@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_tab"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="abm.co.studycards.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_selectLanguageFragment"
+            app:destination="@id/selectLanguageFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_addEditCategoryFragment"
+            app:destination="@id/addEditCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectLanguageFragment"
+        android:name="abm.co.studycards.ui.language.SelectLanguageFragment"
+        android:label="SelectLanguageFragment" />
+    <dialog
+        android:id="@+id/addEditCategoryFragment"
+        android:name="abm.co.studycards.ui.add_category.AddEditCategoryFragment"
+        android:label="fragment_add_edit_category"
+        tools:layout="@layout/fragment_add_edit_category" >
+        <argument
+            android:name="category"
+            app:argType="abm.co.studycards.data.model.vocabulary.Category"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </dialog>
+</navigation>

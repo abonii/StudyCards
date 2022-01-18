@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1099449896785",
+    "project_id": "studycards-905e8",
+    "storage_bucket": "studycards-905e8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1099449896785:android:09ea636a1b201a5f64cd70",
+        "android_client_info": {
+          "package_name": "abm.co.studycards"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1099449896785-e58mepuca2d8suu8ikje5296l7msr482.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "abm.co.studycards",
+            "certificate_hash": "2188e0dbc6e86e1a4238ee86582c57b45efe4c5c"
+          }
+        },
+        {
+          "client_id": "1099449896785-7htb1v20m8o7htj4v4esshkol41qeniq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCPc9E8WCRdSD3A8yzZw2HUzxUXOmb9Tg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1099449896785-7htb1v20m8o7htj4v4esshkol41qeniq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

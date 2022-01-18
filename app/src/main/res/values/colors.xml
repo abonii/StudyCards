@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--same-->
+    <color name="colorPrimary">#4FAFFF</color>
+    <color name="colorPrimaryDark">#1D6DEF</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="violet">#450649</color>
+    <color name="red">#C81414</color>
+    <!--others-->
+    <color name="background">#FDFDFD</color>
+    <color name="tab_background">#F9FFEE</color>
+    <color name="itemContainer">#10000000</color>
+    <color name="second_color">#EEEEEE</color>
+    <color name="third_color">#C4C4C4</color>
+    <color name="lighter_darker">#9C9A9A</color>
+    <color name="ellipse">#D5D5D5</color>
+    <color name="border">#60E4E4E4</color>
+    <color name="color_itself">#ffffff</color>
+    <color name="optionDefaultColor">#10838795</color>
+    <color name="grey">#838795</color>
+    <color name="timelineDefault">#A965AD</color>
+    <!--text-->
+    <color name="textColor">#151522</color>
+    <color name="secondTextColor">#666666</color>
+    <color name="thirdTextColor">#838795</color>
+    <color name="fourthTextColor">#303030</color>
+    <color name="specialTextColor">#31384F</color>
+
+    <color name="swiping_n_know">#FF0000</color>
+    <color name="swiping_know">#00FF00</color>
+    <color name="swiping_doubted">#CFB323</color>
+    <color name="green">#32CD32</color>
+
+    <color name="blue_light">#A6C1EC</color>
+    <color name="blue_light_status">#A8C3EE</color>
+
+    <array name="colors">
+        <item>#00008B</item>
+        <item>#00CED1</item>
+        <item>#25383C</item>
+        <item>#006400</item>
+        <item>#DC143C</item>
+        <item>#3B2F2F</item>
+        <item>#B86500</item>
+        <item>#800000</item>
+        <item>#3EA99F</item>
+        <item>#7D0552</item>
+    </array>
+
+</resources>

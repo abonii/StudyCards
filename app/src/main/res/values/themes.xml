@@ -1,0 +1,51 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.StudyCards" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/second_color</item>
+        <item name="colorSecondaryVariant">@color/third_color</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/background</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <!-- Customize your theme here. -->
+        <!-- BottomSheet-->
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <!--Start Activity Animation-->
+        <!--        <item name="android:windowAnimationStyle">@null</item>-->
+        <!--Toolbar-->
+        <item name="actionOverflowButtonStyle">@style/OverFlow</item>
+
+        <item name="android:listDivider">@drawable/divider</item>
+    </style>
+    <!--bottomSheet-->
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowSoftInputMode">adjustResize|stateAlwaysVisible</item>
+    </style>
+
+    <!--tabs-->
+    <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">@font/poppins_medium</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+    <style name="BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="background">@color/background</item>
+        <item name="itemBackground">@color/background</item>
+        <item name="itemIconTint">@drawable/bottom_navigation_background</item>
+        <item name="android:textColor">@drawable/bottom_navigation_background</item>
+        <item name="labelVisibilityMode">unlabeled</item>
+    </style>
+
+    <!--Toolbar-->
+    <style name="OverFlow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_arrow_left</item>
+    </style>
+
+    <style name="snackbar_text" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textColor">@color/textColor</item>
+    </style>
+</resources>

@@ -1,0 +1,99 @@
+<resources>
+
+    <!--Languages-->
+    <string name="arabic">Arabic</string>
+    <string name="chinese">Chinese</string>
+    <string name="english">English</string>
+    <string name="french">French</string>
+    <string name="german">German</string>
+    <string name="italian">Italian</string>
+    <string name="kazakh">Kazakh</string>
+    <string name="korean">Korean</string>
+    <string name="turkish">Turkish</string>
+    <string name="russian">Russian</string>
+
+    <string name="app_name">FlashCard</string>
+    <string name="title_home_nav">Home</string>
+    <string name="title_home">HOME</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="vocabulary">Vocabulary</string>
+    <string name="add_word">Add Word</string>
+    <string name="empty">Empty</string>
+    <string name="save">Save</string>
+    <string name="clear">Clear</string>
+    <string name="title_in_select_category">Sort the card into:</string>
+    <string name="create_category">Create a Set of Cards</string>
+    <string name="create_word">Create Word</string>
+    <string name="create_folder">Create Folder</string>
+    <string name="learn">Learn</string>
+    <string name="know">Known</string>
+    <string name="upper_learn">LEARN</string>
+    <string name="upper_know">KNOWN</string>
+    <string name="upper_delete">DELETE</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="play">Play</string>
+    <string name="repeat">Repeat</string>
+    <string name="review_words">Review words</string>
+    <string name="pair_it">Pair it</string>
+    <string name="guess_it">GUESS IT</string>
+    <string name="review">REVIEW</string>
+    <string name="repeat_upper">REPEAT</string>
+    <string name="one_game">One Game</string>
+    <string name="ok">OK</string>
+    <string name="great_job">Great job!</string>
+    <string name="add_edit_title">CREATE A WORD</string>
+    <string name="image">Image</string>
+    <string name="transcription">transcription</string>
+    <string name="icon">icon</string>
+    <string name="matching">Matching</string>
+    <string name="pairing">Pairing</string>
+    <string name="guessing">Guessing</string>
+    <string name="cancel">CANCEL</string>
+    <string name="arrow">Arrow</string>
+
+    <string name="upper_doubt">DOUBTED</string>
+    <string name="example">Example</string>
+    <string name="uncertain">UNCERTAIN</string>
+    <string name="unknown">UNKNOWN</string>
+    <string name="unknown_lower">Unknown</string>
+    <string name="uncertain_lower">Uncertain</string>
+    <string name="uncertain_swipe_text">If you were uncertain\n <b>swipe down</b></string>
+    <string name="unknown_swipe_text">If you didn\'t know\n <b>swipe left</b></string>
+    <string name="known_swipe_text">If you were right\n <b>swipe right</b></string>
+    <string name="repeats">"Repeats: "</string>
+    <string name="target_language">Russian</string>
+    <string name="source_language">English</string>
+    <string name="add_edit_category_hint">Name of a set</string>
+    <string name="select_language_toolbar_title">Create new deck</string>
+    <string name="select_language_native_language">Your native language</string>
+    <string name="select_language_learn_lan">Language you want to learn</string>
+    <string name="select_language_continue">Continue</string>
+    <string name="settings">Settings</string>
+    <string name="language_of_the_app">Language of the app</string>
+    <string-array name="vocabulary_tabs">
+        <item name="unknown">UNKNOWN</item>
+        <item name="uncertain">UNCERTAIN</item>
+        <item name="known">KNOWN</item>
+    </string-array>
+
+    <string name="select_category_done">DONE</string>
+    <string name="select_image_title">ENTER URL OF IMAGE</string>
+    <string name="url" translatable="false">Url</string>
+    <string name="undo">Undo</string>
+    <string name="do_u_want_to_delete">Do you want to delete these words?</string>
+    <string name="learning_languages">Target language</string>
+    <string name="system_language">System\'s language</string>
+    <string name="naviagate_to_profile">Navigate to profile to change target or source languages</string>
+    <string name="email">Email</string>
+    <string name="words">%1$s words</string>
+    <string name="password">Password</string>
+    <string name="login">SIGN IN</string>
+    <string name="name">Name</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="profile">Profile</string>
+    <string name="new_password">New Password</string>
+    <string name="logout">Logout</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="socket_timeout_exception">Socket time out exception</string>
+</resources>
