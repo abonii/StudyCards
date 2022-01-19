@@ -1,7 +1,6 @@
 package abm.co.studycards.util
 
 import abm.co.studycards.R
-import abm.co.studycards.helpers.LinkTouchMovementMethod
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.animation.ArgbEvaluator
@@ -11,10 +10,6 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
-import android.os.Build
-import android.text.SpannableString
-import android.text.Spanned
-import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -79,6 +74,10 @@ fun Fragment.getMyColor(id: Int): Int {
     return resources.getColor(id, null)
 }
 
+fun View.getMyColor(id: Int): Int {
+    return resources.getColor(id, null)
+}
+
 fun Fragment.navigate(directions: NavDirections) {
     val controller = findNavController()
     val currentDestination =
@@ -88,47 +87,6 @@ fun Fragment.navigate(directions: NavDirections) {
         controller.navigate(directions)
     }
 }
-
-//
-//fun TextView.makeClickable(
-//    text: String,
-//    listener: TranslatedWordAdapter.OnCheckBoxClicked,
-//    isExample: Boolean
-//) {
-//    val spannableString = SpannableString(this.text)
-//    var startIndexOfLink = -1
-//    if (text.isNotEmpty()) {
-//        val defaultColor =
-//            if (isExample) getMyColor(R.color.second_color)
-//            else getMyColor(R.color.text_color)
-//        val selectedColor =
-//            if (isExample) getMyColor(R.color.colorPrimary)
-//            else getMyColor(R.color.colorPrimaryDark)
-//        val clickableSpan = object : TouchableSpan(
-//            defaultColor,
-//            selectedColor
-//        ) {
-//            override fun onClick(view: View) {
-//                if (isExample) {
-//                    listener.onExampleSelected(text, myPressed)
-//                } else {
-//                    listener.onTranslationSelected(text, myPressed)
-//                }
-//                setMyPressed()
-//            }
-//
-//        }
-//        startIndexOfLink = this.text.toString().indexOf(text, startIndexOfLink + 1)
-//        spannableString.setSpan(
-//            clickableSpan, startIndexOfLink, startIndexOfLink + text.length,
-//            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-//        )
-//    }
-//    this.movementMethod =
-//        LinkTouchMovementMethod()
-//    this.setText(spannableString, TextView.BufferType.SPANNABLE)
-//}
-
 
 fun View.flipInCard(): AnimatorSet {
     val flipInAnimationSet =

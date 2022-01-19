@@ -6,7 +6,7 @@ import retrofit2.http.Query
 
 interface YandexApiService {
     @GET("translate")
-    fun getWordTranslations(
+    suspend fun getWordTranslations(
         @Query("key") APIKey: String,
         @Query("text") textToTranslate: String,
         @Query("lang") lang: String

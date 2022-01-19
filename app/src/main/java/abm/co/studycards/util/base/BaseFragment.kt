@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -15,7 +16,7 @@ abstract class BaseFragment : Fragment(), IResourcesIDListener {
     private var dialogForLoader: Dialog? = null
 
     /*  Modal windows  */
-    open fun toast(view: View, msg: Any, isDurationLong: Boolean = false) {
+    open fun snackbar(view: View, msg: Any, isDurationLong: Boolean = false) {
         context?.let {
             val duration = if (isDurationLong) Snackbar.LENGTH_LONG else Snackbar.LENGTH_SHORT
             when (msg) {
@@ -25,6 +26,19 @@ abstract class BaseFragment : Fragment(), IResourcesIDListener {
                     Snackbar.make(view, getStr(msg), duration)
                 else ->
                     Snackbar.make(view, msg.toString(), duration)
+            }.show()
+        }
+    }
+    open fun toast(msg: Any, isDurationLong: Boolean = false) {
+        context?.let {
+            val duration = if (isDurationLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+            when (msg) {
+                is String ->
+                    Toast.makeText(it, msg, duration)
+                is Int ->
+                    Toast.makeText(it, getStr(msg), duration)
+                else ->
+                    Toast.makeText(it, msg.toString(), duration)
             }.show()
         }
     }

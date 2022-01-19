@@ -32,9 +32,9 @@ class VocabularyRepository @Inject constructor(
     @Named(ADD_CATEGORY_REF) private val addCategoryRef: DatabaseReference,
     @Named(ADD_WORD_REF) private val addWordRef: DatabaseReference,
 ) {
-    suspend fun getOxfordWord(word: String) = oxfordApiHelper.getWordTranslations(word)
+    suspend fun getOxfordWord(word: String,sl:String, tl:String) = oxfordApiHelper.getWordTranslations(word,sl,tl)
 
-    suspend fun getYandexWord(word: String) = yandexApiServiceHelper.getWordTranslations(word)
+    suspend fun getYandexWord(word: String,sl:String, tl:String) = yandexApiServiceHelper.getWordTranslations(word,sl,tl)
 
     suspend fun getCategories() = safeApiCall(Dispatchers.IO){
         categoriesDbRef.get().await().children.mapNotNull { doc ->
@@ -43,7 +43,7 @@ class VocabularyRepository @Inject constructor(
     }
 
     suspend fun getWordsByCategory(categoryId: String) = safeApiCall(Dispatchers.IO){
-        wordsDbRef.child(categoryId).get().await().children.mapNotNull { doc ->
+        wordsDbRef.child(categoryId).child(WORDS_REF).get().await().children.mapNotNull { doc ->
             doc.getValue(Category::class.java)
         }
     }
@@ -57,7 +57,7 @@ class VocabularyRepository @Inject constructor(
 
     suspend fun addWord(word: Word) {
         withContext(Dispatchers.IO) {
-            val ref = addWordRef.child(word.categoryID).push()
+            val ref = addWordRef.child(word.categoryID).child(WORDS_REF).push()
             ref.setValue(word.copy(wordId = ref.key ?: ""))
         }
     }

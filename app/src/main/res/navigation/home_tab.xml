@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_addEditCategoryFragment"
             app:destination="@id/addEditCategoryFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_addEditWordFragment"
+            app:destination="@id/addEditWordFragment" />
     </fragment>
     <fragment
         android:id="@+id/selectLanguageFragment"
@@ -32,4 +35,45 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </dialog>
+    <dialog
+        android:id="@+id/selectCategoryDialogFragment"
+        android:name="abm.co.studycards.ui.add_word.dialog.category.SelectCategoryDialogFragment"
+        android:label="fragment_select_category_dialog"
+        tools:layout="@layout/fragment_select_category_dialog" >
+        <argument
+            android:name="category"
+            app:argType="abm.co.studycards.data.model.vocabulary.Category"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_selectCategoryDialogFragment_to_addEditCategoryFragment"
+            app:destination="@id/addEditCategoryFragment" />
+    </dialog>
+    <fragment
+        android:id="@+id/addEditWordFragment"
+        android:name="abm.co.studycards.ui.add_word.AddEditWordFragment"
+        tools:layout="@layout/fragment_add_edit_word"
+        android:label="AddEditFragmentWord" >
+        <action
+            android:id="@+id/action_addEditWordFragment_to_selectCategoryDialogFragment"
+            app:destination="@id/selectCategoryDialogFragment" />
+        <action
+            android:id="@+id/action_addEditWordFragment_to_imageDialogFragment"
+            app:destination="@id/imageDialogFragment" />
+        <argument
+            android:name="word"
+            app:argType="abm.co.studycards.data.model.vocabulary.Word"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="category"
+            app:argType="abm.co.studycards.data.model.vocabulary.Category"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <dialog
+        android:id="@+id/imageDialogFragment"
+        android:name="abm.co.studycards.ui.add_word.dialog.image.ImageDialogFragment"
+        android:label="fragment_image_dialog"
+        tools:layout="@layout/fragment_image_dialog" />
 </navigation>

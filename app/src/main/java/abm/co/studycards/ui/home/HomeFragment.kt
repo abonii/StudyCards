@@ -11,18 +11,14 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
@@ -34,27 +30,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     private lateinit var options: FirebaseRecyclerOptions<Category>
 
     override fun initViews(savedInstanceState: Bundle?) {
-        viewModel.fetchCategories()
         initUi()
-        collectData()
-    }
-
-    private fun collectData() {
-        lifecycleScope.launchWhenResumed {
-            viewModel.stateFlow.collectLatest {
-                when (it) {
-                    is CategoryUi.Error -> {
-                        showLog(it.error.toString())
-                    }
-                    CategoryUi.Loading -> {
-
-                    }
-                    is CategoryUi.Success -> {
-                        showLog(it.value.toString())
-                    }
-                }
-            }
-        }
     }
 
     private fun initUi() {
@@ -108,10 +84,10 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     }
 
     private fun onFloatingActionWordClick() {
-//        val action =
-//            HomeFragmentDirections
-//                .actionNavigationHomeToAddEditFragment(category = viewModel.category)
-//        navigate(action)
+        val action =
+            HomeFragmentDirections
+                .actionHomeFragmentToAddEditWordFragment()
+        navigate(action)
     }
 
     private fun onFloatingActionCategoryClick() {
@@ -150,7 +126,6 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
             .setQuery(viewModel.categoriesDbRef, Category::class.java)
             .build()
         categoryAdapter = CategoryAdapter(this, options)
-
         binding.recyclerView.apply {
             itemAnimator = null
             setHasFixedSize(true)
@@ -291,5 +266,9 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
         binding.floatingActionButtonCategory.visibility = View.GONE
     }
 
+    override fun onDestroyView() {
+        closeFABMenu()
+        super.onDestroyView()
+    }
 
 }

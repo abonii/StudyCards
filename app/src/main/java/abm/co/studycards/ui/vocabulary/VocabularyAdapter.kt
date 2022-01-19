@@ -30,7 +30,7 @@ class VocabularyAdapter : RecyclerView.Adapter<VocabularyAdapter.ViewHolder>() {
         fun bind(currentItem: Word) {
             expansionsCollection.add(binding.expansionLayout)
             binding.word.text = currentItem.name
-            binding.translation.text = currentItem.translation.joinToString(", ")
+            binding.translation.text = currentItem.translations.joinToString(", ")
             if (currentItem.imageUrl != null) {
                 Glide
                     .with(binding.image)

@@ -5,6 +5,7 @@ import abm.co.studycards.data.model.oxford.RetrieveEntry
 
 interface OxfordApiServiceHelper {
     suspend fun getWordTranslations(
-        word: String
+        word: String,
+        sl: String, tl: String
     ): ResultWrapper<RetrieveEntry>
 }

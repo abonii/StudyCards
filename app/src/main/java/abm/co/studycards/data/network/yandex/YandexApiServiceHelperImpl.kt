@@ -15,17 +15,17 @@ import javax.inject.Singleton
 class YandexApiServiceHelperImpl @Inject constructor(
     @YandexNetwork(TypeEnum.APISERVICE)
     private val yandexApiService: YandexApiService,
-    private val prefs: Prefs
 ) : YandexApiServiceHelper {
 
     override suspend fun getWordTranslations(
         textToTranslate: String,
+        sl:String, tl:String
     ): ResultWrapper<TranslatedText> {
         return safeApiCall(Dispatchers.IO) {
             yandexApiService.getWordTranslations(
                 APIKey = Constants.yandex_api_key,
                 textToTranslate = textToTranslate,
-                lang = prefs.getSourceLanguage() + "-" + prefs.getTargetLanguage()
+                lang = "$sl-$tl"
             )
         }
     }

@@ -7,9 +7,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Word(
     var name: String = "",
-    var translation: List<String> = emptyList(),
-    val imageUrl: String? = null,
-    var examples: List<String>? = null,
+    var translations: List<String> = emptyList(),
+    val imageUrl: String = "",
+    var examples: List<String> = emptyList(),
     var learnOrKnown: String = LearnOrKnown.UNDEFINED.getType(),
     var sourceLanguage: String = "",
     var targetLanguage: String = "",
@@ -17,4 +17,12 @@ data class Word(
     var repeatCount: Int = 0,
     var nextRepeatTime: Long = 0,
     val wordId: String = ""
-) : Parcelable
+) : Parcelable{
+
+    fun setTranslation(translations: Map<String, String>){
+        this.translations = ArrayList(translations.values)
+    }
+    fun setExample(examples: Map<String, String>){
+        this.examples = ArrayList(examples.values)
+    }
+}

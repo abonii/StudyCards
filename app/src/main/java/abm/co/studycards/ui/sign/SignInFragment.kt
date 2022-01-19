@@ -104,7 +104,7 @@ class SignInFragment : BaseBindingFragment<FragmentSignInBinding>(R.layout.fragm
         if (user?.isEmailVerified == true) {
             updateUI(user)
         } else {
-            toast(binding.root,"Please, verify your email address")
+            toast("Please, verify your email address")
             FirebaseAuth.getInstance().signOut()
         }
     }

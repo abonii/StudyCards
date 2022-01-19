@@ -4,15 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 abstract class BaseViewModel : ViewModel() {
 
-    private val _toast = MutableSharedFlow<String>()
-    val toast = MutableSharedFlow<String>()
+    private val _toast = MutableSharedFlow<Any>()
+    val toast = _toast.asSharedFlow()
 
-    fun makeToast(string: String){
+    fun makeToast(any: Any) {
         launchIO {
-            _toast.emit(string)
+            _toast.emit(any)
         }
     }
 

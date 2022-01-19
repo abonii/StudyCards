@@ -7,7 +7,7 @@ import retrofit2.http.Path
 interface OxfordApiService {
 
     @GET("translations/{source_lang}/{target_lang}/{word_id}?strictMatch=false")
-    fun getWordTranslations(
+    suspend fun getWordTranslations(
         @Path("source_lang") sourceLang: String,
         @Path("target_lang") targetLang: String,
         @Path("word_id") wordId: String

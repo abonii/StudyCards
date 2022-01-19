@@ -46,7 +46,7 @@ object FirebaseModule {
 
     @Provides
     @Named(ADD_WORD_REF)
-    fun provideAddWord(db: FirebaseDatabase) = db.reference.child(WORDS_REF).apply {
+    fun provideAddWord(db: FirebaseDatabase) = db.reference.child(CATEGORIES_REF).apply {
         keepSynced(true)
     }
 }
