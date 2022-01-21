@@ -1,9 +1,9 @@
 package abm.co.studycards.di
 
-import abm.co.studycards.util.Constants.ADD_CATEGORY_REF
-import abm.co.studycards.util.Constants.ADD_WORD_REF
+import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.util.Constants.CATEGORIES_REF
-import abm.co.studycards.util.Constants.WORDS_REF
+import abm.co.studycards.util.Constants.USERS_REF
+import abm.co.studycards.util.Constants.USER_ID
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import dagger.Module
@@ -19,6 +19,10 @@ object FirebaseModule {
     @Provides
     fun provideFirebaseAuthInstance() = FirebaseAuth.getInstance()
 
+    @Named(USER_ID)
+    @Provides
+    fun provideUserId() = FirebaseAuth.getInstance().uid ?: ""
+
     @Provides
     fun provideFirebaseDatabase(): FirebaseDatabase {
         return FirebaseDatabase.getInstance()
@@ -26,27 +30,14 @@ object FirebaseModule {
 
     @Provides
     @Named(CATEGORIES_REF)
-    fun provideRealtimeDatabaseCategories(db: FirebaseDatabase) =
-        db.reference.child(CATEGORIES_REF).apply {
-            keepSynced(true)
-        }
-
-    @Provides
-    @Named(WORDS_REF)
-    fun provideRealtimeDatabaseWords(db: FirebaseDatabase) =
-        db.reference.child(CATEGORIES_REF).apply {
-            keepSynced(true)
-        }
-
-    @Provides
-    @Named(ADD_CATEGORY_REF)
-    fun provideAddCategory(db: FirebaseDatabase) = db.reference.child(CATEGORIES_REF).apply {
-        keepSynced(true)
-    }
-
-    @Provides
-    @Named(ADD_WORD_REF)
-    fun provideAddWord(db: FirebaseDatabase) = db.reference.child(CATEGORIES_REF).apply {
-        keepSynced(true)
-    }
+    fun provideRealtimeDatabaseCategories(
+        db: FirebaseDatabase,
+        @Named(USER_ID) userId: String,
+        prefs: Prefs,
+    ) =
+        db.reference.child(USERS_REF).child(userId)
+            .child("${prefs.getSourceLanguage()}-${prefs.getTargetLanguage()}")
+            .child(CATEGORIES_REF).apply {
+                keepSynced(true)
+            }
 }

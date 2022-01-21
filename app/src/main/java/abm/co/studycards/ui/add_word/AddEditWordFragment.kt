@@ -27,7 +27,8 @@ import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
-class AddEditWordFragment : BaseBindingFragment<FragmentAddEditWordBinding>(R.layout.fragment_add_edit_word),
+class AddEditWordFragment :
+    BaseBindingFragment<FragmentAddEditWordBinding>(R.layout.fragment_add_edit_word),
     TranslatedWordDialogFragment.OnFinishDialog {
 
     private val viewModel: AddEditWordViewModel by viewModels()
@@ -78,6 +79,7 @@ class AddEditWordFragment : BaseBindingFragment<FragmentAddEditWordBinding>(R.la
         }
         lifecycleScope.launchWhenStarted {
             viewModel.toast.collectLatest {
+                toast(it)
                 toast(it)
             }
         }
@@ -163,9 +165,9 @@ class AddEditWordFragment : BaseBindingFragment<FragmentAddEditWordBinding>(R.la
     }
 
     private fun directToChooseImage() {
-//        val action = AddEditFragmentDirections
-//            .actionAddEditFragmentToImageDialogFragment(viewModel.wordName)
-//        navigate(action)
+        val action = AddEditWordFragmentDirections
+            .actionAddEditWordFragmentToImageDialogFragment(viewModel.word?.name)
+        navigate(action)
     }
 
 

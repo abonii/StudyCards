@@ -20,11 +20,12 @@ abstract class BaseBindingActivity<B : ViewDataBinding>(@LayoutRes private val l
     }
 
     //  Your view data binding
-    var binding: B? = null
+    private var _binding: B? = null
+    val binding get() = _binding!!
 
     override fun onCreateUI(savedInstanceState: Bundle?) {
         //  Override Resources ID Layout
-        binding = DataBindingUtil.setContentView(this, layoutResID)
+        _binding = DataBindingUtil.setContentView(this, layoutResID)
         //  Initialize all widget in layout by ID
         initViews(savedInstanceState)
     }
@@ -32,6 +33,6 @@ abstract class BaseBindingActivity<B : ViewDataBinding>(@LayoutRes private val l
 
     override fun onDestroy() {
         super.onDestroy()
-        if (binding != null) binding = null
+        _binding = null
     }
 }

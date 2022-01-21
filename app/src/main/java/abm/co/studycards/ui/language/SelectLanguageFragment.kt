@@ -61,17 +61,14 @@ class SelectLanguageFragment : Fragment(R.layout.fragment_select_language),
         if (binding.readBtn.alpha == 1f) {
             prefs.setSourceLanguage(nativeLanguagePosition)
             prefs.setTargetLanguage(targetLanguagePosition)
-            if (parentFragmentManager.backStackEntryCount > 0) {
-                findNavController().popBackStack()
-            } else
-                findNavController().navigate(R.id.navigation_home)
+            findNavController().navigate(SelectLanguageFragmentDirections.actionSelectLanguageFragmentToHomeFragment())
         }
     }
 
 
     override fun onClickWithPosition(
         lang: Language,
-        isTargetLanguage: Boolean
+        isTargetLanguage: Boolean,
     ) {
         if (isTargetLanguage) {
             targetLanguagePosition = lang.code

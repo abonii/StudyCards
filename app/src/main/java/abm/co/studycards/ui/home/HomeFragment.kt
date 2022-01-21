@@ -1,5 +1,6 @@
 package abm.co.studycards.ui.home
 
+import abm.co.studycards.MainActivity
 import abm.co.studycards.R
 import abm.co.studycards.data.model.AvailableLanguages
 import abm.co.studycards.data.model.vocabulary.Category
@@ -7,17 +8,18 @@ import abm.co.studycards.databinding.FragmentHomeBinding
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.getMyColor
 import abm.co.studycards.util.navigate
+import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavOptions
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -26,11 +28,28 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     CategoryAdapter.CategoryAdapterListener {
 
     private val viewModel: HomeViewModel by viewModels()
-    private lateinit var categoryAdapter: CategoryAdapter
-    private lateinit var options: FirebaseRecyclerOptions<Category>
+    private var categoryAdapter = CategoryAdapter(this)
 
     override fun initViews(savedInstanceState: Bundle?) {
         initUi()
+        collectData()
+        showLog("${viewModel.sourceLang} - ${viewModel.targetLang}")
+    }
+
+    private fun collectData() {
+        viewModel.categoriesDbRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val items = mutableListOf<Category>()
+                snapshot.children.forEach {
+                    it.getValue(Category::class.java)?.let { it1 -> items.add(it1) }
+                }
+                categoryAdapter.submitList(items)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                showLog(error.message, "FromHome")
+            }
+        })
     }
 
     private fun initUi() {
@@ -52,9 +71,8 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
             floatingActionButton.setOnClickListener { onFloatingActionClick() }
             floatingActionButtonWord.setOnClickListener { onFloatingActionWordClick() }
             floatingActionButtonCategory.setOnClickListener { onFloatingActionCategoryClick() }
-            deleteCategory.setOnClickListener { onDeleteClicked() }
-            cancel.setOnClickListener { onCancelClicked() }
-            changeLayout.setOnClickListener { onChangeLanguageClicked() }
+            changeTargetBtn.setOnClickListener { onChangeLanguageClicked() }
+            flagImage.setOnClickListener { navigateToSelectLanguages() }
         }
     }
 
@@ -102,40 +120,20 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     }
 
     private fun reCreateItself() {
-        findNavController().navigate(
-            R.id.navigation_home,
-            arguments,
-            NavOptions.Builder()
-                .setPopUpTo(R.id.navigation_home, true)
-                .build()
-        )
-    }
-
-    override fun onStart() {
-        super.onStart()
-        categoryAdapter.startListening()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        categoryAdapter.stopListening()
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        startActivity(intent)
+        requireActivity().finish()
     }
 
     private fun initRecyclerView() {
-        options = FirebaseRecyclerOptions.Builder<Category>()
-            .setQuery(viewModel.categoriesDbRef, Category::class.java)
-            .build()
-        categoryAdapter = CategoryAdapter(this, options)
         binding.recyclerView.apply {
-            itemAnimator = null
+            val divider = DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL,
+            )
             setHasFixedSize(true)
             adapter = categoryAdapter
-            addItemDecoration(
-                DividerItemDecoration(
-                    context,
-                    DividerItemDecoration.VERTICAL,
-                )
-            )
+            addItemDecoration(divider)
         }
     }
 
@@ -160,17 +158,19 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     }
 
     private fun changeTargetWithSource() {
-        binding.apply {
-            val target = targetLanguage.text.toString()
-            targetLanguage.text = sourceLanguage.text
-            sourceLanguage.text = target
-        }
         changePreferenceNativeWithTargetLanguages()
+        binding.apply {
+            targetLanguage.text =
+                AvailableLanguages.getLanguageNameByCode(requireContext(), viewModel.targetLang)
+            sourceLanguage.text =
+                AvailableLanguages.getLanguageNameByCode(requireContext(), viewModel.sourceLang)
+        }
     }
 
     private fun changePreferenceNativeWithTargetLanguages() {
-        viewModel.sourceLang = viewModel.targetLang
+        val target = viewModel.targetLang
         viewModel.targetLang = viewModel.sourceLang
+        viewModel.sourceLang = target
     }
 
 
@@ -190,27 +190,27 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     }
 
     override fun onCategoryClicked(category: Category) {
-        if (isFabOpen()) return
+        if (!isFabOpen()) return
         val action =
-            HomeFragmentDirections.actionHomeFragmentToAddEditCategoryFragment(category)
+            HomeFragmentDirections.actionHomeFragmentToInCategoryFragment(category)
         navigate(action)
     }
 
     override fun onPlay(category: Category) {
-        if (isFabOpen()) return
+        if (!isFabOpen()) return
 //        val action = HomeFragmentDirections.actionNavigationHomeToSelectLearnTypeDialogFragment(
 //            category
 //        )
 //        navigate(action)
     }
 
-    override fun onSelectItem(isShortClickActivated: Boolean, selectedItemsCount: Int) {
-        isFabOpen()
-        binding.apply {
-            binding.floatingActionButton.isVisible = !isShortClickActivated
-            cancel.isVisible = isShortClickActivated
-            deleteCategory.isVisible = isShortClickActivated
-        }
+    override fun onLongClickCategory(category: Category) {
+        showAlertToDeleteCategory(category)
+    }
+
+    private fun navigateToSelectLanguages() {
+        val nav = HomeFragmentDirections.actionHomeFragmentToSelectLanguageFragment()
+        navigate(nav)
     }
 
     private fun setOnBackPressed() {
@@ -234,10 +234,6 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
 //            })
     }
 
-    private fun onCancelClicked() {
-//        categoryAdapter.disableSelectableItems()
-        onSelectItem(false)
-    }
 
     private fun isFabOpen(): Boolean {
         if (viewModel.fabMenuOpened) {
@@ -247,18 +243,15 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
         return true
     }
 
-    private fun onDeleteClicked() {
-//        val items = categoryAdapter.selectedItems()
-//        AlertDialog.Builder(requireContext())
-//            .setMessage("Do you want to delete ${items.size} categor${if (items.size > 1) "ies" else "y"}?")
-//            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-////                viewModel.deleteCategories(items)
-//                categoryAdapter.isShortClickActivated = false
-//                onSelectItem(false)
-//            }
-//            .setNegativeButton(getString(R.string.cancel)) { v, _ ->
-//                v.dismiss()
-//            }.create().show()
+    private fun showAlertToDeleteCategory(category: Category) {
+        AlertDialog.Builder(requireContext())
+            .setMessage("Do you want to delete ${category.mainName}?")
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                viewModel.removeCategory(category)
+            }
+            .setNegativeButton(getString(R.string.cancel)) { v, _ ->
+                v.dismiss()
+            }.create().show()
     }
 
     private fun setInvisibility() {

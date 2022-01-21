@@ -1,10 +1,10 @@
 package abm.co.studycards.util
 
 object Constants {
-    const val CATEGORIES_REF = "category"
-    const val WORDS_REF = "word"
-    const val ADD_CATEGORY_REF = "add_category"
-    const val ADD_WORD_REF = "add_word"
+    const val CATEGORIES_REF = "categories"
+    const val WORDS_REF = "words"
+    const val USER_ID = "user_id"
+    const val USERS_REF = "users"
     const val DEBUG: Boolean = true
     const val baseUrlOxford = "https://od-api.oxforddictionaries.com:443/api/v2/"
     const val oxford_app_id = "36a89c65"

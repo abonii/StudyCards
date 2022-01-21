@@ -1,7 +1,6 @@
 package abm.co.studycards.data.model.vocabulary
 
 import android.os.Parcelable
-import android.util.Log
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -10,12 +9,12 @@ data class Category(
     val mainName: String = "",
     var sourceLanguage: String = "",
     var targetLanguage: String = "",
-    var words: List<Word> = emptyList()
-) : Parcelable{
+    @JvmField var words: List<Word> = emptyList(),
+) : Parcelable {
 
-    fun getWord() = words
+    fun getWords() = words
 
-    fun setWord(words:Map<String, Word>) {
+    fun setWords(words: Map<String, Word>) {
         this.words = ArrayList(words.values)
     }
 

@@ -8,10 +8,19 @@ import abm.co.studycards.data.model.Language
 import abm.co.studycards.databinding.FragmentProfileBinding
 import abm.co.studycards.ui.settings.LanguageOfTheAppAdapter
 import abm.co.studycards.ui.settings.LanguageOfTheAppDialogFragment
+import abm.co.studycards.ui.sign.SignActivity
 import abm.co.studycards.util.base.BaseBindingFragment
+import abm.co.studycards.util.navigate
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -23,10 +32,10 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
     }
 
     private val viewModel: ProfileViewModel by viewModels()
-//    private lateinit var auth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
 
     override fun initViews(savedInstanceState: Bundle?) {
-//        auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         setStatusBar()
         setLanguage()
         initProfileInformation()
@@ -35,19 +44,19 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
     }
 
     private fun initProfileInformation() {
-//        val user = auth.currentUser
-//        if (user != null) {
-//            binding.apply {
-//                userEmail.text = user.email
-//                userName.text = user.displayName
-//                userName.isVisible = !user.displayName.isNullOrBlank()
-//                imageContainer.isVisible = user.photoUrl != null
-//                if (user.photoUrl != null)
-//                    Glide.with(root.context)
-//                        .load(user.photoUrl)
-//                        .into(userImage)
-//            }
-//        }
+        val user = auth.currentUser
+        if (user != null) {
+            binding.apply {
+                userEmail.text = user.email
+                userName.text = user.displayName
+                userName.isVisible = !user.displayName.isNullOrBlank()
+                imageContainer.isVisible = user.photoUrl != null
+                if (user.photoUrl != null)
+                    Glide.with(root.context)
+                        .load(user.photoUrl)
+                        .into(userImage)
+            }
+        }
     }
 
     private fun onClickListeners() {
@@ -66,8 +75,8 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
     }
 
     private fun toSelectTargetLanguage() {
-//        val nav = ProfileFragmentDirections.actionGlobalSelectLanguageFragment()
-//        navigate(nav)
+        val nav = ProfileFragmentDirections.actionProfileFragmentToSelectLanguageFragment2()
+        navigate(nav)
     }
 
     private fun setLanguage() {
@@ -75,7 +84,7 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
             binding.systemLanguage.text = getString(R.string.system_language)
         } else {
             binding.systemLanguage.text =
-                AvailableLanguages.getLanguageNameByCode(requireContext(),viewModel.appLanguage)
+                AvailableLanguages.getLanguageNameByCode(requireContext(), viewModel.appLanguage)
         }
     }
 
@@ -87,7 +96,7 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
     }
 
     private fun setStatusBar() {
-//        requireActivity().window.statusBarColor = resources.getColor(R.color.background, null)
+        requireActivity().window.statusBarColor = resources.getColor(R.color.background, null)
     }
 
     override fun onClick(language: Language) {
@@ -105,19 +114,19 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
     }
 
     private fun logout() {
-//        Firebase.auth.signOut()
-//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//            .requestIdToken(getString(R.string.default_web_client_id))
-//            .requestEmail()
-//            .build()
-//
-//        val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
-//
-//        googleSignInClient.signOut()
-//            .addOnCompleteListener(requireActivity()) {
-//                val i = Intent(requireContext(), SignActivity::class.java)
-//                startActivity(i)
-//                requireActivity().finish()
-//            }
+        Firebase.auth.signOut()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+
+        googleSignInClient.signOut()
+            .addOnCompleteListener(requireActivity()) {
+                val i = Intent(requireContext(), SignActivity::class.java)
+                startActivity(i)
+                requireActivity().finish()
+            }
     }
 }

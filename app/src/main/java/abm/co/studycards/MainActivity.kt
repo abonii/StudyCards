@@ -5,6 +5,7 @@ import abm.co.studycards.databinding.ActivityMainBinding
 import abm.co.studycards.ui.home.HomeFragmentDirections
 import abm.co.studycards.ui.profile.ProfileFragment
 import abm.co.studycards.ui.sign.SignActivity
+import abm.co.studycards.util.Config
 import abm.co.studycards.util.base.BaseBindingActivity
 import abm.co.studycards.util.setupWithNavController
 import android.content.Intent
@@ -33,12 +34,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         }
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        Config.bottomNavHeight = binding.bottomNavView.height
+    }
+
     private fun checkIfLearnLanguagesSelected() {
         if (prefs.getSourceLanguage().isBlank() || prefs.getTargetLanguage().isBlank()) {
 //            currentNavController.value?.popBackStack()
             currentNavController.value?.navigate(HomeFragmentDirections.actionHomeFragmentToSelectLanguageFragment())
         }
     }
+
     private fun checkIfLoggedIn() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {

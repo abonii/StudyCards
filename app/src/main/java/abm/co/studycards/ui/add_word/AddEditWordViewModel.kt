@@ -6,22 +6,29 @@ import abm.co.studycards.data.model.LearnOrKnown
 import abm.co.studycards.data.model.oxford.ResultsEntry
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.data.network.safeApiCall
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.VocabularyRepository
+import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseViewModel
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
+import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class AddEditWordViewModel @Inject constructor(
     private val repository: VocabularyRepository,
+    @Named(Constants.CATEGORIES_REF) private val categoriesDbRef: DatabaseReference,
     prefs: Prefs,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : BaseViewModel() {
 
     private val isLanguagesSupportOxford: Boolean = true
@@ -30,17 +37,21 @@ class AddEditWordViewModel @Inject constructor(
     var imageUrl: String? = word?.imageUrl
     var sourceWord: String = word?.name ?: ""
     var targetWord: String = word?.translations?.joinToString(", ") ?: ""
-    var exampleText: String = word?.examples?.joinToString(", ") ?: ""
+    var exampleText: String = word?.examples?.joinToString("\n") ?: ""
     val sourceLanguage = prefs.getSourceLanguage()
     val targetLanguage = prefs.getTargetLanguage()
     private var translatedOxfordWord: String = "87716944499"
     private var translatedYandexWord: String = ""
-    private lateinit var translatedOxfordClass: ResultsEntry
-    private lateinit var translatedYandexClass: String
+    private var translatedOxfordClass: ResultsEntry? = null
+    private var translatedYandexClass: String? = null
 
 
     private val _stateFlow = MutableStateFlow<AddEditWordUi>(AddEditWordUi.Default)
     val stateFlow = _stateFlow.asStateFlow()
+
+    init {
+        _stateFlow.value = AddEditWordUi.CategoryChanged(category?.mainName ?: "")
+    }
 
     fun fetchWord(fromSource: Boolean) {
         if (isLanguagesSupportOxford && isItMoreThanOneWord(fromSource)) {
@@ -62,7 +73,7 @@ class AddEditWordViewModel @Inject constructor(
                 is ResultWrapper.Success -> {
                     translatedYandexClass = wrapper.value.text?.joinToString(", ") ?: ""
                     _stateFlow.value =
-                        AddEditWordUi.SuccessYandex(translatedYandexClass, fromSource)
+                        AddEditWordUi.SuccessYandex(translatedYandexClass!!, fromSource)
                 }
             }
         }
@@ -72,8 +83,8 @@ class AddEditWordViewModel @Inject constructor(
         launchIO {
             _stateFlow.value = AddEditWordUi.Loading(fromSource)
             delay(50)
-            if ((fromSource && isSourceWordTranslatedOxford()) || (!fromSource && isTargetWordTranslatedOxford())) {
-                _stateFlow.value = AddEditWordUi.SuccessOxford(translatedOxfordClass, fromSource)
+            if (((fromSource && isSourceWordTranslatedOxford()) || (!fromSource && isTargetWordTranslatedOxford())) && translatedOxfordClass!=null) {
+                _stateFlow.value = AddEditWordUi.SuccessOxford(translatedOxfordClass!!, fromSource)
                 return@launchIO
             }
             val sl = if (fromSource) sourceLanguage else targetLanguage
@@ -88,7 +99,7 @@ class AddEditWordViewModel @Inject constructor(
                 is ResultWrapper.Success -> {
                     translatedOxfordClass = wrapper.value.results[0]
                     _stateFlow.value =
-                        AddEditWordUi.SuccessOxford(translatedOxfordClass, fromSource)
+                        AddEditWordUi.SuccessOxford(translatedOxfordClass!!, fromSource)
                 }
             }
         }
@@ -127,21 +138,51 @@ class AddEditWordViewModel @Inject constructor(
             makeToast("Please, create category for this word")
             return false
         }
-        val word = Word(
-            name = sourceWord,
-            translations = targetWord.split(", "),
-            imageUrl = imageUrl ?: "",
-            examples = exampleText.split(", "),
-            learnOrKnown = LearnOrKnown.UNDEFINED.getType(),
-            sourceLanguage = sourceLanguage,
-            targetLanguage = targetLanguage,
-            categoryID = category?.id ?: "",
-        )
-        launchIO {
-            repository.addWord(word)
+        if (word == null) {
+            launchIO {
+                val word = Word(
+                    name = sourceWord,
+                    translations = targetWord.split(", "),
+                    imageUrl = imageUrl ?: "",
+                    examples = exampleText.split(", "),
+                    learnOrKnown = LearnOrKnown.UNDEFINED.getType(),
+                    sourceLanguage = sourceLanguage,
+                    targetLanguage = targetLanguage,
+                    categoryID = category?.id ?: "",
+                )
+                addWord(word)
+            }
+        } else {
+            launchIO {
+                val uWord = word.copy(
+                    name = sourceWord,
+                    translations = targetWord.split(", "),
+                    examples = exampleText.split("\n"),
+                    categoryID = category?.id ?: "",
+                    learnOrKnown = LearnOrKnown.UNDEFINED.getType(),
+                    imageUrl = imageUrl ?: "",
+                    repeatCount = 0
+                )
+                deleteWord(word.categoryID, word.wordId)
+                addWord(uWord)
+            }
         }
         return true
     }
+
+    private suspend fun deleteWord(categoryId: String, wordId: String) {
+        safeApiCall(Dispatchers.IO) {
+            categoriesDbRef.child(categoryId).child(Constants.WORDS_REF).child(wordId).removeValue()
+        }
+    }
+
+    private suspend fun addWord(word: Word) {
+        withContext(Dispatchers.IO) {
+            val ref = categoriesDbRef.child(word.categoryID).child(Constants.WORDS_REF).push()
+            ref.setValue(word.copy(wordId = ref.key ?: ""))
+        }
+    }
+
     private fun isItMoreThanOneWord(fromSource: Boolean): Boolean {
         return ((fromSource && sourceWord.trim().split(" ").size <= 1)
                 || (!fromSource && targetLanguage.trim().split(" ").size <= 1))

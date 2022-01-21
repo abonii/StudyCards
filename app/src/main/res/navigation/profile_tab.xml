@@ -7,5 +7,13 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="abm.co.studycards.ui.profile.ProfileFragment"
-        android:label="ProfileFragment" />
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_selectLanguageFragment2"
+            app:destination="@id/selectLanguageFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectLanguageFragment2"
+        android:name="abm.co.studycards.ui.language.SelectLanguageFragment"
+        android:label="SelectLanguageFragment" />
 </navigation>

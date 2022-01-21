@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -18,15 +19,11 @@ class PrefsModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(context: Context): SharedPreferences {
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
         return context.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)
     }
 
     @Provides
-    @Singleton
-    fun providePrefs(sharedPreferences: SharedPreferences): Prefs {
-        return PrefsImpl(sharedPreferences)
-    }
-
+    fun providePrefs(prefsImpl: PrefsImpl): Prefs = prefsImpl
 
 }

@@ -3,19 +3,20 @@ package abm.co.studycards.ui.add_category
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.VocabularyRepository
+import abm.co.studycards.util.Constants
+import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class AddEditCategoryViewModel @Inject constructor(
-    private val repository: VocabularyRepository,
     private val prefs: Prefs,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    savedStateHandle: SavedStateHandle,
+    @Named(Constants.CATEGORIES_REF) private val categoriesDbRef: DatabaseReference,
+) : BaseViewModel() {
     val category = savedStateHandle.get<Category>("category")
 
     var mainName = category?.mainName ?: ""
@@ -36,14 +37,28 @@ class AddEditCategoryViewModel @Inject constructor(
     }
 
     private fun insertCategory(category: Category) {
-        viewModelScope.launch {
-            repository.addCategory(category)
+        launchIO {
+            addCategory(category)
+        }
+    }
+
+    private fun addCategory(category: Category) {
+        launchIO {
+            val ref = categoriesDbRef.push()
+            ref.setValue(category.copy(id = ref.key ?: ""))
         }
     }
 
     private fun updateCategory(updatedCategory: Category) {
-        viewModelScope.launch {
-//            repository.updateCategory(updatedCategory)
+        launchIO {
+            updateCategoryName(updatedCategory)
+        }
+    }
+
+    private fun updateCategoryName(category: Category) {
+        launchIO {
+            categoriesDbRef.child(category.id)
+                .updateChildren(mapOf("mainName" to category.mainName))
         }
     }
 }
