@@ -16,7 +16,7 @@ class SelectCategoryDialogViewModel @Inject constructor(
     @Named(Constants.CATEGORIES_REF) val categoriesDbRef: DatabaseReference,
 ): BaseViewModel() {
 
-    val category = savedStateHandle.get<Category?>("category")
-    var categoryLive: MutableLiveData<Category?> = MutableLiveData(category)
+    val categoryId = savedStateHandle.get<String>("categoryId")
+    var categoryIdLive: MutableLiveData<Category?> = MutableLiveData()
 
 }

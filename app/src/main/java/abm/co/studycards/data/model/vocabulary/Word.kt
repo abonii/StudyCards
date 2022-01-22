@@ -18,6 +18,11 @@ data class Word(
     var nextRepeatTime: Long = 0,
     val wordId: String = ""
 ) : Parcelable{
+    companion object{
+        const val LEARN_OR_KNOWN = "learnOrKnown"
+        const val REPEAT_COUNT = "repeatCount"
+        const val NEXT_REPEAT_TIME = "nextRepeatTime"
+    }
 
     fun setTranslation(translations: Map<String, String>){
         this.translations = ArrayList(translations.values)

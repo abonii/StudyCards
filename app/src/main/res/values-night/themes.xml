@@ -17,8 +17,6 @@
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <!--Start Activity Animation-->
         <!--        <item name="android:windowAnimationStyle">@null</item>-->
-        <!--Toolbar-->
-        <item name="actionOverflowButtonStyle">@style/OverFlow</item>
 
         <item name="android:listDivider">@drawable/divider</item>
     </style>
@@ -40,9 +38,5 @@
         <item name="labelVisibilityMode">unlabeled</item>
     </style>
 
-    <!--Toolbar-->
-    <style name="OverFlow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_arrow_left</item>
-    </style>
 
 </resources>

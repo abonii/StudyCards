@@ -55,6 +55,7 @@ class SelectLanguageFragment : Fragment(R.layout.fragment_select_language),
 
     private fun setToolbar() {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
+        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
     }
 
     private fun onReadBtnClicked() {

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:layout_marginVertical="3dp"
-        android:background="@color/background"
+        app:cardElevation="0.5dp"
         app:cardCornerRadius="10dp"
         app:contentPadding="8dp">
 
@@ -47,11 +47,11 @@
                     android:layout_marginStart="16dp"
                     android:adjustViewBounds="true"
                     android:background="@drawable/ic_circle"
-                    android:backgroundTint="@color/optionDefaultColor"
+                    android:backgroundTint="@color/lighter_itself"
                     android:contentDescription="@string/icon"
                     android:padding="4dp"
                     app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp"
-                    app:tint="@color/optionDefaultColor" />
+                    app:tint="@color/darker_than_usual" />
             </com.github.florent37.expansionpanel.ExpansionHeader>
 
             <com.github.florent37.expansionpanel.ExpansionLayout
@@ -89,5 +89,5 @@
             </com.github.florent37.expansionpanel.ExpansionLayout>
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

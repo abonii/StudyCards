@@ -41,7 +41,9 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
             override fun onDataChange(snapshot: DataSnapshot) {
                 val items = mutableListOf<Category>()
                 snapshot.children.forEach {
+//                    val a = it.toString()
                     it.getValue(Category::class.java)?.let { it1 -> items.add(it1) }
+//                    Log.i("vocaa", a.toString())
                 }
                 categoryAdapter.submitList(items)
             }
@@ -104,7 +106,9 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     private fun onFloatingActionWordClick() {
         val action =
             HomeFragmentDirections
-                .actionHomeFragmentToAddEditWordFragment()
+                .actionHomeFragmentToAddEditWordFragment(
+                    word = null, categoryName = null
+                )
         navigate(action)
     }
 
@@ -198,10 +202,10 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
 
     override fun onPlay(category: Category) {
         if (!isFabOpen()) return
-//        val action = HomeFragmentDirections.actionNavigationHomeToSelectLearnTypeDialogFragment(
-//            category
-//        )
-//        navigate(action)
+        val action = HomeFragmentDirections.actionHomeFragmentToSelectLearnTypeDialogFragment(
+            category
+        )
+        navigate(action)
     }
 
     override fun onLongClickCategory(category: Category) {
@@ -249,7 +253,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 viewModel.removeCategory(category)
             }
-            .setNegativeButton(getString(R.string.cancel)) { v, _ ->
+            .setNegativeButton(getString(R.string.cancel_upper)) { v, _ ->
                 v.dismiss()
             }.create().show()
     }

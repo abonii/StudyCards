@@ -5,7 +5,10 @@
       <map>
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable-v24/bottom_navigation_background.xml" value="0.24871794871794872" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable-v24/ic_clear.xml" value="0.24871794871794872" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/border_color_green.xml" value="0.24351851851851852" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/border_color_red.xml" value="0.24351851851851852" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/bottom_navigation_background.xml" value="0.24871794871794872" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/circle.xml" value="0.24351851851851852" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/colored_stick.xml" value="0.24351851851851852" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/dashed_button.xml" value="0.24871794871794872" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/divider.xml" value="0.24871794871794872" />
@@ -25,6 +28,8 @@
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/ic_image_search.xml" value="0.24871794871794872" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/ic_notes.xml" value="0.2462962962962963" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/ic_play.xml" value="0.24871794871794872" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/ic_profile.xml" value="0.12083333333333333" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/ic_repeat.xml" value="0.24351851851851852" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/overlayed_flags.xml" value="0.24871794871794872" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/round_corner.xml" value="0.24871794871794872" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/drawable/rounded_button_not_so.xml" value="0.24871794871794872" />
@@ -34,24 +39,35 @@
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/activity_sign.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_add_edit_category.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_add_edit_word.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_confirm_end.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_guessing.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_home.xml" value="0.12291666666666666" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_image_dialog.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_in_category.xml" value="0.11499493414387031" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_matching_pairs.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_profile.xml" value="0.1" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_repeat.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_review.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_select_category_dialog.xml" value="0.3685092127303183" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_select_language.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_select_learn_type_dialog.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_sign_up.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_to_right_or_left.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_translated_word_dialog.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_vocabulary.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/fragment_vocabulary_tab.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/ic_translate.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/item_card.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/item_category.xml" value="0.451417004048583" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/item_language.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/item_language_of_the_app.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/item_matching_card.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/item_option.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/item_review.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/item_select_category.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/item_translated_category.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/item_translated_word.xml" value="0.23645833333333333" />
-        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/item_vocabulary_tab.xml" value="0.10815602836879433" />
+        <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/item_vocabulary_tab.xml" value="0.11499493414387031" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/item_word.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/language_of_the_app_dialog.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/abill/Desktop/StudyCards/app/src/main/res/layout/sign_in_fragment.xml" value="0.23645833333333333" />

@@ -13,7 +13,7 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background"
+            android:background="@color/blue_light_status"
             app:tabBackground="@drawable/tab_background"
             app:tabIndicatorHeight="0dp"
             app:tabRippleColor="@null" />

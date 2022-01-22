@@ -13,7 +13,7 @@ class SelectCategoryAdapter(
     private val listener: SelectCategoryAdapterListener, options: FirebaseRecyclerOptions<Category>
 ) : FirebaseRecyclerAdapter<Category, SelectCategoryAdapter.ViewHolder>(options) {
 
-    var checked: Category? = null
+    var checkedId: String? = null
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
@@ -31,7 +31,7 @@ class SelectCategoryAdapter(
                 category.setOnClickListener {
                     listener.onRadioClicked(currentItem)
                 }
-                if (currentItem == checked)
+                if (currentItem.id == checkedId)
                     radio.isChecked = true
                 else {
                     radioGroup.clearCheck()

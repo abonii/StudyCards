@@ -2,7 +2,7 @@ package abm.co.studycards.ui.add_category
 
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.VocabularyRepository
+import abm.co.studycards.data.repository.FirebaseRepository
 import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -18,7 +18,7 @@ class AddEditCategoryViewModel @Inject constructor(
     @Named(Constants.CATEGORIES_REF) private val categoriesDbRef: DatabaseReference,
 ) : BaseViewModel() {
     val category = savedStateHandle.get<Category>("category")
-
+    private val repository: FirebaseRepository = FirebaseRepository(categoriesDbRef)
     var mainName = category?.mainName ?: ""
 
     fun onSaveCategory() {
@@ -38,27 +38,15 @@ class AddEditCategoryViewModel @Inject constructor(
 
     private fun insertCategory(category: Category) {
         launchIO {
-            addCategory(category)
-        }
-    }
-
-    private fun addCategory(category: Category) {
-        launchIO {
-            val ref = categoriesDbRef.push()
-            ref.setValue(category.copy(id = ref.key ?: ""))
+            repository.addCategory(category)
         }
     }
 
     private fun updateCategory(updatedCategory: Category) {
         launchIO {
-            updateCategoryName(updatedCategory)
+            repository.updateCategoryName(updatedCategory)
         }
     }
 
-    private fun updateCategoryName(category: Category) {
-        launchIO {
-            categoriesDbRef.child(category.id)
-                .updateChildren(mapOf("mainName" to category.mainName))
-        }
-    }
+
 }

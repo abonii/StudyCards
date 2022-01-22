@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--same-->
-    <color name="colorPrimary">#4FAFFF</color>
+    <color name="colorPrimary">#4484EC</color>
     <color name="colorPrimaryDark">#1D6DEF</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
@@ -19,7 +19,8 @@
     <color name="color_itself">#ffffff</color>
     <color name="optionDefaultColor">#10838795</color>
     <color name="grey">#838795</color>
-    <color name="timelineDefault">#A965AD</color>
+    <color name="lighter_itself">#10000000</color>
+    <color name="darker_than_usual">#717171</color>
     <!--text-->
     <color name="textColor">#151522</color>
     <color name="secondTextColor">#666666</color>

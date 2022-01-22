@@ -1,5 +1,7 @@
 package abm.co.studycards.util.base
 
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
@@ -14,6 +16,11 @@ abstract class BaseViewModel : ViewModel() {
     fun makeToast(any: Any) {
         launchIO {
             _toast.emit(any)
+        }
+    }
+    fun makeToast(@StringRes id: Int) {
+        launchIO {
+            _toast.emit(id)
         }
     }
 

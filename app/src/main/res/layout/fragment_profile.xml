@@ -72,7 +72,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="6dp"
                 android:fontFamily="@font/poppins_medium"
-                android:text="aboni"
+                tools:text="aboni"
                 android:textColor="@color/specialTextColor" />
 
             <TextView
@@ -82,7 +82,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/poppins_medium"
-                android:text="abillai_01@mail.ru"
+                tools:text="abo@mail.ru"
                 android:textColor="@color/specialTextColor" />
         </LinearLayout>
 
@@ -146,39 +146,39 @@
 
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/target_language_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                    android:paddingVertical="18dp">
+<!--                <RelativeLayout-->
+<!--                    android:id="@+id/target_language_container"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="?attr/selectableItemBackground"-->
+<!--                    android:clickable="true"-->
+<!--                    android:focusable="true"-->
+<!--                    android:gravity="center_vertical"-->
+<!--                    android:paddingHorizontal="@dimen/activity_horizontal_margin"-->
+<!--                    android:paddingVertical="18dp">-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="@string/learning_languages"
-                        android:textColor="@color/thirdTextColor"
-                        android:textSize="@dimen/profile_left_side_sp"
-                        tools:ignore="RelativeOverlap" />
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_alignParentStart="true"-->
+<!--                        android:fontFamily="sans-serif-medium"-->
+<!--                        android:text="@string/learning_languages"-->
+<!--                        android:textColor="@color/thirdTextColor"-->
+<!--                        android:textSize="@dimen/profile_left_side_sp"-->
+<!--                        tools:ignore="RelativeOverlap" />-->
 
-                    <TextView
-                        android:id="@+id/target_language"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="@string/english"
-                        android:textColor="@color/thirdTextColor"
-                        android:textSize="@dimen/profile_left_side_sp"
-                        tools:ignore="RelativeOverlap" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/target_language"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_alignParentEnd="true"-->
+<!--                        android:fontFamily="sans-serif-medium"-->
+<!--                        android:text="@string/english"-->
+<!--                        android:textColor="@color/thirdTextColor"-->
+<!--                        android:textSize="@dimen/profile_left_side_sp"-->
+<!--                        tools:ignore="RelativeOverlap" />-->
 
-                </RelativeLayout>
+<!--                </RelativeLayout>-->
 
                 <RelativeLayout
                     android:id="@+id/logout_container"

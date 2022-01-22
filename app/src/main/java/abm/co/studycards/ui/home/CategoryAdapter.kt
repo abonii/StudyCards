@@ -1,10 +1,12 @@
 package abm.co.studycards.ui.home
 
+import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.databinding.ItemCategoryBinding
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +40,8 @@ class CategoryAdapter(
                 play.setOnClickListener {
                     listener.onPlay(currentItem)
                 }
-                wordsCount.text = (currentItem.words.size).toString() + " word"
+                wordsCount.text = binding.root.context.resources.getQuantityString(R.plurals.words, currentItem.words.size, currentItem.words.size)
+                    (currentItem.words.size).toString() + " word"
             }
         }
     }

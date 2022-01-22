@@ -40,7 +40,7 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
         setLanguage()
         initProfileInformation()
         initBindings()
-        onClickListeners()
+        clickListeners()
     }
 
     private fun initProfileInformation() {
@@ -59,15 +59,15 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
         }
     }
 
-    private fun onClickListeners() {
+    private fun clickListeners() {
         binding.apply {
             languageOfTheApp.setOnClickListener {
                 LanguageOfTheAppDialogFragment(this@ProfileFragment)
                     .show(childFragmentManager, "LanguageOfTheAppDialogFragment")
             }
-            targetLanguageContainer.setOnClickListener {
-                toSelectTargetLanguage()
-            }
+//            targetLanguageContainer.setOnClickListener {
+//                toSelectTargetLanguage()
+//            }
             logoutContainer.setOnClickListener {
                 logout()
             }
@@ -89,10 +89,10 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
     }
 
     private fun initBindings() {
-        binding.apply {
-            targetLanguage.text =
-                AvailableLanguages.getLanguageNameByCode(requireContext(), viewModel.targetLang)
-        }
+//        binding.apply {
+//            targetLanguage.text =
+//                AvailableLanguages.getLanguageNameByCode(requireContext(), viewModel.targetLang)
+//        }
     }
 
     private fun setStatusBar() {

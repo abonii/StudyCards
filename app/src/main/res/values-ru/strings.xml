@@ -1,0 +1,118 @@
+<resources>
+    <string name="app_name">StudyCard</string>
+    <string name="title_home_nav">Главная</string>
+    <string name="title_home">ГЛАВНАЯ</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="profile">Профиль</string>
+    <string name="vocabulary">Словарный запас</string>
+    <string name="add_word">Добавить слово</string>
+    <string name="empty">Пустой</string>
+    <string name="save">Сохранить</string>
+    <string name="clear">Очистить</string>
+    <string name="title_in_select_category">Отсортируйте карту в:</string>
+    <string name="create_category">Создать набор карточек</string>
+    <string name="create_word">Создать слово</string>
+    <string name="create_folder">Создать категорию</string>
+    <string name="learn">Учить</string>
+    <string name="know">Знаю</string>
+    <string name="upper_learn">УЧИТЬ</string>
+    <string name="upper_know">ЗНАЮ</string>
+    <string name="upper_delete">УДАЛИТЬ</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="play">Играть</string>
+    <string name="repeat">Повторить</string>
+    <string name="review_words">Обзор слов</string>
+    <string name="pair_it">Создай пару</string>
+    <string name="guess_it">Догадайся</string>
+    <string name="review">Обзор</string>
+    <string name="repeat_upper">ПОВТОРИТЬ</string>
+    <string name="one_game">Одной игрой</string>
+    <string name="ok">ОК</string>
+    <string name="great_job">Прекрасная работа!</string>
+    <string name="add_edit_title">СОЗДАНИЕ СЛОВО</string>
+    <string name="image">Изображение</string>
+    <string name="transcription">Транскрипция</string>
+    <string name="icon">иконка</string>
+    <string name="matching">Создай пару</string>
+    <string name="pairing">Создать пару</string>
+    <string name="guessing">Догадайся</string>
+    <string name="cancel_upper">ОТМЕНА</string>
+    <string name="arrow">стрела</string>
+
+    <string name="upper_doubt">СОМНЕВАЮСЬ</string>
+    <string name="example">Пример</string>
+    <string name="uncertain">СОМНЕВАЮСЬ</string>
+    <string name="unknown">НЕ ЗНАЮ</string>
+    <string name="unknown_lower">Не знаю</string>
+    <string name="uncertain_lower">Сомневаюсь</string>
+    <string name="uncertain_swipe_text">Если вы сомневаетесь \n<b>проведите пальцем вниз</b></string>
+    <string name="unknown_swipe_text">Если вы не знали \n<b>проведите пальцем влево</b></string>
+    <string name="known_swipe_text">Если вы были правы \n<b>проведите пальцем вправо</b></string>
+    <string name="repeats">"Повторов: "</string>
+    <string name="add_edit_category_hint">Имя категории</string>
+    <string name="select_language_toolbar_title">Создать новую колоду</string>
+    <string name="select_language_native_language">Ваш родной язык</string>
+    <string name="select_language_learn_lan">Язык, который вы хотите выучить</string>
+    <string name="select_language_continue">Продолжить</string>
+    <string name="settings">Настройки</string>
+    <string name="language_of_the_app">Язык приложения</string>
+
+    <string-array name="vocabulary_tabs">
+        <item name="unknown">НЕ ЗНАЮ</item>
+        <item name="uncertain">СОМНЕВАЮСЬ</item>
+        <item name="known">ЗНАЮ</item>
+    </string-array>
+
+    <!--Languages-->
+    <string name="arabic">Арабский</string>
+    <string name="chinese">Китайский</string>
+    <string name="english">Английский</string>
+    <string name="french">Французский</string>
+    <string name="german">Немецкий</string>
+    <string name="italian">Итальянский</string>
+    <string name="kazakh">Казахский</string>
+    <string name="korean">Корейский</string>
+    <string name="turkish">Турецкий</string>
+    <string name="russian">Русский</string>
+    <string name="select_category_done">ВЫПОЛНЕНО</string>
+    <string name="select_image_title">ВВЕДИТЕ URL ИЗОБРАЖЕНИЯ</string>
+    <string name="undo">Отменить</string>
+    <string name="do_u_want_to_delete">Вы хотите удалить эти слова?</string>
+    <string name="learning_languages">Целевой язык</string>
+    <string name="system_language">Язык системы</string>
+    <string name="naviagate_to_profile">Перейдите в профиль, чтобы изменить целевой или исходный языки</string>
+    <string name="name">Имя</string>
+    <string name="login">Авторизоваться</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="password">Пароль</string>
+    <string name="email">Почта</string>
+    <string name="target_language">Русский</string>
+    <string name="source_language">Английский</string>
+    <string name="new_password">Пароль</string>
+    <string name="logout">Выйти из системы</string>
+    <string name="no_internet_connection">Нет подключения к Интернету</string>
+    <string name="socket_timeout_exception">Исключение тайм-аута сокета</string>
+    <plurals name="words">
+        <item quantity="one"> %d слово</item>
+        <item quantity="many"> %d слов</item>
+        <item quantity="few"> %d слова</item>
+    </plurals>
+
+    <plurals name="learn_words">
+        <item quantity="one"> %d новое слово для изучения</item>
+        <item quantity="many"> %d новых слов для изучения</item>
+        <item quantity="few"> %d новых слова для изучения</item>
+    </plurals>
+
+    <plurals name="repeat_words">
+        <item quantity="one"> %d слово для повторения</item>
+        <item quantity="many"> %d слов для повторения</item>
+        <item quantity="few"> %d слова для повторения</item>
+    </plurals>
+    <string name="some_problems_occured">Возникли проблемы</string>
+    <string name="translate_count_spend">Больше попыток не осталось. Попробуйте завтра, пожалуйста.</string>
+    <string name="name_translation_not_empty">Поля имени или перевода не могут быть пустыми.</string>
+    <string name="choose_category">Пожалуйста, выберите категорию для этого слова.</string>
+
+</resources>

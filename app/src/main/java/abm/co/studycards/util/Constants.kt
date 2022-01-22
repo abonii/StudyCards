@@ -6,6 +6,7 @@ object Constants {
     const val USER_ID = "user_id"
     const val USERS_REF = "users"
     const val DEBUG: Boolean = true
+    const val oneTimeCyclingForGame = 5
     const val baseUrlOxford = "https://od-api.oxforddictionaries.com:443/api/v2/"
     const val oxford_app_id = "36a89c65"
     const val oxford_app_key = "e9f074daee3a6d61e36becf42160e209"

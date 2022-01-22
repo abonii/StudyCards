@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--Languages-->
     <string name="arabic">Arabic</string>
@@ -12,7 +12,7 @@
     <string name="turkish">Turkish</string>
     <string name="russian">Russian</string>
 
-    <string name="app_name">FlashCard</string>
+    <string name="app_name">StudyCard</string>
     <string name="title_home_nav">Home</string>
     <string name="title_home">HOME</string>
     <string name="title_dashboard">Dashboard</string>
@@ -49,7 +49,7 @@
     <string name="matching">Matching</string>
     <string name="pairing">Pairing</string>
     <string name="guessing">Guessing</string>
-    <string name="cancel">CANCEL</string>
+    <string name="cancel_upper" tools:ignore="ButtonCase">CANCEL</string>
     <string name="arrow">Arrow</string>
 
     <string name="upper_doubt">DOUBTED</string>
@@ -86,7 +86,6 @@
     <string name="system_language">System\'s language</string>
     <string name="naviagate_to_profile">Navigate to profile to change target or source languages</string>
     <string name="email">Email</string>
-    <string name="words">%1$s words</string>
     <string name="password">Password</string>
     <string name="login">SIGN IN</string>
     <string name="name">Name</string>
@@ -96,4 +95,29 @@
     <string name="logout">Logout</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="socket_timeout_exception">Socket time out exception</string>
+    <string name="some_problems_occured">Some problems occurred</string>
+    <string name="translated_with_oxford" translatable="false">Translated with Oxford Dictionaries API</string>
+    <string name="translated_with_yandex" translatable="false">Translated with Yandex Translate API</string>
+
+    <string name="translate_count_spend">There are no more attempts left. Try it tomorrow, please.</string>
+    <string name="name_translation_not_empty">The name or translation fields cannot be empty</string>
+
+    <plurals name="words">
+        <item quantity="one"> %d word</item>
+        <item quantity="zero"> %d word</item>
+        <item quantity="other"> %d words</item>
+    </plurals>
+
+    <plurals name="learn_words">
+        <item quantity="one"> %d new word to learn</item>
+        <item quantity="zero"> no new words to learn</item>
+        <item quantity="other"> %d new words to learn</item>
+    </plurals>
+
+    <plurals name="repeat_words">
+        <item quantity="one"> %d word to repeat</item>
+        <item quantity="zero"> no words to repeat</item>
+        <item quantity="other"> %d words to repeat</item>
+    </plurals>
+    <string name="choose_category">Please select a category for this word.</string>
 </resources>

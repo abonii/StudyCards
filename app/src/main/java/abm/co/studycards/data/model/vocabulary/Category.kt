@@ -11,6 +11,9 @@ data class Category(
     var targetLanguage: String = "",
     @JvmField var words: List<Word> = emptyList(),
 ) : Parcelable {
+    companion object{
+        const val MAIN_NAME = "mainName"
+    }
 
     fun getWords() = words
 

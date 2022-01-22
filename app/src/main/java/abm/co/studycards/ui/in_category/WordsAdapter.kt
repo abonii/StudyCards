@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class WordsAdapter(
     private val listener: OnItemClick,
-    private val isTranscriptionSupported: Boolean
+    private val isTranscriptionSupported: Boolean,
 ) : ListAdapter<Word, WordsAdapter.ViewHolder>(DIFF_UTIL) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

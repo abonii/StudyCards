@@ -2,11 +2,12 @@ package abm.co.studycards.ui.vocabulary
 
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.ItemVocabularyTabBinding
-import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -15,14 +16,8 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection
 
-class VocabularyAdapter : RecyclerView.Adapter<VocabularyAdapter.ViewHolder>() {
+class VocabularyAdapter : ListAdapter<Word, VocabularyAdapter.ViewHolder>(DIFF_UTIL) {
 
-    var items: MutableList<Word> = ArrayList()
-        @SuppressLint("NotifyDataSetChanged")
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
     private val expansionsCollection = ExpansionLayoutCollection()
 
     inner class ViewHolder(val binding: ItemVocabularyTabBinding) :
@@ -31,7 +26,7 @@ class VocabularyAdapter : RecyclerView.Adapter<VocabularyAdapter.ViewHolder>() {
             expansionsCollection.add(binding.expansionLayout)
             binding.word.text = currentItem.name
             binding.translation.text = currentItem.translations.joinToString(", ")
-            if (currentItem.imageUrl != null) {
+            if (currentItem.imageUrl.isBlank()) {
                 Glide
                     .with(binding.image)
                     .load(currentItem.imageUrl)
@@ -40,7 +35,7 @@ class VocabularyAdapter : RecyclerView.Adapter<VocabularyAdapter.ViewHolder>() {
                             e: GlideException?,
                             model: Any?,
                             target: Target<Drawable>?,
-                            isFirstResource: Boolean
+                            isFirstResource: Boolean,
                         ): Boolean {
                             binding.image.isVisible = false
                             return false
@@ -51,7 +46,7 @@ class VocabularyAdapter : RecyclerView.Adapter<VocabularyAdapter.ViewHolder>() {
                             model: Any?,
                             target: Target<Drawable>?,
                             dataSource: DataSource?,
-                            isFirstResource: Boolean
+                            isFirstResource: Boolean,
                         ): Boolean {
                             binding.image.isVisible = true
                             return false
@@ -63,6 +58,10 @@ class VocabularyAdapter : RecyclerView.Adapter<VocabularyAdapter.ViewHolder>() {
         }
     }
 
+    public override fun getItem(position: Int): Word {
+        return super.getItem(position)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             ItemVocabularyTabBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -70,18 +69,18 @@ class VocabularyAdapter : RecyclerView.Adapter<VocabularyAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentItem = items[position]
-        holder.bind(currentItem)
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount() = items.size
+    companion object {
+        private val DIFF_UTIL = object : DiffUtil.ItemCallback<Word>() {
+            override fun areItemsTheSame(oldItem: Word, newItem: Word): Boolean =
+                oldItem.wordId == newItem.wordId && oldItem.learnOrKnown == newItem.learnOrKnown
+                        && oldItem.name == newItem.name && oldItem.translations == newItem.translations
 
-    fun deleteItem(pos: Int): Word? {
-        if (items.size > pos) {
-            val removed = items.removeAt(pos)
-            notifyItemRemoved(pos)
-            return removed
+            override fun areContentsTheSame(oldItem: Word, newItem: Word): Boolean =
+                oldItem == newItem
         }
-        return null
     }
+
 }

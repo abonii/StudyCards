@@ -6,6 +6,8 @@ import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.FragmentInCategoryBinding
 import abm.co.studycards.helpers.SwipeToDeleteCallback
+import abm.co.studycards.util.Config
+import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.navigate
 import android.os.Bundle
@@ -57,7 +59,7 @@ class InCategoryFragment :
 
     private fun setToolbar() {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
-        binding.folderName.text = viewModel.category.mainName
+        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
     }
 
     private fun initViews() {
@@ -158,6 +160,7 @@ class InCategoryFragment :
 
     private fun slideUpFAB() {
         binding.floatingActionButton.animate()
+            .translationY(-Config.bottomNavHeight.toFloat())
             .rotation(180f).duration = 500
     }
 
@@ -183,7 +186,9 @@ class InCategoryFragment :
 
     private fun onFloatingActionWordClick() {
         val action =
-            InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(category = viewModel.category)
+            InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
+                categoryName = viewModel.category.mainName
+            )
         navigate(action)
     }
 
@@ -192,7 +197,7 @@ class InCategoryFragment :
         val action =
             InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
                 vocabulary,
-                viewModel.category
+                viewModel.category.mainName
             )
         navigate(action)
     }

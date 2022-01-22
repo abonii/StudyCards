@@ -2,7 +2,6 @@ package abm.co.studycards.ui.home
 
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.VocabularyRepository
 import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseViewModel
 import com.google.firebase.database.DatabaseReference
@@ -45,24 +44,3 @@ class HomeViewModel @Inject constructor(
         }
     }
 }
-//    init {
-//        _stateFlow.value = CategoryUi.Loading
-//    }
-//
-//    fun fetchCategories(){
-////        launchIO {
-////            when(val wrapper = repository.getCategories()){
-////                is ResultWrapper.Error -> {
-////                    _stateFlow.value = CategoryUi.Error(wrapper.status)
-////                }
-////                is ResultWrapper.Success -> {
-////                    _stateFlow.value = CategoryUi.Success(wrapper.value)
-////                }
-////            }
-////        }
-//    }
-//sealed class CategoryUi{
-//    object Loading: CategoryUi()
-//    data class Error(val error:ErrorStatus?):CategoryUi()
-//    data class Success(val value:List<Category>):CategoryUi()
-//}

@@ -31,8 +31,8 @@ class SelectCategoryDialogFragment : DialogFragment(R.layout.fragment_select_cat
     }
 
     private fun setOnClickListeners() {
-        viewModel.categoryLive.observe(viewLifecycleOwner) {
-            selectAdapter.checked = it
+        viewModel.categoryIdLive.observe(viewLifecycleOwner) {
+            selectAdapter.checkedId = it?.id
         }
         binding.apply {
             createCategory.setOnClickListener {
@@ -60,7 +60,7 @@ class SelectCategoryDialogFragment : DialogFragment(R.layout.fragment_select_cat
     }
 
     private fun onDone() {
-        val result = viewModel.categoryLive.value
+        val result = viewModel.categoryIdLive.value
         setFragmentResult("requestCategory", bundleOf("category" to result))
         dismiss()
     }
@@ -87,7 +87,7 @@ class SelectCategoryDialogFragment : DialogFragment(R.layout.fragment_select_cat
     override fun onRadioClicked(
         currentItem: Category
     ) {
-        viewModel.categoryLive.postValue(currentItem)
+        viewModel.categoryIdLive.postValue(currentItem)
     }
 
     override fun onDestroyView() {

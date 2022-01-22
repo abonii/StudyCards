@@ -31,6 +31,7 @@ class InCategoryViewModel @Inject constructor(
     val thisCategoryRef = categoriesDbRef.child(category.id)
     val wordsRef = thisCategoryRef.child(WORDS_REF)
     val targetLang = prefs.getTargetLanguage()
+
     fun insertWord(word: Word) {
         launchIO {
             addWord(word)
