@@ -36,7 +36,7 @@ class AddEditWordFragment :
 
     private val viewModel: AddEditWordViewModel by viewModels()
 
-    override fun initViews(savedInstanceState: Bundle?) {
+    override fun initUI(savedInstanceState: Bundle?) {
         setToolbar()
         initBindings()
         setImage()
@@ -95,8 +95,9 @@ class AddEditWordFragment :
         }
         viewModel.userRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                viewModel.translateCounts =
-                    snapshot.child("canTranslateTimeEveryDay").value.toString().toInt()
+                    snapshot.child("canTranslateTimeEveryDay").value?.let {
+                        viewModel.translateCounts = it as Long
+                    }
             }
 
             override fun onCancelled(error: DatabaseError) {

@@ -27,7 +27,7 @@ class MatchingPairsFragment :
     private lateinit var adapterTranslatedWords: MatchingAdapter
     private lateinit var adapterWords: MatchingAdapter
 
-    override fun initViews(savedInstanceState: Bundle?) {
+    override fun initUI(savedInstanceState: Bundle?) {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
         binding.toolbar.setNavigationIcon(R.drawable.ic_back)
         adapterWords = MatchingAdapter(this, false).apply {

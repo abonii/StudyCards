@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">StudyCard</string>
     <string name="title_home_nav">Главная</string>
     <string name="title_home">ГЛАВНАЯ</string>
     <string name="title_dashboard">Dashboard</string>
@@ -84,12 +83,12 @@
     <string name="naviagate_to_profile">Перейдите в профиль, чтобы изменить целевой или исходный языки</string>
     <string name="name">Имя</string>
     <string name="login">Авторизоваться</string>
-    <string name="sign_up">Зарегистрироваться</string>
+    <string name="registration">Зарегистрироваться</string>
     <string name="password">Пароль</string>
     <string name="email">Почта</string>
     <string name="target_language">Русский</string>
     <string name="source_language">Английский</string>
-    <string name="new_password">Пароль</string>
+    <string name="new_password">Новый пароль</string>
     <string name="logout">Выйти из системы</string>
     <string name="no_internet_connection">Нет подключения к Интернету</string>
     <string name="socket_timeout_exception">Исключение тайм-аута сокета</string>
@@ -114,5 +113,6 @@
     <string name="translate_count_spend">Больше попыток не осталось. Попробуйте завтра, пожалуйста.</string>
     <string name="name_translation_not_empty">Поля имени или перевода не могут быть пустыми.</string>
     <string name="choose_category">Пожалуйста, выберите категорию для этого слова.</string>
+    <string name="forget_password">Забыли пароль?</string>
 
 </resources>

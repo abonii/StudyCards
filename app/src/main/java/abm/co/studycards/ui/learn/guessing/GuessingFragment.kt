@@ -27,7 +27,7 @@ class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.f
     private val viewModel: GuessingViewModel by viewModels()
     private val adapter: OptionsAdapter = OptionsAdapter(this)
 
-    override fun initViews(savedInstanceState: Bundle?) {
+    override fun initUI(savedInstanceState: Bundle?) {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
         binding.apply {
             toolbar.setNavigationIcon(R.drawable.ic_back)

@@ -40,4 +40,11 @@ class FirebaseRepository(private val categoriesDbRef: DatabaseReference) {
             .child(word.wordId)
             .updateChildren(mapOf(Word.LEARN_OR_KNOWN to word.learnOrKnown))
     }
+
+    fun updateWord(word: Word) {
+        categoriesDbRef.child(word.categoryID)
+            .child(Constants.WORDS_REF)
+            .child(word.wordId)
+            .updateChildren(mapOf(Word.LEARN_OR_KNOWN to word.learnOrKnown))
+    }
 }

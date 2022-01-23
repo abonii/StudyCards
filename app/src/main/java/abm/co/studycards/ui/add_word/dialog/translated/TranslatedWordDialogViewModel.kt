@@ -10,7 +10,6 @@ class TranslatedWordDialogViewModel @Inject constructor() : ViewModel() {
 
     var entries: ResultsEntry? = null
     var wordName = ""
-    var examples = ArrayList<String>()
     var clickable = true
     var selectedTranslations: MutableList<String> = ArrayList()
     var selectedExamples: MutableSet<String> = HashSet()

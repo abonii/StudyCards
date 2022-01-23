@@ -9,7 +9,7 @@ import abm.co.studycards.ui.learn.matching.MatchingPairsFragmentDirections
 import abm.co.studycards.ui.learn.review.ReviewFragmentDirections
 import abm.co.studycards.ui.learn.rightleft.ToRightOrLeftFragmentDirections
 import abm.co.studycards.ui.profile.ProfileFragment
-import abm.co.studycards.ui.sign.SignActivity
+import abm.co.studycards.ui.login.LoginActivity
 import abm.co.studycards.util.Config
 import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseBindingActivity
@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -39,7 +40,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
 
     @Inject
     @Named(Constants.USERS_REF)
-    lateinit var categoriesDbRef: DatabaseReference
+    lateinit var userDbRef: DatabaseReference
     private lateinit var currentNavController: LiveData<NavController>
 
     override fun initViews(savedInstanceState: Bundle?) {
@@ -48,10 +49,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
             checkIfIntentExtrasHas()
             checkIfLoggedIn()
             checkIfLearnLanguagesSelected()
-        }
-        lifecycleScope.launch {
-            if (categoriesDbRef.child("canTranslateTimeEveryDay").get().await().value == null)
-                categoriesDbRef.setValue(mapOf("canTranslateTimeEveryDay" to 20))
         }
     }
 
@@ -69,9 +66,32 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
     private fun checkIfLoggedIn() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
-            val intent = Intent(this, SignActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
+        } else {
+            lifecycleScope.launch {
+                val currentCalendar = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                }
+                val yesterdayCalendar =
+                    Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, -1) }
+                val count = userDbRef.child("canTranslateTimeEveryDay")
+                val time = userDbRef.child("canTranslateTimeInMills")
+                if (count.get().await().value == null) {
+                    count.setValue(20)
+                }
+                if (time.get().await().value == null) {
+                    time.setValue(currentCalendar.timeInMillis)
+                } else if (time.get()
+                        .await().value as Long <= yesterdayCalendar.timeInMillis
+                ) {
+                    userDbRef.updateChildren(mapOf("canTranslateTimeInMills" to currentCalendar.timeInMillis))
+                    userDbRef.updateChildren(mapOf("canTranslateTimeEveryDay" to 20))
+                }
+            }
         }
     }
 
@@ -159,9 +179,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
             }
             when (destination.id) {
                 R.id.guessingFragment,
+                R.id.confirmEndFragment,
                 R.id.matchingPairsFragment,
                 R.id.reviewFragment,
-                R.id.toRightOrLeftFragment
+                R.id.toRightOrLeftFragment,
                 -> {
                     slideDown()
 

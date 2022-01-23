@@ -17,7 +17,7 @@ class VocabularyFragment :
     private val viewModel: VocabularyViewModel by viewModels()
     private lateinit var fragmentsArray: Array<String>
 
-    override fun initViews(savedInstanceState: Bundle?) {
+    override fun initUI(savedInstanceState: Bundle?) {
         setStatusBarColor()
         val adapterP = PagerAdapter(requireActivity())
         fragmentsArray = resources.getStringArray(R.array.vocabulary_tabs)

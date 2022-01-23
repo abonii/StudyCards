@@ -46,8 +46,6 @@
                     android:layout_gravity="center_vertical|end"
                     android:layout_marginStart="16dp"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/ic_circle"
-                    android:backgroundTint="@color/lighter_itself"
                     android:contentDescription="@string/icon"
                     android:padding="4dp"
                     app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp"

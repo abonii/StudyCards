@@ -24,7 +24,7 @@ class ReviewFragment : BaseBindingFragment<FragmentReviewBinding>(R.layout.fragm
     private lateinit var mLayoutManager: LinearLayoutManager
     private lateinit var reviewAdapter: ReviewAdapter
 
-    override fun initViews(savedInstanceState: Bundle?) {
+    override fun initUI(savedInstanceState: Bundle?) {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
         binding.toolbar.setNavigationIcon(R.drawable.ic_back)
         reviewAdapter = ReviewAdapter().apply {

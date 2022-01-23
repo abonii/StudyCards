@@ -46,6 +46,7 @@ class SelectCategoryDialogFragment : DialogFragment(R.layout.fragment_select_cat
     private fun initUi() {
         dialog!!.window?.setBackgroundDrawableResource(R.drawable.round_corner)
         initRV()
+        selectAdapter.checkedId = viewModel.categoryId
     }
 
     private fun initRV() {

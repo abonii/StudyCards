@@ -60,13 +60,11 @@ class TranslatedWordDialogFragment(
             cancel.setOnClickListener {
                 dismiss()
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                nested.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-                    if (scrollY > oldScrollY && viewModel.clickable && scrollY - oldScrollY > 10) {
-                        slideDown()
-                    } else if (scrollY < oldScrollY && !viewModel.clickable && oldScrollY - scrollY > 10) {
-                        slideUp()
-                    }
+            nested.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+                if (scrollY > oldScrollY && viewModel.clickable && scrollY - oldScrollY > 10) {
+                    slideDown()
+                } else if (scrollY < oldScrollY && !viewModel.clickable && oldScrollY - scrollY > 10) {
+                    slideUp()
                 }
             }
         }

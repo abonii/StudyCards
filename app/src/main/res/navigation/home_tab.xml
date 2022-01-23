@@ -94,6 +94,10 @@
             android:name="categoryName"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="categoryId"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <dialog
         android:id="@+id/imageDialogFragment"

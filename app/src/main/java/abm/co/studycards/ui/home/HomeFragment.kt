@@ -30,7 +30,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     private val viewModel: HomeViewModel by viewModels()
     private var categoryAdapter = CategoryAdapter(this)
 
-    override fun initViews(savedInstanceState: Bundle?) {
+    override fun initUI(savedInstanceState: Bundle?) {
         initUi()
         collectData()
         showLog("${viewModel.sourceLang} - ${viewModel.targetLang}")
@@ -107,7 +107,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
         val action =
             HomeFragmentDirections
                 .actionHomeFragmentToAddEditWordFragment(
-                    word = null, categoryName = null
+                    word = null, categoryName = null, categoryId = null
                 )
         navigate(action)
     }

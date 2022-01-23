@@ -64,15 +64,16 @@
             android:contentDescription="@string/image"
             android:padding="6dp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_play"
-                android:layout_toStartOf="@id/word"
-                android:layout_centerVertical="true"
-                app:tint="@color/colorPrimary"
-                android:padding="6dp"
-                tools:ignore="ContentDescription" />
+    <ImageView
+        android:id="@+id/audio_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/word"
+        android:padding="6dp"
+        app:srcCompat="@drawable/ic_play"
+        app:tint="@color/colorPrimary"
+        tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/word"

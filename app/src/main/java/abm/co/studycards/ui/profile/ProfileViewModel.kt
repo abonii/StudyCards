@@ -5,18 +5,20 @@ import abm.co.studycards.data.pref.Prefs
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val prefs: Prefs
+    private val prefs: Prefs,
+    val googleSignInClient: GoogleSignInClient,
+    val firebaseAuthInstance: FirebaseAuth
 ) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is notifications Fragment"
-    }
-    val text: LiveData<String> = _text
+
     val appLanguage = prefs.getAppLanguage()
     val targetLang = prefs.getTargetLanguage()
 

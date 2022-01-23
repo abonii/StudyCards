@@ -42,13 +42,11 @@ class CardStackAdapter constructor(val listener: OnClick) :
 
     inner class ViewHolder(val binding: ItemCardFinallyBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(currentItem: Word) {
-            Glide.with(binding.front.image)
-                .load(currentItem.imageUrl)
-                .into(binding.front.image)
-            binding.front.word.text = currentItem.name
-            binding.front.translated.text = currentItem.translations.joinToString(", ")
-            binding.root.setOnClickListener {
+        init {
+            binding.front.audioPlay.setOnClickListener {
+                listener.onAudioClicked(words[absoluteAdapterPosition])
+            }
+            itemView.setOnClickListener {
                 if (binding.front.translated.isVisible) {
                     listener.onClick()
                     val shake = AnimationUtils
@@ -58,6 +56,13 @@ class CardStackAdapter constructor(val listener: OnClick) :
                     onClickToShowBackSide()
                 }
             }
+        }
+        fun bind(currentItem: Word) {
+            Glide.with(binding.front.image)
+                .load(currentItem.imageUrl)
+                .into(binding.front.image)
+            binding.front.word.text = currentItem.name
+            binding.front.translated.text = currentItem.translations.joinToString(", ")
             bindFrontLayout()
         }
 
@@ -110,5 +115,6 @@ class CardStackAdapter constructor(val listener: OnClick) :
 
     interface OnClick {
         fun onClick()
+        fun onAudioClicked(word: Word)
     }
 }

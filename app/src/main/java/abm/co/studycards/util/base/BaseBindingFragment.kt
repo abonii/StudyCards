@@ -17,7 +17,7 @@ abstract class BaseBindingFragment<B : ViewDataBinding>(@LayoutRes private val l
     val binding get() = _binding!!
 
     //  Bind all widgets and start code
-    protected abstract fun initViews(savedInstanceState: Bundle?)
+    protected abstract fun initUI(savedInstanceState: Bundle?)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,7 +30,7 @@ abstract class BaseBindingFragment<B : ViewDataBinding>(@LayoutRes private val l
 
     // Initialize all widget in layout by ID
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initViews(savedInstanceState)
+        initUI(savedInstanceState)
     }
 
     override fun onDestroyView() {

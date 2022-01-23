@@ -2,16 +2,20 @@ package abm.co.studycards.ui.learn.rightleft
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
+import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.FragmentToRightOrLeftBinding
 import abm.co.studycards.ui.learn.confirmend.ConfirmText
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.navigate
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.yuyakaido.android.cardstackview.*
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 
 @AndroidEntryPoint
@@ -22,10 +26,11 @@ class ToRightOrLeftFragment :
     private val viewModel: RightOrLeftViewModel by viewModels()
     private lateinit var cardAdapter: CardStackAdapter
     private lateinit var cardLayoutManager: CardStackLayoutManager
+    private lateinit var textToSpeech: TextToSpeech
 
-    override fun initViews(savedInstanceState: Bundle?) {
+    override fun initUI(savedInstanceState: Bundle?) {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
+        setTextToSpeech()
         cardAdapter = CardStackAdapter(this)
         cardLayoutManager = CardStackLayoutManager(requireContext(), this)
         binding.apply {
@@ -47,7 +52,19 @@ class ToRightOrLeftFragment :
         }
 
         cardAdapter.words = viewModel.words
-
+    }
+    private fun setTextToSpeech() {
+        textToSpeech = TextToSpeech(requireContext()) {
+            if (it != TextToSpeech.ERROR) {
+                textToSpeech.language = Locale(viewModel.targetLang)
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Occurred some problem with audio",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
 
@@ -93,6 +110,22 @@ class ToRightOrLeftFragment :
 
     override fun onClick() {
         overlayVisibility(View.VISIBLE)
+    }
+
+
+    override fun onAudioClicked(word: Word) {
+        val newText = word.translations.joinToString(", ")
+        textToSpeech.speak(
+            newText,
+            TextToSpeech.QUEUE_FLUSH,
+            null,
+            newText
+        )
+    }
+
+    override fun onDestroyView() {
+        textToSpeech.shutdown()
+        super.onDestroyView()
     }
 }
 //const val TAG = "ToRightOrLeft"

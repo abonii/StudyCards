@@ -12,7 +12,7 @@
     <string name="turkish">Turkish</string>
     <string name="russian">Russian</string>
 
-    <string name="app_name">StudyCard</string>
+    <string name="app_name" translatable="false">StudyCards</string>
     <string name="title_home_nav">Home</string>
     <string name="title_home">HOME</string>
     <string name="title_dashboard">Dashboard</string>
@@ -87,11 +87,11 @@
     <string name="naviagate_to_profile">Navigate to profile to change target or source languages</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="login">SIGN IN</string>
+    <string name="login">LOGIN</string>
     <string name="name">Name</string>
-    <string name="sign_up">SIGN UP</string>
+    <string name="registration">Registration</string>
     <string name="profile">Profile</string>
-    <string name="new_password">New Password</string>
+    <string name="new_password">Prompt Password</string>
     <string name="logout">Logout</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="socket_timeout_exception">Socket time out exception</string>
@@ -120,4 +120,12 @@
         <item quantity="other"> %d words to repeat</item>
     </plurals>
     <string name="choose_category">Please select a category for this word.</string>
+    <string name="forget_password">Forget password?</string>
+    <string name="email_empty">Email cannot be empty</string>
+    <string name="password_empty">Password cannot be empty</string>
+    <string name="password_length">Password length should be more than 5</string>
+    <string name="email_not_verified">Please, verify your email address</string>
+    <string name="passwords_not_same">Passwords are not same</string>
+    <string name="we_send_verification">We send verification to your email, please check your email</string>
+    <string name="we_couldnt_send_verification">We cannot send verification to this email</string>
 </resources>

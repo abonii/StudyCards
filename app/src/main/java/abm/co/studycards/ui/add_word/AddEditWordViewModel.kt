@@ -30,12 +30,12 @@ class AddEditWordViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel() {
 
-    var translateCounts: Int = 10
+    var translateCounts: Long = 20
     val word = savedStateHandle.get<Word>("word")
-    var category = savedStateHandle.get<String>("categoryName") ?: ""
+    private var categoryName = savedStateHandle.get<String>("categoryName") ?: ""
+    var currentCategoryId = savedStateHandle.get<String>("categoryId")
     var imageUrl: String? = word?.imageUrl
     var sourceWord: String = word?.name ?: ""
-    var currentCategoryId: String? = word?.categoryID
     var targetWord: String = word?.translations?.joinToString(", ") ?: ""
     var exampleText: String = word?.examples?.joinToString("\n") ?: ""
     val sourceLanguage = prefs.getSourceLanguage()
@@ -50,7 +50,7 @@ class AddEditWordViewModel @Inject constructor(
     val stateFlow = _stateFlow.asStateFlow()
 
     init {
-        _stateFlow.value = AddEditWordUi.CategoryChanged(category)
+        _stateFlow.value = AddEditWordUi.CategoryChanged(categoryName)
     }
 
     fun fetchWord(fromSource: Boolean) {
@@ -100,7 +100,6 @@ class AddEditWordViewModel @Inject constructor(
             when (val wrapper = repository.getOxfordWord(translatedOxfordWord.trim(), sl, tl)) {
                 is ResultWrapper.Error -> {
                     fetchYandexWord(fromSource)
-                    makeToast(wrapper.error ?: "")
                 }
                 is ResultWrapper.Success -> {
                     changeTranslateCount()
@@ -113,7 +112,7 @@ class AddEditWordViewModel @Inject constructor(
     }
 
     private fun changeTranslateCount() {
-        userRef.setValue(mapOf("canTranslateTimeEveryDay" to translateCounts - 1))
+        userRef.updateChildren(mapOf("canTranslateTimeEveryDay" to translateCounts - 1))
     }
 
 //    private fun isSourceWordTranslatedYandex(): Boolean {
@@ -136,7 +135,7 @@ class AddEditWordViewModel @Inject constructor(
     fun changeCategory(category: Category?) {
         category?.let {
             this.currentCategoryId = category.id
-            this.category = category.mainName
+            this.categoryName = category.mainName
             _stateFlow.value = AddEditWordUi.CategoryChanged(category.mainName)
         }
     }
@@ -183,8 +182,8 @@ class AddEditWordViewModel @Inject constructor(
     }
 
     private fun isItMoreThanOneWord(fromSource: Boolean): Boolean {
-        return ((fromSource && sourceWord.trim().split(" ").size <= 1)
-                || (!fromSource && targetLanguage.trim().split(" ").size <= 1))
+        return ((fromSource && sourceWord.trim().split(" ", ",", ".").size <= 1)
+                || (!fromSource && targetWord.trim().split(" ",",",".").size <= 1))
     }
 
     private fun checkIfOxfordSupport(isFromSource: Boolean): Boolean {

@@ -26,7 +26,6 @@ import kotlinx.coroutines.launch
 class VocabularyTabFragment :
     BaseBindingFragment<FragmentVocabularyTabBinding>(R.layout.fragment_vocabulary_tab) {
 
-
     companion object {
         private const val TAB_POSITION = "TAB_POSITION"
 
@@ -42,7 +41,7 @@ class VocabularyTabFragment :
     private val adapterV: VocabularyAdapter = VocabularyAdapter()
     private val viewModel: VocabularyViewModel by viewModels()
 
-    override fun initViews(savedInstanceState: Bundle?) {
+    override fun initUI(savedInstanceState: Bundle?) {
         tabType = LearnOrKnown.getType(arguments?.getInt(TAB_POSITION) ?: 0)
         when (tabType) {
             LearnOrKnown.KNOWN -> {
@@ -66,7 +65,7 @@ class VocabularyTabFragment :
                         snapshot.children.forEach { categories ->
                             categories.children.forEach { categoryId ->
                                 lifecycleScope.launch {
-                                    if (categoryId.key?.isBlank() == true) {
+                                    if (categoryId.key?.isBlank() != true) {
                                         categoryId.children.forEach {
                                             it.getValue(Word::class.java)
                                                 ?.let { word ->

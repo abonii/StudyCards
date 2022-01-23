@@ -6,8 +6,6 @@ import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.FragmentInCategoryBinding
 import abm.co.studycards.helpers.SwipeToDeleteCallback
-import abm.co.studycards.util.Config
-import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.navigate
 import android.os.Bundle
@@ -36,7 +34,7 @@ class InCategoryFragment :
     private var snackbar: Snackbar? = null
     private lateinit var textToSpeech: TextToSpeech
 
-    override fun initViews(savedInstanceState: Bundle?) {
+    override fun initUI(savedInstanceState: Bundle?) {
         initViews()
         setObservers()
 //        setOnBackPressed()
@@ -59,7 +57,6 @@ class InCategoryFragment :
 
     private fun setToolbar() {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
     }
 
     private fun initViews() {
@@ -71,7 +68,7 @@ class InCategoryFragment :
         setTextToSpeech()
         setToolbar()
         setUpRecyclerView()
-        slideUpFAB()
+        initFAB()
     }
 
     private fun setTextToSpeech() {
@@ -90,8 +87,10 @@ class InCategoryFragment :
 
     private fun setObservers() {
         viewModel.categoryLiveData.observe(viewLifecycleOwner, {
-            binding.folderName.text = it.mainName.uppercase()
-            viewModel.category = it
+            if(!it.mainName.isNullOrEmpty()) {
+                binding.folderName.text = it.mainName.uppercase()
+                viewModel.category = it
+            }
         })
 //        viewModel.getCategoryWithWords().observe(viewLifecycleOwner, {
 //            if (it.isEmpty()) {
@@ -158,9 +157,8 @@ class InCategoryFragment :
         snackbar!!.show()
     }
 
-    private fun slideUpFAB() {
+    private fun initFAB() {
         binding.floatingActionButton.animate()
-            .translationY(-Config.bottomNavHeight.toFloat())
             .rotation(180f).duration = 500
     }
 
@@ -187,7 +185,8 @@ class InCategoryFragment :
     private fun onFloatingActionWordClick() {
         val action =
             InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
-                categoryName = viewModel.category.mainName
+                categoryName = viewModel.category.mainName,
+                categoryId = viewModel.category.id
             )
         navigate(action)
     }
@@ -196,8 +195,9 @@ class InCategoryFragment :
     override fun onItemClick(vocabulary: Word) {
         val action =
             InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
-                vocabulary,
-                viewModel.category.mainName
+                word = vocabulary,
+                categoryName = viewModel.category.mainName,
+                categoryId = viewModel.category.id
             )
         navigate(action)
     }
