@@ -37,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/background"
-                    android:src="@drawable/ic_delete"
+                    app:srcCompat="@drawable/ic_delete"
                     android:visibility="gone"
                     app:tint="?attr/colorControlNormal"
                     tools:ignore="ContentDescription" />
@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/background"
-                    android:src="@drawable/ic_edit"
+                    app:srcCompat="@drawable/ic_edit"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>

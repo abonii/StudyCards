@@ -55,6 +55,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     }
 
     private fun initUi() {
+//        ifFabOpenedOpenIt()
         initFABMenu()
         initRecyclerView()
         changeStatusBar()
@@ -67,7 +68,6 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     }
 
     private fun setClickListeners() {
-        setOnBackPressed()
         binding.apply {
             root.setOnClickListener { isFabOpen() }
             floatingActionButton.setOnClickListener { onFloatingActionClick() }
@@ -77,7 +77,6 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
             flagImage.setOnClickListener { navigateToSelectLanguages() }
         }
     }
-
 
     private fun onFloatingActionClick() {
         if (!viewModel.fabMenuOpened) {
@@ -217,28 +216,6 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
         navigate(nav)
     }
 
-    private fun setOnBackPressed() {
-//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
-//            object : OnBackPressedCallback(true) {
-//                override fun handleOnBackPressed() {
-//                    if (!categoryAdapter.isShortClickActivated && !viewModel.fabMenuOpened) {
-//                        if (viewModel.pressedTime + 2000 > System.currentTimeMillis()) {
-//                            isEnabled = false
-//                            requireActivity().finishAffinity()
-//                        } else {
-//                            toast(binding.root, "Press back again to exit")
-//                        }
-//                        viewModel.pressedTime = System.currentTimeMillis()
-//                    } else {
-//                        closeFABMenu()
-////                        categoryAdapter.disableSelectableItems()
-//                        onSelectItem(false)
-//                    }
-//                }
-//            })
-    }
-
-
     private fun isFabOpen(): Boolean {
         if (viewModel.fabMenuOpened) {
             closeFABMenu()
@@ -264,8 +241,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     }
 
     override fun onDestroyView() {
-        closeFABMenu()
+        viewModel.fabMenuOpened = false
         super.onDestroyView()
     }
-
 }

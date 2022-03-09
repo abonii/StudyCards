@@ -35,7 +35,7 @@
                 android:layout_alignParentEnd="true"
                 android:paddingHorizontal="12dp"
                 android:background="@null"
-                android:src="@drawable/ic_delete"
+                app:srcCompat="@drawable/ic_delete"
                 tools:ignore="ContentDescription" />
 
         </RelativeLayout>

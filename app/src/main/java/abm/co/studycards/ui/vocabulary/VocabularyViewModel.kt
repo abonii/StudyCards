@@ -5,20 +5,93 @@ import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.repository.FirebaseRepository
 import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseViewModel
+import android.util.Log
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
 class VocabularyViewModel @Inject constructor(
-    @Named(Constants.CATEGORIES_REF) val categoriesDbRef: DatabaseReference,
+    @Named(Constants.CATEGORIES_REF)
+    var categoriesDbRef: DatabaseReference,
 ) : BaseViewModel() {
+
+    val dispatcher = Dispatchers.IO
+
+    var currentTabType = LearnOrKnown.UNCERTAIN
+    var firstBtnType = LearnOrKnown.KNOWN
+    var secondBtnType = LearnOrKnown.UNKNOWN
+
     private val repository: FirebaseRepository = FirebaseRepository(categoriesDbRef)
+
+    private val _stateFlow = MutableStateFlow<VocabularyUiState>(
+        VocabularyUiState.Loading
+    )
+    val stateFlow = _stateFlow.asStateFlow()
+
+    fun initWords(pos: Int) {
+        setTabSettings(pos)
+        categoriesDbRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                viewModelScope.launch(dispatcher) {
+                    val items = mutableListOf<Word>()
+                    snapshot.children.forEach { categories ->
+                        categories.children.forEach { categoryId ->
+                            if (categoryId.key?.isBlank() != true) {
+                                categoryId.children.forEach {
+                                    it.getValue(Word::class.java)
+                                        ?.let { word ->
+                                            if (LearnOrKnown.getType(word.learnOrKnown) == currentTabType) {
+                                                items.add(word)
+                                            }
+                                        }
+                                }
+                            }
+                        }
+                    }
+                    delay(500)
+                    _stateFlow.value = VocabularyUiState.Success(items)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                _stateFlow.value = VocabularyUiState.Error(error.message)
+            }
+
+        })
+    }
+
+    private fun setTabSettings(pos: Int) {
+        currentTabType = LearnOrKnown.getType(pos)
+        when (currentTabType) {
+            LearnOrKnown.KNOWN -> {
+                firstBtnType = LearnOrKnown.UNKNOWN
+                secondBtnType = LearnOrKnown.UNCERTAIN
+            }
+            LearnOrKnown.UNCERTAIN -> {
+                firstBtnType = LearnOrKnown.UNKNOWN
+                secondBtnType = LearnOrKnown.KNOWN
+            }
+            else -> {
+                firstBtnType = LearnOrKnown.UNCERTAIN
+                secondBtnType = LearnOrKnown.KNOWN
+            }
+        }
+    }
 
     fun changeType(word: Word, type: LearnOrKnown) {
         when (type) {
-            LearnOrKnown.KNOWN ->{
+            LearnOrKnown.KNOWN -> {
                 updateWordLearnType(word.copy(learnOrKnown = LearnOrKnown.KNOWN.getType()))
             }
             LearnOrKnown.UNCERTAIN -> {
@@ -30,11 +103,17 @@ class VocabularyViewModel @Inject constructor(
         }
     }
 
-    private fun updateWordLearnType(word:Word){
+    private fun updateWordLearnType(word: Word) {
         launchIO {
             repository.updateWordLearnType(word)
         }
     }
 
 
+}
+
+sealed class VocabularyUiState {
+    data class Success(val value: List<Word>) : VocabularyUiState()
+    data class Error(val error: String) : VocabularyUiState()
+    object Loading : VocabularyUiState()
 }

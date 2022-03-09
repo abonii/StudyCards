@@ -88,6 +88,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">LOGIN</string>
+    <string name="google_sign">Continue with Google</string>
     <string name="name">Name</string>
     <string name="registration">Registration</string>
     <string name="profile">Profile</string>
@@ -128,4 +129,9 @@
     <string name="passwords_not_same">Passwords are not same</string>
     <string name="we_send_verification">We send verification to your email, please check your email</string>
     <string name="we_couldnt_send_verification">We cannot send verification to this email</string>
+    <string name="continue_without_registration">Continue without registration</string>
+    <string name="or">Or</string>
+    <string name="register_in_order_to">Register in order to use in several phones simultaneously</string>
+    <string name="register">Register</string>
+    <string name="linked_successfully">Successfully linked</string>
 </resources>

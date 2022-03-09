@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1099449896785",
+    "firebase_url": "https://studycards-905e8-default-rtdb.firebaseio.com",
     "project_id": "studycards-905e8",
     "storage_bucket": "studycards-905e8.appspot.com"
   },
@@ -14,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "1099449896785-e58mepuca2d8suu8ikje5296l7msr482.apps.googleusercontent.com",
+          "client_id": "1099449896785-kg5knlngnouevt1v3fej0nl69gdq1bou.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "abm.co.studycards",
-            "certificate_hash": "2188e0dbc6e86e1a4238ee86582c57b45efe4c5c"
+            "certificate_hash": "1158c58a9074de1f031c3771da4d1a1c867ef099"
           }
         },
         {

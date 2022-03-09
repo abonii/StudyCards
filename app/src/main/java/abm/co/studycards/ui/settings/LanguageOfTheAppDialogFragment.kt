@@ -31,8 +31,8 @@ class LanguageOfTheAppDialogFragment(private val listener: LanguageOfTheAppAdapt
         return binding.root
     }
 
-    override fun onClick(language: Language) {
-        listener.onClick(language)
+    override fun onSelectSystemLanguage(language: Language) {
+        listener.onSelectSystemLanguage(language)
         dismiss()
     }
 

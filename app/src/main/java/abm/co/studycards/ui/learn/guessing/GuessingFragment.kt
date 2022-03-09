@@ -67,8 +67,8 @@ class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.f
             if (viewModel.wordsAll.size > oneTimeCyclingForGame) {
                 GuessingFragmentDirections
                     .actionGuessingFragmentToReviewFragment(
-                        true,
-                        viewModel.getLastWords()
+                        isRepeat = true,
+                        words = viewModel.getLastWords()
                     )
             } else {
                 GuessingFragmentDirections
@@ -80,7 +80,7 @@ class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.f
                     .isNotEmpty()
             ) {
                 GuessingFragmentDirections
-                    .actionGuessingFragmentSelf(false, viewModel.getLastWords())
+                    .actionGuessingFragmentSelf(isRepeat = false, words = viewModel.getLastWords())
             } else {
                 GuessingFragmentDirections
                     .actionGlobalConfirmEndFragment(ConfirmText.FINISH_GUESS)

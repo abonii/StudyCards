@@ -49,7 +49,7 @@
             android:background="@drawable/dashed_button"
             android:paddingHorizontal="16dp"
             android:paddingVertical="4dp"
-            android:src="@drawable/ic_play"
+            app:srcCompat="@drawable/ic_play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

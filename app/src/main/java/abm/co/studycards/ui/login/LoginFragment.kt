@@ -24,7 +24,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class LoginFragment : BaseBindingFragment<FragmentSignInBinding>(R.layout.fragment_sign_in) {
 
@@ -38,7 +37,9 @@ class LoginFragment : BaseBindingFragment<FragmentSignInBinding>(R.layout.fragme
                 try {
                     val account = task.getResult(ApiException::class.java)!!
                     firebaseAuthWithGoogle(account.idToken!!)
+                    showLog("token " + account.idToken!!)
                 } catch (e: ApiException) {
+                    showLog("error " + e.message)
                 }
             }
         }
@@ -47,7 +48,6 @@ class LoginFragment : BaseBindingFragment<FragmentSignInBinding>(R.layout.fragme
         initGoogleSignBtn()
         onClickListeners()
     }
-
 
     private fun setClickable(view: View?, isIt: Boolean) {
         if (view != null) {
@@ -64,7 +64,7 @@ class LoginFragment : BaseBindingFragment<FragmentSignInBinding>(R.layout.fragme
 
     private fun initGoogleSignBtn() {
         binding.googleSignIn.getChildAt(0)?.let {
-            (it as TextView).text = getString(R.string.login)
+            (it as TextView).text = getString(R.string.google_sign)
             val smaller = it.paddingLeft.coerceAtMost(it.paddingRight)
             it.setPadding(smaller, it.paddingTop, smaller, it.paddingBottom)
         }
@@ -80,11 +80,28 @@ class LoginFragment : BaseBindingFragment<FragmentSignInBinding>(R.layout.fragme
         binding.loginBtn.setOnClickListener {
             login()
         }
+        binding.anonymousTv.setOnClickListener {
+            signInAnonymously()
+        }
     }
 
     private fun signIn() {
         val intent = Intent(viewModel.googleSignInClient.signInIntent)
         launchSomeActivity.launch(intent)
+    }
+
+    private fun signInAnonymously() {
+        viewModel.firebaseAuthInstance.signInAnonymously()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    updateUI()
+                } else {
+                    toast("${it.exception?.message}")
+                }
+            }
+            .addOnFailureListener {
+                toast("${it.message}")
+            }
     }
 
     private fun login() {
@@ -132,16 +149,10 @@ class LoginFragment : BaseBindingFragment<FragmentSignInBinding>(R.layout.fragme
         }
     }
 
-    private fun navigateToRegistration() {
-        val n = LoginFragmentDirections.actionLoginFragmentToSignUpFragment()
-        findNavController().navigate(n)
-    }
-
     private fun showProgressBar() {
         binding.progress.visibility = View.VISIBLE
         binding.container.animate().alpha(0.5f)
         setClickable(binding.container, false)
-
     }
 
     private fun hideProgressBar() {
@@ -153,11 +164,10 @@ class LoginFragment : BaseBindingFragment<FragmentSignInBinding>(R.layout.fragme
     override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = viewModel.firebaseAuthInstance.currentUser
-        updateUI(currentUser)
+        updateUI()
     }
 
-    private fun updateUI(currentUser: FirebaseUser?) {
+    private fun updateUI(currentUser: FirebaseUser? = viewModel.firebaseAuthInstance.currentUser) {
         hideProgressBar()
         if (currentUser != null) {
             val i = Intent(requireContext(), MainActivity::class.java)
@@ -172,11 +182,16 @@ class LoginFragment : BaseBindingFragment<FragmentSignInBinding>(R.layout.fragme
         viewModel.firebaseAuthInstance.signInWithCredential(credential)
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
-                    val user = viewModel.firebaseAuthInstance.currentUser
-                    updateUI(user)
+                    updateUI()
                 } else {
                     updateUI(null)
                 }
             }
     }
+
+    private fun navigateToRegistration() {
+        val n = LoginFragmentDirections.actionLoginFragmentToSignUpFragment()
+        findNavController().navigate(n)
+    }
+
 }

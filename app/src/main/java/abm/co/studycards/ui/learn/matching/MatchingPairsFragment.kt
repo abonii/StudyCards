@@ -110,8 +110,8 @@ class MatchingPairsFragment :
         val action = if (viewModel.isRepeat) {
             MatchingPairsFragmentDirections
                 .actionMatchingPairsFragmentToGuessingFragment(
-                    true,
-                    viewModel.words
+                    isRepeat = true,
+                    words = viewModel.words
                 )
 
         } else {
@@ -119,8 +119,8 @@ class MatchingPairsFragment :
                     .isNotEmpty()) {
                 MatchingPairsFragmentDirections
                     .actionMatchingPairsFragmentSelf(
-                        false,
-                        viewModel.getLastWords()
+                        isRepeat = false,
+                        words = viewModel.getLastWords()
                     )
             } else {
                 MatchingPairsFragmentDirections

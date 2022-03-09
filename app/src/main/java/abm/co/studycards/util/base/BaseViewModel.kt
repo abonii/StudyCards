@@ -26,7 +26,7 @@ abstract class BaseViewModel : ViewModel() {
 
     // Do work in IO
     fun <P> launchIO(doOnAsyncBlock: suspend CoroutineScope.() -> P): Job {
-        return viewModelScope.launch(CoroutineExceptionHandler { _, e ->
+        return viewModelScope.launch(CoroutineExceptionHandler { _, _ ->
         }) {
             withContext(Dispatchers.IO) {
                 doOnAsyncBlock.invoke(this)

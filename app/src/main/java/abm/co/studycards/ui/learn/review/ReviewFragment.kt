@@ -70,8 +70,8 @@ class ReviewFragment : BaseBindingFragment<FragmentReviewBinding>(R.layout.fragm
         val action = if (viewModel.isRepeat) {
             ReviewFragmentDirections
                 .actionReviewFragmentToMatchingPairsFragment(
-                    true,
-                    viewModel.words
+                    isRepeat = true,
+                    words = viewModel.words
                 )
         } else {
             ReviewFragmentDirections

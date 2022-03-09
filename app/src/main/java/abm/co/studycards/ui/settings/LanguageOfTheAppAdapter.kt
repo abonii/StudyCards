@@ -21,7 +21,7 @@ class LanguageOfTheAppAdapter(
 
             binding.apply {
                 root.setOnClickListener {
-                    listener.onClick(currentItem)
+                    listener.onSelectSystemLanguage(currentItem)
                 }
                 image.setImageDrawable(
                     currentItem.getDrawable(root.context)
@@ -60,6 +60,6 @@ class LanguageOfTheAppAdapter(
     }
 
     interface OnClick {
-        fun onClick(language: Language)
+        fun onSelectSystemLanguage(language: Language)
     }
 }

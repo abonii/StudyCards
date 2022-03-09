@@ -12,5 +12,7 @@ object Constants {
     const val oxford_app_key = "e9f074daee3a6d61e36becf42160e209"
     const val baseUrlYandex = "https://translate.yandex.net/api/v1.5/tr.json/"
     const val yandex_api_key = "trnsl.1.1.20210907T125259Z.71d59d2ddc18ec0c.3506adb6604f097ef464b23ac576f5e0a618893c"
-
+    const val SHOULD_I_OPEN_PROFILE_FRAGMENT = "OPEN_PROFILE_FRAGMENT"
+    const val VOCABULARY_NUM_TABS = 3
+    const val VOCABULARY_TAB_POSITION = "VOCABULARY_TAB_POSITION"
 }

@@ -57,6 +57,7 @@ class InCategoryViewModel @Inject constructor(
         }
     }
 
+    @Suppress("DEPRECATION")
     fun makeSnackBarText(name: String): Spanned {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Html.fromHtml("<b>$name</b> removed", HtmlCompat.FROM_HTML_MODE_LEGACY)

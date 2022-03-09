@@ -2,16 +2,15 @@ package abm.co.studycards
 
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.databinding.ActivityMainBinding
-import abm.co.studycards.ui.home.HomeFragmentDirections
 import abm.co.studycards.ui.learn.confirmend.ConfirmText
 import abm.co.studycards.ui.learn.guessing.GuessingFragmentDirections
 import abm.co.studycards.ui.learn.matching.MatchingPairsFragmentDirections
 import abm.co.studycards.ui.learn.review.ReviewFragmentDirections
 import abm.co.studycards.ui.learn.rightleft.ToRightOrLeftFragmentDirections
-import abm.co.studycards.ui.profile.ProfileFragment
 import abm.co.studycards.ui.login.LoginActivity
 import abm.co.studycards.util.Config
 import abm.co.studycards.util.Constants
+import abm.co.studycards.util.Constants.SHOULD_I_OPEN_PROFILE_FRAGMENT
 import abm.co.studycards.util.base.BaseBindingActivity
 import abm.co.studycards.util.setupWithNavController
 import android.content.Intent
@@ -59,7 +58,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
 
     private fun checkIfLearnLanguagesSelected() {
         if (prefs.getSourceLanguage().isBlank() || prefs.getTargetLanguage().isBlank()) {
-            currentNavController.value?.navigate(HomeFragmentDirections.actionHomeFragmentToSelectLanguageFragment())
+            currentNavController.value?.navigate(R.id.selectLanguageFragment)
         }
     }
 
@@ -147,7 +146,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         if (intent.extras != null) {
             val openProfile = intent
                 .getBooleanExtra(
-                    ProfileFragment.SHOULD_I_OPEN_PROFILE_FRAGMENT, false
+                    SHOULD_I_OPEN_PROFILE_FRAGMENT, false
                 )
             if (openProfile) {
                 binding.bottomNavView.selectedItemId = R.id.profile_tab
@@ -182,6 +181,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                 R.id.confirmEndFragment,
                 R.id.matchingPairsFragment,
                 R.id.reviewFragment,
+                R.id.selectLanguageFragment,
                 R.id.toRightOrLeftFragment,
                 -> {
                     slideDown()
@@ -219,5 +219,4 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
             binding.bottomNavView.visibility = View.VISIBLE
         }
     }
-
 }

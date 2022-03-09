@@ -9,8 +9,8 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
-import kotlin.system.exitProcess
 
 abstract class BaseActivity : AppCompatActivity(), IResourcesIDListener {
 
@@ -23,10 +23,7 @@ abstract class BaseActivity : AppCompatActivity(), IResourcesIDListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        Thread.setDefaultUncaughtExceptionHandler { paramThread, paramThrowable -> //Catch your exception
-//            // Without System.exit() this will not work.
-//            exitProcess(2)
-//        }
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         onCreateUI(savedInstanceState)
         this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }

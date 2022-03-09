@@ -18,7 +18,7 @@
             android:id="@+id/learn_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_play"
+            app:srcCompat="@drawable/ic_play"
             android:padding="5dp"
             android:layout_marginEnd="12dp"
             android:background="@drawable/circle"
@@ -58,7 +58,7 @@
             android:layout_marginEnd="12dp"
             android:contentDescription="@string/icon"
             android:padding="5dp"
-            android:src="@drawable/ic_repeat"
+            app:srcCompat="@drawable/ic_repeat"
             app:tint="@color/lighter_darker" />
 
         <TextView
@@ -97,7 +97,7 @@
                 android:layout_marginEnd="12dp"
                 android:contentDescription="@string/icon"
                 android:padding="5dp"
-                android:src="@drawable/ic_repeat_one"
+                app:srcCompat="@drawable/ic_repeat_one"
                 app:tint="@color/lighter_darker" />
 
             <TextView
@@ -148,7 +148,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="12dp"
                     android:padding="5dp"
-                    android:src="@drawable/ic_add"
+                    app:srcCompat="@drawable/ic_add"
                     app:tint="@color/lighter_darker"
                     android:contentDescription="@string/icon" />
 
@@ -178,7 +178,7 @@
                     android:layout_marginEnd="12dp"
                     android:contentDescription="@string/icon"
                     android:padding="5dp"
-                    android:src="@drawable/ic_arrow_right"
+                    app:srcCompat="@drawable/ic_arrow_right"
                     app:tint="@color/lighter_darker" />
 
                 <TextView
@@ -204,7 +204,7 @@
             android:id="@+id/review_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_review"
+            app:srcCompat="@drawable/ic_review"
             android:padding="5dp"
             android:layout_marginEnd="12dp"
             app:tint="@color/lighter_darker"

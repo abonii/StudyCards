@@ -24,7 +24,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="end"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/overlayed_flags"
+                app:srcCompat="@drawable/overlayed_flags"
                 tools:ignore="ContentDescription" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/background"
                     android:paddingHorizontal="10dp"
-                    android:src="@drawable/ic_change"
+                    app:srcCompat="@drawable/ic_change"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

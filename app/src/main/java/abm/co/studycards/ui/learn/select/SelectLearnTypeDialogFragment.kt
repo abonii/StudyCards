@@ -102,29 +102,30 @@ class SelectLearnTypeDialogFragment : DialogFragment() {
 
 
     private fun setViewModels() {
-        viewModel.undefinedWordsListLive.observe(viewLifecycleOwner, {
+        viewModel.undefinedWordsListLive.observe(viewLifecycleOwner) {
             val subtitleText = viewModel.getTextForLearnSubtitle(requireContext(), it.size)
             binding.apply {
                 learnSubtitle.text = subtitleText
                 oneGameSubtitle.text = subtitleText
             }
             viewModel.undefinedWordsList = it
-        })
+        }
 
-        viewModel.unlearnedWordsListLive.observe(viewLifecycleOwner, {
-                val subtitleText = viewModel.getTextForRepeatSubtitle(requireContext(), it.size)
-                binding.apply {
-                    oneGameSubtitle2.text = subtitleText
-                }
-                viewModel.unlearnedWordsList = it
-            })
-        viewModel.allWordsListLive.observe(viewLifecycleOwner, {
-            viewModel.allWordsList= it
-        })
-        viewModel.repeatWordsLive.observe(viewLifecycleOwner,{
+        viewModel.unlearnedWordsListLive.observe(viewLifecycleOwner) {
+            val subtitleText = viewModel.getTextForRepeatSubtitle(requireContext(), it.size)
+            binding.apply {
+                oneGameSubtitle2.text = subtitleText
+            }
+            viewModel.unlearnedWordsList = it
+        }
+        viewModel.allWordsListLive.observe(viewLifecycleOwner) {
+            viewModel.allWordsList = it
+        }
+        viewModel.repeatWordsLive.observe(viewLifecycleOwner) {
             viewModel.repeatWordsList = it
-            binding.repeatSubtitle.text = viewModel.getTextForRepeatSubtitle(requireContext(), it.size)
-        })
+            binding.repeatSubtitle.text =
+                viewModel.getTextForRepeatSubtitle(requireContext(), it.size)
+        }
     }
 
     private fun onOneTypeGameClicked() {
@@ -139,8 +140,8 @@ class SelectLearnTypeDialogFragment : DialogFragment() {
         if (viewModel.unlearnedWordsList.isNotEmpty()) {
             val action =
                 SelectLearnTypeDialogFragmentDirections.actionSelectLearnTypeDialogFragmentToGuessingFragment(
-                    false,
-                    viewModel.getUnlearnedWordsInTypedArray()
+                    isRepeat = false,
+                    words = viewModel.getUnlearnedWordsInTypedArray()
                 )
             navigate(action)
         }
@@ -150,8 +151,8 @@ class SelectLearnTypeDialogFragment : DialogFragment() {
         if (viewModel.unlearnedWordsList.isNotEmpty()) {
             val action =
                 SelectLearnTypeDialogFragmentDirections.actionSelectLearnTypeDialogFragmentToMatchingPairsFragment(
-                    false,
-                    viewModel.getUnlearnedWordsInTypedArray()
+                    isRepeat = false,
+                    words = viewModel.getUnlearnedWordsInTypedArray()
                 )
             navigate(action)
         }
@@ -162,8 +163,8 @@ class SelectLearnTypeDialogFragment : DialogFragment() {
             val action =
                 SelectLearnTypeDialogFragmentDirections
                     .actionSelectLearnTypeDialogFragmentToReviewFragment(
-                        false,
-                        viewModel.getAllWordsInTypedArray()
+                        isRepeat = false,
+                        words = viewModel.getAllWordsInTypedArray()
                     )
             navigate(action)
         }
@@ -186,8 +187,8 @@ class SelectLearnTypeDialogFragment : DialogFragment() {
             val action =
                 SelectLearnTypeDialogFragmentDirections
                     .actionSelectLearnTypeDialogFragmentToReviewFragment(
-                        true,
-                        viewModel.getRepeatWordsInTypedArray()
+                        isRepeat = true,
+                        words = viewModel.getRepeatWordsInTypedArray()
                     )
             navigate(action)
         }

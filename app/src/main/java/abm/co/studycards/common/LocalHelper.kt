@@ -24,6 +24,7 @@ object LocaleHelper {
         return context.createConfigurationContext(configuration)
     }
 
+    @Suppress("DEPRECATION")
     private fun updateResourcesLegacy(context: Context, language: String): Context {
         val locale = Locale(language)
         Locale.setDefault(locale)

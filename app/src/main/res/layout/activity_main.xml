@@ -23,6 +23,5 @@
             app:layout_constraintBottom_toTopOf="@+id/bottom_nav_view"
             app:layout_constraintTop_toTopOf="parent" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

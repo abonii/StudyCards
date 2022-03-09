@@ -127,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:paddingVertical="15dp"
-                android:text="@string/registration"
+                android:text="@string/register"
                 app:layout_constraintBottom_toBottomOf="parent" />
         </LinearLayout>
     </RelativeLayout>

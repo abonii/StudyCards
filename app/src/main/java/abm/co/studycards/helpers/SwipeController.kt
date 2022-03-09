@@ -18,11 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class SwipeController(
     context: Context, private val recyclerView: RecyclerView,
     private val buttonWidth: Int = 200
-) :
-    ItemTouchHelper.SimpleCallback(0, LEFT) {
+) : ItemTouchHelper.SimpleCallback(0, LEFT) {
     private var buttonList: HashSet<MyButton> = HashSet()
     private lateinit var gestureDetector: GestureDetector
-    private var swipeThreshold = 5f
     private var currentViewHolder = -1
     private var lastViewHolder = -1
     private var buttonBuffer: MutableMap<Int, MutableList<MyButton>> = HashMap()
@@ -74,7 +72,7 @@ abstract class SwipeController(
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val pos = viewHolder.adapterPosition
+        val pos = viewHolder.absoluteAdapterPosition
         if (lastViewHolder != -1 && lastViewHolder != currentViewHolder) {
             recyclerView.adapter?.notifyItemChanged(lastViewHolder)
         }
@@ -82,15 +80,6 @@ abstract class SwipeController(
         buttonList.addAll(buttonBuffer[pos]!!)
         buttonBuffer.clear()
     }
-//
-//    override fun getSwipeVelocityThreshold(defaultValue: Float): Float {
-//        return super.getSwipeVelocityThreshold(defaultValue/swipeThreshold)
-//    }
-//
-//    override fun getSwipeEscapeVelocity(defaultValue: Float): Float {
-//        return super.getSwipeEscapeVelocity(defaultValue/swipeThreshold)
-//    }
-//
 
     override fun onChildDraw(
         c: Canvas,
@@ -101,7 +90,7 @@ abstract class SwipeController(
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        val pos = viewHolder.adapterPosition
+        val pos = viewHolder.absoluteAdapterPosition
         var translationX = dX
         val itemView = viewHolder.itemView
         if (actionState == ACTION_STATE_SWIPE) {

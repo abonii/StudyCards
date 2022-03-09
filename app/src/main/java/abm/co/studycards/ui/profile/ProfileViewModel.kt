@@ -2,11 +2,8 @@ package abm.co.studycards.ui.profile
 
 import abm.co.studycards.data.model.Language
 import abm.co.studycards.data.pref.Prefs
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -18,9 +15,10 @@ class ProfileViewModel @Inject constructor(
     val firebaseAuthInstance: FirebaseAuth
 ) : ViewModel() {
 
-
+    fun isAnonymous() =
+        firebaseAuthInstance.currentUser?.isAnonymous == true
     val appLanguage = prefs.getAppLanguage()
-    val targetLang = prefs.getTargetLanguage()
+//    val targetLang = prefs.getTargetLanguage()
 
     fun setAppLanguage(language: Language) {
         val lang = prefs.getAppLanguage()
