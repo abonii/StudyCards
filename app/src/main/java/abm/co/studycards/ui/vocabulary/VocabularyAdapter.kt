@@ -1,8 +1,9 @@
 package abm.co.studycards.ui.vocabulary
 
+import abm.co.studycards.data.model.LearnOrKnown
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.ItemVocabularyTabBinding
-import android.graphics.drawable.Drawable
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -10,51 +11,83 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
+import com.chauthai.swipereveallayout.SwipeRevealLayout
+import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection
 
-class VocabularyAdapter : ListAdapter<Word, VocabularyAdapter.ViewHolder>(DIFF_UTIL) {
+
+/**
+ * [types]: at position 0 is current fragment type f.e: UNKNOWN
+ * at position 1 is first button's type f.e: UNCERTAIN
+ * at position 2 is second button's type f.e: KNOWN
+ * */
+class VocabularyAdapter(
+    val onChangeType: (word: Word, type: LearnOrKnown) -> Unit,
+    vararg types: LearnOrKnown
+) :
+    ListAdapter<Word, VocabularyAdapter.ViewHolder>(DIFF_UTIL) {
+
+    val firstButton = types[1]
+    val secondButton = types[2]
+
+    private val viewBinderHelper = ViewBinderHelper().apply {
+        setOpenOnlyOne(true)
+    }
 
     private val expansionsCollection = ExpansionLayoutCollection()
 
+
     inner class ViewHolder(val binding: ItemVocabularyTabBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(currentItem: Word) {
-            expansionsCollection.add(binding.expansionLayout)
-            binding.word.text = currentItem.name
-            binding.translation.text = currentItem.translations.joinToString(", ")
-            if (currentItem.imageUrl.isBlank()) {
-                Glide
-                    .with(binding.image)
-                    .load(currentItem.imageUrl)
-                    .addListener(object : RequestListener<Drawable> {
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean,
-                        ): Boolean {
-                            binding.image.isVisible = false
-                            return false
-                        }
+        val swipeRevealLayout = binding.swipeRevealLayout
+        private val expansionLayout = binding.expansionLayout
+        private val swipeListener = object : SwipeRevealLayout.SwipeListener {
+            override fun onClosed(view: SwipeRevealLayout?) {
 
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean,
-                        ): Boolean {
-                            binding.image.isVisible = true
-                            return false
-                        }
-
-                    })
-                    .into(binding.image)
             }
+
+            override fun onOpened(view: SwipeRevealLayout?) {
+                if (expansionLayout.isExpanded) expansionLayout.collapse(true)
+                swipeRevealLayout.open(true)
+            }
+
+            override fun onSlide(view: SwipeRevealLayout?, slideOffset: Float) {}
+
+        }
+
+        init {
+            binding.firstBtn.setOnClickListener {
+                onChangeType(getItem(absoluteAdapterPosition), firstButton)
+            }
+            binding.secondBtn.setOnClickListener {
+                onChangeType(getItem(absoluteAdapterPosition), secondButton)
+            }
+            expansionLayout.run {
+                addListener { _, _ ->
+                    if (swipeRevealLayout.isOpened) collapse(true)
+                }
+            }
+            swipeRevealLayout.setSwipeListener(swipeListener)
+        }
+
+        fun bind(currentItem: Word) = binding.run {
+            changeButtons()
+            expansionsCollection.add(expansionLayout)
+            word.text = currentItem.name
+            translation.text = currentItem.translations.joinToString(", ")
+            image.isVisible = currentItem.imageUrl.isNotEmpty()
+            if (currentItem.imageUrl.isNotEmpty()) {
+                Glide.with(root.context)
+                    .load(currentItem.imageUrl)
+                    .into(image)
+            }
+        }
+
+        private fun changeButtons() = binding.run {
+            firstBtn.setBackgroundColor(firstButton.getColor(root.context))
+            firstBtn.text = firstButton.getName(root.context)
+            secondBtn.text = secondButton.getName(root.context)
+            secondBtn.setBackgroundColor(secondButton.getColor(root.context))
         }
     }
 
@@ -69,7 +102,17 @@ class VocabularyAdapter : ListAdapter<Word, VocabularyAdapter.ViewHolder>(DIFF_U
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val item = getItem(position)
+        viewBinderHelper.bind(holder.swipeRevealLayout, item.wordId)
+        holder.bind(item)
+    }
+
+    fun saveStates(outState: Bundle?) {
+        viewBinderHelper.saveStates(outState)
+    }
+
+    fun restoreStates(inState: Bundle?) {
+        viewBinderHelper.restoreStates(inState)
     }
 
     companion object {

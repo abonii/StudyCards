@@ -122,6 +122,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-database-ktx:20.0.3'
     implementation 'com.firebaseui:firebase-ui-database:8.0.0'
 
+    //swipe recyclerview items
+     implementation 'com.github.amsiq:SwipeRevealLayout:1.4.1-x'
+
     // Timber
 //    implementation 'com.jakewharton.timber:timber:4.7.1'
 

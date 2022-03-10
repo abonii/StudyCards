@@ -3,9 +3,8 @@ package abm.co.studycards.ui.vocabulary
 import abm.co.studycards.data.model.LearnOrKnown
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.repository.FirebaseRepository
-import abm.co.studycards.util.Constants
+import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.base.BaseViewModel
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,7 +21,7 @@ import javax.inject.Named
 
 @HiltViewModel
 class VocabularyViewModel @Inject constructor(
-    @Named(Constants.CATEGORIES_REF)
+    @Named(CATEGORIES_REF)
     var categoriesDbRef: DatabaseReference,
 ) : BaseViewModel() {
 

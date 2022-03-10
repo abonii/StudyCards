@@ -95,6 +95,7 @@
     <string name="new_password">Prompt Password</string>
     <string name="logout">Logout</string>
     <string name="no_internet_connection">No internet connection</string>
+    <string name="error_occurred">Error occurred</string>
     <string name="socket_timeout_exception">Socket time out exception</string>
     <string name="some_problems_occured">Some problems occurred</string>
     <string name="translated_with_oxford" translatable="false">Translated with Oxford Dictionaries API</string>
