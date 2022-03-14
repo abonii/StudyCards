@@ -88,7 +88,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                         .await().value as Long <= yesterdayCalendar.timeInMillis
                 ) {
                     userDbRef.updateChildren(mapOf("canTranslateTimeInMills" to currentCalendar.timeInMillis))
-                    userDbRef.updateChildren(mapOf("canTranslateTimeEveryDay" to 20))
+                    userDbRef.updateChildren(mapOf("canTranslateTimeEveryDay" to 12))
                 }
             }
         }

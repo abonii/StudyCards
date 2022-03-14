@@ -19,10 +19,19 @@
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
+            app:destination="@id/forgotPasswordFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="false"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popUpToInclusive="false"/>
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
-        android:name="abm.co.studycards.ui.login.RegistrationFragment"
+        android:name="abm.co.studycards.ui.registration.RegistrationFragment"
         android:label="sign_up_fragment"
         tools:layout="@layout/fragment_sign_up" >
         <action
@@ -36,4 +45,9 @@
             app:popUpTo="@id/registrationFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="abm.co.studycards.ui.forgot_password.ForgotPasswordFragment"
+        android:label="fragment_forgot_password"
+        tools:layout="@layout/fragment_forgot_password" />
 </navigation>

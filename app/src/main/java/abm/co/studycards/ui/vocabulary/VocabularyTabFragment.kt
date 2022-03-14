@@ -1,15 +1,12 @@
 package abm.co.studycards.ui.vocabulary
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.LearnOrKnown
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.FragmentVocabularyTabBinding
 import abm.co.studycards.util.Constants.VOCABULARY_TAB_POSITION
 import abm.co.studycards.util.base.BaseBindingFragment
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -49,11 +46,10 @@ class VocabularyTabFragment :
                         binding.text.text = getString(R.string.error_occurred)
                     }
                     VocabularyUiState.Loading -> {
-                        binding.recyclerView.isVisible = false
+                        onLoading()
                     }
                     is VocabularyUiState.Success -> {
-                        binding.recyclerView.isVisible = true
-                        adapterV?.submitList(it.value)
+                        onSuccess(it.value)
                     }
                 }
             }
@@ -66,6 +62,18 @@ class VocabularyTabFragment :
         binding.recyclerView.adapter = adapterV
     }
 
+    private fun onSuccess(value: List<Word>) = binding.run{
+        recyclerView.visibility = View.VISIBLE
+        shimmerLayout.stopShimmer()
+        shimmerLayout.hideShimmer()
+        shimmerLayout.visibility = View.GONE
+        adapterV?.submitList(value)
+    }
+    private fun onLoading() = binding.run{
+        shimmerLayout.startShimmer()
+        shimmerLayout.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

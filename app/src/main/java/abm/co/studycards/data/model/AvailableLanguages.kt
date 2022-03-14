@@ -2,9 +2,8 @@ package abm.co.studycards.data.model
 
 import abm.co.studycards.R
 import android.content.Context
-import androidx.core.content.ContextCompat
 
-class AvailableLanguages() {
+class AvailableLanguages {
 
     companion object {
         val availableLanguages = listOf(
@@ -38,14 +37,6 @@ class AvailableLanguages() {
             )
         )
 
-        fun getLanguage(i: Int): Language {
-            return availableLanguages[i]
-        }
-
-        fun getLanguageName(i: Int): Int {
-            return availableLanguages[i].languageResCode
-        }
-
         fun getLanguageNameByCode(context: Context, c: String): String {
             for (i in availableLanguages) {
                 if (i.code == c) {
@@ -55,14 +46,6 @@ class AvailableLanguages() {
             return ""
         }
 
-        fun getLanguageCode(i: Int): String {
-            return availableLanguages[i].code
-        }
-
-        fun getLanguageDrawable(i: Int): Int {
-            return availableLanguages[i].imageFromDrawable
-        }
-
         fun getLanguageDrawableByCode(code: String): Int {
             for (i in availableLanguages) {
                 if (i.code == code) {
@@ -70,14 +53,6 @@ class AvailableLanguages() {
                 }
             }
             return availableLanguages[0].imageFromDrawable
-        }
-
-        fun getLanguages(): ArrayList<Int> {
-            val arr = arrayListOf<Int>()
-            for (i in availableLanguages) {
-                arr.add(i.languageResCode)
-            }
-            return arr
         }
     }
 }

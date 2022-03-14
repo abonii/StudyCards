@@ -92,7 +92,8 @@
     <string name="name">Name</string>
     <string name="registration">Registration</string>
     <string name="profile">Profile</string>
-    <string name="new_password">Prompt Password</string>
+    <string name="forgot_password_fragment_title">Reset password</string>
+    <string name="new_password">New Password</string>
     <string name="logout">Logout</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="error_occurred">Error occurred</string>
@@ -125,14 +126,18 @@
     <string name="forget_password">Forget password?</string>
     <string name="email_empty">Email cannot be empty</string>
     <string name="password_empty">Password cannot be empty</string>
+    <string name="verify_password_empty">Verify password cannot be empty</string>
     <string name="password_length">Password length should be more than 5</string>
     <string name="email_not_verified">Please, verify your email address</string>
     <string name="passwords_not_same">Passwords are not same</string>
-    <string name="we_send_verification">We send verification to your email, please check your email</string>
+    <string name="we_send_verification">We have sent a confirmation to your email address, please check your email address</string>
+    <string name="we_send_reset_password">We have sent a password reset link to your email, please check your email</string>
     <string name="we_couldnt_send_verification">We cannot send verification to this email</string>
+    <string name="we_couldnt_send_reset_password">We could not send reset password to this email</string>
     <string name="continue_without_registration">Continue without registration</string>
     <string name="or">Or</string>
     <string name="register_in_order_to">Register in order to use in several phones simultaneously</string>
     <string name="register">Register</string>
     <string name="linked_successfully">Successfully linked</string>
+    <string name="reset_password">Reset password</string>
 </resources>

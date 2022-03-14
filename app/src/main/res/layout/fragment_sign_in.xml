@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewmodel"
+            type="abm.co.studycards.ui.login.LoginViewModel" />
+    </data>
 
     <ScrollView
         android:id="@+id/nested_scroll_view"
@@ -18,6 +27,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/container"
                 android:layout_width="match_parent"
+                android:alpha="@{viewmodel.loading ? 0.5f : 1f}"
                 android:layout_height="match_parent">
 
                 <TextView
@@ -25,9 +35,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_semi_bold"
+                    android:onClick="@{()->viewmodel.navigateToRegistration()}"
                     android:padding="15dp"
+                    android:focusable="@{!viewmodel.loading}"
+                    android:clickable="@{!viewmodel.loading}"
                     android:text="@string/registration"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/select_text_as_button"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,14 +78,18 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/email"
                         android:nextFocusDown="@id/password_container"
-                        app:boxBackgroundColor="@null">
+                        android:background="@android:color/transparent">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/email_edit_text"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:fontFamily="@font/poppins_regular"
+                            android:maxLines="1"
                             android:lines="1"
+                            android:maxLength="70"
+                            android:singleLine="true"
+                            android:text="@{viewmodel.email}"
                             android:textColorHint="#757575" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,7 +101,7 @@
                         android:layout_marginTop="12dp"
                         android:hint="@string/password"
                         android:nextFocusDown="@id/login_btn"
-                        app:boxBackgroundColor="@null"
+                        android:background="@android:color/transparent"
                         app:passwordToggleEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -94,6 +111,9 @@
                             android:fontFamily="@font/poppins_regular"
                             android:inputType="textPassword"
                             android:maxLines="1"
+                            android:lines="1"
+                            android:singleLine="true"
+                            android:text="@{viewmodel.password}"
                             android:textColorHint="#757575" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,16 +124,20 @@
                         android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                         android:layout_marginTop="15dp"
                         android:fontFamily="@font/poppins_medium"
+                        android:text="@{viewmodel.error}"
                         android:textColor="@color/red"
                         android:textSize="15sp"
-                        android:visibility="gone" />
+                        android:visibility="@{viewmodel.error != null ? View.VISIBLE : View.GONE, default = gone}" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/login_btn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
+                        android:onClick="@{()->viewmodel.loginViaEmail()}"
                         android:paddingVertical="15dp"
+                        android:focusable="@{!viewmodel.loading}"
+                        android:clickable="@{!viewmodel.loading}"
                         android:text="@string/login"
                         android:textColor="@color/white"
                         app:layout_constraintBottom_toBottomOf="parent" />
@@ -123,8 +147,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:gravity="center"
+                        android:focusable="@{!viewmodel.loading}"
+                        android:clickable="@{!viewmodel.loading}"
+                        android:onClick="@{()->viewmodel.navigateToForgotPassword()}"
                         android:text="@string/forget_password"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:textColor="@color/select_text_as_button" />
                 </LinearLayout>
 
                 <com.google.android.gms.common.SignInButton
@@ -133,6 +160,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:textAlignment="center"
+                    android:focusable="@{!viewmodel.loading}"
+                    android:clickable="@{!viewmodel.loading}"
+                    android:onClick="@{() ->viewmodel.loginViaGoogle()}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -144,11 +174,12 @@
                     android:id="@+id/anonymous_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:fontFamily="@font/poppins_semi_bold"
-                    android:minHeight="48dp"
                     android:gravity="center"
+                    android:minHeight="48dp"
+                    android:focusable="@{!viewmodel.loading}"
+                    android:clickable="@{!viewmodel.loading}"
+                    android:onClick="@{()->viewmodel.loginAnonymously()}"
                     android:text="@string/continue_without_registration"
                     android:textAlignment="center"
                     android:textColor="@color/select_text_as_button"
@@ -165,7 +196,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:visibility="gone" />
+                android:visibility="@{viewmodel.loading ? View.VISIBLE : View.GONE, default=gone}" />
+
         </FrameLayout>
 
 

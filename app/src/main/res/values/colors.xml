@@ -23,6 +23,7 @@
     <color name="grey">#838795</color>
     <color name="lighter_itself">#10000000</color>
     <color name="darker_than_usual">#717171</color>
+    <color name="shimmer">#E4E4E4</color>
     <!--text-->
     <color name="textColor">#151522</color>
     <color name="secondTextColor">#666666</color>
@@ -37,6 +38,7 @@
 
     <color name="blue_light">#A6C1EC</color>
     <color name="blue_light_status">#A8C3EE</color>
+
 
     <array name="colors">
         <item>#00008B</item>

@@ -28,7 +28,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fragment_profile),
     LanguageOfTheAppAdapter.OnClick {
@@ -43,9 +42,8 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
                 try {
                     val account = task.getResult(ApiException::class.java)!!
                     firebaseAuthWithGoogle(account.idToken!!)
-                    showLog("token " + account.idToken!!)
                 } catch (e: ApiException) {
-                    showLog("error " + e.message)
+                    toast("error " + e.message)
                 }
             }
         }
@@ -191,6 +189,7 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
                     putBoolean(SHOULD_I_OPEN_PROFILE_FRAGMENT, true)
                 })
             })
+        requireActivity().finish()
     }
 
     private fun logout() {
@@ -202,8 +201,13 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
     }
 
     private fun logoutAnonymousUser() {
-        viewModel.firebaseAuthInstance.currentUser?.delete()
-        navigateToLoginActivity()
+        val currentUser = viewModel.firebaseAuthInstance.currentUser
+        Firebase.auth.signOut()
+        viewModel.googleSignInClient.signOut()
+            .addOnCompleteListener(requireActivity()) {
+                currentUser?.delete()
+                navigateToLoginActivity()
+            }
     }
 
     private fun simpleLogout() {

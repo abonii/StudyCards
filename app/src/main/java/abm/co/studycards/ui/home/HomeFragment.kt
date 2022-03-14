@@ -16,11 +16,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
@@ -28,54 +27,54 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     CategoryAdapter.CategoryAdapterListener {
 
     private val viewModel: HomeViewModel by viewModels()
-    private var categoryAdapter = CategoryAdapter(this)
+    private var categoryAdapter: CategoryAdapter? = null
 
     override fun initUI(savedInstanceState: Bundle?) {
-        initUi()
-        collectData()
-        showLog("${viewModel.sourceLang} - ${viewModel.targetLang}")
-    }
-
-    private fun collectData() {
-        viewModel.categoriesDbRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val items = mutableListOf<Category>()
-                snapshot.children.forEach {
-//                    val a = it.toString()
-                    it.getValue(Category::class.java)?.let { it1 -> items.add(it1) }
-//                    Log.i("vocaa", a.toString())
-                }
-                categoryAdapter.submitList(items)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                showLog(error.message, "FromHome")
-            }
-        })
-    }
-
-    private fun initUi() {
-//        ifFabOpenedOpenIt()
         initFABMenu()
         initRecyclerView()
         changeStatusBar()
         setSourceAndTargetLanguages()
         setClickListeners()
+        collectData()
+    }
+
+    private fun collectData() {
+        lifecycleScope.launchWhenResumed {
+            viewModel.stateFlow.collectLatest {
+                when (it) {
+                    is CategoryUiState.Error -> toast(it.msg)
+                    CategoryUiState.Loading -> onLoading()
+                    is CategoryUiState.Success -> onSuccess(it.value)
+                }
+            }
+        }
+    }
+
+    private fun onSuccess(value: List<Category>) = binding.run {
+        recyclerView.visibility = View.VISIBLE
+        shimmerLayout.stopShimmer()
+        shimmerLayout.hideShimmer()
+        shimmerLayout.visibility = View.GONE
+        categoryAdapter?.submitList(value)
+    }
+
+    private fun onLoading() = binding.run {
+        shimmerLayout.startShimmer()
+        shimmerLayout.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
     }
 
     private fun changeStatusBar() {
         requireActivity().window.statusBarColor = getMyColor(R.color.background)
     }
 
-    private fun setClickListeners() {
-        binding.apply {
-            root.setOnClickListener { isFabOpen() }
-            floatingActionButton.setOnClickListener { onFloatingActionClick() }
-            floatingActionButtonWord.setOnClickListener { onFloatingActionWordClick() }
-            floatingActionButtonCategory.setOnClickListener { onFloatingActionCategoryClick() }
-            changeTargetBtn.setOnClickListener { onChangeLanguageClicked() }
-            flagImage.setOnClickListener { navigateToSelectLanguages() }
-        }
+    private fun setClickListeners() = binding.run {
+        root.setOnClickListener { isFabOpen() }
+        floatingActionButton.setOnClickListener { onFloatingActionClick() }
+        floatingActionButtonWord.setOnClickListener { onFloatingActionWordClick() }
+        floatingActionButtonCategory.setOnClickListener { onFloatingActionCategoryClick() }
+        changeTargetBtn.setOnClickListener { onChangeLanguageClicked() }
+        flagImage.setOnClickListener { navigateToSelectLanguages() }
     }
 
     private fun onFloatingActionClick() {
@@ -129,16 +128,17 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     }
 
     private fun initRecyclerView() {
-        binding.recyclerView.apply {
-            val divider = DividerItemDecoration(
-                context,
-                DividerItemDecoration.VERTICAL,
-            )
-            setHasFixedSize(true)
+        categoryAdapter = CategoryAdapter(this)
+        binding.recyclerView.run {
             adapter = categoryAdapter
-            addItemDecoration(divider)
+            addItemDecoration(getItemDecoration())
         }
     }
+
+    private fun getItemDecoration() = DividerItemDecoration(
+        requireContext(),
+        DividerItemDecoration.VERTICAL,
+    )
 
     private fun setSourceAndTargetLanguages() {
         val nativeLangDrawable = AvailableLanguages.getLanguageDrawableByCode(viewModel.sourceLang)

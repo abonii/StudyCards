@@ -13,17 +13,24 @@ import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.DialogFragmentNavigator
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 fun Number.px(): Int {
     return (this.toFloat() * Resources.getSystem().displayMetrics.density).toInt()
@@ -133,4 +140,32 @@ fun Context.getProgressBarDrawable(): Drawable {
     array.recycle()
 
     return drawable
+}
+
+fun View?.setClickableForAllChildren(isIt:Boolean){
+    if (this != null) {
+        this.isClickable = isIt
+        if (this is EditText)
+            this.isCursorVisible = isIt
+        if (this is ViewGroup) {
+            for (i in 0 until this.childCount) {
+                this.getChildAt(i).setClickableForAllChildren(isIt)
+            }
+        }
+    }
+}
+
+/**
+ * Launches a new coroutine and repeats `block` every time the Fragment's viewLifecycleOwner
+ * is in and out of `minActiveState` lifecycle state.
+ */
+inline fun Fragment.launchAndRepeatWithViewLifecycle(
+    minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
+    crossinline block: suspend CoroutineScope.() -> Unit
+) {
+    viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycle.repeatOnLifecycle(minActiveState) {
+            block()
+        }
+    }
 }
