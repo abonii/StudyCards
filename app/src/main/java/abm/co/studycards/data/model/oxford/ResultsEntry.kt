@@ -5,5 +5,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ResultsEntry(
-    val id: String?, val language: String?, val lexicalEntries: List<LexicalEntry>?
+    val language: String?, val lexicalEntries: List<LexicalEntry>?, val word: String?
 ) : Parcelable

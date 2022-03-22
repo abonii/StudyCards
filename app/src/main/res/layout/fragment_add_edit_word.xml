@@ -1,54 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.add_word.AddEditWordFragment">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <data>
+
+        <variable
+            name="wordFragment"
+            type="abm.co.studycards.ui.add_word.AddEditWordFragment" />
+
+        <variable
+            name="viewmodel"
+            type="abm.co.studycards.ui.add_word.AddEditWordViewModel" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:elevation="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_edit_title"
+                android:textColor="@color/textColor" />
+
+        </androidx.appcompat.widget.Toolbar>
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/background"
-            tools:context=".ui.add_word.AddEditWordFragment">
+            android:fillViewport="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/container_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/background">
-
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/background"
-                    android:elevation="2dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:navigationIcon="@drawable/ic_note">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_edit_title"
-                        android:textColor="@color/textColor" />
-
-                </com.google.android.material.appbar.MaterialToolbar>
+                android:background="@color/background"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin">
 
                 <TextView
                     android:id="@+id/category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:background="@drawable/rounded_button_not_so"
                     android:backgroundTint="@color/second_color"
                     android:drawablePadding="8dp"
-                    android:gravity="center"
+                    android:gravity="start"
+                    android:onClick="@{()->wordFragment.directToCategoryDialogFragment()}"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="3dp"
+                    android:text="@{viewmodel.categoryStateFlow}"
                     app:drawableStartCompat="@drawable/ic_folder"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/image" />
@@ -59,20 +73,22 @@
                     android:layout_height="120dp"
                     android:layout_marginTop="8dp"
                     android:contentDescription="@string/image"
-                    app:srcCompat="@drawable/ic_image_search"
+                    android:onClick="@{()->wordFragment.directToChooseImage()}"
+                    android:setImage="@{viewmodel.imageStateFlow}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/toolbar" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_image_search" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/word_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/edit_text_border"
+                    android:isTranslating="@{viewmodel.sourceTranslatingStateFlow}"
+                    android:languageHint="@{viewmodel.sourceLanguage}"
+                    android:maxLength="100"
                     app:boxStrokeColor="@color/colorPrimary"
-                    app:endIconDrawable="@drawable/ic_translate"
                     app:endIconMode="custom"
                     app:endIconTint="@color/colorPrimary"
                     app:hintTextColor="@color/colorPrimary"
@@ -84,18 +100,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:maxLength="150"
-                        android:maxLines="5" />
+                        android:maxLength="100"
+                        android:maxLines="5"
+                        android:text="@={viewmodel.sourceWordStateFlow}" />
                 </com.google.android.material.textfield.TextInputLayout>
-
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/translated_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="12dp"
-                    android:background="@drawable/edit_text_border"
+                    android:isTranslating="@{viewmodel.targetTranslatingStateFlow}"
+                    android:languageHint="@{viewmodel.targetLanguage}"
+                    android:maxLength="250"
                     app:boxStrokeColor="@color/colorPrimary"
                     app:endIconDrawable="@drawable/ic_translate"
                     app:endIconMode="custom"
@@ -111,18 +128,17 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:maxLength="250"
-                        android:maxLines="7" />
+                        android:maxLines="7"
+                        android:text="@={viewmodel.targetWordStateFlow}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/example_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="12dp"
-                    android:background="@drawable/edit_text_border"
                     android:hint="@string/example"
-
+                    android:maxLength="500"
                     app:boxStrokeColor="@color/colorPrimary"
                     app:hintTextColor="@color/colorPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -135,32 +151,35 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:maxLength="500"
-                        android:maxLines="10" />
+                        android:maxLines="10"
+                        android:text="@={viewmodel.examplesStateFlow}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/save"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="12dp"
-                    android:layout_marginBottom="50dp"
+                    android:onClick="@{()->viewmodel.saveWord()}"
                     android:text="@string/save"
                     android:textColor="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/example_layout" />
+
+
+                <TextView
+                    android:id="@+id/translated_with"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
-
-        <TextView
-            android:id="@+id/translated_with"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:fontFamily="@font/poppins_bold"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="15sp" />
-    </FrameLayout>
+    </LinearLayout>
 </layout>

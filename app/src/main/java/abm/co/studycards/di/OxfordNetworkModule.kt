@@ -1,8 +1,6 @@
 package abm.co.studycards.di
 
 import abm.co.studycards.data.network.oxford.OxfordApiService
-import abm.co.studycards.data.network.oxford.OxfordApiServiceHelper
-import abm.co.studycards.data.network.oxford.OxfordApiServiceHelperImpl
 import abm.co.studycards.data.network.oxford.OxfordInterceptor
 import abm.co.studycards.di.qualifier.OxfordNetwork
 import abm.co.studycards.di.qualifier.TypeEnum.*
@@ -24,7 +22,7 @@ import java.util.concurrent.TimeUnit
 class OxfordNetworkModule {
     @Provides
     @OxfordNetwork(URL)
-    fun provideOxfordUrl() = Constants.baseUrlOxford
+    fun provideOxfordUrl() = Constants.BASE_URL_OXFORD
 
     @Provides
     @OxfordNetwork(GSON)
@@ -66,8 +64,4 @@ class OxfordNetworkModule {
         @OxfordNetwork(RETROFIT) retrofit: Retrofit
     ): OxfordApiService = retrofit.create(OxfordApiService::class.java)
 
-    @Provides
-    @OxfordNetwork(APIHELPER)
-    fun provideOxfordApiServiceHelper(apiHelper: OxfordApiServiceHelperImpl):
-            OxfordApiServiceHelper = apiHelper
 }

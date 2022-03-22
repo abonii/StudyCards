@@ -1,6 +1,8 @@
 package abm.co.studycards.data.model.vocabulary
 
 import abm.co.studycards.data.model.LearnOrKnown
+import abm.co.studycards.util.Constants.EXAMPLES_SEPARATOR
+import abm.co.studycards.util.Constants.TRANSLATIONS_SEPARATOR
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -31,3 +33,7 @@ data class Word(
         this.examples = ArrayList(examples.values)
     }
 }
+fun Word?.examplesToString() = this?.examples?.joinToString(EXAMPLES_SEPARATOR) ?: ""
+fun Word?.translationsToString() = this?.translations?.joinToString(TRANSLATIONS_SEPARATOR) ?: ""
+fun String.examplesToList() = this.split(EXAMPLES_SEPARATOR)
+fun String.translationsToList() = this.split(TRANSLATIONS_SEPARATOR)

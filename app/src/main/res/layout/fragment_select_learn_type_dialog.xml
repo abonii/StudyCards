@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:backgroundTint="@color/background"
-    tools:context=".ui.learn.select.SelectLearnTypeDialogFragment">
+    tools:context=".ui.games.select.SelectLearnTypeDialogFragment">
 
     <RelativeLayout
         android:id="@+id/learn"

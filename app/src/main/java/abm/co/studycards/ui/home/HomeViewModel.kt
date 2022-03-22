@@ -26,6 +26,8 @@ class HomeViewModel @Inject constructor(
 
     val dispatcher = Dispatchers.IO
 
+    var defaultCategory: Category? = null
+
     var fabMenuOpened = false
 
     var sourceLang = prefs.getSourceLanguage()
@@ -51,8 +53,9 @@ class HomeViewModel @Inject constructor(
                     snapshot.children.forEach {
                         it.getValue(Category::class.java)?.let { it1 -> items.add(it1) }
                     }
+                    if (items.size > 0) defaultCategory = items.first()
                     delay(1000)
-                    _stateFlow.value = CategoryUiState.Success(items)
+                    _stateFlow.value = CategoryUiState.Success(items.take(500))
                 }
             }
 
@@ -65,16 +68,16 @@ class HomeViewModel @Inject constructor(
 
     fun removeCategory(category: Category) {
         launchIO {
-            deleteCategory(category.id)
+            categoriesDbRef.child(category.id).removeValue()
         }
     }
 
-    private fun deleteCategory(categoryId: String) {
-        launchIO {
-            launchIO {
-                categoriesDbRef.child(categoryId).removeValue()
-            }
+    fun changePreferenceNativeWithTargetLanguages() {
+        //val target = targetLang
+        targetLang = sourceLang.also {
+            sourceLang = targetLang
         }
+
     }
 }
 

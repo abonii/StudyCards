@@ -5,8 +5,6 @@ import android.content.Intent
 import android.util.SparseArray
 import androidx.core.util.forEach
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -21,12 +19,12 @@ fun BottomNavigationView.setupWithNavController(
     fragmentManager: FragmentManager,
     containerId: Int,
     intent: Intent
-): LiveData<NavController> {
+): NavController? {
 
     // Map of tags
     val graphIdToTagMap = SparseArray<String>()
-    // Result. Mutable live data with the selected controlled
-    val selectedNavController = MutableLiveData<NavController>()
+    // Result. NavController data with the selected controlled
+    var selectedNavController: NavController? = null
 
     var firstFragmentGraphId = 0
 
@@ -54,8 +52,8 @@ fun BottomNavigationView.setupWithNavController(
 
         // Attach or detach nav host fragment depending on whether it's the selected item.
         if (this.selectedItemId == graphId) {
-            // Update livedata with the selected graph
-            selectedNavController.value = navHostFragment.navController
+            // Update NavController with the selected graph
+            selectedNavController = navHostFragment.navController
             attachNavHostFragment(fragmentManager, navHostFragment, index == 0)
         } else {
             detachNavHostFragment(fragmentManager, navHostFragment)
@@ -102,7 +100,7 @@ fun BottomNavigationView.setupWithNavController(
                 }
                 selectedItemTag = newlySelectedItemTag
                 isOnFirstFragment = selectedItemTag == firstFragmentTag
-                selectedNavController.value = selectedFragment.navController
+                selectedNavController = selectedFragment.navController
                 true
             } else {
                 false
@@ -124,7 +122,7 @@ fun BottomNavigationView.setupWithNavController(
 
         // Reset the graph if the currentDestination is not valid (happens when the back
         // stack is popped after using the back button).
-        selectedNavController.value?.let { controller ->
+        selectedNavController?.let { controller ->
             if (controller.currentDestination == null) {
                 controller.navigate(controller.graph.id)
             }

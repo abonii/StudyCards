@@ -1,60 +1,100 @@
 package abm.co.studycards.ui.add_word
 
 import abm.co.studycards.R
-import abm.co.studycards.data.ErrorStatus
 import abm.co.studycards.data.ResultWrapper
 import abm.co.studycards.data.model.LearnOrKnown
 import abm.co.studycards.data.model.oxford.ResultsEntry
-import abm.co.studycards.data.model.vocabulary.Category
-import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.data.model.vocabulary.*
 import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.FirebaseRepository
-import abm.co.studycards.data.repository.VocabularyRepository
+import abm.co.studycards.data.repository.DictionaryRepository
+import abm.co.studycards.data.repository.ServerCloudRepository
+import abm.co.studycards.ui.games.matching.TAG
 import abm.co.studycards.util.Constants
+import abm.co.studycards.util.Constants.OXFORD_CAN_TRANSLATE_MAP
 import abm.co.studycards.util.base.BaseViewModel
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
 class AddEditWordViewModel @Inject constructor(
-    private val repository: VocabularyRepository,
-    @Named(Constants.CATEGORIES_REF) private val categoriesDbRef: DatabaseReference,
+    private val repository: DictionaryRepository,
     @Named(Constants.USERS_REF) var userRef: DatabaseReference,
+    private val firebaseRepository: ServerCloudRepository,
     prefs: Prefs,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel() {
 
-    var translateCounts: Long = 20
+    private val dispatcher = Dispatchers.IO
+
+    var translateCounts: Long = 1
+
     val word = savedStateHandle.get<Word>("word")
     private var categoryName = savedStateHandle.get<String>("categoryName") ?: ""
     var currentCategoryId = savedStateHandle.get<String>("categoryId")
-    var imageUrl: String? = word?.imageUrl
-    var sourceWord: String = word?.name ?: ""
-    var targetWord: String = word?.translations?.joinToString(", ") ?: ""
-    var exampleText: String = word?.examples?.joinToString("\n") ?: ""
+
     val sourceLanguage = prefs.getSourceLanguage()
     val targetLanguage = prefs.getTargetLanguage()
+
     private var translatedOxfordWord: String = "o.abylai01"
     private var translatedYandexWord: String = ""
     private var translatedOxfordClass: ResultsEntry? = null
-    private var translatedYandexClass: String? = null
-    private val firebaseRepository = FirebaseRepository(categoriesDbRef)
 
-    private val _stateFlow = MutableStateFlow<AddEditWordUi>(AddEditWordUi.Default)
-    val stateFlow = _stateFlow.asStateFlow()
+    private val _eventChannel =
+        MutableSharedFlow<AddEditWordEventChannel>()
+    val eventChannel = _eventChannel.asSharedFlow()
+
+    val sourceWordStateFlow = MutableStateFlow(word?.name ?: "")
+
+    val targetWordStateFlow = MutableStateFlow(word.translationsToString())
+
+    val examplesStateFlow = MutableStateFlow(word.examplesToString())
+
+    private val _categoryStateFlow = MutableStateFlow(categoryName)
+    val categoryStateFlow = _categoryStateFlow.asStateFlow()
+
+    private val _sourceTranslatingStateFlow = MutableStateFlow(false)
+    val sourceTranslatingStateFlow = _sourceTranslatingStateFlow.asStateFlow()
+
+    private val _targetTranslatingStateFlow = MutableStateFlow(false)
+    val targetTranslatingStateFlow = _targetTranslatingStateFlow.asStateFlow()
+
+    private val _imageStateFlow = MutableStateFlow(word?.imageUrl)
+    val imageStateFlow = _imageStateFlow.asStateFlow()
 
     init {
-        _stateFlow.value = AddEditWordUi.CategoryChanged(categoryName)
+
+        userRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.child("canTranslateTimeEveryDay").value?.let {
+                    translateCounts = it as Long
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.i("ABO_ADD_WORD", error.message)
+            }
+
+        })
     }
 
     fun fetchWord(fromSource: Boolean) {
         if (translateCounts > 0) {
+            if (fromSource) _sourceTranslatingStateFlow.value = true
+            else _targetTranslatingStateFlow.value = true
             if (checkIfOxfordSupport(fromSource) && isItMoreThanOneWord(fromSource)) {
                 fetchOxfordWord(fromSource)
             } else fetchYandexWord(fromSource)
@@ -64,50 +104,77 @@ class AddEditWordViewModel @Inject constructor(
     }
 
     private fun fetchYandexWord(fromSource: Boolean) {
-        launchIO {
-            _stateFlow.value = AddEditWordUi.Loading(fromSource)
-            delay(50)
-            translatedYandexWord = if (fromSource) sourceWord else targetWord
+        viewModelScope.launch(dispatcher) {
+            translatedYandexWord =
+                (if (fromSource) sourceWordStateFlow.value else targetWordStateFlow.value).trim()
             val sl = if (fromSource) sourceLanguage else targetLanguage
             val tl = if (fromSource) targetLanguage else sourceLanguage
-            when (val wrapper = repository.getYandexWord(translatedYandexWord.trim(), sl, tl)) {
+            when (val wrapper = repository.getYandexWord(translatedYandexWord, sl, tl)) {
                 is ResultWrapper.Error -> {
-                    _stateFlow.value = AddEditWordUi.Error(null, wrapper.error)
+                    makeToast(wrapper.error ?: "")
+                    stopLoadingIcon(fromSource)
                 }
                 is ResultWrapper.Success -> {
                     changeTranslateCount()
-                    translatedYandexClass = wrapper.value.text?.joinToString(", ") ?: ""
-                    _stateFlow.value =
-                        AddEditWordUi.SuccessYandex(translatedYandexClass!!, fromSource)
+                    val translated = wrapper.value.text?.joinToString(", ")
+                    stopLoadingIcon(fromSource)
+                    if (fromSource) {
+                        targetWordStateFlow.value = translated ?: ""
+                    } else {
+                        sourceWordStateFlow.value = translated ?: ""
+                    }
                 }
             }
         }
     }
 
     private fun fetchOxfordWord(fromSource: Boolean) {
-        launchIO {
-            _stateFlow.value = AddEditWordUi.Loading(fromSource)
-            delay(50)
-            if (((fromSource && isSourceWordTranslatedOxford()) || (!fromSource && isTargetWordTranslatedOxford())) && translatedOxfordClass != null) {
-                _stateFlow.value = AddEditWordUi.SuccessOxford(translatedOxfordClass!!, fromSource)
-                return@launchIO
+        viewModelScope.launch(dispatcher) {
+            if (((fromSource && isSourceWordTranslatedOxford()) ||
+                        (!fromSource && isTargetWordTranslatedOxford())) && translatedOxfordClass != null
+            ) {
+                _eventChannel.emit(
+                    AddEditWordEventChannel.NavigateToDictionary(
+                        null,
+                        translatedOxfordClass!!,
+                        fromSource
+                    )
+                )
+                _sourceTranslatingStateFlow.value = false
+                _targetTranslatingStateFlow.value = false
+                return@launch
             }
             val sl = if (fromSource) sourceLanguage else targetLanguage
             val tl = if (fromSource) targetLanguage else sourceLanguage
 
-            translatedOxfordWord = if (fromSource) sourceWord else targetWord
+            translatedOxfordWord =
+                if (fromSource) sourceWordStateFlow.value else targetWordStateFlow.value
 
             when (val wrapper = repository.getOxfordWord(translatedOxfordWord.trim(), sl, tl)) {
                 is ResultWrapper.Error -> {
                     fetchYandexWord(fromSource)
                 }
                 is ResultWrapper.Success -> {
+                    stopLoadingIcon(fromSource)
                     changeTranslateCount()
                     translatedOxfordClass = wrapper.value.results[0]
-                    _stateFlow.value =
-                        AddEditWordUi.SuccessOxford(translatedOxfordClass!!, fromSource)
+                    _eventChannel.emit(
+                        AddEditWordEventChannel.NavigateToDictionary(
+                            null,
+                            translatedOxfordClass!!,
+                            fromSource
+                        )
+                    )
                 }
             }
+        }
+    }
+
+    private fun stopLoadingIcon(fromSource: Boolean) {
+        if (fromSource) {
+            _sourceTranslatingStateFlow.value = false
+        } else {
+            _targetTranslatingStateFlow.value = false
         }
     }
 
@@ -115,103 +182,102 @@ class AddEditWordViewModel @Inject constructor(
         userRef.updateChildren(mapOf("canTranslateTimeEveryDay" to translateCounts - 1))
     }
 
-//    private fun isSourceWordTranslatedYandex(): Boolean {
-//        return sourceWord.lowercase().trim() == translatedYandexWord.lowercase().trim()
-//    }
-
-    fun isSourceWordTranslatedOxford(): Boolean {
-        return sourceWord.lowercase().trim() == translatedOxfordWord.lowercase().trim()
+    private fun isSourceWordTranslatedOxford(): Boolean {
+        return sourceWordStateFlow.value.lowercase().trim() == translatedOxfordWord.lowercase()
+            .trim()
     }
 
-//    private fun isTargetWordTranslatedYandex(): Boolean {
-//        return targetWord.lowercase().trim() == translatedYandexWord.lowercase().trim()
-//    }
-
-    fun isTargetWordTranslatedOxford(): Boolean {
-        return targetWord.lowercase().trim() == translatedOxfordWord.lowercase().trim()
+    private fun isTargetWordTranslatedOxford(): Boolean {
+        return targetWordStateFlow.value.lowercase().trim() == translatedOxfordWord.lowercase()
+            .trim()
     }
 
 
     fun changeCategory(category: Category?) {
-        category?.let {
+        if (category != null) {
             this.currentCategoryId = category.id
             this.categoryName = category.mainName
-            _stateFlow.value = AddEditWordUi.CategoryChanged(category.mainName)
+            _categoryStateFlow.value = categoryName
         }
     }
 
-    fun onSaveClick(): Boolean {
-        if (sourceWord.isBlank() || targetWord.isBlank()) {
-            makeToast(R.string.name_translation_not_empty)
-            return false
+    private fun isItMoreThanOneWord(fromSource: Boolean): Boolean {
+        return ((fromSource && sourceWordStateFlow.value.trim().split(" ", ",", ".").size <= 1)
+                || (!fromSource && targetWordStateFlow.value.trim().split(" ", ",", ".").size <= 1))
+    }
+
+    private fun checkIfOxfordSupport(isFromSource: Boolean): Boolean {
+        return if (isFromSource) {
+            OXFORD_CAN_TRANSLATE_MAP[sourceLanguage]?.contains(targetLanguage) ?: false
+        } else {
+            OXFORD_CAN_TRANSLATE_MAP[targetLanguage]?.contains(sourceLanguage) ?: false
         }
-        if (currentCategoryId==null) {
-            makeToast(R.string.choose_category)
-            return false
-        }
-        if (word == null) {
-            launchIO {
+    }
+
+    fun setImage(v: String?) {
+        _imageStateFlow.value = v
+    }
+
+    fun saveWord() {
+        viewModelScope.launch(dispatcher) {
+            if (sourceWordStateFlow.value.isBlank() || targetWordStateFlow.value.isBlank()) {
+                makeToast(R.string.name_translation_not_empty)
+                return@launch
+            }
+            if (currentCategoryId == null) {
+                makeToast(R.string.choose_category)
+                return@launch
+            }
+            if (word == null) {
                 val word = Word(
-                    name = sourceWord,
-                    translations = targetWord.split(", "),
-                    imageUrl = imageUrl ?: "",
-                    examples = exampleText.split("\n"),
+                    name = sourceWordStateFlow.value,
+                    translations = targetWordStateFlow.value.translationsToList(),
+                    imageUrl = imageStateFlow.value ?: "",
+                    examples = examplesStateFlow.value.examplesToList(),
                     learnOrKnown = LearnOrKnown.UNDEFINED.getType(),
                     sourceLanguage = sourceLanguage,
                     targetLanguage = targetLanguage,
                     categoryID = currentCategoryId ?: "default",
                 )
                 firebaseRepository.addWord(word)
-            }
-        } else {
-            launchIO {
+            } else {
                 val uWord = word.copy(
-                    name = sourceWord,
-                    translations = targetWord.split(", "),
-                    examples = exampleText.split("\n"),
+                    name = sourceWordStateFlow.value,
+                    translations = targetWordStateFlow.value.translationsToList(),
+                    examples = examplesStateFlow.value.examplesToList(),
                     categoryID = currentCategoryId ?: "default",
                     learnOrKnown = LearnOrKnown.UNDEFINED.getType(),
-                    imageUrl = imageUrl ?: "",
+                    imageUrl = imageStateFlow.value ?: "",
                     repeatCount = 0
                 )
                 firebaseRepository.deleteWord(word.categoryID, word.wordId)
                 firebaseRepository.addWord(uWord)
             }
+            _eventChannel.emit(AddEditWordEventChannel.PopBackStack)
         }
-        return true
     }
 
-    private fun isItMoreThanOneWord(fromSource: Boolean): Boolean {
-        return ((fromSource && sourceWord.trim().split(" ", ",", ".").size <= 1)
-                || (!fromSource && targetWord.trim().split(" ",",",".").size <= 1))
-    }
-
-    private fun checkIfOxfordSupport(isFromSource: Boolean): Boolean {
-        val map = mapOf(
-            "en" to listOf("ar", "zh", "de", "it", "ru"),
-            "ar" to listOf("en"),
-            "zh" to listOf("en"),
-            "de" to listOf("en"),
-            "it" to listOf("en"),
-            "ru" to listOf("en")
-        )
-        return if (isFromSource) {
-            map[sourceLanguage]?.contains(targetLanguage) ?: false
+    fun onDictionaryReceived(
+        examples: String?,
+        translations: String?,
+        fromTarget: Boolean,
+    ) {
+        Log.i(TAG, "onDictionaryReceived: $examples")
+        examplesStateFlow.value = examples ?: ""
+        if (!fromTarget) {
+            sourceWordStateFlow.value = translations ?: ""
         } else {
-            map[targetLanguage]?.contains(sourceLanguage) ?: false
+            targetWordStateFlow.value = translations ?: ""
         }
-
     }
-
 }
 
-sealed class AddEditWordUi {
-    object Default : AddEditWordUi()
-    data class Loading(val fromSource: Boolean) : AddEditWordUi()
-    data class SuccessYandex(val value: String, val fromSource: Boolean) : AddEditWordUi()
-    data class SuccessOxford(val value: ResultsEntry, val fromSource: Boolean) :
-        AddEditWordUi()
+sealed class AddEditWordEventChannel {
+    data class NavigateToDictionary(
+        val translatedText: String?,
+        val resultsEntry: ResultsEntry?,
+        val fromSource: Boolean
+    ) : AddEditWordEventChannel()
 
-    data class CategoryChanged(val category: String) : AddEditWordUi()
-    data class Error(val errorStatus: ErrorStatus?, val text: String?) : AddEditWordUi()
+    object PopBackStack : AddEditWordEventChannel()
 }

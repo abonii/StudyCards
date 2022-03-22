@@ -6,7 +6,6 @@ import abm.co.studycards.databinding.ItemCategoryBinding
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 class CategoryAdapter(
     private val listener: CategoryAdapterListener
 ) : ListAdapter<Category, CategoryAdapter.ViewHolder>(DIFF_UTIL) {
+
+    public override fun getItem(position: Int): Category {
+        return super.getItem(position)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -31,17 +34,21 @@ class CategoryAdapter(
                 listener.onLongClickCategory(getItem(absoluteAdapterPosition))
                 true
             }
+            binding.play.setOnClickListener {
+                listener.onPlay(getItem(absoluteAdapterPosition))
+            }
         }
 
         @SuppressLint("SetTextI18n")
         fun bind(currentItem: Category) {
             binding.apply {
                 text.text = currentItem.mainName
-                play.setOnClickListener {
-                    listener.onPlay(currentItem)
-                }
-                wordsCount.text = binding.root.context.resources.getQuantityString(R.plurals.words, currentItem.words.size, currentItem.words.size)
-                    (currentItem.words.size).toString() + " word"
+                wordsCount.text = binding.root.context.resources.getQuantityString(
+                    R.plurals.words,
+                    currentItem.words.size,
+                    currentItem.words.size
+                )
+                (currentItem.words.size).toString() + " word"
             }
         }
     }

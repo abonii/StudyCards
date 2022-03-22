@@ -1,6 +1,9 @@
 package abm.co.studycards.util
 
 import abm.co.studycards.R
+import abm.co.studycards.helpers.LinkTouchMovementMethod
+import abm.co.studycards.helpers.TouchableSpan
+import abm.co.studycards.ui.add_word.dialog.dictionary.adapters.TranslatedWordAdapter
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.animation.ArgbEvaluator
@@ -10,6 +13,11 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.os.Build
+import android.os.Bundle
+import android.text.Html
+import android.text.SpannableString
+import android.text.Spanned
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -95,6 +103,16 @@ fun Fragment.navigate(directions: NavDirections) {
     }
 }
 
+fun Fragment.navigate(id: Int, bundle: Bundle? = null) {
+    val controller = findNavController()
+    val currentDestination =
+        (controller.currentDestination as? FragmentNavigator.Destination)?.className
+            ?: (controller.currentDestination as? DialogFragmentNavigator.Destination)?.className
+    if (currentDestination == this.javaClass.name) {
+        controller.navigate(id, bundle)
+    }
+}
+
 fun View.flipInCard(): AnimatorSet {
     val flipInAnimationSet =
         AnimatorInflater.loadAnimator(
@@ -142,7 +160,7 @@ fun Context.getProgressBarDrawable(): Drawable {
     return drawable
 }
 
-fun View?.setClickableForAllChildren(isIt:Boolean){
+fun View?.setClickableForAllChildren(isIt: Boolean) {
     if (this != null) {
         this.isClickable = isIt
         if (this is EditText)
@@ -155,6 +173,59 @@ fun View?.setClickableForAllChildren(isIt:Boolean){
     }
 }
 
+@Suppress("DEPRECATION")
+fun String?.fromHtml(): CharSequence {
+    return when {
+        this == null -> {
+            SpannableString("")
+        }
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> {
+            Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
+        }
+        else -> {
+            Html.fromHtml(this)
+        }
+    }
+}
+
+fun TextView.makeClickable(
+    text: String,
+    listener: TranslatedWordAdapter.OnCheckBoxClicked,
+    isExample: Boolean
+) {
+    val spannableString = SpannableString(this.text)
+    var startIndexOfLink = -1
+    if (text.isNotEmpty()) {
+        val defaultColor =
+            if (isExample) getMyColor(R.color.secondTextColor)
+            else getMyColor(R.color.textColor)
+        val selectedColor =
+            if (isExample) getMyColor(R.color.colorPrimary)
+            else getMyColor(R.color.colorPrimaryDark)
+        val clickableSpan = object : TouchableSpan(
+            defaultColor,
+            selectedColor
+        ) {
+            override fun onClick(view: View) {
+                if (isExample) {
+                    listener.onExampleSelected(text, myPressed)
+                } else {
+                    listener.onTranslationSelected(text, myPressed)
+                }
+                setMyPressed()
+            }
+
+        }
+        startIndexOfLink = this.text.toString().indexOf(text, startIndexOfLink + 1)
+        spannableString.setSpan(
+            clickableSpan, startIndexOfLink, startIndexOfLink + text.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+    }
+    this.movementMethod =
+        LinkTouchMovementMethod()
+    this.setText(spannableString, TextView.BufferType.SPANNABLE)
+}
 /**
  * Launches a new coroutine and repeats `block` every time the Fragment's viewLifecycleOwner
  * is in and out of `minActiveState` lifecycle state.

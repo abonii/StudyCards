@@ -9,14 +9,14 @@
         android:id="@+id/homeFragment"
         android:name="abm.co.studycards.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_selectLanguageFragment"
             app:destination="@id/selectLanguageFragment"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_addEditCategoryFragment"
             app:destination="@id/addEditCategoryFragment" />
@@ -28,10 +28,10 @@
         <action
             android:id="@+id/action_homeFragment_to_inCategoryFragment"
             app:destination="@id/inCategoryFragment"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_selectLearnTypeDialogFragment"
             app:destination="@id/selectLearnTypeDialogFragment" />
@@ -39,14 +39,14 @@
     <fragment
         android:id="@+id/selectLanguageFragment"
         android:name="abm.co.studycards.ui.language.SelectLanguageFragment"
-        android:label="SelectLanguageFragment" >
+        android:label="SelectLanguageFragment">
         <action
             android:id="@+id/action_selectLanguageFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -54,18 +54,18 @@
         android:id="@+id/addEditCategoryFragment"
         android:name="abm.co.studycards.ui.add_category.AddEditCategoryFragment"
         android:label="fragment_add_edit_category"
-        tools:layout="@layout/fragment_add_edit_category" >
+        tools:layout="@layout/fragment_add_edit_category">
         <argument
             android:name="category"
+            android:defaultValue="@null"
             app:argType="abm.co.studycards.data.model.vocabulary.Category"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
     </dialog>
     <dialog
         android:id="@+id/selectCategoryDialogFragment"
         android:name="abm.co.studycards.ui.add_word.dialog.category.SelectCategoryDialogFragment"
         android:label="fragment_select_category_dialog"
-        tools:layout="@layout/fragment_select_category_dialog" >
+        tools:layout="@layout/fragment_select_category_dialog">
         <argument
             android:name="categoryId"
             app:argType="string"
@@ -77,8 +77,8 @@
     <fragment
         android:id="@+id/addEditWordFragment"
         android:name="abm.co.studycards.ui.add_word.AddEditWordFragment"
-        tools:layout="@layout/fragment_add_edit_word"
-        android:label="AddEditFragmentWord" >
+        android:label="AddEditFragmentWord"
+        tools:layout="@layout/fragment_add_edit_word">
         <action
             android:id="@+id/action_addEditWordFragment_to_selectCategoryDialogFragment"
             app:destination="@id/selectCategoryDialogFragment" />
@@ -87,9 +87,9 @@
             app:destination="@id/imageDialogFragment" />
         <argument
             android:name="word"
+            android:defaultValue="@null"
             app:argType="abm.co.studycards.data.model.vocabulary.Word"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <argument
             android:name="categoryName"
             app:argType="string"
@@ -98,12 +98,15 @@
             android:name="categoryId"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_addEditWordFragment_to_dictionaryDialogFragment"
+            app:destination="@id/dictionaryDialogFragment" />
     </fragment>
     <dialog
         android:id="@+id/imageDialogFragment"
         android:name="abm.co.studycards.ui.add_word.dialog.image.ImageDialogFragment"
         android:label="fragment_image_dialog"
-        tools:layout="@layout/fragment_image_dialog" >
+        tools:layout="@layout/fragment_image_dialog">
         <argument
             android:name="wordName"
             app:argType="string"
@@ -112,14 +115,14 @@
     <fragment
         android:id="@+id/inCategoryFragment"
         android:name="abm.co.studycards.ui.in_category.InCategoryFragment"
-        android:label="InCategoryFragment" >
+        android:label="InCategoryFragment">
         <action
             android:id="@+id/action_inCategoryFragment_to_addEditWordFragment"
             app:destination="@id/addEditWordFragment"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
         <argument
             android:name="category"
             app:argType="abm.co.studycards.data.model.vocabulary.Category" />
@@ -129,9 +132,9 @@
     </fragment>
     <dialog
         android:id="@+id/selectLearnTypeDialogFragment"
-        android:name="abm.co.studycards.ui.learn.select.SelectLearnTypeDialogFragment"
+        android:name="abm.co.studycards.ui.games.select.SelectLearnTypeDialogFragment"
         android:label="fragment_select_learn_type_dialog"
-        tools:layout="@layout/fragment_select_learn_type_dialog" >
+        tools:layout="@layout/fragment_select_learn_type_dialog">
         <argument
             android:name="category"
             app:argType="abm.co.studycards.data.model.vocabulary.Category" />
@@ -150,8 +153,8 @@
     </dialog>
     <fragment
         android:id="@+id/toRightOrLeftFragment"
-        android:name="abm.co.studycards.ui.learn.rightleft.ToRightOrLeftFragment"
-        android:label="ToRightOrLeftFragment" >
+        android:name="abm.co.studycards.ui.games.rightleft.ToRightOrLeftFragment"
+        android:label="ToRightOrLeftFragment">
         <argument
             android:name="category"
             app:argType="string" />
@@ -161,12 +164,12 @@
     </fragment>
     <fragment
         android:id="@+id/matchingPairsFragment"
-        android:name="abm.co.studycards.ui.learn.matching.MatchingPairsFragment"
-        android:label="MatchingPairsFragment" >
+        android:name="abm.co.studycards.ui.games.matching.MatchingPairsFragment"
+        android:label="MatchingPairsFragment">
         <argument
             android:name="isRepeat"
-            app:argType="boolean"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            app:argType="boolean" />
         <argument
             android:name="words"
             app:argType="abm.co.studycards.data.model.vocabulary.Word[]" />
@@ -184,12 +187,12 @@
     </fragment>
     <fragment
         android:id="@+id/guessingFragment"
-        android:name="abm.co.studycards.ui.learn.guessing.GuessingFragment"
-        android:label="GuessingFragment" >
+        android:name="abm.co.studycards.ui.games.guessing.GuessingFragment"
+        android:label="GuessingFragment">
         <argument
             android:name="isRepeat"
-            app:argType="boolean"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            app:argType="boolean" />
         <argument
             android:name="words"
             app:argType="abm.co.studycards.data.model.vocabulary.Word[]" />
@@ -202,12 +205,12 @@
     </fragment>
     <fragment
         android:id="@+id/reviewFragment"
-        android:name="abm.co.studycards.ui.learn.review.ReviewFragment"
-        android:label="ReviewFragment" >
+        android:name="abm.co.studycards.ui.games.review.ReviewFragment"
+        android:label="ReviewFragment">
         <argument
             android:name="isRepeat"
-            app:argType="boolean"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            app:argType="boolean" />
         <action
             android:id="@+id/action_reviewFragment_self"
             app:destination="@id/reviewFragment" />
@@ -224,26 +227,41 @@
     </fragment>
     <dialog
         android:id="@+id/confirmEndFragment"
-        android:name="abm.co.studycards.ui.learn.confirmend.ConfirmEndFragment"
+        android:name="abm.co.studycards.ui.games.confirmend.ConfirmEndFragment"
         android:label="fragment_confirm_end"
-        tools:layout="@layout/fragment_confirm_end" >
+        tools:layout="@layout/fragment_confirm_end">
         <argument
             android:name="confirmType"
             app:argType="abm.co.studycards.ui.learn.confirmend.ConfirmText" />
         <argument
             android:name="category"
+            android:defaultValue="@null"
             app:argType="abm.co.studycards.data.model.vocabulary.Category"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <action
             android:id="@+id/action_confirmEndFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
     </dialog>
-    <action android:id="@+id/action_global_confirmEndFragment" app:destination="@id/confirmEndFragment" />
+    <action
+        android:id="@+id/action_global_confirmEndFragment"
+        app:destination="@id/confirmEndFragment" />
+    <dialog
+        android:id="@+id/dictionaryDialogFragment"
+        android:name="abm.co.studycards.ui.add_word.dialog.dictionary.DictionaryDialogFragment"
+        android:label="fragment_dictionary_dialog"
+        tools:layout="@layout/fragment_dictionary_dialog" >
+        <argument
+            android:name="entry"
+            app:argType="abm.co.studycards.data.model.oxford.ResultsEntry" />
+        <argument
+            android:name="from_target"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </dialog>
 </navigation>

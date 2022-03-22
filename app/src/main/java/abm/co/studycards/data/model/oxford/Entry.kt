@@ -4,6 +4,5 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Entry(val pronunciations:List<Pronunciation>?,
-                 val senses: List<Sense>?
+data class Entry(val senses: List<Sense>?
 ):Parcelable

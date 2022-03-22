@@ -2,6 +2,9 @@ package abm.co.studycards.ui.add_word.dialog.image
 
 import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentImageDialogBinding
+import abm.co.studycards.util.Constants
+import abm.co.studycards.util.Constants.REQUEST_IMAGE_KEY
+import abm.co.studycards.util.base.BaseDialogFragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,27 +19,18 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class ImageDialogFragment : DialogFragment() {
+class ImageDialogFragment : BaseDialogFragment<FragmentImageDialogBinding>(R.layout.fragment_image_dialog) {
 
     private val viewModel: ImageDialogViewModel by viewModels()
-    private lateinit var binding: FragmentImageDialogBinding
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        dialog!!.window?.setBackgroundDrawableResource(R.drawable.round_corner)
 
-        binding = FragmentImageDialogBinding.inflate(inflater, container, false)
-
-        binding.apply {
+    override fun initUI(savedInstanceState: Bundle?) {
+        binding.run {
             url.addTextChangedListener {
                 viewModel.urlText = it.toString()
             }
             url.setText(viewModel.urlText)
             urlLayout.setEndIconOnClickListener {
-                it.isEnabled = false
                 setImage()
-                it.isEnabled = true
             }
             save.setOnClickListener {
                 onDone()
@@ -47,28 +41,27 @@ class ImageDialogFragment : DialogFragment() {
             }
 
         }
-        return binding.root
     }
 
     private fun onDone() {
-        val result = viewModel.urlText
-        setFragmentResult("requestImage", bundleOf("imageUrl" to result))
+        setFragmentResult(REQUEST_IMAGE_KEY, bundleOf("image_url" to viewModel.urlText))
         dismiss()
     }
 
     override fun onStart() {
         super.onStart()
         val width = (resources.displayMetrics.widthPixels * 0.7).toInt()
-        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog!!.window?.run {
+            setBackgroundDrawableResource(R.drawable.round_corner)
+            setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
     }
 
     private fun setImage() {
-        Glide
-            .with(requireActivity())
+        Glide.with(binding.root)
             .load(viewModel.urlText)
             .centerCrop()
             .into(binding.imageView)
-
     }
 
 }

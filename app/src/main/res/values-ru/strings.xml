@@ -80,7 +80,7 @@
     <string name="do_u_want_to_delete">Вы хотите удалить эти слова?</string>
     <string name="learning_languages">Целевой язык</string>
     <string name="system_language">Язык системы</string>
-    <string name="naviagate_to_profile">Перейдите в профиль, чтобы изменить целевой или исходный языки</string>
+    <string name="navigate_to_profile">Перейдите в профиль, чтобы изменить целевой или исходный языки</string>
     <string name="name">Имя</string>
     <string name="login">Авторизоваться</string>
     <string name="registration">Зарегистрироваться</string>
@@ -109,7 +109,7 @@
         <item quantity="many"> %d слов для повторения</item>
         <item quantity="few"> %d слова для повторения</item>
     </plurals>
-    <string name="some_problems_occured">Возникли проблемы</string>
+    <string name="some_problems_occurred">Возникли проблемы</string>
     <string name="translate_count_spend">Больше попыток не осталось. Попробуйте завтра, пожалуйста.</string>
     <string name="name_translation_not_empty">Поля имени или перевода не могут быть пустыми.</string>
     <string name="choose_category">Пожалуйста, выберите категорию для этого слова.</string>

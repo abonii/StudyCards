@@ -2,7 +2,7 @@ package abm.co.studycards.ui.vocabulary
 
 import abm.co.studycards.data.model.LearnOrKnown
 import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.repository.FirebaseRepository
+import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,6 +23,7 @@ import javax.inject.Named
 class VocabularyViewModel @Inject constructor(
     @Named(CATEGORIES_REF)
     var categoriesDbRef: DatabaseReference,
+    private val repository: ServerCloudRepository
 ) : BaseViewModel() {
 
     val dispatcher = Dispatchers.IO
@@ -30,8 +31,6 @@ class VocabularyViewModel @Inject constructor(
     var currentTabType = LearnOrKnown.UNCERTAIN
     var firstBtnType = LearnOrKnown.KNOWN
     var secondBtnType = LearnOrKnown.UNKNOWN
-
-    private val repository: FirebaseRepository = FirebaseRepository(categoriesDbRef)
 
     private val _stateFlow = MutableStateFlow<VocabularyUiState>(
         VocabularyUiState.Loading

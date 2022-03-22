@@ -23,7 +23,7 @@ class SelectCategoryAdapter(
     inner class ViewHolder(private val binding: ItemSelectCategoryBinding)
         : RecyclerView.ViewHolder(binding.root) {
         fun bind(currentItem: Category) {
-            binding.apply {
+            binding.run {
                 category.text = currentItem.mainName
                 radio.setOnClickListener {
                     listener.onRadioClicked(currentItem)

@@ -1,8 +1,6 @@
 package abm.co.studycards.di
 
 import abm.co.studycards.data.network.yandex.YandexApiService
-import abm.co.studycards.data.network.yandex.YandexApiServiceHelper
-import abm.co.studycards.data.network.yandex.YandexApiServiceHelperImpl
 import abm.co.studycards.di.qualifier.TypeEnum.*
 import abm.co.studycards.di.qualifier.YandexNetwork
 import abm.co.studycards.util.Constants
@@ -23,7 +21,7 @@ import java.util.concurrent.TimeUnit
 class YandexNetworkModule {
     @Provides
     @YandexNetwork(URL)
-    fun provideYandexUrl() = Constants.baseUrlYandex
+    fun provideYandexUrl() = Constants.BASE_URL_YANDEX
 
     @Provides
     @YandexNetwork(GSON)
@@ -66,8 +64,4 @@ class YandexNetworkModule {
         @YandexNetwork(RETROFIT) retrofit: Retrofit
     ): YandexApiService = retrofit.create(YandexApiService::class.java)
 
-    @Provides
-    @YandexNetwork(APIHELPER)
-    fun provideYandexApiServiceHelper(apiHelper: YandexApiServiceHelperImpl):
-            YandexApiServiceHelper = apiHelper
 }

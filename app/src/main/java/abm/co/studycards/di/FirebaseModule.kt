@@ -62,13 +62,14 @@ object FirebaseModule {
             .child(CATEGORIES_REF).apply {
                 keepSynced(true)
             }
-    @Provides
+
     @Named(USERS_REF)
+    @Provides
     fun provideRealtimeDatabaseUser(
         db: FirebaseDatabase,
         @Named(USER_ID) userId: String
     ) =
         db.reference.child(USERS_REF).child(userId).apply {
-                keepSynced(true)
-            }
+            keepSynced(true)
+        }
 }

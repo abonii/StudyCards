@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
+    <data>
+        <variable
+            name="homefragment"
+            type="abm.co.studycards.ui.home.HomeFragment" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -22,6 +28,7 @@
                 android:id="@+id/flag_image"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:onClick="@{()->homefragment.navigateToSelectLanguages()}"
                 android:layout_gravity="end"
                 android:layout_marginEnd="8dp"
                 app:srcCompat="@drawable/overlayed_flags"
@@ -52,6 +59,7 @@
                     android:backgroundTint="@color/background"
                     android:paddingHorizontal="10dp"
                     app:srcCompat="@drawable/ic_change"
+                    android:onClick="@{()->homefragment.onChangeLanguageClicked()}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -76,9 +84,9 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:listitem="@layout/item_category"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
@@ -89,6 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="12dp"
+            android:onClick="@{()->homefragment.onFloatingActionCategoryClick()}"
             android:backgroundTint="@color/colorPrimary"
             android:contentDescription="@string/add_word"
             android:drawableLeft="@drawable/ic_folder"
@@ -109,6 +118,7 @@
             android:backgroundTint="@color/colorPrimary"
             android:contentDescription="@string/add_word"
             android:drawableLeft="@drawable/ic_note"
+            android:onClick="@{()->homefragment.onFloatingActionWordClick()}"
             android:drawableTint="@color/white"
             android:text="@string/create_word"
             android:textColor="@color/white"
@@ -122,6 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
+            android:onClick="@{()->homefragment.onFloatingActionClick()}"
             android:layout_marginBottom="12dp"
             android:backgroundTint="@color/colorPrimary"
             android:contentDescription="@string/add_word"
@@ -160,5 +171,16 @@
                 <include layout="@layout/item_category_shimmer"/>
             </LinearLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <TextView
+            android:id="@+id/error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

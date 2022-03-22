@@ -2,159 +2,123 @@ package abm.co.studycards.ui.in_category
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.FragmentInCategoryBinding
 import abm.co.studycards.helpers.SwipeToDeleteCallback
 import abm.co.studycards.util.base.BaseBindingFragment
+import abm.co.studycards.util.fromHtml
+import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import android.widget.Toast
-import androidx.core.view.isVisible
+import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import java.util.*
 
 @AndroidEntryPoint
 class InCategoryFragment :
-    BaseBindingFragment<FragmentInCategoryBinding>(R.layout.fragment_in_category),
-    WordsAdapter.OnItemClick {
+    BaseBindingFragment<FragmentInCategoryBinding>(R.layout.fragment_in_category) {
 
+    private var wordsAdapter: WordsAdapter? = null
     private val viewModel: InCategoryViewModel by viewModels()
-    private var wordsAdapter: WordsAdapter = WordsAdapter(this, isLanguageInstalled())
     private var snackbar: Snackbar? = null
     private lateinit var textToSpeech: TextToSpeech
 
     override fun initUI(savedInstanceState: Bundle?) {
-        initViews()
-        setObservers()
-//        setOnBackPressed()
+        binding.inCategoryFragment = this
+        initTextToSpeech()
+        setToolbar()
+        initFAB()
+        collectData()
+        setUpRecyclerView()
     }
-
-//    private fun setOnBackPressed() {
-//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
-//            object : OnBackPressedCallback(true) {
-//                override fun handleOnBackPressed() {
-//                    if (!wordsAdapter.isShortClickActivated) {
-//                        isEnabled = false
-//                        requireActivity().onBackPressed()
-//                    } else {
-//                        wordsAdapter.disableSelectableItems()
-//                        onSelectItems(false, 0)
-//                    }
-//                }
-//            })
-//    }
 
     private fun setToolbar() {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
     }
 
-    private fun initViews() {
-        binding.apply {
-            floatingActionButton.setOnClickListener { onFloatingActionWordClick() }
-            edit.setOnClickListener { directToEditCategory() }
-//            deleteCategory.setOnClickListener { onDeleteClicked() }
+
+    private fun collectData() {
+        launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
+            viewModel.stateFlow.collect {
+                when (it) {
+                    is InCategoryUiState.Error -> errorOccurred(it.msg)
+                    InCategoryUiState.Loading -> onLoading()
+                    is InCategoryUiState.Success -> onSuccess(it.value)
+                }
+            }
         }
-        setTextToSpeech()
-        setToolbar()
-        setUpRecyclerView()
-        initFAB()
+        launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
+            viewModel.categoryStateFlow.collect {
+                if (it.mainName.isNotEmpty()) {
+                    binding.folderName.text = it.mainName.uppercase()
+                    viewModel.category = it
+                }
+            }
+        }
     }
 
-    private fun setTextToSpeech() {
+    private fun onSuccess(value: List<Word>) = binding.run {
+        wordsAdapter?.submitList(value)
+        progressBar.visibility = View.GONE
+        error.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+    }
+
+    private fun onLoading() = binding.run {
+        error.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
+    }
+
+    private fun errorOccurred(text: String) = binding.run {
+        error.visibility = View.VISIBLE
+        error.text = text
+        progressBar.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+    }
+
+    private fun initTextToSpeech() {
         textToSpeech = TextToSpeech(requireContext()) {
             if (it != TextToSpeech.ERROR) {
                 textToSpeech.language = Locale(viewModel.targetLang)
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Occurred some problem with audio",
-                    Toast.LENGTH_SHORT
-                ).show()
+                viewModel.isLanguageInstalled =
+                    textToSpeech.voices.contains(textToSpeech.voice)
             }
         }
-    }
-
-    private fun setObservers() {
-        viewModel.categoryLiveData.observe(viewLifecycleOwner, {
-            if(!it.mainName.isNullOrEmpty()) {
-                binding.folderName.text = it.mainName.uppercase()
-                viewModel.category = it
-            }
-        })
-//        viewModel.getCategoryWithWords().observe(viewLifecycleOwner, {
-//            if (it.isEmpty()) {
-//                binding.recyclerView.visibility = View.GONE
-//                binding.text.visibility = View.VISIBLE
-//            }
-//            if (!it.equals(wordsAdapter.items)) {
-//                wordsAdapter.insertItems(it)
-//            }
-//        })
-        viewModel.thisCategoryRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                viewModel.categoryLiveData.postValue(snapshot.getValue(Category::class.java))
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                showLog(error.message, "InCategoryCategoryRef")
-            }
-        })
-        viewModel.wordsRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val items = mutableListOf<Word>()
-                snapshot.children.forEach {
-                    it.getValue(Word::class.java)?.let { it1 -> items.add(it1) }
-                }
-                wordsAdapter.submitList(items)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                showLog(error.message, "InCategoryWordRef")
-            }
-
-        })
     }
 
     private fun setUpRecyclerView() {
+        wordsAdapter = WordsAdapter(::onItemClick, ::onAudioClicked)
         binding.recyclerView.apply {
             adapter = wordsAdapter
-            setHasFixedSize(true)
-            addItemDecoration(
-                DividerItemDecoration(
-                    context,
-                    DividerItemDecoration.VERTICAL
-                )
-            )
+            addItemDecoration(getItemDecoration())
         }
-        val itemTouchHelper = ItemTouchHelper(object : SwipeToDeleteCallback(requireContext()) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.absoluteAdapterPosition
-                val deletedWord = wordsAdapter.getItem(position)
-                showUndoSnackBar(deletedWord)
-                viewModel.deleteWord(deletedWord)
-            }
-        })
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback())
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 
+    private fun getItemDecoration() =
+        DividerItemDecoration(
+            context,
+            DividerItemDecoration.VERTICAL
+        )
+
     private fun showUndoSnackBar(deletedWord: Word) {
-        val text = viewModel.makeSnackBarText(deletedWord.name)
+        val text = deletedWord.name.fromHtml()
         snackbar = Snackbar.make(binding.recyclerView, text, Snackbar.LENGTH_LONG)
             .setAction(getString(R.string.undo)) {
                 viewModel.insertWord(deletedWord)
             }
-        snackbar!!.show()
+        snackbar?.show()
     }
 
     private fun initFAB() {
@@ -162,27 +126,13 @@ class InCategoryFragment :
             .rotation(180f).duration = 500
     }
 
-//    private fun onDeleteClicked() {
-//        val items = wordsAdapter.selectedItems()
-//        AlertDialog.Builder(requireContext())
-//            .setMessage(getString(R.string.do_u_want_to_delete))
-//            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-////                viewModel.deleteWords(items)
-//                wordsAdapter.isShortClickActivated = false
-//                onSelectItems(false)
-//            }
-//            .setNegativeButton(getString(R.string.cancel)) { v, _ ->
-//                v.dismiss()
-//            }.create().show()
-//    }
-
-    private fun directToEditCategory() {
+    fun directToEditCategory() {
         val action =
             InCategoryFragmentDirections.actionInCategoryFragmentToAddEditCategoryFragment(viewModel.category)
         navigate(action)
     }
 
-    private fun onFloatingActionWordClick() {
+    fun onFloatingActionWordClick() {
         val action =
             InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
                 categoryName = viewModel.category.mainName,
@@ -192,7 +142,7 @@ class InCategoryFragment :
     }
 
 
-    override fun onItemClick(vocabulary: Word) {
+    private fun onItemClick(vocabulary: Word) {
         val action =
             InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
                 word = vocabulary,
@@ -202,40 +152,35 @@ class InCategoryFragment :
         navigate(action)
     }
 
-    override fun onSelectItems(isShortClickActivated: Boolean, selectedItemsCount: Int) {
-        binding.apply {
-            toolbar.setNavigationIcon(
-                if (isShortClickActivated) R.drawable.ic_clear
-                else R.drawable.ic_back
+    private fun onAudioClicked(word: Word) {
+        if (!viewModel.isLanguageInstalled) {
+            toast("Occurred some problem with audio, it seems you don't have the language to speech")
+        } else {
+            val newText = word.translations.joinToString(", ")
+            textToSpeech.speak(
+                newText,
+                TextToSpeech.QUEUE_FLUSH,
+                null,
+                newText
             )
-            folderName.text =
-                if (isShortClickActivated)
-                    selectedItemsCount.toString()
-                else
-                    viewModel.category.mainName
-            edit.isVisible = !isShortClickActivated
-            deleteCategory.isVisible = isShortClickActivated
-            floatingActionButton.isVisible = !isShortClickActivated
         }
     }
 
-    override fun onAudioClicked(word: Word) {
-        val newText = word.translations.joinToString(", ")
-        textToSpeech.speak(
-            newText,
-            TextToSpeech.QUEUE_FLUSH,
-            null,
-            newText
-        )
-    }
-
-    private fun isLanguageInstalled(): Boolean {
-        return true
+    private fun itemTouchHelperCallback() = object : SwipeToDeleteCallback(requireContext()) {
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.absoluteAdapterPosition
+            val deletedWord = wordsAdapter?.getItem(position)
+            if (deletedWord != null) {
+                showUndoSnackBar(deletedWord)
+                viewModel.deleteWord(deletedWord)
+            }
+        }
     }
 
     override fun onDestroyView() {
         snackbar?.dismiss()
         textToSpeech.shutdown()
+        wordsAdapter = null
         super.onDestroyView()
     }
 }
