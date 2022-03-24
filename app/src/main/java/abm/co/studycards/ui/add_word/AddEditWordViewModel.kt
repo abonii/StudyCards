@@ -8,7 +8,6 @@ import abm.co.studycards.data.model.vocabulary.*
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.DictionaryRepository
 import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.ui.games.matching.TAG
 import abm.co.studycards.util.Constants
 import abm.co.studycards.util.Constants.OXFORD_CAN_TRANSLATE_MAP
 import abm.co.studycards.util.base.BaseViewModel
@@ -257,12 +256,7 @@ class AddEditWordViewModel @Inject constructor(
         }
     }
 
-    fun onDictionaryReceived(
-        examples: String?,
-        translations: String?,
-        fromTarget: Boolean,
-    ) {
-        Log.i(TAG, "onDictionaryReceived: $examples")
+    fun onDictionaryReceived(examples: String?, translations: String?, fromTarget: Boolean) {
         examplesStateFlow.value = examples ?: ""
         if (!fromTarget) {
             sourceWordStateFlow.value = translations ?: ""

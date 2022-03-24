@@ -2,6 +2,7 @@ package abm.co.studycards.ui.games.rightleft
 
 import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemCardFinallyBinding
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
@@ -16,9 +17,12 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-
-class CardStackAdapter constructor(val listener: OnClick) :
+class CardStackAdapter constructor(
+    private val onShakeCard: () -> Unit,
+    private val onAudioClicked: (Word) -> Unit
+) :
     RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
+
     var words: List<Word> = ArrayList()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
@@ -36,19 +40,17 @@ class CardStackAdapter constructor(val listener: OnClick) :
         holder.bind(currentItem)
     }
 
-    override fun getItemCount(): Int {
-        return words.size
-    }
+    override fun getItemCount() = words.size
 
     inner class ViewHolder(val binding: ItemCardFinallyBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.front.audioPlay.setOnClickListener {
-                listener.onAudioClicked(words[absoluteAdapterPosition])
+                onAudioClicked(words[absoluteAdapterPosition])
             }
             itemView.setOnClickListener {
                 if (binding.front.translated.isVisible) {
-                    listener.onClick()
+                    onShakeCard()
                     val shake = AnimationUtils
                         .loadAnimation(binding.root.context, R.anim.shake)
                     binding.root.startAnimation(shake)
@@ -57,12 +59,13 @@ class CardStackAdapter constructor(val listener: OnClick) :
                 }
             }
         }
+
         fun bind(currentItem: Word) {
             Glide.with(binding.front.image)
                 .load(currentItem.imageUrl)
                 .into(binding.front.image)
             binding.front.word.text = currentItem.name
-            binding.front.translated.text = currentItem.translations.joinToString(", ")
+            binding.front.translated.text = currentItem.translationsToString()
             bindFrontLayout()
         }
 
@@ -87,34 +90,6 @@ class CardStackAdapter constructor(val listener: OnClick) :
             binding.front.image.isVisible = false
             binding.front.translated.isVisible = false
         }
-
-//        private fun onShakeVisibilityOn() {
-//            binding.front.myBottomOverlay.apply {
-//                isVisible = true
-//                animate().alpha(1f).setDuration(1500).withEndAction {
-//                    isVisible = false
-//                }.start()
-//            }
-//            binding.front.myLeftOverlay.apply {
-//                isVisible = true
-//                animate().alpha(1f).setDuration(1500).withEndAction {
-//                    isVisible = false
-//                }.start()
-//            }
-//            binding.front.myRightOverlay.apply {
-//                isVisible = true
-//                animate().alpha(1f).setDuration(1500).withEndAction {
-//                    isVisible = false
-//                }.start()
-//            }
-//            val shake = AnimationUtils
-//                .loadAnimation(binding.root.context, R.anim.shake)
-//            binding.root.startAnimation(shake)
-//        }
     }
 
-    interface OnClick {
-        fun onClick()
-        fun onAudioClicked(word: Word)
-    }
 }

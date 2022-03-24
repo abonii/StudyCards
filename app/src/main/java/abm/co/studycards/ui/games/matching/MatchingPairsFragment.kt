@@ -21,19 +21,17 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MatchingPairsFragment :
-    BaseBindingFragment<FragmentMatchingPairsBinding>(R.layout.fragment_matching_pairs),
-    MatchingAdapter.OnClickCard {
+    BaseBindingFragment<FragmentMatchingPairsBinding>(R.layout.fragment_matching_pairs){
     private val viewModel: MatchingPairsViewModel by viewModels()
     private lateinit var adapterTranslatedWords: MatchingAdapter
     private lateinit var adapterWords: MatchingAdapter
 
     override fun initUI(savedInstanceState: Bundle?) {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
-        adapterWords = MatchingAdapter(this, false).apply {
+        adapterWords = MatchingAdapter(::onClick, false).apply {
             words = viewModel.getWords()
         }
-        adapterTranslatedWords = MatchingAdapter(this, true).apply {
+        adapterTranslatedWords = MatchingAdapter(::onClick, true).apply {
             words = viewModel.getWords()
         }
     }
@@ -54,7 +52,7 @@ class MatchingPairsFragment :
         }
     }
 
-    override fun onClick(
+    fun onClick(
         currentItemId: String,
         isTranslatedWord: Boolean,
     ): Boolean {
@@ -140,5 +138,3 @@ class MatchingPairsFragment :
         scaleDown.start()
     }
 }
-
-const val TAG = "MatchingPairs"

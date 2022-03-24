@@ -2,6 +2,7 @@ package abm.co.studycards.ui.games.guessing
 
 import abm.co.studycards.data.model.LearnOrKnown
 import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants
 import abm.co.studycards.util.Constants.ONE_TIME_CYCLE_GAME
 import abm.co.studycards.util.base.BaseViewModel
@@ -9,6 +10,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -16,7 +18,7 @@ import javax.inject.Named
 
 @HiltViewModel
 class GuessingViewModel @Inject constructor(
-    @Named(Constants.CATEGORIES_REF) private val categoriesDbRef: DatabaseReference,
+    private val repository: ServerCloudRepository,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel() {
     var isClicked: Boolean = false
@@ -67,21 +69,9 @@ class GuessingViewModel @Inject constructor(
         return calendar.timeInMillis
     }
 
-    private fun updateWord(copy: Word) {
-        viewModelScope.launch {
-            updateWordLearnType(copy)
-        }
-    }
-
-    private fun updateWordLearnType(word: Word) {
-        launchIO {
-            categoriesDbRef.child(word.categoryID)
-                .child(Constants.WORDS_REF)
-                .child(word.wordId)
-                .updateChildren(mapOf(
-                    Word.LEARN_OR_KNOWN to word.learnOrKnown,
-                    Word.REPEAT_COUNT to word.repeatCount,
-                    Word.NEXT_REPEAT_TIME to word.nextRepeatTime))
+    private fun updateWord(word: Word) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateWordRepeatType(word)
         }
     }
 }

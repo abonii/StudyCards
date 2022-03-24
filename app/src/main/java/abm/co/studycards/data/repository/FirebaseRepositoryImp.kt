@@ -13,7 +13,7 @@ import javax.inject.Named
 class FirebaseRepositoryImp @Inject constructor(
     @Named(Constants.CATEGORIES_REF)
     private val categoriesDbRef: DatabaseReference
-):ServerCloudRepository{
+) : ServerCloudRepository {
 
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
@@ -52,5 +52,18 @@ class FirebaseRepositoryImp @Inject constructor(
             .child(Constants.WORDS_REF)
             .child(word.wordId)
             .updateChildren(mapOf(Word.LEARN_OR_KNOWN to word.learnOrKnown))
+    }
+
+    override fun updateWordRepeatType(word: Word) {
+        categoriesDbRef.child(word.categoryID)
+            .child(Constants.WORDS_REF)
+            .child(word.wordId)
+            .updateChildren(
+                mapOf(
+                    Word.LEARN_OR_KNOWN to word.learnOrKnown,
+                    Word.REPEAT_COUNT to word.repeatCount,
+                    Word.NEXT_REPEAT_TIME to word.nextRepeatTime
+                )
+            )
     }
 }

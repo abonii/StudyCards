@@ -21,14 +21,14 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.fragment_guessing),
-    OptionsAdapter.OnClickCard {
+class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.fragment_guessing){
 
     private val viewModel: GuessingViewModel by viewModels()
-    private val adapter: OptionsAdapter = OptionsAdapter(this)
+    private lateinit var adapter: OptionsAdapter
 
     override fun initUI(savedInstanceState: Bundle?) {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
+        adapter = OptionsAdapter(::onClick)
         binding.apply {
             toolbar.setNavigationIcon(R.drawable.ic_back)
             word.text = viewModel.getWord().name
@@ -42,7 +42,7 @@ class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.f
         }
     }
 
-    override fun onClick(view: View, currentItemId: String) {
+     fun onClick(view: View, currentItemId: String) {
         if (!viewModel.isClicked) {
             if (viewModel.getWord().wordId == currentItemId) {
                 onAnsweredCorrect(view)

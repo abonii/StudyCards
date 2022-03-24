@@ -1,44 +1,28 @@
 package abm.co.studycards.ui.games.select
 
+import abm.co.studycards.R
 import abm.co.studycards.anim.Animations
-import abm.co.studycards.data.model.LearnOrKnown
-import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.FragmentSelectLearnTypeDialogBinding
+import abm.co.studycards.util.base.BaseDialogFragment
 import abm.co.studycards.util.navigate
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @AndroidEntryPoint
-class SelectLearnTypeDialogFragment : DialogFragment() {
+class SelectLearnTypeDialogFragment :
+    BaseDialogFragment<FragmentSelectLearnTypeDialogBinding>(R.layout.fragment_select_learn_type_dialog) {
 
-    private lateinit var binding: FragmentSelectLearnTypeDialogBinding
     private val viewModel: SelectLearnTypeViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        binding = FragmentSelectLearnTypeDialogBinding.inflate(inflater, container, false)
-        setBindings()
+    override fun initUI(savedInstanceState: Bundle?) {
+        setClickListeners()
         setViewModels()
-
-        return binding.root
     }
 
-    private fun setBindings() {
-        binding.apply {
+    private fun setClickListeners() {
+        binding.run {
             learn.setOnClickListener {
                 onLearnClicked()
             }
@@ -58,53 +42,13 @@ class SelectLearnTypeDialogFragment : DialogFragment() {
                 onGuessingClicked()
             }
         }
-        lifecycleScope.launchWhenCreated {
-            viewModel.apply {
-                currentCategory.addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        allWordsList.clear()
-                        unlearnedWordsList.clear()
-                        repeatWordsList.clear()
-                        undefinedWordsList.clear()
-                        Log.i("qwert", "++${category.id}")
-                        snapshot.children.forEach { words ->
-                            words.getValue(Word::class.java)
-                                ?.let { word ->
-                                    Log.i("qwert", word.name + "++")
-                                    val currentTime = Calendar.getInstance().timeInMillis
-                                    val type = LearnOrKnown.getType(word.learnOrKnown)
-                                    if (LearnOrKnown.UNCERTAIN == type || LearnOrKnown.UNKNOWN == type) {
-                                        if (word.nextRepeatTime <= currentTime)
-                                            repeatWordsList.add(word)
-                                        unlearnedWordsList.add(word)
-                                    }
-                                    if (LearnOrKnown.UNDEFINED == type) {
-                                        undefinedWordsList.add(word)
-                                    }
-                                    allWordsList.add(word)
-                                }
-
-                        }
-                        allWordsListLive.postValue(allWordsList)
-                        repeatWordsLive.postValue(repeatWordsList)
-                        undefinedWordsListLive.postValue(undefinedWordsList)
-                        unlearnedWordsListLive.postValue(unlearnedWordsList)
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-
-                    }
-                })
-            }
-
-        }
     }
 
 
     private fun setViewModels() {
         viewModel.undefinedWordsListLive.observe(viewLifecycleOwner) {
             val subtitleText = viewModel.getTextForLearnSubtitle(requireContext(), it.size)
-            binding.apply {
+            binding.run {
                 learnSubtitle.text = subtitleText
                 oneGameSubtitle.text = subtitleText
             }
@@ -113,9 +57,7 @@ class SelectLearnTypeDialogFragment : DialogFragment() {
 
         viewModel.unlearnedWordsListLive.observe(viewLifecycleOwner) {
             val subtitleText = viewModel.getTextForRepeatSubtitle(requireContext(), it.size)
-            binding.apply {
-                oneGameSubtitle2.text = subtitleText
-            }
+            binding.oneGameSubtitle2.text = subtitleText
             viewModel.unlearnedWordsList = it
         }
         viewModel.allWordsListLive.observe(viewLifecycleOwner) {

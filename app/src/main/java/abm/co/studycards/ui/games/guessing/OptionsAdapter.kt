@@ -9,9 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class OptionsAdapter(
-    private val listener: OnClickCard,
-) : RecyclerView.Adapter<OptionsAdapter.ViewHolder>() {
+class OptionsAdapter(private val onClickCard: (View, String) -> Unit) :
+    RecyclerView.Adapter<OptionsAdapter.ViewHolder>() {
+
     var words: List<Word> = ArrayList()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
@@ -26,7 +26,7 @@ class OptionsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = words[position]
-        holder.bind(currentItem, listener)
+        holder.bind(currentItem)
     }
 
     override fun getItemCount(): Int {
@@ -35,23 +35,16 @@ class OptionsAdapter(
 
     inner class ViewHolder(val binding: ItemOptionBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
+            binding.root.setOnClickListener {
+                onClickCard(binding.option, words[absoluteAdapterPosition].wordId)
+            }
             views.add(binding.option)
         }
 
-        fun bind(currentItem: Word, listener: OnClickCard) {
+        fun bind(currentItem: Word) {
             binding.option.text = currentItem.translations.joinToString(", ")
             binding.option.setBackgroundColor(Color.TRANSPARENT)
-            binding.root.setOnClickListener {
-                listener.onClick(binding.option, currentItem.wordId)
-            }
         }
-    }
-
-    interface OnClickCard {
-        fun onClick(
-            view: View,
-            currentItemId: String,
-        )
     }
 
 }

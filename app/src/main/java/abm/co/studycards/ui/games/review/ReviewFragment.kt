@@ -26,9 +26,8 @@ class ReviewFragment : BaseBindingFragment<FragmentReviewBinding>(R.layout.fragm
 
     override fun initUI(savedInstanceState: Bundle?) {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
         reviewAdapter = ReviewAdapter().apply {
-            words = if (viewModel.isRepeat) viewModel.getFiveWords().toMutableList()
+            words = if (viewModel.isRepeat) viewModel.getFiveWords()
             else viewModel.words.toMutableList()
         }
         mLayoutManager = CenterZoomLayoutManager(
@@ -38,10 +37,9 @@ class ReviewFragment : BaseBindingFragment<FragmentReviewBinding>(R.layout.fragm
         snapHelper = SnapHelperOneByOne().apply {
             attachToRecyclerView(binding.recyclerView)
         }
-        binding.recyclerView.apply {
+        binding.recyclerView.run {
             layoutManager = mLayoutManager
             adapter = reviewAdapter
-            setHasFixedSize(true)
             addOnScrollListener(onScroll())
         }
     }
@@ -80,5 +78,3 @@ class ReviewFragment : BaseBindingFragment<FragmentReviewBinding>(R.layout.fragm
         navigate(action)
     }
 }
-//const val TAG = "reviewFragment"
-

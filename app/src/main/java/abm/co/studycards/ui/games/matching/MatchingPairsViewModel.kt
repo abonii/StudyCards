@@ -2,15 +2,15 @@ package abm.co.studycards.ui.games.matching
 
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.util.Constants.ONE_TIME_CYCLE_GAME
+import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class MatchingPairsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : BaseViewModel() {
     var translatedClickedItem: String = ""
     var wordClickedItem: String = ""
     var countOfElements = 0

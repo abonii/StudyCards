@@ -1,6 +1,7 @@
 package abm.co.studycards.ui.games.review
 
 import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemReviewBinding
 import android.annotation.SuppressLint
 import android.graphics.BlurMaskFilter
@@ -38,11 +39,10 @@ class ReviewAdapter : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
     inner class ViewHolder(val binding: ItemReviewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(currentItem: Word) {
             binding.word.text = currentItem.name
-            Glide
-                .with(binding.image)
+            Glide.with(binding.image)
                 .load(currentItem.imageUrl)
                 .into(binding.image)
-            binding.translated.text = currentItem.translations.joinToString("; ")
+            binding.translated.text = currentItem.translationsToString()
             val radius: Float = binding.translated.textSize / 3
             val filter = BlurMaskFilter(radius, BlurMaskFilter.Blur.NORMAL)
             binding.translated.paint.maskFilter = filter

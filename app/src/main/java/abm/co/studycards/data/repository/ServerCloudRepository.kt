@@ -11,4 +11,5 @@ interface ServerCloudRepository {
     suspend fun addWord(word: Word)
     fun updateWordLearnType(word: Word)
     fun updateWord(word: Word)
+    fun updateWordRepeatType(word: Word)
 }

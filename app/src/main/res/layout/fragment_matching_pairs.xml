@@ -35,6 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:overScrollMode="never"
+            tools:listitem="@layout/item_matching_card"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/second_recycler"
             app:layout_constraintHorizontal_weight="1"

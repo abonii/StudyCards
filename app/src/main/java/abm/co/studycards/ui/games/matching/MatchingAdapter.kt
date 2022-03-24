@@ -1,6 +1,7 @@
 package abm.co.studycards.ui.games.matching
 
 import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemMatchingCardBinding
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
@@ -11,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 
 class MatchingAdapter(
-    private val listener: OnClickCard,
+    private val onClickCard: (String, Boolean) -> Boolean,
     private val isTranslatedWords: Boolean,
 ) : RecyclerView.Adapter<MatchingAdapter.ViewHolder>() {
     var words: List<Word> = ArrayList()
@@ -28,7 +29,10 @@ class MatchingAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return ViewHolder(ItemMatchingCardBinding.inflate(inflater, parent, false))
+        return ViewHolder(
+            ItemMatchingCardBinding.inflate(inflater, parent, false),
+            isTranslatedWords
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -36,41 +40,31 @@ class MatchingAdapter(
 
         if (position == selectedItemPos)
             holder.selectedCardStroke()
-        else
-            holder.defaultCardStroke()
-
-        if (isTranslatedWords) {
-            holder.bindTranslated(currentItem, listener)
-        } else {
-            holder.bind(currentItem, listener)
-        }
+        else holder.defaultCardStroke()
+        holder.bind(currentItem)
     }
 
     override fun getItemCount(): Int {
         return words.size
     }
 
-    inner class ViewHolder(val binding: ItemMatchingCardBinding) :
+    inner class ViewHolder(
+        val binding: ItemMatchingCardBinding,
+        private val isTranslatedWords: Boolean
+    ) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(currentItem: Word, listener: OnClickCard) {
-            binding.word.text = currentItem.name
+        init {
             binding.root.setOnClickListener {
                 currentItemCard = it as MaterialCardView
-                if (listener.onClick(currentItem.wordId, false))
+                if (onClickCard(words[absoluteAdapterPosition].wordId, isTranslatedWords))
                     changeSelectedPosition()
                 lastItemCard = currentItemCard
             }
-
         }
 
-        fun bindTranslated(currentItem: Word, listener: OnClickCard) {
-            binding.word.text = currentItem.translations.joinToString(", ")
-            binding.root.setOnClickListener {
-                currentItemCard = it as MaterialCardView
-                if (listener.onClick(currentItem.wordId, true))
-                    changeSelectedPosition()
-                lastItemCard = currentItemCard
-            }
+        fun bind(currentItem: Word) {
+            binding.word.text =
+                if (!isTranslatedWords) currentItem.name else currentItem.translationsToString()
         }
 
         private fun changeSelectedPosition() {
@@ -101,11 +95,5 @@ class MatchingAdapter(
         }
     }
 
-    interface OnClickCard {
-        fun onClick(
-            currentItemId: String,
-            isTranslatedWord: Boolean,
-        ): Boolean
-    }
 
 }

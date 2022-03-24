@@ -3,6 +3,7 @@ package abm.co.studycards.ui.games.rightleft
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.FragmentToRightOrLeftBinding
 import abm.co.studycards.ui.games.confirmend.ConfirmText
 import abm.co.studycards.util.base.BaseBindingFragment
@@ -10,7 +11,6 @@ import abm.co.studycards.util.navigate
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.yuyakaido.android.cardstackview.*
@@ -21,7 +21,7 @@ import java.util.*
 @AndroidEntryPoint
 class ToRightOrLeftFragment :
     BaseBindingFragment<FragmentToRightOrLeftBinding>(R.layout.fragment_to_right_or_left),
-    CardStackListener, CardStackAdapter.OnClick {
+    CardStackListener {
 
     private val viewModel: RightOrLeftViewModel by viewModels()
     private lateinit var cardAdapter: CardStackAdapter
@@ -31,38 +31,34 @@ class ToRightOrLeftFragment :
     override fun initUI(savedInstanceState: Bundle?) {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
         setTextToSpeech()
-        cardAdapter = CardStackAdapter(this)
+        cardAdapter = CardStackAdapter(::onShakeCard, ::onAudioClicked)
+            .apply { words = viewModel.words }
         cardLayoutManager = CardStackLayoutManager(requireContext(), this)
-        binding.apply {
+            .apply {
+                setStackFrom(StackFrom.Top)
+                setVisibleCount(3)
+                setDirections(listOf(Direction.Right, Direction.Left, Direction.Bottom))
+                setCanScrollHorizontal(true)
+                setCanScrollVertical(true)
+                setTranslationInterval(4.0f)
+                setScaleInterval(0.95f)
+                setSwipeThreshold(0.2f)
+                setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
+                setMaxDegree(20.0f)
+            }
+        binding.run {
             folderName.text = viewModel.category.uppercase()
             cardStack.layoutManager = cardLayoutManager
             cardStack.adapter = cardAdapter
         }
-        cardLayoutManager.apply {
-            setStackFrom(StackFrom.Top)
-            setVisibleCount(3)
-            setDirections(listOf(Direction.Right, Direction.Left, Direction.Bottom))
-            setCanScrollHorizontal(true)
-            setCanScrollVertical(true)
-            setTranslationInterval(4.0f)
-            setScaleInterval(0.95f)
-            setSwipeThreshold(0.2f)
-            setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
-            setMaxDegree(20.0f)
-        }
-
-        cardAdapter.words = viewModel.words
     }
+
     private fun setTextToSpeech() {
         textToSpeech = TextToSpeech(requireContext()) {
             if (it != TextToSpeech.ERROR) {
                 textToSpeech.language = Locale(viewModel.targetLang)
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Occurred some problem with audio",
-                    Toast.LENGTH_SHORT
-                ).show()
+                toast(R.string.problem_with_audio)
             }
         }
     }
@@ -97,24 +93,18 @@ class ToRightOrLeftFragment :
     override fun onCardDisappeared(view: View?, position: Int) {}
 
     private fun overlayVisibility(myVisibility: Int) {
-        binding.myBottomOverlay.apply {
-            visibility = myVisibility
-        }
-        binding.myLeftOverlay.apply {
-            visibility = myVisibility
-        }
-        binding.myRightOverlay.apply {
-            visibility = myVisibility
-        }
+        binding.myBottomOverlay.visibility = myVisibility
+        binding.myLeftOverlay.visibility = myVisibility
+        binding.myRightOverlay.visibility = myVisibility
     }
 
-    override fun onClick() {
+    private fun onShakeCard() {
         overlayVisibility(View.VISIBLE)
     }
 
 
-    override fun onAudioClicked(word: Word) {
-        val newText = word.translations.joinToString(", ")
+    private fun onAudioClicked(word: Word) {
+        val newText = word.translationsToString()
         textToSpeech.speak(
             newText,
             TextToSpeech.QUEUE_FLUSH,
@@ -128,4 +118,3 @@ class ToRightOrLeftFragment :
         super.onDestroyView()
     }
 }
-//const val TAG = "ToRightOrLeft"
