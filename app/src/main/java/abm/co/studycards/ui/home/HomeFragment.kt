@@ -202,7 +202,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
 
     override fun onPlay(category: Category) {
         if (isFabOpen()) return
-        val action = HomeFragmentDirections.actionHomeFragmentToSelectLearnTypeDialogFragment(
+        val action = HomeFragmentDirections.actionHomeFragmentToSelectGamesTypeDialogFragment(
             category
         )
         navigate(action)

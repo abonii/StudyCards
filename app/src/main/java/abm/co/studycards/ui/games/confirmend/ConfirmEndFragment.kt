@@ -19,7 +19,6 @@ import kotlinx.parcelize.Parcelize
 class ConfirmEndFragment : DialogFragment() {
 
     private lateinit var binding: FragmentConfirmEndBinding
-    private val navArgs: ConfirmEndFragmentArgs by navArgs()
     private val viewModel: ConfirmEndViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

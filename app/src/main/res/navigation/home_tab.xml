@@ -33,8 +33,8 @@
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
         <action
-            android:id="@+id/action_homeFragment_to_selectLearnTypeDialogFragment"
-            app:destination="@id/selectLearnTypeDialogFragment" />
+            android:id="@+id/action_homeFragment_to_selectGamesTypeDialogFragment"
+            app:destination="@id/selectGamesTypeDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/selectLanguageFragment"
@@ -131,24 +131,24 @@
             app:destination="@id/addEditCategoryFragment" />
     </fragment>
     <dialog
-        android:id="@+id/selectLearnTypeDialogFragment"
+        android:id="@+id/selectGamesTypeDialogFragment"
         android:name="abm.co.studycards.ui.games.select.SelectLearnTypeDialogFragment"
-        android:label="fragment_select_learn_type_dialog"
+        android:label="fragment_select_games_type_dialog"
         tools:layout="@layout/fragment_select_learn_type_dialog">
         <argument
             android:name="category"
             app:argType="abm.co.studycards.data.model.vocabulary.Category" />
         <action
-            android:id="@+id/action_selectLearnTypeDialogFragment_to_toRightOrLeftFragment"
+            android:id="@+id/action_selectGamesTypeDialogFragment_to_toRightOrLeftFragment"
             app:destination="@id/toRightOrLeftFragment" />
         <action
-            android:id="@+id/action_selectLearnTypeDialogFragment_to_matchingPairsFragment"
+            android:id="@+id/action_selectGamesTypeDialogFragment_to_matchingPairsFragment"
             app:destination="@id/matchingPairsFragment" />
         <action
-            android:id="@+id/action_selectLearnTypeDialogFragment_to_guessingFragment"
+            android:id="@+id/action_selectGamesTypeDialogFragment_to_guessingFragment"
             app:destination="@id/guessingFragment" />
         <action
-            android:id="@+id/action_selectLearnTypeDialogFragment_to_reviewFragment"
+            android:id="@+id/action_selectGamesTypeDialogFragment_to_reviewFragment"
             app:destination="@id/reviewFragment" />
     </dialog>
     <fragment
@@ -232,7 +232,7 @@
         tools:layout="@layout/fragment_confirm_end">
         <argument
             android:name="confirmType"
-            app:argType="abm.co.studycards.ui.learn.confirmend.ConfirmText" />
+            app:argType="abm.co.studycards.ui.games.confirmend.ConfirmText" />
         <argument
             android:name="category"
             android:defaultValue="@null"

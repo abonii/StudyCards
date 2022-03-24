@@ -139,7 +139,7 @@ class SelectLearnTypeDialogFragment : DialogFragment() {
     private fun onGuessingClicked() {
         if (viewModel.unlearnedWordsList.isNotEmpty()) {
             val action =
-                SelectLearnTypeDialogFragmentDirections.actionSelectLearnTypeDialogFragmentToGuessingFragment(
+                SelectLearnTypeDialogFragmentDirections.actionSelectGamesTypeDialogFragmentToGuessingFragment(
                     isRepeat = false,
                     words = viewModel.getUnlearnedWordsInTypedArray()
                 )
@@ -150,7 +150,7 @@ class SelectLearnTypeDialogFragment : DialogFragment() {
     private fun onPairingClicked() {
         if (viewModel.unlearnedWordsList.isNotEmpty()) {
             val action =
-                SelectLearnTypeDialogFragmentDirections.actionSelectLearnTypeDialogFragmentToMatchingPairsFragment(
+                SelectLearnTypeDialogFragmentDirections.actionSelectGamesTypeDialogFragmentToMatchingPairsFragment(
                     isRepeat = false,
                     words = viewModel.getUnlearnedWordsInTypedArray()
                 )
@@ -162,7 +162,7 @@ class SelectLearnTypeDialogFragment : DialogFragment() {
         if (viewModel.allWordsList.isNotEmpty()) {
             val action =
                 SelectLearnTypeDialogFragmentDirections
-                    .actionSelectLearnTypeDialogFragmentToReviewFragment(
+                    .actionSelectGamesTypeDialogFragmentToReviewFragment(
                         isRepeat = false,
                         words = viewModel.getAllWordsInTypedArray()
                     )
@@ -174,7 +174,7 @@ class SelectLearnTypeDialogFragment : DialogFragment() {
         if (viewModel.undefinedWordsList.isNotEmpty()) {
             val action =
                 SelectLearnTypeDialogFragmentDirections
-                    .actionSelectLearnTypeDialogFragmentToToRightOrLeftFragment(
+                    .actionSelectGamesTypeDialogFragmentToToRightOrLeftFragment(
                         viewModel.categoryName,
                         viewModel.getLearnWordsInTypedArray()
                     )
@@ -186,7 +186,7 @@ class SelectLearnTypeDialogFragment : DialogFragment() {
         if (viewModel.repeatWordsList.isNotEmpty()) {
             val action =
                 SelectLearnTypeDialogFragmentDirections
-                    .actionSelectLearnTypeDialogFragmentToReviewFragment(
+                    .actionSelectGamesTypeDialogFragmentToReviewFragment(
                         isRepeat = true,
                         words = viewModel.getRepeatWordsInTypedArray()
                     )
