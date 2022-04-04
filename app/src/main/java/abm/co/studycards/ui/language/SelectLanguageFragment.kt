@@ -6,47 +6,40 @@ import abm.co.studycards.data.model.AvailableLanguages
 import abm.co.studycards.data.model.Language
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.databinding.FragmentSelectLanguageBinding
+import abm.co.studycards.util.base.BaseBindingFragment
 import android.os.Bundle
-import android.view.View
-import androidx.fragment.app.Fragment
+import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SelectLanguageFragment : Fragment(R.layout.fragment_select_language),
+class SelectLanguageFragment :
+    BaseBindingFragment<FragmentSelectLanguageBinding>(R.layout.fragment_select_language),
     LanguageAdapter.OnClickWithPosition {
 
     @Inject
     lateinit var prefs: Prefs
-
-    private lateinit var binding: FragmentSelectLanguageBinding
     private var nativeLanguagePosition = ""
     private var targetLanguagePosition = ""
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding = FragmentSelectLanguageBinding.bind(view)
+
+    override fun initUI(savedInstanceState: Bundle?) {
         setBindings()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     private fun setBindings() {
         setToolbar()
+        if (prefs.getSourceLanguage().isEmpty() || prefs.getTargetLanguage().isEmpty()) {
+            (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        }
         val nativeAdapter = LanguageAdapter(requireContext(), this, false)
         val targetAdapter = LanguageAdapter(requireContext(), this, true)
         nativeAdapter.addItems(AvailableLanguages.availableLanguages)
         targetAdapter.addItems(AvailableLanguages.availableLanguages)
-        binding.apply {
-            rvNativeLanguage.apply {
-                adapter = nativeAdapter
-                layoutManager =
-                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            }
-            rvLearnLanguage.apply {
-                adapter = targetAdapter
-                layoutManager =
-                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            }
+        binding.run {
+            rvNativeLanguage.adapter = nativeAdapter
+            rvLearnLanguage.adapter = targetAdapter
             readBtn.setOnClickListener {
                 onReadBtnClicked()
             }
@@ -87,6 +80,19 @@ class SelectLanguageFragment : Fragment(R.layout.fragment_select_language),
             binding.readBtn.alpha = 1f
         } else {
             binding.readBtn.alpha = 0.6f
+        }
+    }
+
+    private val callback = object : OnBackPressedCallback(
+        true /** true means that the callback is enabled */
+    ) {
+        override fun handleOnBackPressed() {
+            if (prefs.getSourceLanguage().isNotEmpty() && prefs.getTargetLanguage().isNotEmpty()) {
+                findNavController().popBackStack()
+                isEnabled = false
+            }else{
+                requireActivity().finishAffinity()
+            }
         }
     }
 

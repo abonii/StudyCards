@@ -147,6 +147,7 @@
     <string name="register_in_order_to">Register in order to use in several phones simultaneously</string>
     <string name="register">Register</string>
     <string name="linked_successfully">Successfully linked</string>
-    <string name="reset_password">Reset password</string>
+    <string name="reset_password">Reset the password</string>
     <string name="problem_with_audio">Occurred some problem with audio</string>
+    <string name="contact_us">Contact us</string>
 </resources>

@@ -7,8 +7,6 @@ import androidx.annotation.*
 interface IResourcesIDListener {
     fun getStr(@StringRes id: Int): String
 
-    fun concatStr(text: String): String
-
     @Nullable
     fun getImg(@DrawableRes id: Int): Drawable?
 

@@ -8,13 +8,11 @@ import abm.co.studycards.util.base.BaseBindingFragment
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
 
 @AndroidEntryPoint
 class VocabularyTabFragment :
@@ -62,14 +60,15 @@ class VocabularyTabFragment :
         binding.recyclerView.adapter = adapterV
     }
 
-    private fun onSuccess(value: List<Word>) = binding.run{
+    private fun onSuccess(value: List<Word>) = binding.run {
         recyclerView.visibility = View.VISIBLE
         shimmerLayout.stopShimmer()
         shimmerLayout.hideShimmer()
         shimmerLayout.visibility = View.GONE
         adapterV?.submitList(value)
     }
-    private fun onLoading() = binding.run{
+
+    private fun onLoading() = binding.run {
         shimmerLayout.startShimmer()
         shimmerLayout.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE

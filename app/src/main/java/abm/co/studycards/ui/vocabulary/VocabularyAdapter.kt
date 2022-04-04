@@ -2,6 +2,7 @@ package abm.co.studycards.ui.vocabulary
 
 import abm.co.studycards.data.model.LearnOrKnown
 import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemVocabularyTabBinding
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,7 +18,7 @@ import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection
 
 
 /**
- * [types]: at position 0 is current fragment type f.e: UNKNOWN
+ * types: at position 0 is current fragment type f.e: UNKNOWN
  * at position 1 is first button's type f.e: UNCERTAIN
  * at position 2 is second button's type f.e: KNOWN
  * */
@@ -62,10 +63,8 @@ class VocabularyAdapter(
             binding.secondBtn.setOnClickListener {
                 onChangeType(getItem(absoluteAdapterPosition), secondButton)
             }
-            expansionLayout.run {
-                addListener { _, _ ->
-                    if (swipeRevealLayout.isOpened) collapse(true)
-                }
+            expansionLayout.addListener { _, _ ->
+                if (swipeRevealLayout.isOpened) expansionLayout.collapse(true)
             }
             swipeRevealLayout.setSwipeListener(swipeListener)
         }
@@ -74,7 +73,7 @@ class VocabularyAdapter(
             changeButtons()
             expansionsCollection.add(expansionLayout)
             word.text = currentItem.name
-            translation.text = currentItem.translations.joinToString(", ")
+            translation.text = currentItem.translationsToString()
             image.isVisible = currentItem.imageUrl.isNotEmpty()
             if (currentItem.imageUrl.isNotEmpty()) {
                 Glide.with(root.context)

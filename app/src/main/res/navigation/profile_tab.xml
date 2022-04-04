@@ -11,9 +11,16 @@
         <action
             android:id="@+id/action_profileFragment_to_selectLanguageFragment2"
             app:destination="@id/selectLanguageFragment2" />
+        <action
+            android:id="@+id/action_profileFragment_to_languageOfTheAppDialogFragment"
+            app:destination="@id/languageOfTheAppDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/selectLanguageFragment2"
         android:name="abm.co.studycards.ui.language.SelectLanguageFragment"
         android:label="SelectLanguageFragment" />
+    <dialog
+        android:id="@+id/languageOfTheAppDialogFragment"
+        android:name="abm.co.studycards.ui.settings.LanguageOfTheAppDialogFragment"
+        android:label="LanguageOfTheAppDialogFragment" />
 </navigation>

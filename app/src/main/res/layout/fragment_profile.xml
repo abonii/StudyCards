@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.profile.ProfileFragment">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewmodel"
+            type="abm.co.studycards.ui.profile.ProfileViewModel" />
+
+        <variable
+            name="profileFragment"
+            type="abm.co.studycards.ui.profile.ProfileFragment" />
+    </data>
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -11,15 +25,12 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/background"
-            tools:context=".ui.profile.ProfileFragment">
+            android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/background"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -41,6 +52,7 @@
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                 android:layout_marginVertical="12dp"
                 android:orientation="vertical"
+                android:visibility="@{viewmodel.isAnonymous() ? View.VISIBLE : View.GONE}"
                 app:layout_constraintTop_toBottomOf="@id/toolbar">
 
                 <TextView
@@ -56,7 +68,8 @@
                 <com.google.android.gms.common.SignInButton
                     android:id="@+id/google_sign_in"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:onClick="@{()->profileFragment.registerWithGmail()}" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -75,8 +88,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
                     android:nextFocusDown="@id/password_container"
-                    app:boxBackgroundColor="@null"
-                    app:errorEnabled="true">
+                    app:boxBackgroundColor="@android:color/transparent"
+                    app:errorEnabled="true"
+                    app:errorText="@{viewmodel.emailError}">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/email_edit_text"
@@ -84,6 +98,10 @@
                         android:layout_height="match_parent"
                         android:fontFamily="@font/poppins_regular"
                         android:lines="1"
+                        android:maxLength="70"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="@={viewmodel.email}"
                         android:textColorHint="#757575" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,8 +113,9 @@
                     android:layout_marginTop="12dp"
                     android:hint="@string/password"
                     android:nextFocusDown="@id/login_btn"
-                    app:boxBackgroundColor="@null"
+                    app:boxBackgroundColor="@android:color/transparent"
                     app:errorEnabled="true"
+                    app:errorText="@{viewmodel.passwordError}"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -105,7 +124,10 @@
                         android:layout_height="match_parent"
                         android:fontFamily="@font/poppins_regular"
                         android:inputType="textPassword"
+                        android:lines="1"
                         android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="@={viewmodel.password}"
                         android:textColorHint="#757575" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -114,6 +136,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:onClick="@{()->viewmodel.onClickRegistration()}"
                     android:paddingVertical="15dp"
                     android:text="@string/register"
                     android:textColor="@color/white"
@@ -127,6 +150,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingHorizontal="12dp"
+                android:visibility="@{viewmodel.isAnonymous() ? View.GONE : View.VISIBLE}"
                 app:layout_constraintTop_toBottomOf="@id/login_container">
 
                 <androidx.cardview.widget.CardView
@@ -136,6 +160,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="25dp"
                     android:layout_marginBottom="30dp"
+                    android:visibility="@{viewmodel.userPhotoUrl != null ? View.VISIBLE : View.GONE}"
                     android:backgroundTint="#EDF1FF"
                     app:cardCornerRadius="50dp">
 
@@ -152,6 +177,7 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:scaleType="centerCrop"
+                            app:imageWithGlide="@{viewmodel.userPhotoUrl}"
                             app:srcCompat="@color/colorPrimary"
                             tools:ignore="ContentDescription" />
 
@@ -165,7 +191,9 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="6dp"
                     android:fontFamily="@font/poppins_medium"
+                    android:text="@{viewmodel.userName}"
                     android:textColor="@color/specialTextColor"
+                    android:visibility="@{viewmodel.userName!=null ? View.VISIBLE : View.GONE}"
                     tools:text="aboni" />
 
                 <TextView
@@ -175,7 +203,9 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="4dp"
                     android:fontFamily="@font/poppins_medium"
+                    android:text="@{viewmodel.email}"
                     android:textColor="@color/specialTextColor"
+                    android:visibility="@{viewmodel.email!=null ? View.VISIBLE : View.GONE}"
                     tools:text="abo@mail.ru" />
             </LinearLayout>
 
@@ -213,6 +243,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center_vertical"
+                        android:onClick="@{()->profileFragment.navigateToChangeAppLanguage()}"
                         android:paddingHorizontal="@dimen/activity_horizontal_margin"
                         android:paddingVertical="18dp">
 
@@ -232,11 +263,41 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:fontFamily="sans-serif-medium"
-                            android:text="@string/english"
                             android:textColor="@color/thirdTextColor"
                             android:textSize="@dimen/profile_left_side_sp"
                             tools:ignore="RelativeOverlap" />
 
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/contact_us_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:onClick="@{()->profileFragment.onClickContactUs()}"
+                        android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                        android:paddingVertical="18dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/contact_us"
+                            android:textColor="@color/thirdTextColor"
+                            android:textSize="@dimen/profile_left_side_sp"
+                            tools:ignore="RelativeOverlap" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            app:srcCompat="@drawable/ic_arrow_right"
+                            app:tint="@color/thirdTextColor"
+                            tools:ignore="ContentDescription" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -247,6 +308,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center_vertical"
+                        android:onClick="@{()->profileFragment.logout()}"
                         android:paddingHorizontal="@dimen/activity_horizontal_margin"
                         android:paddingVertical="18dp">
 

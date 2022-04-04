@@ -87,7 +87,7 @@ class LoginViewModel @Inject constructor(
                         if (it.isSuccessful) {
                             checkIfEmailVerified()
                         } else {
-                            _error.value = it.exception?.message
+                            _error.value = it.exception?.localizedMessage
                         }
                     }
             }

@@ -2,8 +2,8 @@ package abm.co.studycards.ui.games.matching
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
+import abm.co.studycards.data.model.ConfirmText
 import abm.co.studycards.databinding.FragmentMatchingPairsBinding
-import abm.co.studycards.ui.games.confirmend.ConfirmText
 import abm.co.studycards.util.Constants.ONE_TIME_CYCLE_GAME
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.navigate
@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.core.animation.doOnEnd
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,10 +22,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MatchingPairsFragment :
-    BaseBindingFragment<FragmentMatchingPairsBinding>(R.layout.fragment_matching_pairs){
+    BaseBindingFragment<FragmentMatchingPairsBinding>(R.layout.fragment_matching_pairs) {
     private val viewModel: MatchingPairsViewModel by viewModels()
-    private lateinit var adapterTranslatedWords: MatchingAdapter
-    private lateinit var adapterWords: MatchingAdapter
+    private var adapterTranslatedWords: MatchingAdapter? = null
+    private var adapterWords: MatchingAdapter? = null
 
     override fun initUI(savedInstanceState: Bundle?) {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
@@ -66,8 +67,8 @@ class MatchingPairsFragment :
 
     private fun checkIfSameWord(): Boolean {
         if (viewModel.translatedClickedItem == viewModel.wordClickedItem) {
-            disappearCards(adapterTranslatedWords.currentItemCard)
-            disappearCards(adapterWords.currentItemCard)
+            adapterTranslatedWords?.currentItemCard?.let { disappearCards(it) }
+            adapterWords?.currentItemCard?.let { disappearCards(it) }
             viewModel.countOfElements++
             viewModel.translatedClickedItem = ""
             viewModel.wordClickedItem = ""
@@ -84,16 +85,16 @@ class MatchingPairsFragment :
     private fun onBothSideClicked() {
         val shake: Animation =
             AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
-        adapterWords.apply {
-            currentItemCard.apply {
+        adapterWords?.run {
+            currentItemCard?.run {
                 strokeColor = Color.TRANSPARENT
                 startAnimation(shake)
             }
             lastItemSelectedPos = -1
             selectedItemPos = -1
         }
-        adapterTranslatedWords.apply {
-            currentItemCard.apply {
+        adapterTranslatedWords?.run {
+            currentItemCard?.run {
                 strokeColor = Color.TRANSPARENT
                 startAnimation(shake)
             }
@@ -114,7 +115,8 @@ class MatchingPairsFragment :
 
         } else {
             if (viewModel.words.size >= ONE_TIME_CYCLE_GAME && viewModel.getLastWords()
-                    .isNotEmpty()) {
+                    .isNotEmpty()
+            ) {
                 MatchingPairsFragmentDirections
                     .actionMatchingPairsFragmentSelf(
                         isRepeat = false,
@@ -136,5 +138,16 @@ class MatchingPairsFragment :
         )
         scaleDown.duration = 600
         scaleDown.start()
+        scaleDown.doOnEnd {
+            card.visibility = View.GONE
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        adapterTranslatedWords = null
+        adapterWords = null
+        viewModel.translatedClickedItem = ""
+        viewModel.wordClickedItem = ""
     }
 }

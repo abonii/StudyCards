@@ -1,44 +1,38 @@
 package abm.co.studycards.ui.settings
 
+import abm.co.studycards.R
 import abm.co.studycards.data.model.AvailableLanguages
 import abm.co.studycards.data.model.Language
 import abm.co.studycards.databinding.LanguageOfTheAppDialogBinding
+import abm.co.studycards.util.Constants
+import abm.co.studycards.util.Constants.REQUEST_SYSTEM_LANGUAGE_KEY
+import abm.co.studycards.util.base.BaseDialogFragment
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
+import androidx.recyclerview.widget.DividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LanguageOfTheAppDialogFragment(private val listener: LanguageOfTheAppAdapter.OnClick) :
-    DialogFragment(), LanguageOfTheAppAdapter.OnClick {
+class LanguageOfTheAppDialogFragment :
+    BaseDialogFragment<LanguageOfTheAppDialogBinding>(R.layout.language_of_the_app_dialog) {
 
-    private var _binding: LanguageOfTheAppDialogBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = LanguageOfTheAppDialogBinding.inflate(inflater, container, false)
+    override fun initUI(savedInstanceState: Bundle?) {
         binding.listView.adapter = LanguageOfTheAppAdapter(
-            requireContext(),
             AvailableLanguages.systemLanguages,
-            this
+            ::onSelectSystemLanguage
         )
-        return binding.root
+        binding.listView.addItemDecoration(getItemDecoration())
     }
 
-    override fun onSelectSystemLanguage(language: Language) {
-        listener.onSelectSystemLanguage(language)
+    private fun onSelectSystemLanguage(language: Language) {
+        setFragmentResult(REQUEST_SYSTEM_LANGUAGE_KEY, bundleOf("language" to language))
         dismiss()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    private fun getItemDecoration() = DividerItemDecoration(
+        requireContext(),
+        DividerItemDecoration.VERTICAL,
+    )
 
 }

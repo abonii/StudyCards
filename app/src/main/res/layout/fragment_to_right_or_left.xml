@@ -30,9 +30,9 @@
         <com.yuyakaido.android.cardstackview.CardStackView
             android:id="@+id/card_stack"
             android:layout_width="match_parent"
-            tools:listitem="@layout/item_card"
             android:layout_height="match_parent"
-            android:layout_below="@id/toolbar" />
+            android:layout_below="@id/toolbar"
+            tools:listitem="@layout/item_card" />
 
         <TextView
             android:id="@+id/my_left_overlay"

@@ -2,6 +2,7 @@ package abm.co.studycards.di
 
 import abm.co.studycards.R
 import abm.co.studycards.data.pref.Prefs
+import abm.co.studycards.util.Constants.API_KEYS
 import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.Constants.USERS_REF
 import abm.co.studycards.util.Constants.USER_ID
@@ -33,6 +34,7 @@ object FirebaseModule {
             .requestEmail()
             .build()
     }
+
     @Provides
     fun provideGoogleSignInClient(
         signInOptions: GoogleSignInOptions,
@@ -49,6 +51,10 @@ object FirebaseModule {
     fun provideFirebaseDatabase(): FirebaseDatabase {
         return FirebaseDatabase.getInstance()
     }
+
+    @Provides
+    @Named(API_KEYS)
+    fun provideApiKeys(db: FirebaseDatabase) = db.reference.child("api")
 
     @Provides
     @Named(CATEGORIES_REF)

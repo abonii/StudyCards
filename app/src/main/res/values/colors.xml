@@ -13,7 +13,7 @@
     <color name="background">#FDFDFD</color>
     <color name="tab_background">#F9FFEE</color>
     <color name="itemContainer">#10000000</color>
-    <color name="second_color">#EEEEEE</color>
+    <color name="second_color">#D6D6D6</color>
     <color name="third_color">#C4C4C4</color>
     <color name="lighter_darker">#9C9A9A</color>
     <color name="ellipse">#D5D5D5</color>
@@ -36,9 +36,7 @@
     <color name="swiping_doubted">#CFB323</color>
     <color name="green">#32CD32</color>
 
-    <color name="blue_light">#A6C1EC</color>
     <color name="blue_light_status">#A8C3EE</color>
-
 
     <array name="colors">
         <item>#00008B</item>

@@ -57,7 +57,7 @@ class VocabularyViewModel @Inject constructor(
                             }
                         }
                     }
-                    delay(500)
+                    delay(800)
                     _stateFlow.value = VocabularyUiState.Success(items)
                 }
             }
@@ -102,7 +102,7 @@ class VocabularyViewModel @Inject constructor(
     }
 
     private fun updateWordLearnType(word: Word) {
-        launchIO {
+        viewModelScope.launch(dispatcher) {
             repository.updateWordLearnType(word)
         }
     }

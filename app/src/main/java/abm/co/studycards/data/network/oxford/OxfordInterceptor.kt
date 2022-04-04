@@ -1,16 +1,13 @@
 package abm.co.studycards.data.network.oxford
 
-import abm.co.studycards.util.Constants
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
 
-class OxfordInterceptor : Interceptor {
+class OxfordInterceptor() : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val builder = chain.request().newBuilder()
-        builder.header("app_id", Constants.OXFORD_APP_ID)
-        builder.header("app_key", Constants.OXFORD_API_KEY)
         return chain.proceed(builder.build())
     }
 }

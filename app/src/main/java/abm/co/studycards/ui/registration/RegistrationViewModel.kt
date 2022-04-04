@@ -57,7 +57,7 @@ class RegistrationViewModel @Inject constructor(
                         if (it.isSuccessful) {
                             sendVerificationEmail()
                         } else {
-                            _error.value = "${it.exception?.message}"
+                            _error.value = "${it.exception?.localizedMessage}"
                         }
                         _loading.value = false
                     }

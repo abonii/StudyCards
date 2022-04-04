@@ -3,9 +3,7 @@ package abm.co.studycards.ui.vocabulary
 import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentVocabularyBinding
 import abm.co.studycards.util.base.BaseBindingFragment
-import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,8 +27,10 @@ class VocabularyFragment :
             tab.text = fragmentsArray[position]
         }.attach()
     }
-    private fun setStatusBarColor(){
-        requireActivity().window.statusBarColor = resources.getColor(R.color.blue_light_status,null)
+
+    private fun setStatusBarColor() {
+        requireActivity().window.statusBarColor =
+            resources.getColor(R.color.blue_light_status, null)
     }
 
     override fun onDestroyView() {

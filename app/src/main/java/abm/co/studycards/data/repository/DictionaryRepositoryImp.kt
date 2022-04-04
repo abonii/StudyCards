@@ -9,7 +9,6 @@ import abm.co.studycards.di.qualifier.YandexNetwork
 import abm.co.studycards.util.Constants.YANDEX_API_KEY
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
-import javax.inject.Singleton
 
 
 class DictionaryRepositoryImp @Inject constructor(
@@ -18,19 +17,27 @@ class DictionaryRepositoryImp @Inject constructor(
     @YandexNetwork(TypeEnum.APISERVICE)
     private val yandexApiService: YandexApiService,
 ) : DictionaryRepository {
-    override suspend fun getOxfordWord(word: String, sl: String, tl: String) =
+    override suspend fun getOxfordWord(
+        word: String,
+        sl: String,
+        tl: String,
+        oxfordApiId: String,
+        oxfordApiKey: String
+    ) =
         safeApiCall(Dispatchers.IO) {
             oxfordApiService.getWordTranslations(
                 sourceLang = sl,
                 targetLang = tl,
-                wordId = word
+                wordId = word,
+                oxfordApiId,
+                oxfordApiKey
             )
         }
 
-    override suspend fun getYandexWord(word: String, sl: String, tl: String) =
+    override suspend fun getYandexWord(word: String, sl: String, tl: String, yandexApiKey: String) =
         safeApiCall(Dispatchers.IO) {
             yandexApiService.getWordTranslations(
-                APIKey = YANDEX_API_KEY,
+                APIKey = yandexApiKey,
                 textToTranslate = word,
                 lang = "$sl-$tl"
             )

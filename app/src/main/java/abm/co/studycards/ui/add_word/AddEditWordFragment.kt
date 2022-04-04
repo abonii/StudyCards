@@ -11,6 +11,8 @@ import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
 import android.os.Bundle
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -61,6 +63,11 @@ class AddEditWordFragment :
                         directToOxfordWordsDialog(it.resultsEntry!!, it.fromSource)
                     }
                     AddEditWordEventChannel.PopBackStack -> findNavController().popBackStack()
+                    AddEditWordEventChannel.ShakeCategory -> {
+                        val shake: Animation =
+                            AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
+                        binding.category.startAnimation(shake)
+                    }
                 }
             }
         }

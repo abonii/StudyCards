@@ -27,6 +27,5 @@
 # This rule will properly ProGuard all the model classes in
 # the package com.yourcompany.models.
 # Modify this rule to fit the structure of your app.
--keepclassmembers class abm.co.studycards.data.models.** {
-  *;
-}
+
+-keep class abm.co.studycards.data.model.**{ *; }

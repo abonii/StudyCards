@@ -23,8 +23,8 @@ class MatchingAdapter(
         }
     var selectedItemPos = -1
     var lastItemSelectedPos = -1
-    lateinit var lastItemCard: MaterialCardView
-    lateinit var currentItemCard: MaterialCardView
+    var lastItemCard: MaterialCardView? = null
+    var currentItemCard: MaterialCardView? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -70,7 +70,7 @@ class MatchingAdapter(
         private fun changeSelectedPosition() {
             selectedItemPos = absoluteAdapterPosition
             if (lastItemSelectedPos == selectedItemPos) {
-                if (lastItemCard.strokeColorStateList == ColorStateList.valueOf(Color.RED)) {
+                if (lastItemCard?.strokeColorStateList == ColorStateList.valueOf(Color.RED)) {
                     defaultCardStroke()
                 } else {
                     selectedCardStroke()
@@ -80,7 +80,7 @@ class MatchingAdapter(
             lastItemSelectedPos = if (lastItemSelectedPos == -1)
                 selectedItemPos
             else {
-                defaultCardStroke(lastItemCard)
+                lastItemCard?.let { defaultCardStroke(it) }
                 selectedItemPos
             }
             notifyItemChanged(selectedItemPos, 0)
@@ -94,6 +94,5 @@ class MatchingAdapter(
             binding.root.strokeColor = Color.RED
         }
     }
-
 
 }

@@ -1,5 +1,6 @@
 package abm.co.studycards.ui.games.confirmend
 
+import abm.co.studycards.data.model.ConfirmText
 import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.SavedStateHandle

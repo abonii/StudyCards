@@ -70,12 +70,6 @@ abstract class BaseFragment : Fragment(), IResourcesIDListener {
     override fun getStr(@StringRes id: Int): String = getString(id)
 
     /*
-     * Concat all your text, strings and resources,
-     * to one String
-     */
-    override fun concatStr(text: String): String = text
-
-    /*
      * Get drawable (png, jpg, svg, ....) by ID
      */
     @Nullable

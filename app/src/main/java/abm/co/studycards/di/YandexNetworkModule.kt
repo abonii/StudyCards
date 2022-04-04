@@ -35,13 +35,13 @@ class YandexNetworkModule {
             logger.level = HttpLoggingInterceptor.Level.BASIC
             OkHttpClient.Builder()
                 .addInterceptor(logger)
-                .readTimeout(100, TimeUnit.SECONDS)
-                .connectTimeout(100, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
                 .build()
         } else // debug OFF
             OkHttpClient.Builder()
-                .readTimeout(100, TimeUnit.SECONDS)
-                .connectTimeout(100, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
                 .build()
 
     @Provides

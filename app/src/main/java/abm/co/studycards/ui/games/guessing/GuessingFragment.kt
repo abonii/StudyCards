@@ -2,8 +2,8 @@ package abm.co.studycards.ui.games.guessing
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
+import abm.co.studycards.data.model.ConfirmText
 import abm.co.studycards.databinding.FragmentGuessingBinding
-import abm.co.studycards.ui.games.confirmend.ConfirmText
 import abm.co.studycards.util.Constants.ONE_TIME_CYCLE_GAME
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.changeBackgroundChangesAndFlip
@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.fragment_guessing){
+class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.fragment_guessing) {
 
     private val viewModel: GuessingViewModel by viewModels()
     private lateinit var adapter: OptionsAdapter
@@ -42,7 +42,7 @@ class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.f
         }
     }
 
-     fun onClick(view: View, currentItemId: String) {
+    fun onClick(view: View, currentItemId: String) {
         if (!viewModel.isClicked) {
             if (viewModel.getWord().wordId == currentItemId) {
                 onAnsweredCorrect(view)

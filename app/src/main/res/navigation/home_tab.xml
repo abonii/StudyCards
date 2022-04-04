@@ -232,7 +232,7 @@
         tools:layout="@layout/fragment_confirm_end">
         <argument
             android:name="confirmType"
-            app:argType="abm.co.studycards.ui.games.confirmend.ConfirmText" />
+            app:argType="abm.co.studycards.data.model.ConfirmText" />
         <argument
             android:name="category"
             android:defaultValue="@null"

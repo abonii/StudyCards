@@ -1,7 +1,7 @@
 package abm.co.studycards.util.base
 
-import abm.co.studycards.common.LocaleHelper
 import abm.co.studycards.data.pref.Prefs
+import abm.co.studycards.helpers.LocaleHelper
 import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 
 abstract class BaseActivity : AppCompatActivity(), IResourcesIDListener {
@@ -23,20 +22,22 @@ abstract class BaseActivity : AppCompatActivity(), IResourcesIDListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         onCreateUI(savedInstanceState)
         this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 
     override fun attachBaseContext(newBase: Context) {
         val lang = getLang(newBase)
-        val context = LocaleHelper.setLocale(newBase, lang)
-        super.attachBaseContext(context)
+        if (lang != null) {
+            val context = LocaleHelper.setLocale(newBase, lang)
+            super.attachBaseContext(context)
+        }else
+            super.attachBaseContext(newBase)
     }
 
-    private fun getLang(context: Context): String {
+    private fun getLang(context: Context): String? {
         val sf = context.getSharedPreferences(Prefs.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        return sf.getString(Prefs.SELECTED_APP_LANGUAGE, "en") ?: "en"
+        return sf.getString(Prefs.SELECTED_APP_LANGUAGE, null)
     }
 
 
@@ -60,12 +61,6 @@ abstract class BaseActivity : AppCompatActivity(), IResourcesIDListener {
      *  example -> yourResources.getString(id);
      */
     override fun getStr(@StringRes id: Int): String = getString(id)
-
-    /*
-     * Concat all your text, strings and resources,
-     * to one String
-     */
-    override fun concatStr(text: String): String = text
 
     /*
      * Get drawable (png, jpg, svg, ....) by ID

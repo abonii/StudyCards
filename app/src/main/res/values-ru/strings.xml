@@ -114,5 +114,34 @@
     <string name="name_translation_not_empty">Поля имени или перевода не могут быть пустыми.</string>
     <string name="choose_category">Пожалуйста, выберите категорию для этого слова.</string>
     <string name="forget_password">Забыли пароль?</string>
+    <string name="error_occurred">Произошла ошибка</string>
+    <string name="forgot_password_fragment_title">Сбросить пароль</string>
+    <string name="finished_pairing">Вы закончили соединить слова в пары.</string>
+    <string name="finished_guessing">Вы закончили угадывать слова.</string>
+    <string name="finished_review">Вы закончили просмотр слов.</string>
+    <string name="finished_learning">Вы закончили учить слова.</string>
+    <string name="finished_repeating">Вы закончили повторять слова.</string>
+    <string name="google_sign">Войти с Google</string>
+    <string name="do_u_want_to_delete_category">Вы хотите удалить эту категорию?</string>
+    <string name="do_u_want_to_exit">Вы хотите выйти?</string>
+    <string name="do_u_want_to_delete_this">Вы хотите удалить <![CDATA[<b><i>%1$s</i></b>]]>?</string>
+    <string name="email_empty">Электронная почта не может быть пустой</string>
+    <string name="password_empty">Пароль не может быть пустым</string>
+    <string name="verify_password_empty">Пароль не может быть пустым</string>
+    <string name="password_length">Длина пароля должна быть более 5</string>
+    <string name="email_not_verified">Пожалуйста, подтвердите свой адрес электронной почты</string>
+    <string name="passwords_not_same">Пароли не совпадают</string>
+    <string name="we_send_verification">Мы отправили подтверждение на ваш адрес электронной почты, пожалуйста, проверьте свой адрес электронной почты</string>
+    <string name="we_send_reset_password">Мы отправили ссылку для сброса пароля на вашу электронную почту, пожалуйста, проверьте свою электронную почту</string>
+    <string name="we_couldnt_send_verification">Мы не можем отправить подтверждение на это электронное письмо</string>
+    <string name="we_couldnt_send_reset_password">Мы не смогли отправить пароль для сброса на это электронное письмо</string>
+    <string name="continue_without_registration">Войти как гость</string>
+    <string name="or">Или</string>
+    <string name="register_in_order_to">Зарегистрируйтесь, чтобы использовать на нескольких телефонах одновременно</string>
+    <string name="register">Зарегистрировать</string>
+    <string name="linked_successfully">Успешно связано</string>
+    <string name="reset_password">Сбросить пароль</string>
+    <string name="problem_with_audio">Возникла какая-то проблема со звуком</string>
+    <string name="contact_us">Связаться с нами</string>
 
 </resources>

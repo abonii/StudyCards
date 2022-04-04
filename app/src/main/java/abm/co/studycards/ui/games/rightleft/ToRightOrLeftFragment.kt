@@ -2,10 +2,10 @@ package abm.co.studycards.ui.games.rightleft
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
+import abm.co.studycards.data.model.ConfirmText
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.FragmentToRightOrLeftBinding
-import abm.co.studycards.ui.games.confirmend.ConfirmText
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.navigate
 import android.os.Bundle
@@ -42,14 +42,14 @@ class ToRightOrLeftFragment :
                 setCanScrollVertical(true)
                 setTranslationInterval(4.0f)
                 setScaleInterval(0.95f)
-                setSwipeThreshold(0.2f)
+                setSwipeThreshold(0.3f)
                 setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
-                setMaxDegree(20.0f)
+                setMaxDegree(180.0f)
             }
         binding.run {
             folderName.text = viewModel.category.uppercase()
             cardStack.layoutManager = cardLayoutManager
-            cardStack.adapter = cardAdapter
+            cardStack .adapter = cardAdapter
         }
     }
 
@@ -101,7 +101,6 @@ class ToRightOrLeftFragment :
     private fun onShakeCard() {
         overlayVisibility(View.VISIBLE)
     }
-
 
     private fun onAudioClicked(word: Word) {
         val newText = word.translationsToString()

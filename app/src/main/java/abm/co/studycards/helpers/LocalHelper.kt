@@ -1,4 +1,4 @@
-package abm.co.studycards.common
+package abm.co.studycards.helpers
 
 import android.annotation.TargetApi
 import android.content.Context

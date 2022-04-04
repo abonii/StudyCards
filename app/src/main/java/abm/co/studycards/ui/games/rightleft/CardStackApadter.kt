@@ -20,8 +20,7 @@ import com.bumptech.glide.Glide
 class CardStackAdapter constructor(
     private val onShakeCard: () -> Unit,
     private val onAudioClicked: (Word) -> Unit
-) :
-    RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
 
     var words: List<Word> = ArrayList()
         @SuppressLint("NotifyDataSetChanged")

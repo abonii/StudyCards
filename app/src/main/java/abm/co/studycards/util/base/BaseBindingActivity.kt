@@ -1,5 +1,6 @@
 package abm.co.studycards.util.base
 
+import abm.co.studycards.R
 import android.content.Context
 import android.os.Bundle
 import android.view.MotionEvent
@@ -25,6 +26,7 @@ abstract class BaseBindingActivity<B : ViewDataBinding>(@LayoutRes private val l
 
     override fun onCreateUI(savedInstanceState: Bundle?) {
         //  Override Resources ID Layout
+        setTheme(R.style.Theme_StudyCards)
         _binding = DataBindingUtil.setContentView(this, layoutResID)
         //  Initialize all widget in layout by ID
         initViews(savedInstanceState)

@@ -2,7 +2,6 @@ package abm.co.studycards
 
 import abm.co.studycards.databinding.ActivityMainBinding
 import abm.co.studycards.ui.login.LoginActivity
-import abm.co.studycards.util.Constants.SHOULD_I_OPEN_PROFILE_FRAGMENT
 import abm.co.studycards.util.base.BaseBindingActivity
 import abm.co.studycards.util.setupWithNavController
 import android.content.Intent
@@ -11,8 +10,11 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,33 +22,31 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
 
     private val viewModel: MainViewModel by viewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+        super.onCreate(savedInstanceState)
+        checkIfLoggedIn()
+    }
+
     override fun initViews(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
-            checkIfIntentExtrasHas()
         }
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        checkIfLoggedIn()
-        checkLearnLanguagesSelected()
-    }
-
     private fun checkLearnLanguagesSelected() {
-        if (viewModel.prefs.getSourceLanguage().isBlank()
-            || viewModel.prefs.getTargetLanguage().isBlank()) {
+        if (viewModel.isTargetAndSourceLangSet()) {
             viewModel.currentNavController?.navigate(R.id.selectLanguageFragment)
         }
     }
 
     private fun checkIfLoggedIn() {
         if (viewModel.getCurrentUser() == null) {
-            Intent(this, LoginActivity::class.java).also {
-                startActivity(it)
-            }
+            val i = Intent(this, LoginActivity::class.java)
+            startActivity(i)
             finish()
         } else {
+            checkLearnLanguagesSelected()
             viewModel.setDailyTranslateTime()
         }
     }
@@ -61,17 +61,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                 || super.onSupportNavigateUp()
     }
 
-    private fun checkIfIntentExtrasHas() {
-        if (intent.extras != null) {
-            val openProfile = intent.getBooleanExtra(
-                SHOULD_I_OPEN_PROFILE_FRAGMENT, false
-            )
-            if (openProfile) {
-                binding.bottomNavView.selectedItemId = R.id.profile_tab
-                viewModel.currentNavController?.setGraph(R.navigation.profile_tab, intent.extras)
-            }
-        }
-    }
+//    private fun checkIfIntentExtrasHas() {
+//        if (intent.extras != null) {
+//            val openProfile = intent.getBooleanExtra(
+//                SHOULD_I_OPEN_PROFILE_FRAGMENT, false
+//            )
+//            if (!openProfile) {
+//                binding.bottomNavView.selectedItemId = R.id.profile_tab
+//                viewModel.currentNavController?.setGraph(R.navigation.profile_tab, intent.extras)
+//            }
+//        }
+//    }
 
 
     private fun setupBottomNavigationBar() {
@@ -122,7 +122,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
     private fun slideUp() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.slide_up)
         binding.bottomNavView.run {
-            if(visibility != View.VISIBLE) {
+            if (visibility != View.VISIBLE) {
                 startAnimation(animation)
                 visibility = View.VISIBLE
             }

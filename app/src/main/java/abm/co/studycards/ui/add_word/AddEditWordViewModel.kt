@@ -32,6 +32,7 @@ import javax.inject.Named
 class AddEditWordViewModel @Inject constructor(
     private val repository: DictionaryRepository,
     @Named(Constants.USERS_REF) var userRef: DatabaseReference,
+    @Named(Constants.API_KEYS) var apiKeys: DatabaseReference,
     private val firebaseRepository: ServerCloudRepository,
     prefs: Prefs,
     savedStateHandle: SavedStateHandle,
@@ -74,8 +75,11 @@ class AddEditWordViewModel @Inject constructor(
     private val _imageStateFlow = MutableStateFlow(word?.imageUrl)
     val imageStateFlow = _imageStateFlow.asStateFlow()
 
-    init {
+    private var oxfordApiKey = "IdIk4ortU"
+    private var oxfordApiId = "IdIk4ortU"
+    private var yandexApiKey = "IdIk4ortU"
 
+    init {
         userRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.child("canTranslateTimeEveryDay").value?.let {
@@ -86,7 +90,22 @@ class AddEditWordViewModel @Inject constructor(
             override fun onCancelled(error: DatabaseError) {
                 Log.i("ABO_ADD_WORD", error.message)
             }
-
+        })
+        apiKeys.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.child("oxford_key").value?.let {
+                    oxfordApiKey = it.toString()
+                }
+                snapshot.child("oxford_id").value?.let {
+                    oxfordApiId = it.toString()
+                }
+                snapshot.child("yandex_key").value?.let {
+                    yandexApiKey = it.toString()
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                makeToast(error.message)
+            }
         })
     }
 
@@ -108,7 +127,7 @@ class AddEditWordViewModel @Inject constructor(
                 (if (fromSource) sourceWordStateFlow.value else targetWordStateFlow.value).trim()
             val sl = if (fromSource) sourceLanguage else targetLanguage
             val tl = if (fromSource) targetLanguage else sourceLanguage
-            when (val wrapper = repository.getYandexWord(translatedYandexWord, sl, tl)) {
+            when (val wrapper = repository.getYandexWord(translatedYandexWord, sl, tl, yandexApiKey)) {
                 is ResultWrapper.Error -> {
                     makeToast(wrapper.error ?: "")
                     stopLoadingIcon(fromSource)
@@ -149,7 +168,7 @@ class AddEditWordViewModel @Inject constructor(
             translatedOxfordWord =
                 if (fromSource) sourceWordStateFlow.value else targetWordStateFlow.value
 
-            when (val wrapper = repository.getOxfordWord(translatedOxfordWord.trim(), sl, tl)) {
+            when (val wrapper = repository.getOxfordWord(translatedOxfordWord.trim(), sl, tl, oxfordApiId, oxfordApiKey)) {
                 is ResultWrapper.Error -> {
                     fetchYandexWord(fromSource)
                 }
@@ -225,6 +244,7 @@ class AddEditWordViewModel @Inject constructor(
             }
             if (currentCategoryId == null) {
                 makeToast(R.string.choose_category)
+                _eventChannel.emit(AddEditWordEventChannel.ShakeCategory)
                 return@launch
             }
             if (word == null) {
@@ -272,6 +292,8 @@ sealed class AddEditWordEventChannel {
         val resultsEntry: ResultsEntry?,
         val fromSource: Boolean
     ) : AddEditWordEventChannel()
+
+    object ShakeCategory:AddEditWordEventChannel()
 
     object PopBackStack : AddEditWordEventChannel()
 }

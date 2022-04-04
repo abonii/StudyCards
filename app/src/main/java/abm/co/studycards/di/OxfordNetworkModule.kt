@@ -5,6 +5,10 @@ import abm.co.studycards.data.network.oxford.OxfordInterceptor
 import abm.co.studycards.di.qualifier.OxfordNetwork
 import abm.co.studycards.di.qualifier.TypeEnum.*
 import abm.co.studycards.util.Constants
+import abm.co.studycards.util.Constants.OXFORD_API_KEY
+import abm.co.studycards.util.Constants.OXFORD_APP_ID
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -16,6 +20,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -33,17 +38,16 @@ class OxfordNetworkModule {
     fun provideOkHttpClient(): OkHttpClient =
         if (Constants.DEBUG) { // debug ON
             val logger = HttpLoggingInterceptor()
-            logger.level = HttpLoggingInterceptor.Level.BODY
+            logger.level = HttpLoggingInterceptor.Level.BASIC
             OkHttpClient.Builder()
                 .addInterceptor(logger)
-                .addInterceptor(OxfordInterceptor())
-                .readTimeout(100, TimeUnit.SECONDS)
-                .connectTimeout(100, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
                 .build()
         } else // debug OFF
             OkHttpClient.Builder()
-                .readTimeout(100, TimeUnit.SECONDS)
-                .connectTimeout(100, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
                 .build()
 
     @Provides

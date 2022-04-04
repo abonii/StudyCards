@@ -1,7 +1,7 @@
 package abm.co.studycards
 
+import abm.co.studycards.data.model.ConfirmText
 import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.ui.games.confirmend.ConfirmText
 import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.core.os.bundleOf
@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.*
@@ -18,17 +19,22 @@ import javax.inject.Named
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val prefs: Prefs,
+    prefs: Prefs,
     @Named(Constants.USERS_REF)
     val userDbRef: DatabaseReference
 ) : BaseViewModel() {
 
     var currentNavController: NavController? = null
 
+    private val sourceLanguage = prefs.getSourceLanguage()
+    private val targetLanguage = prefs.getTargetLanguage()
+
+    fun isTargetAndSourceLangSet() = sourceLanguage.isBlank() || targetLanguage.isBlank()
+
     fun getCurrentUser() = FirebaseAuth.getInstance().currentUser
 
     fun setDailyTranslateTime() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val currentCalendar = Calendar.getInstance().apply {
                 set(Calendar.HOUR_OF_DAY, 0)
                 set(Calendar.MINUTE, 0)

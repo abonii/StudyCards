@@ -97,11 +97,15 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
         viewModel.fabMenuOpened = true
         setVisibility(true)
         recyclerView.alpha = 0.6f
+        toolbar.alpha = 0.6f
         floatingActionButton.animate().rotation(45F)
         floatingActionButtonWord.animate()
-            .translationY(-resources.getDimension(R.dimen.standard_80))
+            .translationY(-floatingActionButton.height * 1.2f)
         floatingActionButtonCategory.animate()
-            .translationY(-resources.getDimension(R.dimen.standard_160))
+            .translationY(
+                -floatingActionButtonWord.height.toFloat()
+                        - floatingActionButton.height * 1.5f
+            )
     }
 
     private fun setVisibility(isVisible: Boolean) = binding.run {
@@ -186,6 +190,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     private fun closeFABMenu() = binding.run {
         viewModel.fabMenuOpened = false
         recyclerView.alpha = 1f
+        toolbar.alpha = 1f
         floatingActionButton.animate().rotation(-180F).withEndAction {
             setVisibility(false)
         }.duration = 500
