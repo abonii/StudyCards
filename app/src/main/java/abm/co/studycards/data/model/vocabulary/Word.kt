@@ -19,20 +19,22 @@ data class Word(
     var repeatCount: Int = 0,
     var nextRepeatTime: Long = 0,
     val wordId: String = ""
-) : Parcelable{
-    companion object{
+) : Parcelable {
+    companion object {
         const val LEARN_OR_KNOWN = "learnOrKnown"
         const val REPEAT_COUNT = "repeatCount"
         const val NEXT_REPEAT_TIME = "nextRepeatTime"
     }
 
-    fun setTranslation(translations: Map<String, String>){
+    fun setTranslation(translations: Map<String, String>) {
         this.translations = ArrayList(translations.values)
     }
-    fun setExample(examples: Map<String, String>){
+
+    fun setExample(examples: Map<String, String>) {
         this.examples = ArrayList(examples.values)
     }
 }
+
 fun Word?.examplesToString() = this?.examples?.joinToString(EXAMPLES_SEPARATOR) ?: ""
 fun Word?.translationsToString() = this?.translations?.joinToString(TRANSLATIONS_SEPARATOR) ?: ""
 fun String.examplesToList() = this.split(EXAMPLES_SEPARATOR)

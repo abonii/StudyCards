@@ -4,6 +4,7 @@ import abm.co.studycards.databinding.ActivityMainBinding
 import abm.co.studycards.ui.login.LoginActivity
 import abm.co.studycards.util.base.BaseBindingActivity
 import abm.co.studycards.util.setupWithNavController
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -13,8 +14,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,7 +35,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
 
     private fun checkLearnLanguagesSelected() {
         if (viewModel.isTargetAndSourceLangSet()) {
-            viewModel.currentNavController?.navigate(R.id.selectLanguageFragment)
+            viewModel.currentNavController?.value?.navigate(R.id.selectLanguageFragment)
         }
     }
 
@@ -57,46 +56,40 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return viewModel.onBackAndNavigateUp() || viewModel.currentNavController!!.navigateUp()
+        return viewModel.onBackAndNavigateUp() || viewModel.currentNavController?.value!!.navigateUp()
                 || super.onSupportNavigateUp()
     }
 
-//    private fun checkIfIntentExtrasHas() {
-//        if (intent.extras != null) {
-//            val openProfile = intent.getBooleanExtra(
-//                SHOULD_I_OPEN_PROFILE_FRAGMENT, false
-//            )
-//            if (!openProfile) {
-//                binding.bottomNavView.selectedItemId = R.id.profile_tab
-//                viewModel.currentNavController?.setGraph(R.navigation.profile_tab, intent.extras)
-//            }
-//        }
-//    }
-
-
     private fun setupBottomNavigationBar() {
-        //R.navigation.explore_tab,
         val navGraphIds = listOf(
-            R.navigation.home_tab, R.navigation.vocabulary_tab, R.navigation.profile_tab
+            R.navigation.home_tab,
+            R.navigation.vocabulary_tab,
+            R.navigation.explore_tab,
+            R.navigation.profile_tab
         )
         val controller = binding.bottomNavView.setupWithNavController(
             navGraphIds = navGraphIds, fragmentManager = supportFragmentManager,
             containerId = R.id.nav_host_container, intent = intent
         )
 
-        viewModel.currentNavController = controller?.apply {
-            addOnDestinationChangedListener { _, destination, _ ->
-                when (destination.id) {
-                    R.id.guessingFragment, R.id.confirmEndFragment, R.id.matchingPairsFragment,
-                    R.id.reviewFragment, R.id.selectLanguageFragment, R.id.toRightOrLeftFragment,
-                    -> {
-                        slideDown()
-                    }
-                    else -> slideUp()
+        viewModel.currentNavController = controller
+
+        controller.observe(this) { navController ->
+            navController.addOnDestinationChangedListener(listener)
+        }
+
+    }
+    private val listener =
+        NavController.OnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.guessingFragment, R.id.confirmEndFragment, R.id.matchingPairsFragment,
+                R.id.reviewFragment, R.id.selectLanguageFragment, R.id.toRightOrLeftFragment,
+                -> {
+                    slideDown()
                 }
+                else -> slideUp()
             }
         }
-    }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
@@ -128,4 +121,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
             }
         }
     }
+
+}
+fun Activity.setDefaultStatusBar() {
+    window.statusBarColor = resources.getColor(R.color.background, null)
 }

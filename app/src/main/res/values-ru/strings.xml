@@ -1,8 +1,6 @@
 <resources>
-    <string name="title_home_nav">Главная</string>
-    <string name="title_home">ГЛАВНАЯ</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Главная</string>
+    <string name="title_explore">Исследовать</string>
     <string name="profile">Профиль</string>
     <string name="vocabulary">Словарный запас</string>
     <string name="add_word">Добавить слово</string>
@@ -143,5 +141,6 @@
     <string name="reset_password">Сбросить пароль</string>
     <string name="problem_with_audio">Возникла какая-то проблема со звуком</string>
     <string name="contact_us">Связаться с нами</string>
+    <string name="set_of_words">Набор слов</string>
 
 </resources>

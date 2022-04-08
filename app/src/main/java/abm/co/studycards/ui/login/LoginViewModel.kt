@@ -33,7 +33,6 @@ class LoginViewModel @Inject constructor(
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
 
-
     private val _sharedFlow = MutableSharedFlow<LoginEventChannel>()
     val sharedFlow = _sharedFlow.asSharedFlow()
 

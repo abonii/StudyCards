@@ -5,6 +5,7 @@ import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.core.os.bundleOf
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
@@ -24,7 +25,7 @@ class MainViewModel @Inject constructor(
     val userDbRef: DatabaseReference
 ) : BaseViewModel() {
 
-    var currentNavController: NavController? = null
+    var currentNavController: LiveData<NavController>? = null
 
     private val sourceLanguage = prefs.getSourceLanguage()
     private val targetLanguage = prefs.getTargetLanguage()
@@ -58,12 +59,12 @@ class MainViewModel @Inject constructor(
     }
 
     fun onBackAndNavigateUp(): Boolean {
-        return when (currentNavController?.currentDestination?.id) {
+        return when (currentNavController?.value?.currentDestination?.id) {
             R.id.guessingFragment,
             R.id.matchingPairsFragment,
             R.id.toRightOrLeftFragment,
             R.id.reviewFragment -> {
-                currentNavController?.navigate(
+                currentNavController?.value?.navigate(
                     R.id.confirmEndFragment, bundleOf(Pair("confirmType", ConfirmText.ON_EXIT))
                 )
                 true

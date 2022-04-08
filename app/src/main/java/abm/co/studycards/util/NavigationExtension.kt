@@ -5,6 +5,8 @@ import android.content.Intent
 import android.util.SparseArray
 import androidx.core.util.forEach
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -19,12 +21,12 @@ fun BottomNavigationView.setupWithNavController(
     fragmentManager: FragmentManager,
     containerId: Int,
     intent: Intent
-): NavController? {
+): LiveData<NavController> {
 
     // Map of tags
     val graphIdToTagMap = SparseArray<String>()
-    // Result. NavController data with the selected controlled
-    var selectedNavController: NavController? = null
+    // Result. Mutable live data with the selected controlled
+    val selectedNavController = MutableLiveData<NavController>()
 
     var firstFragmentGraphId = 0
 
@@ -52,8 +54,8 @@ fun BottomNavigationView.setupWithNavController(
 
         // Attach or detach nav host fragment depending on whether it's the selected item.
         if (this.selectedItemId == graphId) {
-            // Update NavController with the selected graph
-            selectedNavController = navHostFragment.navController
+            // Update livedata with the selected graph
+            selectedNavController.value = navHostFragment.navController
             attachNavHostFragment(fragmentManager, navHostFragment, index == 0)
         } else {
             detachNavHostFragment(fragmentManager, navHostFragment)
@@ -88,8 +90,8 @@ fun BottomNavigationView.setupWithNavController(
                         .setPrimaryNavigationFragment(selectedFragment)
                         .apply {
                             // Detach all other Fragments
-                            graphIdToTagMap.forEach { _, fragmentTagItem ->
-                                if (fragmentTagItem != newlySelectedItemTag) {
+                            graphIdToTagMap.forEach { _, fragmentTagIter ->
+                                if (fragmentTagIter != newlySelectedItemTag) {
                                     detach(fragmentManager.findFragmentByTag(firstFragmentTag)!!)
                                 }
                             }
@@ -100,7 +102,7 @@ fun BottomNavigationView.setupWithNavController(
                 }
                 selectedItemTag = newlySelectedItemTag
                 isOnFirstFragment = selectedItemTag == firstFragmentTag
-                selectedNavController = selectedFragment.navController
+                selectedNavController.value = selectedFragment.navController
                 true
             } else {
                 false
@@ -122,7 +124,7 @@ fun BottomNavigationView.setupWithNavController(
 
         // Reset the graph if the currentDestination is not valid (happens when the back
         // stack is popped after using the back button).
-        selectedNavController?.let { controller ->
+        selectedNavController.value?.let { controller ->
             if (controller.currentDestination == null) {
                 controller.navigate(controller.graph.id)
             }

@@ -5,6 +5,7 @@ import abm.co.studycards.R
 import abm.co.studycards.data.model.AvailableLanguages
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.databinding.FragmentHomeBinding
+import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.fromHtml
 import abm.co.studycards.util.getMyColor
@@ -82,7 +83,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     }
 
     private fun changeStatusBar() {
-        requireActivity().window.statusBarColor = getMyColor(R.color.background)
+        requireActivity().setDefaultStatusBar()
     }
 
     fun onFloatingActionClick() {

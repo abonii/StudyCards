@@ -27,6 +27,18 @@ class FirebaseRepositoryImp @Inject constructor(
         ref.setValue(category.copy(id = ref.key ?: "category"))
     }
 
+    override fun addWithIdCategory(category: Category) {
+        val ref = categoriesDbRef.child(category.id)
+        ref.setValue(category)
+    }
+
+    override suspend fun addWords(category: Category) {
+        addWithIdCategory(category.copy(words = emptyList()))
+        category.words.forEach {
+            addWord(it)
+        }
+    }
+
     override suspend fun deleteWord(categoryId: String, wordId: String) {
         withContext(dispatcher) {
             categoriesDbRef.child(categoryId).child(Constants.WORDS_REF).child(wordId).removeValue()

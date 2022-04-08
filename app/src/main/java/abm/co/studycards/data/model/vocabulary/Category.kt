@@ -9,8 +9,10 @@ data class Category(
     val mainName: String = "",
     var sourceLanguage: String = "",
     var targetLanguage: String = "",
+    val imageUrl: String = "",
     @JvmField var words: List<Word> = emptyList(),
 ) : Parcelable {
+
     companion object{
         const val MAIN_NAME = "mainName"
     }

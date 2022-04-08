@@ -10,8 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 class WordsAdapter(
     private val onItemClick: (Word) -> Unit,
     private val onAudioClicked: (Word) -> Unit
-) :
-    ListAdapter<Word, WordViewHolder>(DIFF_UTIL) {
+) : ListAdapter<Word, WordViewHolder>(DIFF_UTIL) {
 
     override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
         holder.bind(getItem(position))
@@ -36,8 +35,7 @@ class WordsAdapter(
     companion object {
         private val DIFF_UTIL = object : DiffUtil.ItemCallback<Word>() {
             override fun areItemsTheSame(oldItem: Word, newItem: Word): Boolean =
-                oldItem.wordId == newItem.wordId && oldItem.learnOrKnown == newItem.learnOrKnown
-                        && oldItem.name == newItem.name && oldItem.translations == newItem.translations
+                oldItem.wordId == newItem.wordId
 
             override fun areContentsTheSame(oldItem: Word, newItem: Word): Boolean =
                 oldItem == newItem

@@ -8,6 +8,8 @@ object Constants {
     const val WORDS_REF = "words"
     const val USER_ID = "user_id"
     const val USERS_REF = "users"
+    const val EXPLORE_REF = "explore"
+    const val SETS_REF = "sets"
     const val DEBUG = true
     const val ONE_TIME_CYCLE_GAME = 5
     const val BASE_URL_OXFORD = "https://od-api.oxforddictionaries.com:443/api/v2/"
@@ -24,6 +26,9 @@ object Constants {
     const val REQUEST_IMAGE_KEY = "REQUEST_IMAGE_KEY"
     const val REQUEST_DICTIONARY_KEY = "REQUEST_DICTIONARY_KEY"
     const val REQUEST_CATEGORY_KEY = "REQUEST_CATEGORY_KEY"
+    const val MARGIN_BTN_CARDS = 16f
+    const val LEFT_PADDING = 0f
+    const val CARD_COUNT_IN_ONE_PAGE = 3f
     val OXFORD_CAN_TRANSLATE_MAP = mapOf(
         "en" to listOf("ar", "zh", "de", "it", "ru"),
         "ar" to listOf("en"),
