@@ -12,9 +12,13 @@ import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.Purchase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_main) {
@@ -27,9 +31,42 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         checkIfLoggedIn()
     }
 
+    override fun onResume() {
+        super.onResume()
+        checkSubscription()
+    }
+
+    private fun checkSubscription() {
+        lifecycleScope.launchWhenResumed {
+            viewModel.pricingRepository.setPurchases(BillingClient.SkuType.SUBS)
+            viewModel.pricingRepository.purchaseStateFlow.collectLatest {
+                if (it == null) return@collectLatest
+                if (it.isEmpty()) {
+                    viewModel.prefs.setIsPremium(false)
+                } else it.forEach { purchase ->
+                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && purchase.isAcknowledged) {
+                        viewModel.prefs.setIsPremium(true)
+                        toast(this@MainActivity, "premium set up")
+                        return@forEach
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.billingClient.endConnection()
+    }
+
     override fun initViews(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
+        }
+        lifecycleScope.launchWhenResumed {
+            viewModel.toast.collectLatest {
+                toast(this@MainActivity, it, true)
+            }
         }
     }
 
@@ -79,6 +116,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         }
 
     }
+
     private val listener =
         NavController.OnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
@@ -123,6 +161,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
     }
 
 }
+
 fun Activity.setDefaultStatusBar() {
     window.statusBarColor = resources.getColor(R.color.background, null)
 }

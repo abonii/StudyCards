@@ -10,17 +10,26 @@ plugins {
 }
 
 android {
+
     compileSdk 31
 
     defaultConfig {
         applicationId "abm.co.studycards"
         minSdk 23
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        versionCode 19
+        versionName "0.19"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.debug
+        proguardFiles
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
     }
 
     buildTypes {
@@ -143,6 +152,9 @@ dependencies {
 
     // Timber
 //    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    //billing
+    implementation("com.android.billingclient:billing-ktx:4.1.0")
 
     // Local Unit Tests
     implementation "androidx.test:core:1.4.0"

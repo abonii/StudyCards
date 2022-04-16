@@ -4,14 +4,14 @@ import abm.co.studycards.R
 import abm.co.studycards.helpers.LinkTouchMovementMethod
 import abm.co.studycards.helpers.TouchableSpan
 import abm.co.studycards.ui.add_word.dialog.dictionary.adapters.TranslatedWordAdapter
+import android.R.color
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.Color
-import android.graphics.Typeface
+import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -25,6 +25,8 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.DimenRes
+import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.getDrawableOrThrow
@@ -39,6 +41,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+
 
 fun Number.px(): Int {
     return (this.toFloat() * Resources.getSystem().displayMetrics.density).toInt()
@@ -225,6 +228,22 @@ fun TextView.makeClickable(
     this.movementMethod =
         LinkTouchMovementMethod()
     this.setText(spannableString, TextView.BufferType.SPANNABLE)
+}
+
+@Suppress("DEPRECATION")
+fun TextView.leftAndRightDrawable(@DrawableRes left: Int = 0, @DrawableRes right: Int = R.drawable.ic_arrow_down, @DimenRes sizeRes: Int) {
+    val drawableL = ContextCompat.getDrawable(context, left)
+    val drawableR = ContextCompat.getDrawable(context, right)
+    val size = resources.getDimensionPixelSize(sizeRes)
+    drawableL?.setBounds(0, -3, size, size)
+    drawableR?.setBounds(0, 0, size, size)
+    val colorInt = ContextCompat.getColor(context, R.color.textColor)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        drawableR?.colorFilter = BlendModeColorFilter(colorInt, BlendMode.SRC_ATOP)
+    }else{
+        drawableR?.setColorFilter(colorInt, PorterDuff.Mode.SRC_ATOP)
+    }
+    this.setCompoundDrawables(drawableL, null, drawableR, null)
 }
 /**
  * Launches a new coroutine and repeats `block` every time the Fragment's viewLifecycleOwner

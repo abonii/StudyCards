@@ -13,10 +13,10 @@
         <action
             android:id="@+id/action_homeFragment_to_selectLanguageFragment"
             app:destination="@id/selectLanguageFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/stay_on_slide_up"
+            app:popEnterAnim="@anim/stay_on_slide_down"
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_homeFragment_to_addEditCategoryFragment"
             app:destination="@id/addEditCategoryFragment" />

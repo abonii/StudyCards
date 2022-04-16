@@ -15,8 +15,8 @@ class App : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         instance = this
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
     }
 
     override fun attachBaseContext(base: Context?) {

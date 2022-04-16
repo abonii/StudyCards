@@ -7,6 +7,7 @@ import abm.co.studycards.data.model.Language
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.databinding.FragmentSelectLanguageBinding
 import abm.co.studycards.util.base.BaseBindingFragment
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
@@ -48,15 +49,22 @@ class SelectLanguageFragment :
 
     private fun setToolbar() {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
+        binding.toolbar.setNavigationIcon(R.drawable.ic_clear)
     }
 
     private fun onReadBtnClicked() {
         if (binding.readBtn.alpha == 1f) {
             prefs.setSourceLanguage(nativeLanguagePosition)
             prefs.setTargetLanguage(targetLanguagePosition)
-            findNavController().navigate(SelectLanguageFragmentDirections.actionSelectLanguageFragmentToHomeFragment())
+//            findNavController().navigate(SelectLanguageFragmentDirections.actionSelectLanguageFragmentToHomeFragment())
+            reCreateItself()
         }
+        }
+
+    private fun reCreateItself() {
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        startActivity(intent)
+        requireActivity().finish()
     }
 
 
@@ -84,13 +92,14 @@ class SelectLanguageFragment :
     }
 
     private val callback = object : OnBackPressedCallback(
-        true /** true means that the callback is enabled */
+        true
+        /** true means that the callback is enabled */
     ) {
         override fun handleOnBackPressed() {
             if (prefs.getSourceLanguage().isNotEmpty() && prefs.getTargetLanguage().isNotEmpty()) {
                 findNavController().popBackStack()
                 isEnabled = false
-            }else{
+            } else {
                 requireActivity().finishAffinity()
             }
         }

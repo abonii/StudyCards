@@ -18,6 +18,7 @@
         android:clickable="true"
         android:focusable="true"
         app:cardElevation="0dp"
+        app:cardBackgroundColor="@android:color/transparent"
         app:rippleColor="#10000000">
 
         <LinearLayout
@@ -37,7 +38,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    app:cardBackgroundColor="@color/background"
                     app:cardCornerRadius="8dp"
                     app:cardElevation="2dp">
 

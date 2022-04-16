@@ -12,13 +12,12 @@
 
         <RelativeLayout
             android:id="@+id/learn"
-            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
+            android:foreground="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:padding="@dimen/activity_horizontal_margin">
+            android:padding="@dimen/item_select_vertical_padding">
 
             <ImageView
                 android:id="@+id/learn_image"
@@ -27,38 +26,41 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="12dp"
-                android:background="@drawable/circle"
                 android:contentDescription="@string/icon"
                 android:padding="5dp"
                 app:srcCompat="@drawable/ic_play"
-                app:tint="@color/green" />
+                app:tint="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/learn_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/learn_image"
+                android:fontFamily="@font/poppins_medium"
                 android:text="@string/learn"
-                android:textColor="@color/textColor" />
+                android:textColor="@color/textColor"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/learn_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/learn_title"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_light"
+                android:textColor="@color/secondTextColor"
                 android:layout_toEndOf="@id/learn_image" />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/repeat"
-            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:padding="12dp">
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="@dimen/item_select_vertical_padding">
 
             <ImageView
                 android:id="@+id/repeat_image"
@@ -86,6 +88,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/repeat_title"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_light"
+                android:textColor="@color/secondTextColor"
                 android:layout_toEndOf="@id/repeat_image" />
         </RelativeLayout>
 
@@ -95,10 +100,9 @@
 
             <RelativeLayout
                 android:id="@+id/one_type_game"
-                style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/activity_horizontal_margin">
+                android:padding="@dimen/item_select_vertical_padding">
 
                 <ImageView
                     android:id="@+id/one_game_image"
@@ -125,6 +129,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/one_game_title"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/poppins_light"
+                    android:textColor="@color/secondTextColor"
                     android:layout_toEndOf="@id/one_game_image"
                     tools:text="wsgdf" />
 
@@ -133,6 +140,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/one_game_subtitle"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/poppins_light"
+                    android:textColor="@color/secondTextColor"
                     android:layout_toEndOf="@id/one_game_image"
                     tools:text="wsgdf" />
 
@@ -150,7 +160,7 @@
                     android:id="@+id/pairing"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
+                    android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
                     android:paddingHorizontal="@dimen/activity_horizontal_margin"
@@ -165,7 +175,7 @@
                         android:layout_marginEnd="12dp"
                         android:contentDescription="@string/icon"
                         android:padding="5dp"
-                        app:srcCompat="@drawable/ic_add"
+                        app:srcCompat="@drawable/ic_pairing"
                         app:tint="@color/lighter_darker" />
 
                     <TextView
@@ -183,7 +193,7 @@
                     android:id="@+id/guessing"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
+                    android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
                     android:paddingHorizontal="@dimen/activity_horizontal_margin"
@@ -198,7 +208,7 @@
                         android:layout_marginEnd="12dp"
                         android:contentDescription="@string/icon"
                         android:padding="5dp"
-                        app:srcCompat="@drawable/ic_arrow_right"
+                        app:srcCompat="@drawable/ic_quiz"
                         app:tint="@color/lighter_darker" />
 
                     <TextView
@@ -216,13 +226,12 @@
 
         <RelativeLayout
             android:id="@+id/review"
-            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
+            android:foreground="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:padding="@dimen/activity_horizontal_margin">
+            android:padding="@dimen/item_select_vertical_padding">
 
             <ImageView
                 android:id="@+id/review_image"
@@ -233,7 +242,7 @@
                 android:layout_marginEnd="12dp"
                 android:contentDescription="@string/icon"
                 android:padding="5dp"
-                app:srcCompat="@drawable/ic_review"
+                app:srcCompat="@drawable/ic_refresh"
                 app:tint="@color/lighter_darker" />
 
             <TextView

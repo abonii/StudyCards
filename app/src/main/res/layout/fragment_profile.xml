@@ -31,8 +31,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -236,6 +235,40 @@
                     android:showDividers="middle">
 
                     <RelativeLayout
+                        android:id="@+id/premium_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:onClick="@{()->profileFragment.navigateToPremiumFragment()}"
+                        android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                        android:paddingVertical="18dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Premium"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/profile_left_side_sp"
+                            tools:ignore="RelativeOverlap" />
+
+                        <TextView
+                            android:id="@+id/has_premium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@{viewmodel.hasPremium()}"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="@dimen/profile_left_side_sp"
+                            tools:ignore="RelativeOverlap" />
+
+                    </RelativeLayout>
+                    <RelativeLayout
                         android:id="@+id/language_of_the_app"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -253,7 +286,7 @@
                             android:layout_alignParentStart="true"
                             android:fontFamily="sans-serif-medium"
                             android:text="@string/language_of_the_app"
-                            android:textColor="@color/thirdTextColor"
+                            android:textColor="@color/secondTextColor"
                             android:textSize="@dimen/profile_left_side_sp"
                             tools:ignore="RelativeOverlap" />
 
@@ -263,7 +296,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:fontFamily="sans-serif-medium"
-                            android:textColor="@color/thirdTextColor"
+                            android:textColor="@color/secondTextColor"
                             android:textSize="@dimen/profile_left_side_sp"
                             tools:ignore="RelativeOverlap" />
 
@@ -287,7 +320,7 @@
                             android:layout_alignParentStart="true"
                             android:fontFamily="sans-serif-medium"
                             android:text="@string/contact_us"
-                            android:textColor="@color/thirdTextColor"
+                            android:textColor="@color/secondTextColor"
                             android:textSize="@dimen/profile_left_side_sp"
                             tools:ignore="RelativeOverlap" />
 
@@ -296,7 +329,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             app:srcCompat="@drawable/ic_arrow_right"
-                            app:tint="@color/thirdTextColor"
+                            app:tint="@color/secondTextColor"
                             tools:ignore="ContentDescription" />
                     </RelativeLayout>
 
@@ -318,7 +351,7 @@
                             android:layout_alignParentStart="true"
                             android:fontFamily="sans-serif-medium"
                             android:text="@string/logout"
-                            android:textColor="@color/thirdTextColor"
+                            android:textColor="@color/secondTextColor"
                             android:textSize="@dimen/profile_left_side_sp"
                             tools:ignore="RelativeOverlap" />
 
@@ -327,7 +360,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             app:srcCompat="@drawable/ic_arrow_right"
-                            app:tint="@color/thirdTextColor"
+                            app:tint="@color/secondTextColor"
                             tools:ignore="ContentDescription" />
                     </RelativeLayout>
                 </LinearLayout>

@@ -25,7 +25,7 @@
     <color name="darker_than_usual">#717171</color>
     <color name="shimmer">#E4E4E4</color>
     <!--text-->
-    <color name="textColor">#151522</color>
+    <color name="textColor">#080808</color>
     <color name="secondTextColor">#666666</color>
     <color name="thirdTextColor">#838795</color>
     <color name="fourthTextColor">#303030</color>

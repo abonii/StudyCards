@@ -23,7 +23,11 @@
             app:argType="abm.co.studycards.data.model.vocabulary.Category" />
         <action
             android:id="@+id/action_inExploreCategoryFragment_to_addYourselfFragment"
-            app:destination="@id/addYourselfFragment" />
+            app:destination="@id/addYourselfFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/stay_on_slide_up"
+            app:popEnterAnim="@anim/stay_on_slide_down"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
     <fragment
         android:id="@+id/addYourselfFragment"

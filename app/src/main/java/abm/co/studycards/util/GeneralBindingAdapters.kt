@@ -21,9 +21,11 @@ object GeneralBindingAdapters {
         if (url != null) {
             Glide.with(context)
                 .load(url)
+                .timeout(4000)
                 .into(this)
         }
     }
+
     @JvmStatic
     @BindingAdapter("app:imageWithGlide")
     fun ImageView.setImageWithGlide(url: Uri?) {

@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="abm.co.studycards">
 
+    <uses-permission android:name="com.android.vending.BILLING" />
+
     <application
         android:name=".util.core.App"
         android:allowBackup="true"

@@ -8,16 +8,13 @@ import abm.co.studycards.databinding.FragmentHomeBinding
 import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.fromHtml
-import abm.co.studycards.util.getMyColor
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
+import abm.co.studycards.util.leftAndRightDrawable
 import abm.co.studycards.util.navigate
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -46,7 +43,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
         launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.stateFlow.collect {
                 when (it) {
-                    is CategoryUiState.Error -> errorOccurred()
+                    is CategoryUiState.Error -> errorOccurred(it.msg)
                     CategoryUiState.Loading -> onLoading()
                     is CategoryUiState.Success -> onSuccess(it.value)
                 }
@@ -76,8 +73,9 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
         recyclerView.visibility = View.GONE
     }
 
-    private fun errorOccurred() = binding.run {
-        binding.error.visibility = View.VISIBLE
+    private fun errorOccurred(errorMsg:String) = binding.run {
+        error.visibility = View.VISIBLE
+        error.text = errorMsg
         recyclerView.visibility = View.GONE
         stopShimmer()
     }
@@ -130,7 +128,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     }
 
     fun onChangeLanguageClicked() {
-        changeTargetWithSource()
+        viewModel.changePreferenceNativeWithTargetLanguages()
         reCreateItself()
     }
 
@@ -156,33 +154,19 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     private fun setSourceAndTargetLanguages() {
         val nativeLangDrawable = AvailableLanguages.getLanguageDrawableByCode(viewModel.sourceLang)
         val targetLangDrawable = AvailableLanguages.getLanguageDrawableByCode(viewModel.targetLang)
-        val overlayImage =
-            ContextCompat.getDrawable(requireContext(), R.drawable.overlayed_flags) as LayerDrawable
-        val replaceNativeDrawable =
-            ContextCompat.getDrawable(requireContext(), nativeLangDrawable) as Drawable
-        val replaceTargetDrawable =
-            ContextCompat.getDrawable(requireContext(), targetLangDrawable) as Drawable
-        val testFactor1 = overlayImage.setDrawableByLayerId(R.id.first_flag, replaceNativeDrawable)
-        val testFactor2 = overlayImage.setDrawableByLayerId(R.id.second_flag, replaceTargetDrawable)
-        if (testFactor1 && testFactor2)
-            binding.flagImage.setImageDrawable(overlayImage)
+        binding.sourceLanguage.leftAndRightDrawable(
+            left = nativeLangDrawable,
+            sizeRes = R.dimen.home_page_language_image_size
+        )
+        binding.targetLanguage.leftAndRightDrawable(
+            left = targetLangDrawable,
+            sizeRes = R.dimen.home_page_language_image_size
+        )
         binding.targetLanguage.text =
-            AvailableLanguages.getLanguageNameByCode(requireContext(), viewModel.targetLang)
+            AvailableLanguages.getLanguageShortNameByCode(requireContext(), viewModel.targetLang)
         binding.sourceLanguage.text =
-            AvailableLanguages.getLanguageNameByCode(requireContext(), viewModel.sourceLang)
-
+            AvailableLanguages.getLanguageShortNameByCode(requireContext(), viewModel.sourceLang)
     }
-
-    private fun changeTargetWithSource() {
-        viewModel.changePreferenceNativeWithTargetLanguages()
-        binding.apply {
-            targetLanguage.text =
-                AvailableLanguages.getLanguageNameByCode(requireContext(), viewModel.targetLang)
-            sourceLanguage.text =
-                AvailableLanguages.getLanguageNameByCode(requireContext(), viewModel.sourceLang)
-        }
-    }
-
 
     private fun initFABMenu() {
         binding.floatingActionButton.animate().rotation(-180F).duration = 500

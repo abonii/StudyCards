@@ -1,5 +1,6 @@
 package abm.co.studycards
 
+import abm.co.studycards.data.PricingRepository
 import abm.co.studycards.data.model.ConfirmText
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.util.Constants
@@ -18,12 +19,16 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
+
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    prefs: Prefs,
+    val prefs: Prefs,
+    val pricingRepository: PricingRepository,
     @Named(Constants.USERS_REF)
-    val userDbRef: DatabaseReference
+    val userDbRef: DatabaseReference,
 ) : BaseViewModel() {
+
+    val billingClient = pricingRepository.getBillingClient()
 
     var currentNavController: LiveData<NavController>? = null
 
@@ -71,6 +76,9 @@ class MainViewModel @Inject constructor(
             }
             else -> false
         }
+    }
+
+    fun checkSubscription() {
     }
 
 }

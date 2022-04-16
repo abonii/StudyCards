@@ -2,7 +2,7 @@
 <resources>
     <!--others-->
     <color name="background">#1D1D1D</color>
-    <color name="tab_background">#060011</color>
+    <color name="tab_background">#1B1A1A</color>
     <color name="itemContainer">#10FFFFFF</color>
     <color name="second_color">#222222</color>
     <color name="third_color">#3B3B3B</color>

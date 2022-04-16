@@ -26,9 +26,6 @@ class ForgotPasswordFragment :
     override fun initUI(savedInstanceState: Bundle?) {
         binding.run {
             viewmodel = viewModel
-            emailEditText.addTextChangedListener {
-                viewModel.email = it.toString().trim()
-            }
         }
         lifecycleScope.launch {
             viewModel.toast.collect {

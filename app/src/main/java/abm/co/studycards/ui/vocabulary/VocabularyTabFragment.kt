@@ -3,6 +3,7 @@ package abm.co.studycards.ui.vocabulary
 import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.FragmentVocabularyTabBinding
+import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.Constants.VOCABULARY_TAB_POSITION
 import abm.co.studycards.util.base.BaseBindingFragment
 import android.os.Bundle
@@ -41,7 +42,7 @@ class VocabularyTabFragment :
             viewModel.stateFlow.collectLatest {
                 when (it) {
                     is VocabularyUiState.Error -> {
-                        binding.text.text = getString(R.string.error_occurred)
+                        errorOccurred(it.error)
                     }
                     VocabularyUiState.Loading -> {
                         onLoading()
@@ -55,6 +56,14 @@ class VocabularyTabFragment :
         setUpRecyclerView()
     }
 
+    private fun errorOccurred(errorMsg:String) = binding.run {
+        text.visibility = View.VISIBLE
+        text.text = errorMsg
+        recyclerView.visibility = View.GONE
+        shimmerLayout.stopShimmer()
+        shimmerLayout.hideShimmer()
+        shimmerLayout.visibility = View.GONE
+    }
 
     private fun setUpRecyclerView() {
         binding.recyclerView.adapter = adapterV

@@ -1,12 +1,12 @@
 package abm.co.studycards.data.pref
 
 import abm.co.studycards.data.pref.Prefs.Companion.ACCESS_TOKEN
+import abm.co.studycards.data.pref.Prefs.Companion.IS_PREMIUM
 import abm.co.studycards.data.pref.Prefs.Companion.SELECTED_APP_LANGUAGE
 import abm.co.studycards.data.pref.Prefs.Companion.SOURCE_LANGUAGE
 import abm.co.studycards.data.pref.Prefs.Companion.TARGET_LANGUAGE
 import abm.co.studycards.data.pref.Prefs.Companion.USER_ID
 import android.content.SharedPreferences
-import com.google.gson.Gson
 import javax.inject.Inject
 
 class PrefsImpl @Inject constructor(
@@ -50,7 +50,7 @@ class PrefsImpl @Inject constructor(
     }
 
     override fun getAppLanguage(): String {
-        return preferences.getString(SELECTED_APP_LANGUAGE, "en") ?: ""
+        return preferences.getString(SELECTED_APP_LANGUAGE, "") ?: ""
     }
 
     override fun setAppLanguage(value: String) {
@@ -78,6 +78,17 @@ class PrefsImpl @Inject constructor(
     override fun setTargetLanguage(value: String) {
         with(preferences.edit()) {
             putString(TARGET_LANGUAGE, value)
+            commit()
+        }
+    }
+
+    override fun getIsPremium(): Boolean {
+        return preferences.getBoolean(IS_PREMIUM, false)
+    }
+
+    override fun setIsPremium(value: Boolean) {
+        with(preferences.edit()) {
+            putBoolean(IS_PREMIUM, value)
             commit()
         }
     }

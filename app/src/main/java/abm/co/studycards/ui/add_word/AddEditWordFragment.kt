@@ -4,6 +4,7 @@ import abm.co.studycards.MainActivity
 import abm.co.studycards.R
 import abm.co.studycards.data.model.oxford.ResultsEntry
 import abm.co.studycards.databinding.FragmentAddEditWordBinding
+import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.Constants.REQUEST_CATEGORY_KEY
 import abm.co.studycards.util.Constants.REQUEST_DICTIONARY_KEY
 import abm.co.studycards.util.Constants.REQUEST_IMAGE_KEY
@@ -36,6 +37,7 @@ class AddEditWordFragment :
     }
 
     private fun setToolbar() {
+        requireActivity().setDefaultStatusBar()
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
     }
 

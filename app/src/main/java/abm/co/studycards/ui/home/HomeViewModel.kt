@@ -1,14 +1,14 @@
 package abm.co.studycards.ui.home
 
+import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseViewModel
+import abm.co.studycards.util.core.App
+import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -51,11 +51,18 @@ class HomeViewModel @Inject constructor(
                 viewModelScope.launch(dispatcher) {
                     val items = mutableListOf<Category>()
                     snapshot.children.forEach {
-                        it.getValue(Category::class.java)?.let { it1 -> items.add(it1) }
+                        try {
+                            it.getValue(Category::class.java)?.let { it1 -> items.add(it1) }
+                        }catch (e: DatabaseException){
+                            it.ref.removeValue()
+                        }
                     }
-                    if (items.size > 0) defaultCategory = items.first()
-                    delay(1000)
-                    _stateFlow.value = CategoryUiState.Success(items.take(500))
+                    if (items.size > 0) {
+                        defaultCategory = items.first()
+                        _stateFlow.value = CategoryUiState.Success(items.take(500))
+                    }else{
+                        _stateFlow.value = CategoryUiState.Error(App.instance.getString(R.string.empty_home_fragment))
+                    }
                 }
             }
 
@@ -67,7 +74,7 @@ class HomeViewModel @Inject constructor(
 
 
     fun removeCategory(category: Category) {
-        launchIO {
+        viewModelScope.launch(dispatcher) {
             categoriesDbRef.child(category.id).removeValue()
         }
     }

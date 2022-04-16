@@ -29,3 +29,19 @@
 # Modify this rule to fit the structure of your app.
 
 -keep class abm.co.studycards.data.model.**{ *; }
+-keepclassmembers class com.google.firebase.database.GenericTypeIndicator {
+  *;
+}
+-keep class com.google.googlesignin.** { *; }
+-keepnames class com.google.googlesignin.* { *; }
+
+-keep class com.google.android.gms.auth.** { *; }
+
+-dontwarn org.bouncycastle.jsse.BCSSLParameters
+-dontwarn org.bouncycastle.jsse.BCSSLSocket
+-dontwarn org.bouncycastle.jsse.provider.BouncyCastleJsseProvider
+-dontwarn org.conscrypt.Conscrypt
+-dontwarn org.conscrypt.ConscryptHostnameVerifier
+-dontwarn org.openjsse.javax.net.ssl.SSLParameters
+-dontwarn org.openjsse.javax.net.ssl.SSLSocket
+-dontwarn org.openjsse.net.ssl.OpenJSSE

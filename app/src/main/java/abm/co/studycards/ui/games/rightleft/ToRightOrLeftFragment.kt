@@ -40,11 +40,11 @@ class ToRightOrLeftFragment :
                 setDirections(listOf(Direction.Right, Direction.Left, Direction.Bottom))
                 setCanScrollHorizontal(true)
                 setCanScrollVertical(true)
-                setTranslationInterval(4.0f)
+                setTranslationInterval(6f)
                 setScaleInterval(0.95f)
                 setSwipeThreshold(0.3f)
                 setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
-                setMaxDegree(180.0f)
+                setMaxDegree(150.0f)
             }
         binding.run {
             folderName.text = viewModel.category.uppercase()

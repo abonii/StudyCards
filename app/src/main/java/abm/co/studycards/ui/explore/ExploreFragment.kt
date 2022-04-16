@@ -44,6 +44,7 @@ class ExploreFragment : BaseBindingFragment<FragmentExploreBinding>(R.layout.fra
     private fun onSuccess(value: List<ParentExploreUI>) = binding.run {
         parentRecyclerView.visibility = View.VISIBLE
         stopShimmer()
+        error.visibility = View.GONE
         parentAdapter?.submitList(value)
     }
 
@@ -60,6 +61,7 @@ class ExploreFragment : BaseBindingFragment<FragmentExploreBinding>(R.layout.fra
 
     private fun onLoading() = binding.run {
         startShimmer()
+        error.visibility = View.GONE
         parentRecyclerView.visibility = View.GONE
     }
 

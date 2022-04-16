@@ -77,9 +77,14 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
             navigate(it)
         }
     }
+    fun navigateToPremiumFragment() {
+        ProfileFragmentDirections.actionProfileFragmentToBuyPremiumFragment().also {
+            navigate(it)
+        }
+    }
 
     private fun FragmentProfileBinding.setLanguage() {
-        if (viewModel.appLanguage.isBlank()) {
+        if (viewModel.appLanguage.isEmpty()) {
             systemLanguage.text = getString(R.string.system_language)
         } else {
             systemLanguage.text =

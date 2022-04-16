@@ -5,6 +5,7 @@ import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.util.Constants.API_KEYS
 import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.Constants.EXPLORE_REF
+import abm.co.studycards.util.Constants.SETS_REF
 import abm.co.studycards.util.Constants.USERS_REF
 import abm.co.studycards.util.Constants.USER_ID
 import android.app.Application
@@ -85,7 +86,7 @@ object FirebaseModule {
     fun provideRealtimeDatabaseExplore(
         db: FirebaseDatabase,
         prefs: Prefs
-    ) = db.reference.child(EXPLORE_REF)
+    ) = db.reference.child(EXPLORE_REF).child(SETS_REF)
         .child("${prefs.getSourceLanguage()}-${prefs.getTargetLanguage()}").apply {
             keepSynced(true)
         }

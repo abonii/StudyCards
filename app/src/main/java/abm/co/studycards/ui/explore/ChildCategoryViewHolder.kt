@@ -15,23 +15,5 @@ class ChildCategoryViewHolder(val binding: ItemChildCategoryBinding, onClickItem
 
     fun bind(currentItem: Category) {
         binding.item = currentItem
-//        val newWidth = (Resources.getSystem().displayMetrics.widthPixels -
-//                (MARGIN_BTN_CARDS * CARD_COUNT_IN_ONE_PAGE).px() -
-//                LEFT_PADDING.px() - MARGIN_BTN_CARDS.px()) / CARD_COUNT_IN_ONE_PAGE
-
-//        binding.run {
-//            holder.run {
-//                layoutParams = layoutParams.apply {
-//                    width = newWidth.toInt() + 4 //it's for margin
-//                } // changed width
-//            }
-//            card.run {
-//                layoutParams =
-//                    layoutParams.apply {
-//                        width = newWidth.toInt()
-//                        height = (newWidth * 1.6).toInt()
-//                    } //changed height
-//            }
-//        }
     }
 }

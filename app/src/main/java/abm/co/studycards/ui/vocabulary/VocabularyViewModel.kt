@@ -1,15 +1,14 @@
 package abm.co.studycards.ui.vocabulary
 
+import abm.co.studycards.R
 import abm.co.studycards.data.model.LearnOrKnown
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.base.BaseViewModel
+import abm.co.studycards.util.core.App
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -47,18 +46,24 @@ class VocabularyViewModel @Inject constructor(
                         categories.children.forEach { categoryId ->
                             if (categoryId.key?.isBlank() != true) {
                                 categoryId.children.forEach {
-                                    it.getValue(Word::class.java)
-                                        ?.let { word ->
-                                            if (LearnOrKnown.getType(word.learnOrKnown) == currentTabType) {
-                                                items.add(word)
+                                    try {
+                                        it.getValue(Word::class.java)
+                                            ?.let { word ->
+                                                if (LearnOrKnown.getType(word.learnOrKnown) == currentTabType) {
+                                                    items.add(word)
+                                                }
                                             }
-                                        }
+                                    } catch (e: DatabaseException) {
+                                        categoryId.ref.removeValue()
+                                    }
                                 }
                             }
                         }
                     }
                     delay(800)
-                    _stateFlow.value = VocabularyUiState.Success(items)
+                    if (items.size == 0) {
+                        _stateFlow.value = VocabularyUiState.Error(App.instance.getString(R.string.empty))
+                    } else _stateFlow.value = VocabularyUiState.Success(items)
                 }
             }
 

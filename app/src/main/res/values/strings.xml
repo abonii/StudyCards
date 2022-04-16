@@ -11,6 +11,16 @@
     <string name="korean">Korean</string>
     <string name="turkish">Turkish</string>
     <string name="russian">Russian</string>
+    <string name="arabic_short">Arb</string>
+    <string name="chinese_short">Chi</string>
+    <string name="english_short">Eng</string>
+    <string name="french_short">Fre</string>
+    <string name="german_short">Ger</string>
+    <string name="italian_short">Ita</string>
+    <string name="kazakh_short">Kaz</string>
+    <string name="korean_short">Kor</string>
+    <string name="turkish_short">Tur</string>
+    <string name="russian_short">Rus</string>
 
     <string name="app_name" translatable="false">StudyCards</string>
     <string name="title_home">Home</string>
@@ -153,4 +163,18 @@
     <string name="select_all_words">Select all words</string>
     <string name="select_words">Select words</string>
     <string name="add">Add</string>
+    <string name="empty_home_fragment">There is no sets yet. Create new one by clicking + button below</string>
+    <string name="change_target_and_native">Change target with native language</string>
+    <string name="study_cards_title">Study Cards Premium</string>
+    <string name="premium_additional_description">Подписку можно отменить в любое время.</string>
+    <string name="premium_feature1">Неограниченное количество переводов</string>
+    <string name="premium_feature2">Обучение без рекламы</string>
+    <string name="premium_feature3">Неограниченные учебные колоды</string>
+    <string name="premium_feature1_des">Можно переводить слова, не выходя из приложения</string>
+    <string name="premium_feature2_des">наслаждайся тишиной</string>
+    <string name="premium_feature3_des">только две колоды бесплатно</string>
+    <string name="just_image">Just Image</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="empty_in_explore">The administrators still haven\'t added a single set of words.</string>
+    <string name="skus_not_found">No skus found from query</string>
 </resources>

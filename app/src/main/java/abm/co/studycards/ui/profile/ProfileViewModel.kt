@@ -24,12 +24,14 @@ class ProfileViewModel @Inject constructor(
     fun isAnonymous() =
         firebaseAuthInstance.currentUser?.isAnonymous == true
 
+    fun hasPremium() = if (prefs.getIsPremium()) "HAS PREMIUM" else "DON\'T HAVE PREMIUM"
+
     val appLanguage = prefs.getAppLanguage()
 
     var email = firebaseAuthInstance.currentUser?.email
     var password: String = ""
     val userName = firebaseAuthInstance.currentUser?.displayName
-    val userPhotoUrl= firebaseAuthInstance.currentUser?.photoUrl
+    val userPhotoUrl = firebaseAuthInstance.currentUser?.photoUrl
 
     private val _emailError = MutableStateFlow<String?>(null)
     val emailError = _emailError.asStateFlow()

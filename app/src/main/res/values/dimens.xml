@@ -8,6 +8,9 @@
     <dimen name="standard_80">80dp</dimen>
     <dimen name="standard_160">160dp</dimen>
     <dimen name="vocabulary_button_width">100dp</dimen>
+    <dimen name="home_page_language_image_size">19dp</dimen>
+    <dimen name="item_select_vertical_padding">12dp</dimen>
+    <dimen name="toolbar_elevation">2dp</dimen>
 
 
 </resources>

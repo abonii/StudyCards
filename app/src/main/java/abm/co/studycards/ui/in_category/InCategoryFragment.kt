@@ -5,6 +5,7 @@ import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.FragmentInCategoryBinding
 import abm.co.studycards.helpers.SwipeToDeleteCallback
+import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.fromHtml
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
@@ -42,6 +43,7 @@ class InCategoryFragment :
     }
 
     private fun setToolbar() {
+        requireActivity().setDefaultStatusBar()
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
     }
 
@@ -98,7 +100,7 @@ class InCategoryFragment :
 
     private fun setUpRecyclerView() {
         wordsAdapter = WordsAdapter(::onItemClick, ::onAudioClicked)
-        binding.recyclerView.apply {
+        binding.recyclerView.run {
             adapter = wordsAdapter
             addItemDecoration(getItemDecoration())
         }

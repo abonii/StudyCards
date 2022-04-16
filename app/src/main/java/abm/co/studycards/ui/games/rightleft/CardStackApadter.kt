@@ -3,7 +3,7 @@ package abm.co.studycards.ui.games.rightleft
 import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.model.vocabulary.translationsToString
-import abm.co.studycards.databinding.ItemCardFinallyBinding
+import abm.co.studycards.databinding.ItemCardBinding
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -31,7 +31,7 @@ class CardStackAdapter constructor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return ViewHolder(ItemCardFinallyBinding.inflate(inflater, parent, false))
+        return ViewHolder(ItemCardBinding.inflate(inflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -41,14 +41,15 @@ class CardStackAdapter constructor(
 
     override fun getItemCount() = words.size
 
-    inner class ViewHolder(val binding: ItemCardFinallyBinding) :
+    inner class ViewHolder(val binding: ItemCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         init {
-            binding.front.audioPlay.setOnClickListener {
+            binding.audioPlay.setOnClickListener {
                 onAudioClicked(words[absoluteAdapterPosition])
             }
             itemView.setOnClickListener {
-                if (binding.front.translated.isVisible) {
+                if (binding.translated.isVisible) {
                     onShakeCard()
                     val shake = AnimationUtils
                         .loadAnimation(binding.root.context, R.anim.shake)
@@ -60,15 +61,15 @@ class CardStackAdapter constructor(
         }
 
         fun bind(currentItem: Word) {
-            Glide.with(binding.front.image)
+            Glide.with(binding.image)
                 .load(currentItem.imageUrl)
-                .into(binding.front.image)
-            binding.front.word.text = currentItem.name
-            binding.front.translated.text = currentItem.translationsToString()
+                .into(binding.image)
+            binding.word.text = currentItem.name
+            binding.translated.text = currentItem.translationsToString()
             bindFrontLayout()
         }
 
-        private fun onClickToShowBackSide(view: View = binding.front.root) {
+        private fun onClickToShowBackSide(view: View = binding.innerCard) {
             val oa1 = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0f)
             val oa2 = ObjectAnimator.ofFloat(view, "scaleX", 0f, 1f)
             oa1.interpolator = DecelerateInterpolator()
@@ -81,13 +82,13 @@ class CardStackAdapter constructor(
         }
 
         private fun bindBackLayout() {
-            binding.front.image.isVisible = true
-            binding.front.translated.isVisible = true
+            binding.image.isVisible = true
+            binding.translated.isVisible = true
         }
 
         private fun bindFrontLayout() {
-            binding.front.image.isVisible = false
-            binding.front.translated.isVisible = false
+            binding.image.isVisible = false
+            binding.translated.isVisible = false
         }
     }
 

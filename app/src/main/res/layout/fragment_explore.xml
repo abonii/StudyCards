@@ -12,6 +12,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:elevation="@dimen/toolbar_elevation"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -62,6 +64,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/textColor"
             android:visibility="gone"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:fontFamily="@font/poppins_medium"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

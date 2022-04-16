@@ -136,7 +136,7 @@
     <string name="continue_without_registration">Войти как гость</string>
     <string name="or">Или</string>
     <string name="register_in_order_to">Зарегистрируйтесь, чтобы использовать на нескольких телефонах одновременно</string>
-    <string name="register">Зарегистрировать</string>
+    <string name="register">Зарегистрироваться</string>
     <string name="linked_successfully">Успешно связано</string>
     <string name="reset_password">Сбросить пароль</string>
     <string name="problem_with_audio">Возникла какая-то проблема со звуком</string>

@@ -7,7 +7,6 @@ import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.Constants.EXPLORE_REF
-import abm.co.studycards.util.Constants.SETS_REF
 import abm.co.studycards.util.Constants.WORDS_REF
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -48,7 +47,7 @@ class AddYourselfViewModel @Inject constructor(
 
     var category = savedStateHandle.get<Category>("category")!!
 
-    private val wordsRef = exploreDbRef.child(SETS_REF).child(category.id).child(WORDS_REF)
+    private val wordsRef = exploreDbRef.child(CATEGORIES_REF).child(category.id).child(WORDS_REF)
 
     val targetLang = prefs.getTargetLanguage()
 

@@ -89,6 +89,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/add"
                 android:layout_marginBottom="10dp"
+                android:textColor="@color/white"
                 android:onClick="@{()->viewmodel.onAddClicked()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

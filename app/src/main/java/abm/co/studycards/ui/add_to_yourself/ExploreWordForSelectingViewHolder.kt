@@ -12,7 +12,7 @@ class ExploreWordForSelectingViewHolder(
     private val binding: ItemExploreWordSelectionBinding,
     onWordChecked: (Int, Boolean) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
-    val checkBox = binding.checkbox
+
     init {
         binding.checkbox.setOnCheckedChangeListener { _, b ->
             onWordChecked(absoluteAdapterPosition, b)

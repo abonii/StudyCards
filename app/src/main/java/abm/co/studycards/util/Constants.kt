@@ -29,6 +29,7 @@ object Constants {
     const val MARGIN_BTN_CARDS = 16f
     const val LEFT_PADDING = 0f
     const val CARD_COUNT_IN_ONE_PAGE = 3f
+    val SUBSCRIPTIONS_PRODUCTS = listOf<String>("monthly_subscription", "unlimited_translation")
     val OXFORD_CAN_TRANSLATE_MAP = mapOf(
         "en" to listOf("ar", "zh", "de", "it", "ru"),
         "ar" to listOf("en"),

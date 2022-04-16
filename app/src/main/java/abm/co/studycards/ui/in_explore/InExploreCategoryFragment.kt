@@ -4,6 +4,7 @@ import abm.co.studycards.MainActivity
 import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.FragmentInExploreCategoryBinding
+import abm.co.studycards.helpers.MarginItemDecoration
 import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
@@ -88,10 +89,7 @@ class InExploreCategoryFragment :
     }
 
     private fun getItemDecoration() =
-        DividerItemDecoration(
-            context,
-            DividerItemDecoration.VERTICAL
-        )
+        MarginItemDecoration(requireContext(), DividerItemDecoration.VERTICAL, 1)
 
     override fun onDestroyView() {
         wordsAdapter = null

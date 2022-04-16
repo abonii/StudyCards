@@ -3,6 +3,7 @@ package abm.co.studycards.ui.forgot_password
 import abm.co.studycards.R
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.core.App
+import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +23,12 @@ class ForgotPasswordViewModel @Inject constructor(
     val loading = _loading.asStateFlow()
 
     fun sendResetPassword() = viewModelScope.launch {
+        if (TextUtils.isEmpty(email)) {
+            makeToast(App.instance.getString(R.string.email_empty))
+            return@launch
+        }
         _loading.value = true
-        firebaseAuthInstance.sendPasswordResetEmail(email)
+        firebaseAuthInstance.sendPasswordResetEmail(email.trim())
             .addOnCompleteListener {
                 _loading.value = false
                 if (it.isSuccessful) {

@@ -24,6 +24,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/empty"
+            android:fontFamily="@font/poppins_medium"
             android:textColor="@color/textColor"
             android:visibility="gone" />
 
