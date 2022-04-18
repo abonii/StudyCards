@@ -1,5 +1,7 @@
 package abm.co.studycards.di
 
+import abm.co.studycards.domain.BillingClientProvider
+import abm.co.studycards.domain.BillingClientProviderImpl
 import abm.co.studycards.domain.BillingUpdateListener
 import com.android.billingclient.api.PurchasesUpdatedListener
 import dagger.Module
@@ -14,6 +16,10 @@ class BillingModule {
 
     @Singleton
     @Provides
-    fun provideBillingUpdate(prefsImpl: BillingUpdateListener): PurchasesUpdatedListener = prefsImpl
+    fun provideBillingUpdateListener(impl: BillingUpdateListener): PurchasesUpdatedListener = impl
+
+    @Singleton
+    @Provides
+    fun provideBillingProvider(impl: BillingClientProviderImpl): BillingClientProvider = impl
 
 }

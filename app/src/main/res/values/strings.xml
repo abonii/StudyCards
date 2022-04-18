@@ -177,4 +177,6 @@
     <string name="subscribe">Subscribe</string>
     <string name="empty_in_explore">The administrators still haven\'t added a single set of words.</string>
     <string name="skus_not_found">No skus found from query</string>
+    <string name="link_to_account">User must not be anonymous, link to account</string>
+    <string name="verify_account">Verify your account</string>
 </resources>

@@ -54,6 +54,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     private fun onSuccess(value: List<Category>) = binding.run {
         recyclerView.visibility = View.VISIBLE
         stopShimmer()
+        error.visibility = View.GONE
         categoryAdapter?.submitList(value)
     }
 
@@ -71,6 +72,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     private fun onLoading() = binding.run {
         startShimmer()
         recyclerView.visibility = View.GONE
+        error.visibility = View.GONE
     }
 
     private fun errorOccurred(errorMsg:String) = binding.run {

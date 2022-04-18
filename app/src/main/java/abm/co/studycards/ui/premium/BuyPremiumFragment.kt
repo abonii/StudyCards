@@ -6,10 +6,12 @@ import abm.co.studycards.util.base.BaseBindingFragment
 import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import com.android.billingclient.api.BillingClient
+import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.SkuDetails
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class BuyPremiumFragment :
@@ -21,7 +23,7 @@ class BuyPremiumFragment :
     override fun initUI(savedInstanceState: Bundle?) {
         initRV()
         collectData()
-        viewModel.getSubscriptions()
+        viewModel.getProducts()
     }
 
     private fun collectData() {
@@ -32,17 +34,32 @@ class BuyPremiumFragment :
                 toast(getString(R.string.skus_not_found))
             }
         }
-
+        lifecycleScope.launch {
+            viewModel.toast.collectLatest {
+                toast(it)
+            }
+        }
     }
 
     private fun getNewWidthOfItem(products: Int): Int {
-        return ((Resources.getSystem().displayMetrics.widthPixels - (products + 2) * resources
+        return ((Resources.getSystem().displayMetrics.widthPixels
+                - (products + 2) * resources
             .getDimension(R.dimen.activity_horizontal_margin)) / if (products == 1) 2 else products).toInt()
     }
 
     private fun initRV() {
         productsAdapter = ProductAdapter { skuDetails ->
-            launchPurchaseFlow(skuDetails)
+            when {
+                viewModel.isUserNotVerified() -> {
+                    toast(getString(R.string.verify_account))
+                }
+                viewModel.isUserAnonymous() -> {
+                    toast(getString(R.string.link_to_account))
+                }
+                else -> {
+                    launchPurchaseFlow(skuDetails)
+                }
+            }
         }
         binding.recyclerViewProducts.adapter = productsAdapter
     }
@@ -59,9 +76,5 @@ class BuyPremiumFragment :
 
         val billingClient = viewModel.getBillingClient()
         billingClient.launchBillingFlow(requireActivity(), flowParams)
-    }
-
-    companion object {
-        const val TAG = "BILLING_ABO"
     }
 }

@@ -8,6 +8,8 @@ object Constants {
     const val WORDS_REF = "words"
     const val USER_ID = "user_id"
     const val USERS_REF = "users"
+    const val PURCHASES_REF = "purchases"
+    const val MY_PURCHASES_REF = "purchaseToken"
     const val EXPLORE_REF = "explore"
     const val SETS_REF = "sets"
     const val DEBUG = true

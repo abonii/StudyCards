@@ -4,7 +4,6 @@ import abm.co.studycards.R
 import abm.co.studycards.helpers.LinkTouchMovementMethod
 import abm.co.studycards.helpers.TouchableSpan
 import abm.co.studycards.ui.add_word.dialog.dictionary.adapters.TranslatedWordAdapter
-import android.R.color
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.animation.ArgbEvaluator
@@ -41,6 +40,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 fun Number.px(): Int {
@@ -231,7 +231,11 @@ fun TextView.makeClickable(
 }
 
 @Suppress("DEPRECATION")
-fun TextView.leftAndRightDrawable(@DrawableRes left: Int = 0, @DrawableRes right: Int = R.drawable.ic_arrow_down, @DimenRes sizeRes: Int) {
+fun TextView.leftAndRightDrawable(
+    @DrawableRes left: Int = 0,
+    @DrawableRes right: Int = R.drawable.ic_arrow_down,
+    @DimenRes sizeRes: Int
+) {
     val drawableL = ContextCompat.getDrawable(context, left)
     val drawableR = ContextCompat.getDrawable(context, right)
     val size = resources.getDimensionPixelSize(sizeRes)
@@ -240,11 +244,26 @@ fun TextView.leftAndRightDrawable(@DrawableRes left: Int = 0, @DrawableRes right
     val colorInt = ContextCompat.getColor(context, R.color.textColor)
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         drawableR?.colorFilter = BlendModeColorFilter(colorInt, BlendMode.SRC_ATOP)
-    }else{
+    } else {
         drawableR?.setColorFilter(colorInt, PorterDuff.Mode.SRC_ATOP)
     }
     this.setCompoundDrawables(drawableL, null, drawableR, null)
 }
+
+fun Calendar.toStartOfTheDay():Calendar {
+    return this.apply {
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+    }
+}
+
+fun Calendar.toDay(dayCount: Int):Calendar {
+    return this.apply {
+        add(Calendar.DAY_OF_MONTH, dayCount)
+    }
+}
+
 /**
  * Launches a new coroutine and repeats `block` every time the Fragment's viewLifecycleOwner
  * is in and out of `minActiveState` lifecycle state.

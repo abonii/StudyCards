@@ -49,8 +49,7 @@ class YandexNetworkModule {
     fun provideRetrofit(
         @YandexNetwork(OKHTTP) okHttpClient: OkHttpClient,
         @YandexNetwork(URL) baseURL: String
-    ):
-            Retrofit {
+    ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseURL)
             .addConverterFactory(GsonConverterFactory.create())

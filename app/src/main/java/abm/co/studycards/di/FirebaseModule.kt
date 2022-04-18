@@ -5,6 +5,8 @@ import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.util.Constants.API_KEYS
 import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.Constants.EXPLORE_REF
+import abm.co.studycards.util.Constants.MY_PURCHASES_REF
+import abm.co.studycards.util.Constants.PURCHASES_REF
 import abm.co.studycards.util.Constants.SETS_REF
 import abm.co.studycards.util.Constants.USERS_REF
 import abm.co.studycards.util.Constants.USER_ID
@@ -15,20 +17,30 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.ktx.functions
+import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object FirebaseModule {
 
+    @Singleton
     @Provides
     fun provideFirebaseAuthInstance() = FirebaseAuth.getInstance()
 
+    @Singleton
+    @Provides
+    fun provideFirebaseFunctionsInstance() = FirebaseFunctions.getInstance()
+
+    @Singleton
     @Provides
     fun provideGoogleSignInOptions(application: Application): GoogleSignInOptions {
         return GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -37,6 +49,7 @@ object FirebaseModule {
             .build()
     }
 
+    @Singleton
     @Provides
     fun provideGoogleSignInClient(
         signInOptions: GoogleSignInOptions,
@@ -78,6 +91,24 @@ object FirebaseModule {
         @Named(USER_ID) userId: String
     ) =
         db.reference.child(USERS_REF).child(userId).apply {
+            keepSynced(true)
+        }
+
+    @Named(MY_PURCHASES_REF)
+    @Provides
+    fun provideRealtimeDatabaseMyPurchase(
+        db: FirebaseDatabase,
+        @Named(USER_ID) userId: String
+    ) =
+        db.reference.child(USERS_REF).child(userId).child(MY_PURCHASES_REF).apply {
+            keepSynced(true)
+        }
+
+    @Named(PURCHASES_REF)
+    @Provides
+    fun provideRealtimeDatabasePurchase(
+        db: FirebaseDatabase
+    ) = db.reference.child(PURCHASES_REF).apply {
             keepSynced(true)
         }
 

@@ -33,30 +33,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
 
     override fun onResume() {
         super.onResume()
-        checkSubscription()
-    }
-
-    private fun checkSubscription() {
-        lifecycleScope.launchWhenResumed {
-            viewModel.pricingRepository.setPurchases(BillingClient.SkuType.SUBS)
-            viewModel.pricingRepository.purchaseStateFlow.collectLatest {
-                if (it == null) return@collectLatest
-                if (it.isEmpty()) {
-                    viewModel.prefs.setIsPremium(false)
-                } else it.forEach { purchase ->
-                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && purchase.isAcknowledged) {
-                        viewModel.prefs.setIsPremium(true)
-                        toast(this@MainActivity, "premium set up")
-                        return@forEach
-                    }
-                }
-            }
-        }
+//        viewModel.verifySubscription()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.billingClient.endConnection()
+        viewModel.shutDownBillingClient()
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
