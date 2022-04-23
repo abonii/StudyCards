@@ -6,11 +6,12 @@ import abm.co.studycards.data.network.yandex.YandexApiService
 import abm.co.studycards.di.qualifier.OxfordNetwork
 import abm.co.studycards.di.qualifier.TypeEnum
 import abm.co.studycards.di.qualifier.YandexNetwork
-import abm.co.studycards.util.Constants.YANDEX_API_KEY
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
+@Singleton
 class DictionaryRepositoryImp @Inject constructor(
     @OxfordNetwork(TypeEnum.APISERVICE)
     private val oxfordApiService: OxfordApiService,

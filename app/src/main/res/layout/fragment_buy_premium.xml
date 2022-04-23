@@ -115,55 +115,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/container2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/container1">
-
-                <ImageView
-                    android:id="@+id/check2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_check_square"
-                    tools:ignore="ContentDescription" />
-
-                <TextView
-                    android:id="@+id/feature2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:text="@string/premium_feature1"
-                    android:textColor="@color/textColor"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/check2"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/feature2_des"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_light"
-                    android:text="@string/premium_feature1_des"
-                    android:textColor="@color/thirdTextColor"
-                    android:textSize="13sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/feature2"
-                    app:layout_constraintStart_toEndOf="@+id/check2"
-                    app:layout_constraintStart_toStartOf="@+id/feature2"
-                    app:layout_constraintTop_toBottomOf="@+id/feature2" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/container3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -172,7 +123,7 @@
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/container2">
+                app:layout_constraintTop_toBottomOf="@+id/container1">
 
                 <ImageView
                     android:id="@+id/check3"
@@ -217,7 +168,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="50dp"
-                android:layout_marginTop="29dp"
+                android:layout_marginTop="10dp"
                 android:fontFamily="@font/poppins_extra_light"
                 android:gravity="center"
                 android:text="@string/premium_additional_description"
@@ -225,7 +176,7 @@
                 android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/container3" />
+                app:layout_constraintTop_toBottomOf="@+id/recycler_view_products" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_products"
@@ -237,7 +188,7 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/premium_additional_description"
+                app:layout_constraintTop_toBottomOf="@id/container3"
                 tools:itemCount="2"
                 tools:listitem="@layout/item_products_list" />
 

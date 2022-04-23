@@ -5,7 +5,6 @@ import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.util.Constants.API_KEYS
 import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.Constants.EXPLORE_REF
-import abm.co.studycards.util.Constants.MY_PURCHASES_REF
 import abm.co.studycards.util.Constants.PURCHASES_REF
 import abm.co.studycards.util.Constants.SETS_REF
 import abm.co.studycards.util.Constants.USERS_REF
@@ -18,8 +17,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.functions.ktx.functions
-import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -76,41 +73,20 @@ object FirebaseModule {
     fun provideRealtimeDatabaseCategories(
         db: FirebaseDatabase,
         @Named(USER_ID) userId: String,
-        prefs: Prefs,
-    ) =
-        db.reference.child(USERS_REF).child(userId)
-            .child("${prefs.getSourceLanguage()}-${prefs.getTargetLanguage()}")
-            .child(CATEGORIES_REF).apply {
-                keepSynced(true)
-            }
+        prefs: Prefs
+    ) = db.reference.child(USERS_REF).child(userId)
+        .child("${prefs.getSourceLanguage()}-${prefs.getTargetLanguage()}")
+        .child(CATEGORIES_REF).apply {
+            keepSynced(true)
+        }
 
     @Named(USERS_REF)
     @Provides
     fun provideRealtimeDatabaseUser(
         db: FirebaseDatabase,
         @Named(USER_ID) userId: String
-    ) =
-        db.reference.child(USERS_REF).child(userId).apply {
-            keepSynced(true)
-        }
-
-    @Named(MY_PURCHASES_REF)
-    @Provides
-    fun provideRealtimeDatabaseMyPurchase(
-        db: FirebaseDatabase,
-        @Named(USER_ID) userId: String
-    ) =
-        db.reference.child(USERS_REF).child(userId).child(MY_PURCHASES_REF).apply {
-            keepSynced(true)
-        }
-
-    @Named(PURCHASES_REF)
-    @Provides
-    fun provideRealtimeDatabasePurchase(
-        db: FirebaseDatabase
-    ) = db.reference.child(PURCHASES_REF).apply {
-            keepSynced(true)
-        }
+    ) = db.reference.child(USERS_REF).child(userId)
+        .apply { keepSynced(true) }
 
     @Named(EXPLORE_REF)
     @Provides

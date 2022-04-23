@@ -9,7 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
+@Singleton
 class FirebaseRepositoryImp @Inject constructor(
     @Named(Constants.CATEGORIES_REF)
     private val categoriesDbRef: DatabaseReference

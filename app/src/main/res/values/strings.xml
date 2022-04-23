@@ -179,4 +179,5 @@
     <string name="skus_not_found">No skus found from query</string>
     <string name="link_to_account">User must not be anonymous, link to account</string>
     <string name="verify_account">Verify your account</string>
+    <string name="buy_translations">Buy more translations</string>
 </resources>

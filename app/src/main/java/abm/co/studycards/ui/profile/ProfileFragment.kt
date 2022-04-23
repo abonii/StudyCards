@@ -7,6 +7,8 @@ import abm.co.studycards.data.model.Language
 import abm.co.studycards.databinding.FragmentProfileBinding
 import abm.co.studycards.helpers.LocaleHelper
 import abm.co.studycards.ui.login.LoginActivity
+import abm.co.studycards.util.Constants
+import abm.co.studycards.util.Constants.DEV_ACCOUNT_LINK
 import abm.co.studycards.util.Constants.REQUEST_SYSTEM_LANGUAGE_KEY
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.navigate
@@ -133,7 +135,7 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
 
     fun onClickContactUs() {
         val i = Intent(Intent.ACTION_VIEW)
-        i.data = Uri.parse("https://t.me/oabylay")
+        i.data = Uri.parse(DEV_ACCOUNT_LINK)
         startActivity(i)
     }
 

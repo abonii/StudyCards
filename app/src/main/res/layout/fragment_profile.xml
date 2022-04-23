@@ -251,7 +251,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:fontFamily="sans-serif-medium"
-                            android:text="Premium"
+                            android:text="@string/buy_translations"
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/profile_left_side_sp"
                             tools:ignore="RelativeOverlap" />
@@ -262,7 +262,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:fontFamily="sans-serif-medium"
-                            android:text="@{viewmodel.hasPremium()}"
+                            android:text="@{viewmodel.translationCount}"
                             android:textColor="@color/colorPrimaryDark"
                             android:textSize="@dimen/profile_left_side_sp"
                             tools:ignore="RelativeOverlap" />

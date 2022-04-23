@@ -15,8 +15,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.Purchase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -29,11 +27,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         installSplashScreen()
         super.onCreate(savedInstanceState)
         checkIfLoggedIn()
-    }
-
-    override fun onResume() {
-        super.onResume()
-//        viewModel.verifySubscription()
     }
 
     override fun onDestroy() {

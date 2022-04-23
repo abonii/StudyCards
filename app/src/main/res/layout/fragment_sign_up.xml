@@ -75,7 +75,7 @@
                         android:fontFamily="@font/poppins_regular"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
-                        android:text="@{viewmodel.email}" />
+                        android:text="@={viewmodel.email}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -94,7 +94,7 @@
                         android:fontFamily="@font/poppins_regular"
                         android:inputType="textPassword"
                         android:maxLines="1"
-                        android:text="@{viewmodel.password}" />
+                        android:text="@={viewmodel.password}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -113,7 +113,7 @@
                         android:fontFamily="@font/poppins_regular"
                         android:inputType="textPassword"
                         android:maxLines="1"
-                        android:text="@{viewmodel.verifyPassword}" />
+                        android:text="@={viewmodel.verifyPassword}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView

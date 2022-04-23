@@ -1,14 +1,9 @@
 package abm.co.studycards.di
 
 import abm.co.studycards.data.network.oxford.OxfordApiService
-import abm.co.studycards.data.network.oxford.OxfordInterceptor
 import abm.co.studycards.di.qualifier.OxfordNetwork
 import abm.co.studycards.di.qualifier.TypeEnum.*
 import abm.co.studycards.util.Constants
-import abm.co.studycards.util.Constants.OXFORD_API_KEY
-import abm.co.studycards.util.Constants.OXFORD_APP_ID
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -20,7 +15,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Named
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -55,8 +49,7 @@ class OxfordNetworkModule {
     fun provideRetrofit(
         @OxfordNetwork(OKHTTP) okHttpClient: OkHttpClient,
         @OxfordNetwork(URL) BaseURL: String
-    ):
-            Retrofit = Retrofit.Builder()
+    ): Retrofit = Retrofit.Builder()
         .baseUrl(BaseURL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())

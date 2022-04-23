@@ -23,15 +23,14 @@ class BuyPremiumFragment :
     override fun initUI(savedInstanceState: Bundle?) {
         initRV()
         collectData()
-        viewModel.getProducts()
     }
 
     private fun collectData() {
-        viewModel.subscriptionsLiveData.observe(viewLifecycleOwner) { subscriptions ->
-            if (subscriptions != null) {
-                setProductsList(subscriptions)
-            } else {
-                toast(getString(R.string.skus_not_found))
+        lifecycleScope.launchWhenResumed {
+            viewModel.skusStateFlow.collectLatest { subscriptions ->
+                if (subscriptions.isNotEmpty()) {
+                    setProductsList(subscriptions)
+                }
             }
         }
         lifecycleScope.launch {

@@ -1,137 +1,141 @@
 package abm.co.studycards.data
 
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.domain.BillingClientProvider
-import abm.co.studycards.util.Constants.SUBSCRIPTIONS_PRODUCTS
-import abm.co.studycards.util.connect
-import abm.co.studycards.util.getProducts
+import abm.co.studycards.util.Constants.AN_APP_SKUS
+import abm.co.studycards.util.Constants.PRODUCT_TYPE
+import abm.co.studycards.util.Constants.TAG
+import abm.co.studycards.util.Constants.VERIFY_PRODUCT_FUN
+import abm.co.studycards.util.core.App
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.android.billingclient.api.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PricingRepositoryImpl @Inject constructor(
-    private val billingClientProvider: BillingClientProvider,
     @ApplicationContext val context: Context,
-    private val prefs: Prefs,
     private val firebaseFunctions: FirebaseFunctions,
-    private val firebaseAuth: FirebaseAuth
-) : PricingRepository {
+    private val firebaseAuth: FirebaseAuth,
+    private val coroutineScope: CoroutineScope,
+) : PricingRepository, BillingClientStateListener, PurchasesUpdatedListener {
 
-    private var _purchaseStateFlow: MutableStateFlow<List<Purchase>?> = MutableStateFlow(null)
-    override val purchaseStateFlow = _purchaseStateFlow.asStateFlow()
+    private val _skusLiveData = MutableStateFlow<List<SkuDetails>>(emptyList())
+    override val skusStateFlow: StateFlow<List<SkuDetails>> = _skusLiveData.asStateFlow()
 
-    private var _verifySharedFlow: MutableSharedFlow<List<Purchase>?> = MutableSharedFlow(
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
-    override val verifySharedFlow = _verifySharedFlow.asSharedFlow()
+    override var billingClient: BillingClient = BillingClient
+        .newBuilder(App.instance)
+        .enablePendingPurchases()
+        .setListener(this)
+        .build()
 
-    override suspend fun setPurchases(purchaseType: String) {
-        val connectIfNeeded = connectIfNeeded()
-        if (!connectIfNeeded) return
-        getBillingClient().queryPurchasesAsync(purchaseType) { _, listener ->
-            _purchaseStateFlow.value = listener
-        }
+    init {
+        billingClient.startConnection(this)
     }
 
-    override suspend fun getSubscriptions(): List<SkuDetails>? {
-        val connectIfNeeded = connectIfNeeded()
-        if (!connectIfNeeded)
-            return null
-        val queryParamsBuilder = SkuDetailsParams.newBuilder().apply {
-            setSkusList(SUBSCRIPTIONS_PRODUCTS)
-            setType(BillingClient.SkuType.SUBS)
-        }
-
-        return getProducts(queryParamsBuilder.build())
-    }
-
-    private suspend fun acknowledgePurchase(purchase: Purchase): BillingResult? {
-        if (purchase.purchaseState != Purchase.PurchaseState.PURCHASED || purchase.isAcknowledged)
-            return null
-
-        val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-            .setPurchaseToken(purchase.purchaseToken)
-            .build()
-        return getBillingClient().acknowledgePurchase(acknowledgePurchaseParams)
-    }
-
-    override suspend fun acknowledgePurchases(list: List<Purchase>?) {
-        list?.forEach {
-            when (acknowledgePurchase(it)?.responseCode) {
-                BillingClient.BillingResponseCode.OK -> {
-                    prefs.setIsPremium(true)
+    private fun listenForPurchase() {
+        billingClient.queryPurchasesAsync(PRODUCT_TYPE) { result, purchases ->
+//            Log.i(TAG, "listen: " + result.responseCode.toString() + "-" + purchases)
+            if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                coroutineScope.launch {
+                    verifySubscriptions(purchases)
                 }
             }
         }
     }
 
-    override suspend fun verifySubscriptions(list: List<Purchase>?) {
+    private fun querySkuDetailsAsync() {
+        val queryParamsBuilder = SkuDetailsParams.newBuilder().apply {
+            setSkusList(AN_APP_SKUS)
+            setType(PRODUCT_TYPE)
+        }
+        getProducts(queryParamsBuilder.build())
+    }
+
+    private fun verifySubscriptions(list: List<Purchase>?) {
         list?.forEach {
-            verifySubscription(it)
+            verifyProduct(it)
         }
     }
 
-    private fun verifySubscription(purchase: Purchase) {
-        Toast.makeText(context, "verifySubscription: $purchase", Toast.LENGTH_LONG).show()
+    private fun verifyProduct(purchase: Purchase) {
         val data = mapOf(
-            "sku_id" to BillingClient.SkuType.SUBS,
+            "sku_id" to purchase.skus.getOrNull(0),
             "purchase_token" to purchase.purchaseToken,
-            "package_name" to "abm.co.studycards",
-            "user_id" to firebaseAuth.currentUser?.uid,
+            "package_name" to purchase.packageName,
+            "user_id" to (firebaseAuth.currentUser?.uid ?: "000000"),
         )
-        firebaseFunctions.getHttpsCallable("verifySubscription").call(data).continueWith { task ->
+        firebaseFunctions.getHttpsCallable(VERIFY_PRODUCT_FUN).call(data).continueWith { task ->
             try {
                 (task.result?.data as HashMap<*, *>).let {
-                    val verifySubscription = SubscriptionVerify(
+                    val verifyPurchase = PurchaseVerify(
                         status = it["status"] as Int,
-                        message = it["message"] as String
+                        purchaseState = it["purchaseState"] as Int?
                     )
-                    Toast.makeText(
-                        context,
-                        "called verify from server: ${verifySubscription.message}",
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
-                    if (verifySubscription.status == 200)
-                        _verifySharedFlow.tryEmit(listOf(purchase))
+//                    Log.i(TAG, "verifySubscription: ${verifyPurchase.purchaseState}")
+                    if (verifyPurchase.status == 200 &&
+                        verifyPurchase.purchaseState != Purchase.PurchaseState.PENDING
+                    ) {
+                        Log.i(TAG, "verified: $verifyPurchase")
+                        consumeProduct(purchase)
+                    }
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "getHttpsCall error: " + e.message, Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+//                Log.e(TAG, "verifySubscription: " + e.message)
                 null
             }
         }
     }
 
-    override suspend fun getProducts(productDetailsParams: SkuDetailsParams): List<SkuDetails>? {
-        return withContext(Dispatchers.IO) {
-            val connectIfNeeded = connectIfNeeded()
-            if (!connectIfNeeded)
-                null
-            else getBillingClient().getProducts(productDetailsParams)
+    private fun consumeProduct(purchase: Purchase) {
+        Log.i(TAG, "consumeProduct: $purchase")
+        val consumeParams = ConsumeParams.newBuilder()
+            .setPurchaseToken(purchase.purchaseToken)
+            .build()
+        billingClient.consumeAsync(consumeParams) { _, _ -> }
+    }
+
+    private fun getProducts(params: SkuDetailsParams) {
+        billingClient.querySkuDetailsAsync(params) { _, products ->
+            if (products != null) {
+                coroutineScope.launch {
+                    products.sortBy { it.price }
+                    _skusLiveData.emit(products)
+                }
+            }
         }
     }
 
-    private suspend fun connectIfNeeded(): Boolean {
-        return withContext(Dispatchers.IO) {
-            getBillingClient().isReady || getBillingClient().connect()
+    override fun onBillingServiceDisconnected() {
+        billingClient.startConnection(this@PricingRepositoryImpl)
+    }
+
+    override fun onBillingSetupFinished(response: BillingResult) {
+        listenForPurchase()
+        when (response.responseCode) {
+            BillingClient.BillingResponseCode.OK -> {
+                coroutineScope.launch {
+                    querySkuDetailsAsync()
+                }
+            }
         }
     }
 
-    override fun getBillingClient() = billingClientProvider.billingClient
+    override fun onPurchasesUpdated(res: BillingResult, p1: MutableList<Purchase>?) {
+        if (res.responseCode == BillingClient.BillingResponseCode.OK) {
+            coroutineScope.launch {
+                verifySubscriptions(p1)
+            }
+        }
+    }
 
 }

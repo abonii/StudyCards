@@ -1,57 +1,21 @@
 {
   "project_info": {
-    "project_number": "1099449896785",
-    "firebase_url": "https://studycards-905e8-default-rtdb.firebaseio.com",
-    "project_id": "studycards-905e8",
-    "storage_bucket": "studycards-905e8.appspot.com"
+    "project_number": "111316305374",
+    "firebase_url": "https://study-cards-0000-default-rtdb.firebaseio.com",
+    "project_id": "study-cards-0000",
+    "storage_bucket": "study-cards-0000.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1099449896785:android:d6eb7e3a6e85a01264cd70",
-        "android_client_info": {
-          "package_name": "abc.co.studycardsadmin"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1099449896785-7htb1v20m8o7htj4v4esshkol41qeniq.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBCPc9E8WCRdSD3A8yzZw2HUzxUXOmb9Tg"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1099449896785-7htb1v20m8o7htj4v4esshkol41qeniq.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1099449896785-ikka0s3ii5vtkv6mv5uv6s7i9u9qrt6c.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.bbbakdaulet.StudyCards"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1099449896785:android:09ea636a1b201a5f64cd70",
+        "mobilesdk_app_id": "1:111316305374:android:5be57e5c3fcb71cce7c94f",
         "android_client_info": {
           "package_name": "abm.co.studycards"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1099449896785-e7m6r17vdos5lkgnv6818abojfmm6cj1.apps.googleusercontent.com",
+          "client_id": "111316305374-d8jmekjftue9ljs0pvfkgn70k7lqlk06.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "abm.co.studycards",
@@ -59,28 +23,21 @@
           }
         },
         {
-          "client_id": "1099449896785-7htb1v20m8o7htj4v4esshkol41qeniq.apps.googleusercontent.com",
+          "client_id": "111316305374-21t7ltj94npjvbqrcbmql58ugpstjnu9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBCPc9E8WCRdSD3A8yzZw2HUzxUXOmb9Tg"
+          "current_key": "AIzaSyAyAVA1WrxOdZlenkazz8C3WqPtWfwyZBA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1099449896785-7htb1v20m8o7htj4v4esshkol41qeniq.apps.googleusercontent.com",
+              "client_id": "111316305374-21t7ltj94npjvbqrcbmql58ugpstjnu9.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "1099449896785-ikka0s3ii5vtkv6mv5uv6s7i9u9qrt6c.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.bbbakdaulet.StudyCards"
-              }
             }
           ]
         }
