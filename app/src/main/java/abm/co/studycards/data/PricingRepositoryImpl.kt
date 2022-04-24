@@ -2,17 +2,15 @@ package abm.co.studycards.data
 
 import abm.co.studycards.util.Constants.AN_APP_SKUS
 import abm.co.studycards.util.Constants.PRODUCT_TYPE
-import abm.co.studycards.util.Constants.TAG
 import abm.co.studycards.util.Constants.VERIFY_PRODUCT_FUN
-import abm.co.studycards.util.core.App
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import com.android.billingclient.api.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,27 +23,28 @@ class PricingRepositoryImpl @Inject constructor(
     @ApplicationContext val context: Context,
     private val firebaseFunctions: FirebaseFunctions,
     private val firebaseAuth: FirebaseAuth,
-    private val coroutineScope: CoroutineScope,
+    private val coroutineScope: CoroutineScope
 ) : PricingRepository, BillingClientStateListener, PurchasesUpdatedListener {
 
     private val _skusLiveData = MutableStateFlow<List<SkuDetails>>(emptyList())
     override val skusStateFlow: StateFlow<List<SkuDetails>> = _skusLiveData.asStateFlow()
 
     override var billingClient: BillingClient = BillingClient
-        .newBuilder(App.instance)
+        .newBuilder(context.applicationContext)
         .enablePendingPurchases()
         .setListener(this)
         .build()
 
-    init {
-        billingClient.startConnection(this)
+    override fun startConnection() {
+        coroutineScope.launch(Dispatchers.IO) {
+            billingClient.startConnection(this@PricingRepositoryImpl)
+        }
     }
 
     private fun listenForPurchase() {
         billingClient.queryPurchasesAsync(PRODUCT_TYPE) { result, purchases ->
-//            Log.i(TAG, "listen: " + result.responseCode.toString() + "-" + purchases)
-            if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                coroutineScope.launch {
+            coroutineScope.launch(Dispatchers.IO) {
+                if (result.responseCode == BillingClient.BillingResponseCode.OK) {
                     verifySubscriptions(purchases)
                 }
             }
@@ -80,24 +79,19 @@ class PricingRepositoryImpl @Inject constructor(
                         status = it["status"] as Int,
                         purchaseState = it["purchaseState"] as Int?
                     )
-//                    Log.i(TAG, "verifySubscription: ${verifyPurchase.purchaseState}")
                     if (verifyPurchase.status == 200 &&
                         verifyPurchase.purchaseState != Purchase.PurchaseState.PENDING
                     ) {
-                        Log.i(TAG, "verified: $verifyPurchase")
                         consumeProduct(purchase)
                     }
                 }
             } catch (e: Exception) {
                 Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
-//                Log.e(TAG, "verifySubscription: " + e.message)
-                null
             }
         }
     }
 
     private fun consumeProduct(purchase: Purchase) {
-        Log.i(TAG, "consumeProduct: $purchase")
         val consumeParams = ConsumeParams.newBuilder()
             .setPurchaseToken(purchase.purchaseToken)
             .build()
@@ -107,7 +101,7 @@ class PricingRepositoryImpl @Inject constructor(
     private fun getProducts(params: SkuDetailsParams) {
         billingClient.querySkuDetailsAsync(params) { _, products ->
             if (products != null) {
-                coroutineScope.launch {
+                coroutineScope.launch(Dispatchers.IO) {
                     products.sortBy { it.price }
                     _skusLiveData.emit(products)
                 }
@@ -116,14 +110,14 @@ class PricingRepositoryImpl @Inject constructor(
     }
 
     override fun onBillingServiceDisconnected() {
-        billingClient.startConnection(this@PricingRepositoryImpl)
+        startConnection()
     }
 
     override fun onBillingSetupFinished(response: BillingResult) {
-        listenForPurchase()
-        when (response.responseCode) {
-            BillingClient.BillingResponseCode.OK -> {
-                coroutineScope.launch {
+        coroutineScope.launch(Dispatchers.IO) {
+            when (response.responseCode) {
+                BillingClient.BillingResponseCode.OK -> {
+                    listenForPurchase()
                     querySkuDetailsAsync()
                 }
             }
@@ -131,8 +125,8 @@ class PricingRepositoryImpl @Inject constructor(
     }
 
     override fun onPurchasesUpdated(res: BillingResult, p1: MutableList<Purchase>?) {
-        if (res.responseCode == BillingClient.BillingResponseCode.OK) {
-            coroutineScope.launch {
+        coroutineScope.launch(Dispatchers.IO) {
+            if (res.responseCode == BillingClient.BillingResponseCode.OK) {
                 verifySubscriptions(p1)
             }
         }

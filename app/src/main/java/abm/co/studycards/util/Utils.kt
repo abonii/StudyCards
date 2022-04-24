@@ -10,7 +10,10 @@ import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.*
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -18,15 +21,10 @@ import android.text.Html
 import android.text.SpannableString
 import android.text.Spanned
 import android.util.TypedValue
-import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
-import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.fragment.app.Fragment
@@ -37,7 +35,6 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.DialogFragmentNavigator
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -51,46 +48,46 @@ fun Number.dp(): Int {
     return (this.toInt() / Resources.getSystem().displayMetrics.density).toInt()
 }
 
-fun Number.sp(): Int {
-    return (this.toInt() / Resources.getSystem().displayMetrics.density).toInt()
-}
+//fun Number.sp(): Int {
+//    return (this.toInt() / Resources.getSystem().displayMetrics.density).toInt()
+//}
 
-fun SearchView.setTypeFace(font: Typeface?) {
-    val searchText = this.findViewById<TextView>(androidx.appcompat.R.id.search_src_text)
-    searchText.apply {
-        setTextColor(ContextCompat.getColor(this.context, R.color.textColor))
-        gravity = Gravity.BOTTOM
-        typeface = font
-    }
-}
+//fun SearchView.setTypeFace(font: Typeface?) {
+//    val searchText = this.findViewById<TextView>(androidx.appcompat.R.id.search_src_text)
+//    searchText.apply {
+//        setTextColor(ContextCompat.getColor(this.context, R.color.textColor))
+//        gravity = Gravity.BOTTOM
+//        typeface = font
+//    }
+//}
 
-fun ImageView.setImageWithGlide(url: String) {
-    Glide.with(this.context)
-        .load(url)
-        .placeholder(R.drawable.ic_image)
-        .into(this)
-}
+//fun ImageView.setImageWithGlide(url: String) {
+//    Glide.with(this.context)
+//        .load(url)
+//        .placeholder(R.drawable.ic_image)
+//        .into(this)
+//}
 
-fun View.setNewWidthAndHeightForView(newWidth: Int, newHeight: Int) {
-    this.apply {
-        layoutParams = layoutParams.apply {
-            width = newWidth
-            height = newHeight
-        }
-    }
-}
+//fun View.setNewWidthAndHeightForView(newWidth: Int, newHeight: Int) {
+//    this.apply {
+//        layoutParams = layoutParams.apply {
+//            width = newWidth
+//            height = newHeight
+//        }
+//    }
+//}
 
-fun View.setNewHeightForView(newHeight: Int) {
-    this.apply {
-        layoutParams = layoutParams.apply {
-            height = newHeight
-        }
-    }
-}
+//fun View.setNewHeightForView(newHeight: Int) {
+//    this.apply {
+//        layoutParams = layoutParams.apply {
+//            height = newHeight
+//        }
+//    }
+//}
 
-fun Fragment.getMyColor(id: Int): Int {
-    return resources.getColor(id, null)
-}
+//fun Fragment.getMyColor(id: Int): Int {
+//    return resources.getColor(id, null)
+//}
 
 fun View.getMyColor(id: Int): Int {
     return resources.getColor(id, null)
@@ -163,18 +160,18 @@ fun Context.getProgressBarDrawable(): Drawable {
     return drawable
 }
 
-fun View?.setClickableForAllChildren(isIt: Boolean) {
-    if (this != null) {
-        this.isClickable = isIt
-        if (this is EditText)
-            this.isCursorVisible = isIt
-        if (this is ViewGroup) {
-            for (i in 0 until this.childCount) {
-                this.getChildAt(i).setClickableForAllChildren(isIt)
-            }
-        }
-    }
-}
+//fun View?.setClickableForAllChildren(isIt: Boolean) {
+//    if (this != null) {
+//        this.isClickable = isIt
+//        if (this is EditText)
+//            this.isCursorVisible = isIt
+//        if (this is ViewGroup) {
+//            for (i in 0 until this.childCount) {
+//                this.getChildAt(i).setClickableForAllChildren(isIt)
+//            }
+//        }
+//    }
+//}
 
 @Suppress("DEPRECATION")
 fun String?.fromHtml(): CharSequence {

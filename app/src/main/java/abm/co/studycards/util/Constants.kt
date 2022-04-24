@@ -4,6 +4,7 @@ import com.android.billingclient.api.BillingClient
 
 object Constants {
     const val TAG = "IM_CHECKING"
+    const val APP_NAME = "Study Cards"
     const val CAN_TRANSLATE_EVERY_DAY_ANONYMOUS = 4
     const val CAN_TRANSLATE_EVERY_DAY = 12
     const val CAN_TRANSLATE_EVERY_PREMIUM = 2000

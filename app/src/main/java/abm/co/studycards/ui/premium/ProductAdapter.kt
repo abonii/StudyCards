@@ -1,6 +1,7 @@
 package abm.co.studycards.ui.premium
 
 import abm.co.studycards.databinding.ItemProductsListBinding
+import abm.co.studycards.util.Constants.APP_NAME
 import abm.co.studycards.util.dp
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -32,7 +33,6 @@ class ProductAdapter(
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val item = products[position]
-//        val isSelected = products[position].second
         holder.bind(item)
     }
 
@@ -44,8 +44,12 @@ class ProductAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            itemView.setOnClickListener {
-                onProductClick.invoke(absoluteAdapterPosition)
+            binding.card.setOnClickListener {
+                onProductClick(absoluteAdapterPosition)
+            }
+            binding.card.setOnLongClickListener {
+                onProductClick(absoluteAdapterPosition)
+                true
             }
             itemView.layoutParams = itemView.layoutParams.apply {
                 width = newWidth
@@ -55,6 +59,7 @@ class ProductAdapter(
         fun bind(product: SkuDetails) {
             with(binding) {
                 productName.text = product.title
+                    .replace("($APP_NAME)", "").trim()
                 price.text = product.price
             }
         }

@@ -7,6 +7,7 @@ import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.SkuDetails
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,8 +73,12 @@ class BuyPremiumFragment :
         val flowParams = BillingFlowParams.newBuilder()
             .setSkuDetails(product)
             .build()
-
         val billingClient = viewModel.getBillingClient()
-        billingClient.launchBillingFlow(requireActivity(), flowParams)
+        when (billingClient.launchBillingFlow(requireActivity(), flowParams).responseCode) {
+            BillingClient.BillingResponseCode.SERVICE_DISCONNECTED,
+            BillingClient.BillingResponseCode.SERVICE_TIMEOUT -> {
+                viewModel.retryConnection()
+            }
+        }
     }
 }

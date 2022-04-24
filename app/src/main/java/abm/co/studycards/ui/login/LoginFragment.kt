@@ -6,25 +6,19 @@ import abm.co.studycards.databinding.FragmentSignInBinding
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
-import abm.co.studycards.util.setClickableForAllChildren
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class LoginFragment : BaseBindingFragment<FragmentSignInBinding>(R.layout.fragment_sign_in) {

@@ -6,12 +6,10 @@ import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.core.App
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -21,7 +19,8 @@ import javax.inject.Named
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val prefs: Prefs,
-    @Named(Constants.CATEGORIES_REF) val categoriesDbRef: DatabaseReference,
+    @Named(Constants.CATEGORIES_REF)
+    val categoriesDbRef: DatabaseReference,
 ) : BaseViewModel() {
 
     val dispatcher = Dispatchers.IO

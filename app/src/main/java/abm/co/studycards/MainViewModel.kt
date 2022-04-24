@@ -28,8 +28,12 @@ import javax.inject.Named
 class MainViewModel @Inject constructor(
     val prefs: Prefs,
     @Named(USERS_REF) val userDbRef: DatabaseReference,
-    private val pricingRepository: PricingRepository
+    pricingRepository: PricingRepository
 ) : BaseViewModel() {
+
+    init {
+        pricingRepository.startConnection()
+    }
 
     var currentNavController: LiveData<NavController>? = null
 
@@ -107,11 +111,8 @@ class MainViewModel @Inject constructor(
             }
 
             override fun onCancelled(error: DatabaseError) {
-                makeToast(error.message)
+
             }
         })
     }
-
-    fun shutDownBillingClient() = pricingRepository.billingClient.endConnection()
-
 }

@@ -29,11 +29,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         checkIfLoggedIn()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.shutDownBillingClient()
-    }
-
     override fun initViews(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
             setupBottomNavigationBar()

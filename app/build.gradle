@@ -17,8 +17,8 @@ android {
         applicationId "abm.co.studycards"
         minSdk 23
         targetSdk 32
-        versionCode 36
-        versionName "0.36"
+        versionCode 39
+        versionName "0.39"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         proguardFiles
