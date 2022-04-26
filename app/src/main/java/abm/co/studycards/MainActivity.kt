@@ -7,6 +7,7 @@ import abm.co.studycards.util.setupWithNavController
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
@@ -14,7 +15,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -47,7 +47,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
     }
 
     private fun checkIfLoggedIn() {
-        if (viewModel.getCurrentUser() == null) {
+        if (viewModel.getCurrentUser() != null) {
             val i = Intent(this, LoginActivity::class.java)
             startActivity(i)
             finish()
@@ -62,9 +62,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
             super.onBackPressed()
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return viewModel.onBackAndNavigateUp() || viewModel.currentNavController?.value!!.navigateUp()
-                || super.onSupportNavigateUp()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            if (!viewModel.onBackAndNavigateUp() ||
+                !viewModel.currentNavController?.value!!.navigateUp()
+            )
+                super.onBackPressed()
+            return true
+        }
+        return true
     }
 
     private fun setupBottomNavigationBar() {
@@ -104,10 +110,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         setupBottomNavigationBar()
     }
 
-    fun setToolbar(toolbar: Toolbar, navController: NavController) {
+    fun setToolbar(toolbar: Toolbar, _n: NavController) {
         setSupportActionBar(toolbar)
-        setupActionBarWithNavController(navController)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar.navigationIcon = getImg(R.drawable.ic_back)
     }
 
     private fun slideDown() {

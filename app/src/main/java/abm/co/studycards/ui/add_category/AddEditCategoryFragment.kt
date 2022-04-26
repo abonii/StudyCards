@@ -2,6 +2,7 @@ package abm.co.studycards.ui.add_category
 
 import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentAddEditCategoryBinding
+import abm.co.studycards.util.base.BaseDialogFragment
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
@@ -12,22 +13,13 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddEditCategoryFragment : DialogFragment(R.layout.fragment_add_edit_category) {
+class AddEditCategoryFragment : BaseDialogFragment<FragmentAddEditCategoryBinding>(R.layout.fragment_add_edit_category) {
 
     private val viewModel: AddEditCategoryViewModel by viewModels()
-    private var _binding: FragmentAddEditCategoryBinding? = null
-    private val binding get() = _binding!!
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentAddEditCategoryBinding.bind(view)
-        binding.apply {
-            category.apply {
-                setText(viewModel.mainName)
-                addTextChangedListener {
-                    viewModel.mainName = it.toString()
-                }
-            }
+    override fun initUI(savedInstanceState: Bundle?) {
+        binding.run {
+            viewmodel = viewModel
             save.setOnClickListener {
                 viewModel.saveCategory()
                 dismiss()
@@ -45,11 +37,6 @@ class AddEditCategoryFragment : DialogFragment(R.layout.fragment_add_edit_catego
             )
             setBackgroundDrawableResource(R.drawable.round_corner)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }

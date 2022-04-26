@@ -10,6 +10,7 @@ interface Prefs {
         const val SOURCE_LANGUAGE: String = "ABO_FLASH_CARD_NATIVE_LANGUAGE"
         const val TARGET_LANGUAGE: String = "ABO_FLASH_CARD_TARGET_LANGUAGE"
         const val IS_PREMIUM: String = "ABO_FLASH_CARD_IS_PREMIUM"
+        const val IS_FIRST_TIME: String = "ABO_FLASH_CARD_IS_FIRST_TIME"
     }
 
     fun getAccessToken(): String
@@ -32,6 +33,9 @@ interface Prefs {
 
     fun getIsPremium(): Boolean
     fun setIsPremium(value: Boolean)
+
+    fun getIsFirstTime(): Boolean
+    fun getIsFirstTime(value: Boolean)
 
 
 }

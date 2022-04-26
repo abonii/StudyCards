@@ -1,6 +1,7 @@
 package abm.co.studycards.data.pref
 
 import abm.co.studycards.data.pref.Prefs.Companion.ACCESS_TOKEN
+import abm.co.studycards.data.pref.Prefs.Companion.IS_FIRST_TIME
 import abm.co.studycards.data.pref.Prefs.Companion.IS_PREMIUM
 import abm.co.studycards.data.pref.Prefs.Companion.SELECTED_APP_LANGUAGE
 import abm.co.studycards.data.pref.Prefs.Companion.SOURCE_LANGUAGE
@@ -89,6 +90,17 @@ class PrefsImpl @Inject constructor(
     override fun setIsPremium(value: Boolean) {
         with(preferences.edit()) {
             putBoolean(IS_PREMIUM, value)
+            commit()
+        }
+    }
+
+    override fun getIsFirstTime(): Boolean {
+        return preferences.getBoolean(IS_FIRST_TIME, false)
+    }
+
+    override fun getIsFirstTime(value: Boolean) {
+        with(preferences.edit()) {
+            putBoolean(IS_FIRST_TIME, value)
             commit()
         }
     }

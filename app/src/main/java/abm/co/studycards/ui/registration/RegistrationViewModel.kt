@@ -1,11 +1,11 @@
 package abm.co.studycards.ui.registration
 
 import abm.co.studycards.R
+import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.core.App
 import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,10 +16,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
-    private val firebaseAuthInstance: FirebaseAuth
+    private val repository: ServerCloudRepository
 ) : BaseViewModel() {
 
+    private val firebaseAuth = repository.firebaseAuth
     var email: String = ""
+    var name: String = ""
     var password: String = ""
     var verifyPassword: String = ""
 
@@ -36,6 +38,9 @@ class RegistrationViewModel @Inject constructor(
     fun register() {
         _loading.value = true
         when {
+            TextUtils.isEmpty(name) -> {
+                _error.value = App.instance.getString(R.string.email_empty)
+            }
             TextUtils.isEmpty(email) -> {
                 _error.value = App.instance.getString(R.string.email_empty)
             }
@@ -52,10 +57,11 @@ class RegistrationViewModel @Inject constructor(
                 _error.value = App.instance.getString(R.string.passwords_not_same)
             }
             else -> {
-                firebaseAuthInstance.createUserWithEmailAndPassword(email, password)
+                firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
                             sendVerificationEmail()
+                            repository.addUserName(name)
                         } else {
                             _error.value = "${it.exception?.localizedMessage}"
                         }
@@ -66,24 +72,23 @@ class RegistrationViewModel @Inject constructor(
     }
 
     private fun sendVerificationEmail() {
-        firebaseAuthInstance.currentUser?.sendEmailVerification()
+        firebaseAuth.currentUser?.sendEmailVerification()
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    firebaseAuthInstance.signOut()
                     makeToast(R.string.we_send_verification)
-                    navigateToLoginFragment()
+                    navigateToMainActivity()
                 } else {
                     makeToast(R.string.we_couldnt_send_verification)
                 }
             }
     }
 
-    fun navigateToLoginFragment() = viewModelScope.launch {
-        _sharedFlow.emit(RegistrationEventChannel.NavigateToLogin)
+    private fun navigateToMainActivity() = viewModelScope.launch {
+        _sharedFlow.emit(RegistrationEventChannel.NavigateToMainActivity)
     }
 
 }
 
 sealed class RegistrationEventChannel {
-    object NavigateToLogin : RegistrationEventChannel()
+    object NavigateToMainActivity : RegistrationEventChannel()
 }

@@ -15,9 +15,15 @@
         <!-- BottomSheet-->
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <!--Toolbar-->
-<!--        <item name="actionOverflowButtonStyle">@style/OverFlow</item>-->
+        <item name="actionOverflowButtonStyle">@style/OverFlow</item>
+        <item name="textInputStyle">@style/TextInputLayoutTheme</item>
+        <item name="materialButtonStyle">@style/MyButtonStyle</item>
+
+        <item name="colorControlNormal">@color/textColor</item>
 
         <item name="android:listDivider">@drawable/divider</item>
+
+        <item name="android:editTextStyle">@style/MyCustomEditTextStyle</item>
     </style>
     <!--bottomSheet-->
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
@@ -26,8 +32,19 @@
 
     <!--tabs-->
     <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
-        <item name="android:fontFamily">@font/poppins_medium</item>
+        <item name="android:fontFamily">@font/helvetica_medium</item>
         <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="MyButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:textSize">@dimen/button_text_sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/helvetica_light</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="cornerRadius">@dimen/button_corner_radius_dp</item>
+        <item name="android:paddingTop">@dimen/button_padding_vertically</item>
+        <item name="android:paddingBottom">@dimen/button_padding_vertically</item>
     </style>
 
     <style name="BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
@@ -36,13 +53,21 @@
         <item name="labelVisibilityMode">unlabeled</item>
     </style>
 
+    <style name="TextInputLayoutTheme" parent="Widget.Design.TextInputLayout">
+        <item name="colorOnSurface">@android:color/transparent</item>
+        <item name="hintAnimationEnabled">false</item>
+        <item name="hintEnabled">false</item>
+    </style>
 
-    <!--Toolbar-->
-<!--    <style name="OverFlow" parent="@style/Widget.AppCompat.ActionButton.Overflow">-->
-<!--        <item name="android:src">@drawable/ic_back</item>-->
-<!--    </style>-->
+    <style name="OverFlow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="srcCompat">@drawable/ic_back</item>
+        <item name="colorControlNormal">@color/textColor</item>
+    </style>
+    <style name="MyCustomEditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:textColorHint">@color/secondTextColor</item>
+        <item name="android:fontFamily">@font/helvetica_roman</item>
+        <item name="android:textSize">@dimen/edit_text_sp</item>
+    </style>
 
-<!--    <style name="snackbar_text" parent="@style/Widget.MaterialComponents.Snackbar.TextView">-->
-<!--        <item name="android:textColor">@color/textColor</item>-->
-<!--    </style>-->
 </resources>

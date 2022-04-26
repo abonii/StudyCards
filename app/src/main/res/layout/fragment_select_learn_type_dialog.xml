@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/learn_image"
-                android:fontFamily="@font/poppins_medium"
+                android:fontFamily="@font/helvetica_medium"
                 android:text="@string/learn"
                 android:textColor="@color/textColor"
                 android:textSize="16sp" />
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/learn_title"
                 android:textSize="16sp"
-                android:fontFamily="@font/poppins_light"
+                android:fontFamily="@font/helvetica_light"
                 android:textColor="@color/secondTextColor"
                 android:layout_toEndOf="@id/learn_image" />
 
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/repeat_title"
                 android:textSize="16sp"
-                android:fontFamily="@font/poppins_light"
+                android:fontFamily="@font/helvetica_light"
                 android:textColor="@color/secondTextColor"
                 android:layout_toEndOf="@id/repeat_image" />
         </RelativeLayout>
@@ -130,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/one_game_title"
                     android:textSize="16sp"
-                    android:fontFamily="@font/poppins_light"
+                    android:fontFamily="@font/helvetica_light"
                     android:textColor="@color/secondTextColor"
                     android:layout_toEndOf="@id/one_game_image"
                     tools:text="wsgdf" />
@@ -141,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/one_game_subtitle"
                     android:textSize="16sp"
-                    android:fontFamily="@font/poppins_light"
+                    android:fontFamily="@font/helvetica_light"
                     android:textColor="@color/secondTextColor"
                     android:layout_toEndOf="@id/one_game_image"
                     tools:text="wsgdf" />

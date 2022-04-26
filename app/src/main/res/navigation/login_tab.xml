@@ -3,22 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/sign_navigation"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/firstPageFragment">
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="abm.co.studycards.ui.login.LoginFragment"
         android:label="sign_in_fragment"
-        tools:layout="@layout/fragment_sign_in" >
-        <action
-            android:id="@+id/action_loginFragment_to_signUpFragment"
-            app:destination="@id/registrationFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:launchSingleTop="false"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popUpToInclusive="false" />
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
             app:destination="@id/forgotPasswordFragment"
@@ -27,27 +18,36 @@
             app:launchSingleTop="false"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right"
-            app:popUpToInclusive="false"/>
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
         android:name="abm.co.studycards.ui.registration.RegistrationFragment"
         android:label="sign_up_fragment"
-        tools:layout="@layout/fragment_sign_up" >
-        <action
-            android:id="@+id/action_registrationFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:launchSingleTop="true"
-            app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_left"
-            app:popUpTo="@id/registrationFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
+        tools:layout="@layout/fragment_registration" />
     <fragment
         android:id="@+id/forgotPasswordFragment"
         android:name="abm.co.studycards.ui.forgot_password.ForgotPasswordFragment"
         android:label="fragment_forgot_password"
         tools:layout="@layout/fragment_forgot_password" />
+    <fragment
+        android:id="@+id/firstPageFragment"
+        android:name="abm.co.studycards.ui.first_page.FirstPageFragment"
+        android:label="fragment_first_page"
+        tools:layout="@layout/fragment_first_page">
+        <action
+            android:id="@+id/action_firstPageFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/stay_on_slide_up"
+            app:popEnterAnim="@anim/stay_on_slide_down"
+            app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_firstPageFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/stay_on_slide_up"
+            app:popEnterAnim="@anim/stay_on_slide_down"
+            app:popExitAnim="@anim/slide_down" />
+    </fragment>
 </navigation>

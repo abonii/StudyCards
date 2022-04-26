@@ -3,6 +3,7 @@ package abm.co.studycards.data.repository
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.util.Constants
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -14,14 +15,23 @@ import javax.inject.Singleton
 @Singleton
 class FirebaseRepositoryImp @Inject constructor(
     @Named(Constants.CATEGORIES_REF)
-    private val categoriesDbRef: DatabaseReference
+    private val categoriesDbRef: DatabaseReference,
+    @Named(Constants.USERS_REF)
+    var userRef: DatabaseReference,
+    override val firebaseAuth: FirebaseAuth
 ) : ServerCloudRepository {
 
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
+    override fun getCurrentUser() = firebaseAuth.currentUser
+
     override fun updateCategoryName(category: Category) {
         categoriesDbRef.child(category.id)
             .updateChildren(mapOf(Category.MAIN_NAME to category.mainName))
+    }
+
+    override fun addUserName(name: String) {
+        userRef.child("name").setValue(name)
     }
 
     override fun addCategory(category: Category) {

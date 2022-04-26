@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,17 +21,17 @@ class AddEditCategoryViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val category = savedStateHandle.get<Category>("category")
-    var mainName = category?.mainName ?: ""
+    var mainName = MutableStateFlow(category?.mainName ?: "")
 
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
     fun saveCategory() {
         if (category != null) {
-            val updatedCategory = category.copy(mainName = mainName)
+            val updatedCategory = category.copy(mainName = mainName.value)
             updateCategory(updatedCategory)
         } else {
             val newCategory = Category(
-                mainName = mainName,
+                mainName = mainName.value,
                 sourceLanguage = prefs.getSourceLanguage(),
                 targetLanguage = prefs.getTargetLanguage()
             )

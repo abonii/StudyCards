@@ -34,7 +34,7 @@
     <string name="matching">Создай пару</string>
     <string name="pairing">Создать пару</string>
     <string name="guessing">Догадайся</string>
-    <string name="cancel_upper">ОТМЕНА</string>
+    <string name="cancel">ОТМЕНА</string>
     <string name="arrow">стрела</string>
 
     <string name="upper_doubt">СОМНЕВАЮСЬ</string>
@@ -119,7 +119,7 @@
     <string name="finished_review">Вы закончили просмотр слов.</string>
     <string name="finished_learning">Вы закончили учить слова.</string>
     <string name="finished_repeating">Вы закончили повторять слова.</string>
-    <string name="google_sign">Войти с Google</string>
+    <string name="google_sign">Продолжить с помощью Google</string>
     <string name="do_u_want_to_delete_category">Вы хотите удалить эту категорию?</string>
     <string name="do_u_want_to_exit">Вы хотите выйти?</string>
     <string name="do_u_want_to_delete_this">Вы хотите удалить <![CDATA[<b><i>%1$s</i></b>]]>?</string>
@@ -142,5 +142,6 @@
     <string name="problem_with_audio">Возникла какая-то проблема со звуком</string>
     <string name="contact_us">Связаться с нами</string>
     <string name="set_of_words">Набор слов</string>
+    <string name="continue_with_email">Продолжить с помощью электронной почты</string>
 
 </resources>

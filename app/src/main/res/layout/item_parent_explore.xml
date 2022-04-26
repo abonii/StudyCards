@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:fontFamily="@font/poppins_bold"
+                android:fontFamily="@font/helvetica_bold"
                 android:gravity="start"
                 android:textColor="@color/textColor"
                 tools:text="Category" />

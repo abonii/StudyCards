@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -26,6 +28,8 @@ class LoginViewModel @Inject constructor(
 
     var email: String = ""
     var password: String = ""
+
+    val dispatcher = Dispatchers.IO
 
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
@@ -44,7 +48,12 @@ class LoginViewModel @Inject constructor(
         _sharedFlow.emit(LoginEventChannel.NavigateToMainActivity)
     }
 
-    fun loginAnonymously() = viewModelScope.launch {
+    fun setLoading(b:Boolean){
+        _loading.value = b
+    }
+
+    fun loginAnonymously() = viewModelScope.launch(dispatcher) {
+        delay(200)
         _loading.value = true
         firebaseAuthInstance.signInAnonymously()
             .addOnCompleteListener {
@@ -61,18 +70,23 @@ class LoginViewModel @Inject constructor(
             }
     }
 
-    fun navigateToForgotPassword() = viewModelScope.launch {
+    fun navigateToForgotPassword() = viewModelScope.launch(dispatcher) {
         _sharedFlow.emit(LoginEventChannel.NavigateToForgotPassword)
     }
 
-    fun loginViaGoogle() = viewModelScope.launch {
+    fun navigateToEmailFragment() = viewModelScope.launch(dispatcher) {
+        _sharedFlow.emit(LoginEventChannel.NavigateToEmailFragment)
+    }
+
+    fun loginViaGoogle() = viewModelScope.launch(dispatcher) {
         val intent = Intent(googleSignInClient.signInIntent)
+        _loading.value = true
         _sharedFlow.emit(LoginEventChannel.LoginViaGoogle(intent))
     }
 
-    fun loginViaEmail() = viewModelScope.launch {
+    fun loginViaEmail() = viewModelScope.launch(dispatcher) {
         when {
-            TextUtils.isEmpty(email) -> {
+            TextUtils.isEmpty(email.trim()) -> {
                 _error.value = App.instance.getString(R.string.email_empty)
             }
             TextUtils.isEmpty(password) -> {
@@ -80,26 +94,16 @@ class LoginViewModel @Inject constructor(
             }
             else -> {
                 _loading.value = true
-                firebaseAuthInstance.signInWithEmailAndPassword(email, password)
+                firebaseAuthInstance.signInWithEmailAndPassword(email.trim(), password)
                     .addOnCompleteListener {
                         _loading.value = false
                         if (it.isSuccessful) {
-                            checkIfEmailVerified()
+                            checkUserExistence()
                         } else {
                             _error.value = it.exception?.localizedMessage
                         }
                     }
             }
-        }
-    }
-
-    private fun checkIfEmailVerified() {
-        val user = firebaseAuthInstance.currentUser
-        if (user?.isEmailVerified == true) {
-            checkUserExistence(user)
-        } else {
-            makeToast(App.instance.getString(R.string.email_not_verified))
-            FirebaseAuth.getInstance().signOut()
         }
     }
 
@@ -111,7 +115,6 @@ class LoginViewModel @Inject constructor(
     }
 
     fun firebaseAuthWithGoogle(idToken: String) {
-        _loading.value = true
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         firebaseAuthInstance.signInWithCredential(credential)
             .addOnCompleteListener { task ->
@@ -130,4 +133,5 @@ sealed class LoginEventChannel {
     object NavigateToRegistration : LoginEventChannel()
     object NavigateToMainActivity : LoginEventChannel()
     object NavigateToForgotPassword : LoginEventChannel()
+    object NavigateToEmailFragment : LoginEventChannel()
 }

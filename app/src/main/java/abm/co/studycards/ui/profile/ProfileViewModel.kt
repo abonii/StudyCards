@@ -33,6 +33,8 @@ class ProfileViewModel @Inject constructor(
     fun isAnonymous() =
         firebaseAuthInstance.currentUser?.isAnonymous == true
 
+    fun isVerified() = firebaseAuthInstance.currentUser?.isEmailVerified == true
+
     val translationCount = MutableStateFlow("0")
 
     init {

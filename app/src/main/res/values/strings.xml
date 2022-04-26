@@ -32,8 +32,8 @@
     <string name="clear">Clear</string>
     <string name="title_in_select_category">Sort the card into:</string>
     <string name="create_category">Create a Set of Cards</string>
-    <string name="create_word">Create Word</string>
-    <string name="create_folder">Create Folder</string>
+    <string name="create_word">Create a word</string>
+    <string name="create_folder">Create a set</string>
     <string name="learn">Learn</string>
     <string name="know">Known</string>
     <string name="upper_learn">LEARN</string>
@@ -57,7 +57,7 @@
     <string name="matching">Matching</string>
     <string name="pairing">Pairing</string>
     <string name="guessing">Guessing</string>
-    <string name="cancel_upper" tools:ignore="ButtonCase">CANCEL</string>
+    <string name="cancel" >Cancel</string>
     <string name="arrow">Arrow</string>
 
     <string name="upper_doubt">DOUBTED</string>
@@ -98,7 +98,7 @@
     <string name="navigate_to_profile">Navigate to profile to change target or source languages</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="login">LOGIN</string>
+    <string name="login">Sign in</string>
     <string name="google_sign">Continue with Google</string>
     <string name="name">Name</string>
     <string name="finished_repeating">You finished repeating</string>
@@ -141,6 +141,7 @@
     <string name="choose_category">Please select a category for this word.</string>
     <string name="forget_password">Forget password?</string>
     <string name="email_empty">Email cannot be empty</string>
+    <string name="name_empty">Name cannot be empty</string>
     <string name="password_empty">Password cannot be empty</string>
     <string name="verify_password_empty">Verify password cannot be empty</string>
     <string name="password_length">Password length should be more than 5</string>
@@ -150,7 +151,7 @@
     <string name="we_send_reset_password">We have sent a password reset link to your email, please check your email</string>
     <string name="we_couldnt_send_verification">We cannot send verification to this email</string>
     <string name="we_couldnt_send_reset_password">We could not send reset password to this email</string>
-    <string name="continue_without_registration">Continue without registration</string>
+    <string name="continue_without_registration">Continue as Guest</string>
     <string name="or">Or</string>
     <string name="register_in_order_to">Register in order to use in several phones simultaneously</string>
     <string name="register">Register</string>
@@ -180,4 +181,11 @@
     <string name="link_to_account">User must not be anonymous, link to account</string>
     <string name="verify_account">Verify your account</string>
     <string name="buy_translations">Buy more translations</string>
+    <string name="welcome">Welcome to Study Cards!</string>
+    <string name="first_page_second_title">See how millions of rely an StudyCards to stay organized and get more done.</string>
+    <string name="continue_with_email">Continue with Email</string>
+    <string name="don_t_have_account">Don\'t you have an account?</string>
+    <string name="first_page_title">Learn. Play. Repeat.</string>
+    <string name="sign_up">Sign up</string>
+    <!--    <string name="agree_with_privacy_policy"><![CDATA[By joining, you agree to Study Cards\'s <a href="https://www.freeprivacypolicy.com/live/c663b277–554d-41b6-aebd-dfc34b059928">Terms of Service</a> & Privacy Policy]]></string>-->
 </resources>

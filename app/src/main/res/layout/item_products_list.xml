@@ -8,49 +8,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="1dp"
-        android:paddingBottom="15dp"
         app:cardBackgroundColor="@color/colorPrimary"
         app:cardCornerRadius="1dp"
         app:cardElevation="2dp"
-        app:strokeColor="@color/grey"
+        app:strokeColor="@color/colorPrimary"
         app:strokeWidth="1dp">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
             android:orientation="vertical"
             android:padding="6dp">
 
             <TextView
                 android:id="@+id/product_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="15dp"
-                android:fontFamily="@font/poppins_semi_bold"
+                android:fontFamily="@font/helvetica_roman"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="12sp"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toTopOf="@id/price"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 tools:text="Assinatura mensal" />
 
             <TextView
                 android:id="@+id/price"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/poppins_bold"
+                android:fontFamily="@font/helvetica_black"
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="12sp"
+                app:layout_constraintTop_toBottomOf="@id/product_name"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 tools:text="$ 35.00" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

@@ -20,7 +20,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 
 @AndroidEntryPoint
@@ -223,7 +222,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 viewModel.removeCategory(category)
             }
-            .setNegativeButton(getString(R.string.cancel_upper)) { v, _ ->
+            .setNegativeButton(getString(R.string.cancel)) { v, _ ->
                 v.dismiss()
             }.create().show()
     }

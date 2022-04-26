@@ -1,0 +1,30 @@
+<resources>
+    <dimen name="toolbar_elevation">1.4dp</dimen>
+    <dimen name="item_select_vertical_padding">8.4dp</dimen>
+    <dimen name="standard_80">56dp</dimen>
+    <dimen name="button_padding_vertically">10.5dp</dimen>
+    <dimen name="first_page_default_margin">11.2dp</dimen>
+    <dimen name="button_corner_radius_dp">3.5dp</dimen>
+    <dimen name="ic_default_dp">16.8dp</dimen>
+    <dimen name="first_page_btn_hor_margin">16.8dp</dimen>
+    <dimen name="mar_btwn_btns">7dp</dimen>
+    <dimen name="activity_vertical_margin">11.2dp</dimen>
+    <dimen name="layout_item_margin">5.6dp</dimen>
+    <dimen name="clickable_text_min_height">25.2dp</dimen>
+    <dimen name="layout_recycler_margin">5.6dp</dimen>
+    <dimen name="activity_horizontal_margin">11.2dp</dimen>
+    <dimen name="standard_160">112dp</dimen>
+    <dimen name="vocabulary_button_width">70dp</dimen>
+    <dimen name="home_page_language_image_size">13.3dp</dimen>
+    <dimen name="btn_min_height">38.5dp</dimen>
+    <dimen name="ic_google_dp">19.6dp</dimen>
+    <dimen name="edit_text_sp">13.3sp</dimen>
+    <dimen name="toolbar_title_sp">13.3sp</dimen>
+    <dimen name="first_page_btn_sp">11.9sp</dimen>
+    <dimen name="button_text_sp">11.9sp</dimen>
+    <dimen name="big_text_sp">19.6sp</dimen>
+    <dimen name="profile_left_side_sp">9.1sp</dimen>
+    <dimen name="first_page_subtitle_sp">11.2sp</dimen>
+    <dimen name="image_first_page_height">169.4dp</dimen>
+    <dimen name="image_first_page_width">166.6dp</dimen>
+</resources>

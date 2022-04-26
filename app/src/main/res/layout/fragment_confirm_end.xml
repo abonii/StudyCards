@@ -61,7 +61,7 @@
             android:layout_toStartOf="@id/ok"
             android:paddingHorizontal="15dp"
             android:paddingVertical="15dp"
-            android:text="@string/cancel_upper"
+            android:text="@string/cancel"
             android:textColor="@color/red"
             android:textStyle="bold"
             android:visibility="invisible" />

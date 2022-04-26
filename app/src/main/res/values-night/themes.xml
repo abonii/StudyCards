@@ -27,7 +27,7 @@
 
     <!--tabs-->
     <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
-        <item name="android:fontFamily">@font/poppins_medium</item>
+        <item name="android:fontFamily">@font/helvetica_medium</item>
         <item name="android:textSize">13sp</item>
     </style>
     <style name="BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">

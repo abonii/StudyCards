@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginHorizontal="5dp"
-                android:fontFamily="@font/poppins_regular"
+                android:fontFamily="@font/helvetica_roman"
                 android:textAllCaps="false"
                 tools:text="@string/know"
                 android:textSize="10sp"
@@ -39,7 +39,7 @@
                 android:layout_marginStart="5dp"
                 android:textAllCaps="false"
                 android:textSize="10sp"
-                android:fontFamily="@font/poppins_regular"
+                android:fontFamily="@font/helvetica_roman"
                 tools:text="@string/unknown"
                 app:cornerRadius="10dp"
                 tools:ignore="SmallSp" />

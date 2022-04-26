@@ -13,14 +13,14 @@
     <color name="background">#FDFDFD</color>
     <color name="tab_background">#F9FFEE</color>
     <color name="itemContainer">#10000000</color>
-    <color name="second_color">#D6D6D6</color>
-    <color name="third_color">#C4C4C4</color>
+    <color name="second_color">#DCDCDC</color>
+    <color name="third_color">#F5F5F5</color>
     <color name="lighter_darker">#9C9A9A</color>
     <color name="ellipse">#D5D5D5</color>
     <color name="border">#60E4E4E4</color>
     <color name="color_itself">#ffffff</color>
     <color name="optionDefaultColor">#10838795</color>
-    <color name="grey">#838795</color>
+    <color name="grey">#C4C4C4</color>
     <color name="lighter_itself">#10000000</color>
     <color name="darker_than_usual">#717171</color>
     <color name="shimmer">#E4E4E4</color>
@@ -28,8 +28,9 @@
     <color name="textColor">#080808</color>
     <color name="secondTextColor">#666666</color>
     <color name="thirdTextColor">#838795</color>
-    <color name="fourthTextColor">#303030</color>
+    <color name="fourthTextColor">#9F9F9F</color>
     <color name="specialTextColor">#31384F</color>
+    <color name="editTextColor">#CDCDCD</color>
 
     <color name="swiping_n_know">#FF0000</color>
     <color name="swiping_know">#03DC03</color>

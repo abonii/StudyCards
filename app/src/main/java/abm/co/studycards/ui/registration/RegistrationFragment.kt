@@ -1,20 +1,23 @@
 package abm.co.studycards.ui.registration
 
+import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.databinding.FragmentSignUpBinding
+import abm.co.studycards.databinding.FragmentRegistrationBinding
+import abm.co.studycards.ui.login.LoginActivity
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
-import abm.co.studycards.util.navigate
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RegistrationFragment : BaseBindingFragment<FragmentSignUpBinding>(R.layout.fragment_sign_up) {
+class RegistrationFragment :
+    BaseBindingFragment<FragmentRegistrationBinding>(R.layout.fragment_registration) {
 
     private val viewModel: RegistrationViewModel by viewModels()
 
@@ -26,8 +29,8 @@ class RegistrationFragment : BaseBindingFragment<FragmentSignUpBinding>(R.layout
         launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.sharedFlow.collect { eventChannel ->
                 when (eventChannel) {
-                    RegistrationEventChannel.NavigateToLogin -> {
-                        navigateToLogin()
+                    RegistrationEventChannel.NavigateToMainActivity -> {
+                        navigateToMainActivity()
                     }
                 }
             }
@@ -39,10 +42,16 @@ class RegistrationFragment : BaseBindingFragment<FragmentSignUpBinding>(R.layout
         }
     }
 
-    private fun navigateToLogin() {
-        RegistrationFragmentDirections.actionRegistrationFragmentToLoginFragment().also {
-            navigate(it)
+    override fun onResume() {
+        super.onResume()
+            (activity as LoginActivity).setToolbar(binding.toolbar, R.drawable.ic_clear)
+    }
+
+    private fun navigateToMainActivity() {
+        Intent(requireContext(), MainActivity::class.java).also {
+            startActivity(it)
         }
+        requireActivity().finish()
     }
 
 
