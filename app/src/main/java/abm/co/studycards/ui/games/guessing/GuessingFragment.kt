@@ -13,6 +13,7 @@ import abm.co.studycards.util.navigate
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.cardview.widget.CardView
 import androidx.core.animation.doOnEnd
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -29,8 +30,7 @@ class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.f
     override fun initUI(savedInstanceState: Bundle?) {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
         adapter = OptionsAdapter(::onClick)
-        binding.apply {
-            toolbar.setNavigationIcon(R.drawable.ic_back)
+        binding.run {
             word.text = viewModel.getWord().name
             recyclerview.layoutManager = GridLayoutManager(
                 requireContext(), ONE_TIME_CYCLE_GAME,
@@ -42,7 +42,7 @@ class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.f
         }
     }
 
-    fun onClick(view: View, currentItemId: String) {
+    fun onClick(view: CardView, currentItemId: String) {
         if (!viewModel.isClicked) {
             if (viewModel.getWord().wordId == currentItemId) {
                 onAnsweredCorrect(view)
@@ -67,8 +67,7 @@ class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.f
             if (viewModel.wordsAll.size > ONE_TIME_CYCLE_GAME) {
                 GuessingFragmentDirections
                     .actionGuessingFragmentToReviewFragment(
-                        isRepeat = true,
-                        words = viewModel.getLastWords()
+                        isRepeat = true, words = viewModel.getLastWords()
                     )
             } else {
                 GuessingFragmentDirections
@@ -90,8 +89,8 @@ class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.f
     }
 
     //change background color of clicked item for same time
-    private fun onAnsweredWrong(view: View) {
-        view.changeBackgroundChangesAndFlip(Color.RED).apply {
+    private fun onAnsweredWrong(view: CardView) {
+        view.changeBackgroundChangesAndFlip(color = Color.RED).run {
             doOnEnd {
                 adapter.words = viewModel.words
                 viewModel.isClicked = false
@@ -101,8 +100,8 @@ class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.f
     }
 
     //change background color of clicked item for same time
-    private fun onAnsweredCorrect(view: View) {
-        view.changeBackgroundChangesAndFlip(Color.GREEN).doOnEnd {
+    private fun onAnsweredCorrect(view: CardView) {
+        view.changeBackgroundChangesAndFlip(color = getClr(R.color.green)).doOnEnd {
             if (!checkIfLast()) {
                 onBackgroundColorChanged()
             }

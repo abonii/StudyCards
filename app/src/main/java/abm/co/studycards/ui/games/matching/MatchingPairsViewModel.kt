@@ -17,8 +17,11 @@ class MatchingPairsViewModel @Inject constructor(
     val isRepeat = savedStateHandle.get<Boolean>("isRepeat") ?: false
     private val _words = savedStateHandle.get<Array<Word>>("words")
     val words = _words!!
-    val wordsSize = getWords().size
-    fun getWords() = words.take(ONE_TIME_CYCLE_GAME).shuffled()
+    fun getDefaultWords() = words.take(ONE_TIME_CYCLE_GAME).shuffled().map {
+        WordMatching(it, isSelected = false, isSelectedCorrect = null)
+    }
+    val wordsSize = words.size
+
     fun getLastWords(): Array<Word> {
         return words.takeLast(words.size - ONE_TIME_CYCLE_GAME).toTypedArray()
     }

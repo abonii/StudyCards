@@ -8,8 +8,9 @@ import abm.co.studycards.data.model.vocabulary.*
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.DictionaryRepository
 import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants
+import abm.co.studycards.util.Constants.API_KEYS
 import abm.co.studycards.util.Constants.OXFORD_CAN_TRANSLATE_MAP
+import abm.co.studycards.util.Constants.USERS_REF
 import abm.co.studycards.util.base.BaseViewModel
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
@@ -31,8 +32,8 @@ import javax.inject.Named
 @HiltViewModel
 class AddEditWordViewModel @Inject constructor(
     private val repository: DictionaryRepository,
-    @Named(Constants.USERS_REF) var userRef: DatabaseReference,
-    @Named(Constants.API_KEYS) var apiKeys: DatabaseReference,
+    @Named(USERS_REF) var userRef: DatabaseReference,
+    @Named(API_KEYS) var apiKeys: DatabaseReference,
     private val firebaseRepository: ServerCloudRepository,
     prefs: Prefs,
     savedStateHandle: SavedStateHandle,
@@ -40,7 +41,7 @@ class AddEditWordViewModel @Inject constructor(
 
     private val dispatcher = Dispatchers.IO
 
-    var translateCounts: Long = 1
+    var translateCounts: Long = 0
 
     val word = savedStateHandle.get<Word>("word")
     private var categoryName = savedStateHandle.get<String>("categoryName") ?: ""
@@ -49,7 +50,7 @@ class AddEditWordViewModel @Inject constructor(
     val sourceLanguage = prefs.getSourceLanguage()
     val targetLanguage = prefs.getTargetLanguage()
 
-    private var translatedOxfordWord: String = "o.abylai01"
+    private var translatedOxfordWord: String = "ilm"
     private var translatedYandexWord: String = ""
     private var translatedOxfordClass: ResultsEntry? = null
 
@@ -72,12 +73,13 @@ class AddEditWordViewModel @Inject constructor(
     private val _targetTranslatingStateFlow = MutableStateFlow(false)
     val targetTranslatingStateFlow = _targetTranslatingStateFlow.asStateFlow()
 
-    private val _imageStateFlow = MutableStateFlow(word?.imageUrl)
-    val imageStateFlow = _imageStateFlow.asStateFlow()
+    val imageStateFlow = MutableStateFlow(word?.imageUrl)
+    val imageCanSetUrlStateFlow = MutableStateFlow(true)
+    val imageVisibleStateFlow = MutableStateFlow(word?.imageUrl?.isNotBlank() == true)
 
-    private var oxfordApiKey = "IdIk4ortU"
-    private var oxfordApiId = "IdIk4ortU"
-    private var yandexApiKey = "IdIk4ortU"
+    private var oxfordApiKey = "why_do_you_need_this_api_key_?"
+    private var oxfordApiId = "why_do_you_need_this_id_?"
+    private var yandexApiKey = "why_do_you_need_this_api_key_?"
 
     init {
         userRef.addValueEventListener(object : ValueEventListener {
@@ -91,18 +93,21 @@ class AddEditWordViewModel @Inject constructor(
                 Log.i("ABO_ADD_WORD", error.message)
             }
         })
-        apiKeys.addValueEventListener(object : ValueEventListener{
+        apiKeys.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.child("oxford_key").value?.let {
-                    oxfordApiKey = it.toString()
-                }
-                snapshot.child("oxford_id").value?.let {
-                    oxfordApiId = it.toString()
-                }
-                snapshot.child("yandex_key").value?.let {
-                    yandexApiKey = it.toString()
+                viewModelScope.launch(dispatcher) {
+                    snapshot.child("oxford_key").value?.let {
+                        oxfordApiKey = it.toString()
+                    }
+                    snapshot.child("oxford_id").value?.let {
+                        oxfordApiId = it.toString()
+                    }
+                    snapshot.child("yandex_key").value?.let {
+                        yandexApiKey = it.toString()
+                    }
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {
                 makeToast(error.message)
             }
@@ -110,24 +115,39 @@ class AddEditWordViewModel @Inject constructor(
     }
 
     fun fetchWord(fromSource: Boolean) {
-        if (translateCounts > 0) {
-            if (fromSource) _sourceTranslatingStateFlow.value = true
-            else _targetTranslatingStateFlow.value = true
-            if (checkIfOxfordSupport(fromSource) && isItMoreThanOneWord(fromSource)) {
-                fetchOxfordWord(fromSource)
-            } else fetchYandexWord(fromSource)
-        } else {
-            makeToast(R.string.translate_count_spend)
+        viewModelScope.launch(dispatcher) {
+            if (translateCounts > 0) {
+                if (fromSource) _sourceTranslatingStateFlow.value = true
+                else _targetTranslatingStateFlow.value = true
+                if (checkIfOxfordSupport(fromSource) && isItMoreThanOneWord(fromSource)) {
+                    fetchOxfordWord(fromSource)
+                } else fetchYandexWord(fromSource)
+            } else {
+                makeToast(R.string.translate_count_spend)
+            }
         }
     }
 
     private fun fetchYandexWord(fromSource: Boolean) {
         viewModelScope.launch(dispatcher) {
+            if (((fromSource && isSourceWordTranslatedYandex()) ||
+                        (!fromSource && isTargetWordTranslatedYandex()))
+            ) {
+                if (fromSource) {
+                    targetWordStateFlow.value = translatedYandexWord
+                } else {
+                    sourceWordStateFlow.value = translatedYandexWord
+                }
+                _sourceTranslatingStateFlow.value = false
+                _targetTranslatingStateFlow.value = false
+                return@launch
+            }
             translatedYandexWord =
                 (if (fromSource) sourceWordStateFlow.value else targetWordStateFlow.value).trim()
             val sl = if (fromSource) sourceLanguage else targetLanguage
             val tl = if (fromSource) targetLanguage else sourceLanguage
-            when (val wrapper = repository.getYandexWord(translatedYandexWord, sl, tl, yandexApiKey)) {
+            when (val wrapper =
+                repository.getYandexWord(translatedYandexWord, sl, tl, yandexApiKey)) {
                 is ResultWrapper.Error -> {
                     makeToast(wrapper.error ?: "")
                     stopLoadingIcon(fromSource)
@@ -168,7 +188,13 @@ class AddEditWordViewModel @Inject constructor(
             translatedOxfordWord =
                 if (fromSource) sourceWordStateFlow.value else targetWordStateFlow.value
 
-            when (val wrapper = repository.getOxfordWord(translatedOxfordWord.trim(), sl, tl, oxfordApiId, oxfordApiKey)) {
+            when (val wrapper = repository.getOxfordWord(
+                translatedOxfordWord.trim(),
+                sl,
+                tl,
+                oxfordApiId,
+                oxfordApiKey
+            )) {
                 is ResultWrapper.Error -> {
                     fetchYandexWord(fromSource)
                 }
@@ -189,15 +215,19 @@ class AddEditWordViewModel @Inject constructor(
     }
 
     private fun stopLoadingIcon(fromSource: Boolean) {
-        if (fromSource) {
-            _sourceTranslatingStateFlow.value = false
-        } else {
-            _targetTranslatingStateFlow.value = false
+        viewModelScope.launch {
+            if (fromSource) {
+                _sourceTranslatingStateFlow.value = false
+            } else {
+                _targetTranslatingStateFlow.value = false
+            }
         }
     }
 
     private fun changeTranslateCount() {
-        userRef.updateChildren(mapOf("canTranslateTimeEveryDay" to translateCounts - 1))
+        viewModelScope.launch(dispatcher) {
+            userRef.updateChildren(mapOf("canTranslateTimeEveryDay" to translateCounts - 1))
+        }
     }
 
     private fun isSourceWordTranslatedOxford(): Boolean {
@@ -210,12 +240,24 @@ class AddEditWordViewModel @Inject constructor(
             .trim()
     }
 
+    private fun isSourceWordTranslatedYandex(): Boolean {
+        return sourceWordStateFlow.value.lowercase().trim() == translatedYandexWord.lowercase()
+            .trim()
+    }
+
+    private fun isTargetWordTranslatedYandex(): Boolean {
+        return targetWordStateFlow.value.lowercase().trim() == translatedYandexWord.lowercase()
+            .trim()
+    }
+
 
     fun changeCategory(category: Category?) {
-        if (category != null) {
-            this.currentCategoryId = category.id
-            this.categoryName = category.mainName
-            _categoryStateFlow.value = categoryName
+        viewModelScope.launch(dispatcher) {
+            if (category != null) {
+                currentCategoryId = category.id
+                categoryName = category.mainName
+                _categoryStateFlow.value = categoryName
+            }
         }
     }
 
@@ -230,10 +272,6 @@ class AddEditWordViewModel @Inject constructor(
         } else {
             OXFORD_CAN_TRANSLATE_MAP[targetLanguage]?.contains(sourceLanguage) ?: false
         }
-    }
-
-    fun setImage(v: String?) {
-        _imageStateFlow.value = v
     }
 
     fun saveWord() {
@@ -277,11 +315,26 @@ class AddEditWordViewModel @Inject constructor(
     }
 
     fun onDictionaryReceived(examples: String?, translations: String?, fromTarget: Boolean) {
-        examplesStateFlow.value = examples ?: ""
-        if (!fromTarget) {
-            sourceWordStateFlow.value = translations ?: ""
-        } else {
-            targetWordStateFlow.value = translations ?: ""
+        viewModelScope.launch(dispatcher) {
+            examplesStateFlow.value = examples ?: ""
+            if (!fromTarget) {
+                sourceWordStateFlow.value = translations ?: ""
+            } else {
+                targetWordStateFlow.value = translations ?: ""
+            }
+        }
+    }
+
+    fun changeEditableImageUrl(hasFocus: Boolean) {
+        viewModelScope.launch(dispatcher) {
+            if (!hasFocus) {
+                _eventChannel.emit(
+                    AddEditWordEventChannel.ChangeImageVisibility(
+                        imageStateFlow.value?.isNotBlank() == true
+                    )
+                )
+            }
+            imageCanSetUrlStateFlow.value = !hasFocus
         }
     }
 }
@@ -293,7 +346,8 @@ sealed class AddEditWordEventChannel {
         val fromSource: Boolean
     ) : AddEditWordEventChannel()
 
-    object ShakeCategory:AddEditWordEventChannel()
+    object ShakeCategory : AddEditWordEventChannel()
 
     object PopBackStack : AddEditWordEventChannel()
+    data class ChangeImageVisibility(val enabled: Boolean) : AddEditWordEventChannel()
 }

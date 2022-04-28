@@ -4,6 +4,7 @@ import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemCardBinding
+import abm.co.studycards.util.GeneralBindingAdapters.setImageWithGlide
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -15,7 +16,6 @@ import android.view.animation.DecelerateInterpolator
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 
 class CardStackAdapter constructor(
     private val onShakeCard: () -> Unit,
@@ -61,11 +61,9 @@ class CardStackAdapter constructor(
         }
 
         fun bind(currentItem: Word) {
-            Glide.with(binding.image)
-                .load(currentItem.imageUrl)
-                .into(binding.image)
-            binding.word.text = currentItem.name
-            binding.translated.text = currentItem.translationsToString()
+            binding.wordImage.setImageWithGlide(currentItem.imageUrl)
+            binding.translated.text = currentItem.name
+            binding.word.text = currentItem.translationsToString()
             bindFrontLayout()
         }
 
@@ -82,12 +80,12 @@ class CardStackAdapter constructor(
         }
 
         private fun bindBackLayout() {
-            binding.image.isVisible = true
+            binding.wordImageContainer.isVisible = true
             binding.translated.isVisible = true
         }
 
         private fun bindFrontLayout() {
-            binding.image.isVisible = false
+            binding.wordImageContainer.isVisible = false
             binding.translated.isVisible = false
         }
     }

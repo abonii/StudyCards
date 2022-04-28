@@ -1,21 +1,18 @@
 package abm.co.studycards.ui.games.matching
 
 import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemMatchingCardBinding
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.card.MaterialCardView
 
 class MatchingAdapter(
-    private val onClickCard: (String, Boolean) -> Boolean,
+    private val onClickCard: (String, Boolean) -> Boolean?,
     private val isTranslatedWords: Boolean,
-) : RecyclerView.Adapter<MatchingAdapter.ViewHolder>() {
-    var words: List<Word> = ArrayList()
+) : RecyclerView.Adapter<MatchingViewHolder>() {
+
+    var items: List<WordMatching> = ArrayList()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
@@ -23,76 +20,98 @@ class MatchingAdapter(
         }
     var selectedItemPos = -1
     var lastItemSelectedPos = -1
-    var lastItemCard: MaterialCardView? = null
-    var currentItemCard: MaterialCardView? = null
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MatchingViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return ViewHolder(
+        return MatchingViewHolder(
             ItemMatchingCardBinding.inflate(inflater, parent, false),
             isTranslatedWords
-        )
+        ) { pos ->
+            changeSelectedPosition(pos)
+            val isSameTwoWords = onClickCard(items[pos].word.wordId, isTranslatedWords)
+            sameTwoWords(isSameTwoWords, pos)
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentItem = words[position]
+    private fun sameTwoWords(isIt:Boolean?, pos:Int){
+        if (isIt != null) {
+            if (isIt) notifyItemChanged(pos, CORRECT)
+            else notifyItemChanged(pos, NOT_CORRECT)
+        } else {
+            notifyItemChanged(selectedItemPos, CLICKED)
+        }
+    }
 
-        if (position == selectedItemPos)
-            holder.selectedCardStroke()
-        else holder.defaultCardStroke()
-        holder.bind(currentItem)
+    override fun onBindViewHolder(holder: MatchingViewHolder, position: Int) {
+        val currentItem = items[position]
+        val correct = currentItem.isSelectedCorrect
+        val selected = currentItem.isSelected
+        holder.bind(currentItem.word)
+        if (correct != null) {
+            if (correct)
+                holder.bindCorrectWord()
+            else {
+                holder.shakeUnCorrectWord()
+                items[position].isSelectedCorrect = null
+            }
+        } else {
+            if (selected) {
+                holder.bindSelectedWord()
+            } else {
+                holder.bindDefaultWord()
+            }
+        }
+    }
+
+    private fun changeSelectedPosition(position: Int) {
+        selectedItemPos = position
+        when {
+            lastItemSelectedPos != -1 && lastItemSelectedPos != selectedItemPos -> {
+                notifyItemChanged(lastItemSelectedPos, NOT_SELECTED)
+            }
+        }
+        lastItemSelectedPos = position
+    }
+
+    override fun onBindViewHolder(
+        holder: MatchingViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isNotEmpty()) {
+            when (payloads.first()) {
+                SELECTED -> {//clicked item
+                    items[position].isSelected = true
+                }
+                NOT_SELECTED -> {//clicked item twice
+                    items[position].isSelected = false
+                }
+                CORRECT -> {//clicked item correct
+                    items[position].isSelectedCorrect = true
+                }
+                NOT_CORRECT -> {//shake unCorrect item
+                    items[position].isSelectedCorrect = false
+                    items[position].isSelected = false
+                }
+                CLICKED -> {//shake unCorrect item
+                    items[position].isSelected = !items[position].isSelected
+                }
+            }
+        }
+        super.onBindViewHolder(holder, position, payloads)
     }
 
     override fun getItemCount(): Int {
-        return words.size
+        return items.size
     }
 
-    inner class ViewHolder(
-        val binding: ItemMatchingCardBinding,
-        private val isTranslatedWords: Boolean
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.root.setOnClickListener {
-                currentItemCard = it as MaterialCardView
-                if (onClickCard(words[absoluteAdapterPosition].wordId, isTranslatedWords))
-                    changeSelectedPosition()
-                lastItemCard = currentItemCard
-            }
-        }
-
-        fun bind(currentItem: Word) {
-            binding.word.text =
-                if (!isTranslatedWords) currentItem.name else currentItem.translationsToString()
-        }
-
-        private fun changeSelectedPosition() {
-            selectedItemPos = absoluteAdapterPosition
-            if (lastItemSelectedPos == selectedItemPos) {
-                if (lastItemCard?.strokeColorStateList == ColorStateList.valueOf(Color.RED)) {
-                    defaultCardStroke()
-                } else {
-                    selectedCardStroke()
-                }
-                return
-            }
-            lastItemSelectedPos = if (lastItemSelectedPos == -1)
-                selectedItemPos
-            else {
-                lastItemCard?.let { defaultCardStroke(it) }
-                selectedItemPos
-            }
-            notifyItemChanged(selectedItemPos, 0)
-        }
-
-        fun defaultCardStroke(view: MaterialCardView = binding.root) {
-            view.strokeColor = Color.TRANSPARENT
-        }
-
-        fun selectedCardStroke() {
-            binding.root.strokeColor = Color.RED
-        }
+    companion object {
+        const val SELECTED = 0
+        const val NOT_SELECTED = 1
+        const val CORRECT = 2
+        const val NOT_CORRECT = 3
+        const val CLICKED = 4
     }
-
 }
+
+data class WordMatching(val word: Word, var isSelected: Boolean, var isSelectedCorrect: Boolean?)

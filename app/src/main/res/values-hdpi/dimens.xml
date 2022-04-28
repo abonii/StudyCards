@@ -24,7 +24,19 @@
 	<dimen name="button_text_sp">11.9sp</dimen>
 	<dimen name="big_text_sp">19.6sp</dimen>
 	<dimen name="profile_left_side_sp">9.1sp</dimen>
-	<dimen name="first_page_subtitle_sp">11.2sp</dimen>
+	<dimen name="normal_text_sp">11.2sp</dimen>
 	<dimen name="image_first_page_height">169.4dp</dimen>
 	<dimen name="image_first_page_width">166.6dp</dimen>
+	<dimen name="fab_margin">8.4dp</dimen>
+	<dimen name="mar_btwn_a_little_btns">8.4dp</dimen>
+	<dimen name="activity_horizontal_half_margin">5.6dp</dimen>
+	<dimen name="profile_user_image_radius">35dp</dimen>
+	<dimen name="square_word_image_width">134.4dp</dimen>
+	<dimen name="ic_normal_dp">12.6dp</dimen>
+	<dimen name="mar_btwn_larger_btns">12.6dp</dimen>
+	<dimen name="drawable_text_padding_dp">2.8dp</dimen>
+	<dimen name="square_word_image_height">86.1dp</dimen>
+	<dimen name="edit_text_category_height">66.5dp</dimen>
+	<dimen name="button_padding_normal_vertically">12.6dp</dimen>
+	<dimen name="profile_user_image_size">70dp</dimen>
 </resources>

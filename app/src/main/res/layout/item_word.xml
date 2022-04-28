@@ -12,7 +12,7 @@
 
     <View
         android:id="@+id/stick"
-        android:layout_width="2.5dp"
+        android:layout_width="5dp"
         android:layout_height="0dp"
         android:background="@drawable/colored_stick"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -59,7 +59,7 @@
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:paddingHorizontal="5dp"
-        app:srcCompat="@drawable/ic_play_full"
+        app:srcCompat="@drawable/ic_play"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

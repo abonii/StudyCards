@@ -6,8 +6,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardCornerRadius="6dp"
         app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="6dp"
         app:cardElevation="0dp">
 
         <com.google.android.material.card.MaterialCardView
@@ -33,10 +33,12 @@
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="12dp"
                     android:background="@drawable/border_color_green"
+                    android:fontFamily="@font/helvetica_bold"
                     android:padding="8dp"
                     android:rotation="-20"
                     android:text="@string/know"
                     android:textColor="@color/swiping_know"
+                    android:textSize="@dimen/normal_text_sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -47,9 +49,11 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="25dp"
                     android:background="@drawable/border_color_yellow"
+                    android:fontFamily="@font/helvetica_bold"
                     android:padding="8dp"
                     android:text="@string/uncertain_lower"
                     android:textColor="@color/swiping_doubted"
+                    android:textSize="@dimen/normal_text_sp"
                     android:textStyle="bold"
                     app:drawableTint="@color/colorPrimary" />
 
@@ -62,21 +66,33 @@
                     android:layout_marginTop="12dp"
                     android:layout_marginEnd="12dp"
                     android:background="@drawable/border_color_red"
+                    android:fontFamily="@font/helvetica_bold"
                     android:padding="8dp"
                     android:rotation="20"
                     android:text="@string/unknown_lower"
                     android:textColor="@color/swiping_n_know"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/normal_text_sp" />
 
-                <ImageView
-                    android:id="@+id/image"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/word_image_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_above="@id/word"
                     android:layout_centerHorizontal="true"
-                    android:contentDescription="@string/image"
-                    android:padding="6dp"
-                    android:visibility="invisible" />
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="invisible"
+                    app:cardCornerRadius="7dp">
+
+                    <ImageView
+                        android:id="@+id/word_image"
+                        android:layout_width="@dimen/square_word_image_width"
+                        android:layout_height="@dimen/square_word_image_height"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/image"
+                        android:scaleType="centerCrop"
+                        tools:srcCompat="@drawable/ic_image" />
+                </androidx.cardview.widget.CardView>
+
 
                 <ImageView
                     android:id="@+id/audio_play"
@@ -85,7 +101,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@id/word"
                     android:padding="6dp"
-                    app:srcCompat="@drawable/ic_play_full"
+                    app:srcCompat="@drawable/ic_play"
                     app:tint="@color/colorPrimary"
                     tools:ignore="ContentDescription" />
 
@@ -94,9 +110,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/helvetica_medium"
+                    android:maxLines="6"
                     android:paddingVertical="@dimen/activity_vertical_margin"
-                    android:textColor="@color/textColor"
-                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/big_text_sp"
                     tools:text="order" />
 
                 <TextView
@@ -105,9 +124,12 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/word"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginVertical="@dimen/activity_vertical_margin"
+                    android:layout_marginVertical="@dimen/mar_btwn_btns"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/helvetica_roman"
+                    android:maxLines="5"
                     android:textColor="@color/textColor"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/normal_text_sp"
                     android:visibility="invisible" />
 
             </RelativeLayout>

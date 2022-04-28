@@ -7,13 +7,16 @@ import abm.co.studycards.databinding.FragmentAddEditWordBinding
 import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.Constants.REQUEST_CATEGORY_KEY
 import abm.co.studycards.util.Constants.REQUEST_DICTIONARY_KEY
-import abm.co.studycards.util.Constants.REQUEST_IMAGE_KEY
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
 import android.os.Bundle
+import android.view.View
+import android.view.View.OnFocusChangeListener
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.EditorInfo
+import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -25,7 +28,8 @@ import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class AddEditWordFragment :
-    BaseBindingFragment<FragmentAddEditWordBinding>(R.layout.fragment_add_edit_word) {
+    BaseBindingFragment<FragmentAddEditWordBinding>(R.layout.fragment_add_edit_word),
+    OnFocusChangeListener {
 
     private val viewModel: AddEditWordViewModel by viewModels()
 
@@ -45,9 +49,6 @@ class AddEditWordFragment :
         setFragmentResultListener(REQUEST_CATEGORY_KEY) { _, bundle ->
             viewModel.changeCategory(bundle.getParcelable("category"))
         }
-        setFragmentResultListener(REQUEST_IMAGE_KEY) { _, bundle ->
-            viewModel.setImage(bundle.getString("image_url"))
-        }
         setFragmentResultListener(REQUEST_DICTIONARY_KEY) { _, bundle ->
             viewModel.onDictionaryReceived(
                 translations = bundle.getString("selected_translations"),
@@ -66,9 +67,29 @@ class AddEditWordFragment :
                     }
                     AddEditWordEventChannel.PopBackStack -> findNavController().popBackStack()
                     AddEditWordEventChannel.ShakeCategory -> {
-                        val shake: Animation =
-                            AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
-                        binding.category.startAnimation(shake)
+                        shakeView(binding.category)
+                    }
+                    is AddEditWordEventChannel.ChangeImageVisibility -> {
+                        if (it.enabled && !binding.wordImageContainer.isVisible) {
+                            binding.containerLayout.animate().translationY(
+                                resources.getDimension(R.dimen.square_word_image_height)
+                            ).withStartAction {
+                                binding.wordImageContainer.animate().alpha(1f).duration = 0
+                            }.withEndAction {
+                                binding.containerLayout.animate().translationY(0f).duration = 0
+                                viewModel.imageVisibleStateFlow.value = true
+                            }.duration = 500
+                        } else if (!it.enabled && binding.wordImageContainer.isVisible) {
+                            binding.containerLayout.animate().translationY(
+                                -resources.getDimension(R.dimen.square_word_image_height)
+                            ).withStartAction {
+                                binding.wordImageContainer.animate().alpha(0f).duration = 0
+                            }.withEndAction {
+                                binding.containerLayout.animate().translationY(0f).duration = 0
+                                viewModel.imageVisibleStateFlow.value = false
+                            }.duration = 500
+                        }
+
                     }
                 }
             }
@@ -89,12 +110,23 @@ class AddEditWordFragment :
         translatedLayout.setEndIconOnClickListener {
             viewModel.fetchWord(false)
         }
+        imageLayout.setEndIconOnClickListener {
+            binding.image.setText("")
+            viewModel.changeEditableImageUrl(false)
+        }
+        image.setOnFocusChangeListener { _, hasFocus ->
+            viewModel.changeEditableImageUrl(hasFocus)
+        }
+        image.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                image.clearFocus()
+            }
+            false
+        }
     }
 
-    fun directToChooseImage() {
-        val action = AddEditWordFragmentDirections
-            .actionAddEditWordFragmentToImageDialogFragment(viewModel.word?.name)
-        navigate(action)
+    fun shakeImageContainer() {
+        shakeView(binding.imageLayout)
     }
 
     fun directToCategoryDialogFragment() {
@@ -113,5 +145,19 @@ class AddEditWordFragment :
         navigate(action)
     }
 
+    private fun shakeView(view: View) {
+        val shake: Animation =
+            AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
+        view.startAnimation(shake)
+    }
 
+    override fun onDestroyView() {
+        binding.wordImageContainer.animate().cancel()
+        binding.containerLayout.animate().cancel()
+        super.onDestroyView()
+    }
+
+    override fun onFocusChange(p0: View?, hasFocus: Boolean) {
+
+    }
 }

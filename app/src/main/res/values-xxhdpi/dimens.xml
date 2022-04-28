@@ -22,9 +22,21 @@
 	<dimen name="button_text_sp">15.3sp</dimen>
 	<dimen name="big_text_sp">25.2sp</dimen>
 	<dimen name="profile_left_side_sp">11.7sp</dimen>
-	<dimen name="first_page_subtitle_sp">14.4sp</dimen>
+	<dimen name="normal_text_sp">14.4sp</dimen>
 	<dimen name="ic_default_dp">21.6dp</dimen>
 	<dimen name="ic_google_dp">25.2dp</dimen>
 	<dimen name="image_first_page_height">217.8dp</dimen>
 	<dimen name="image_first_page_width">214.2dp</dimen>
+	<dimen name="fab_margin">10.8dp</dimen>
+	<dimen name="mar_btwn_a_little_btns">10.8dp</dimen>
+	<dimen name="activity_horizontal_half_margin">7.2dp</dimen>
+	<dimen name="profile_user_image_radius">45dp</dimen>
+	<dimen name="square_word_image_width">172.8dp</dimen>
+	<dimen name="ic_normal_dp">16.2dp</dimen>
+	<dimen name="mar_btwn_larger_btns">16.2dp</dimen>
+	<dimen name="drawable_text_padding_dp">3.6dp</dimen>
+	<dimen name="square_word_image_height">110.7dp</dimen>
+	<dimen name="edit_text_category_height">85.5dp</dimen>
+	<dimen name="button_padding_normal_vertically">16.2dp</dimen>
+	<dimen name="profile_user_image_size">90dp</dimen>
 </resources>

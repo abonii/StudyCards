@@ -1,5 +1,6 @@
 package abm.co.studycards.util
 
+import abm.co.studycards.R
 import android.net.Uri
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -18,10 +19,11 @@ object GeneralBindingAdapters {
     @JvmStatic
     @BindingAdapter("app:imageWithGlide")
     fun ImageView.setImageWithGlide(url: String?) {
-        if (url != null) {
+        if (url?.isNotBlank() == true) {
             Glide.with(context)
                 .load(url)
                 .timeout(4000)
+                .error(R.drawable.ic_image)
                 .into(this)
         }
     }

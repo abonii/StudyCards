@@ -49,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginVertical="12dp"
+                android:layout_marginVertical="@dimen/mar_btwn_btns"
                 android:orientation="vertical"
                 android:visibility="@{viewmodel.isAnonymous() ? View.VISIBLE : View.GONE}"
                 app:layout_constraintTop_toBottomOf="@id/toolbar">
@@ -85,23 +85,23 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email"
                     android:nextFocusDown="@id/password_container"
-                    app:boxBackgroundColor="@android:color/transparent"
                     app:errorEnabled="true"
-                    app:errorText="@{viewmodel.emailError}">
+                    app:errorText="@{viewmodel.emailError}"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/email_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:fontFamily="@font/helvetica_roman"
+                        android:hint="@string/email"
                         android:lines="1"
                         android:maxLength="70"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:text="@={viewmodel.email}"
-                        android:textColorHint="#757575" />
+                        android:theme="@style/MyCustomEditTextStyle" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -109,25 +109,25 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="@string/password"
+                    android:layout_marginTop="@dimen/mar_btwn_btns"
                     android:nextFocusDown="@id/login_btn"
-                    app:boxBackgroundColor="@android:color/transparent"
                     app:errorEnabled="true"
                     app:errorText="@{viewmodel.passwordError}"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/password_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:fontFamily="@font/helvetica_roman"
+                        android:hint="@string/password"
                         android:inputType="textPassword"
                         android:lines="1"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:text="@={viewmodel.password}"
-                        android:textColorHint="#757575" />
+                        android:theme="@style/MyCustomEditTextStyle" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -136,8 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:onClick="@{()->viewmodel.onClickRegistration()}"
-                    android:paddingVertical="15dp"
-                    android:text="@string/register"
+                    android:text="@string/sign_up"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -148,7 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="12dp"
+                android:paddingHorizontal="@dimen/mar_btwn_btns"
                 android:visibility="@{viewmodel.isVerified() ? View.VISIBLE : View.GONE}"
                 app:layout_constraintTop_toBottomOf="@id/login_container">
 
@@ -159,16 +158,16 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="25dp"
                     android:layout_marginBottom="30dp"
-                    android:backgroundTint="#EDF1FF"
+                    android:backgroundTint="@color/second_color"
                     android:visibility="@{viewmodel.userPhotoUrl != null ? View.VISIBLE : View.GONE}"
-                    app:cardCornerRadius="50dp">
+                    app:cardCornerRadius="@dimen/profile_user_image_radius">
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="@dimen/profile_user_image_size"
+                        android:layout_height="@dimen/profile_user_image_size"
                         android:layout_gravity="center"
                         android:layout_margin="1dp"
-                        app:cardCornerRadius="50dp">
+                        app:cardCornerRadius="@dimen/profile_user_image_radius">
 
                         <ImageView
                             android:id="@+id/user_image"
@@ -214,10 +213,10 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="14dp"
                     android:fontFamily="@font/helvetica_medium"
-                    android:text="@string/we_send_verification"
-                    android:textColor="@color/specialTextColor"
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
+                    android:text="@string/we_send_verification"
+                    android:textColor="@color/specialTextColor"
                     android:visibility="@{viewmodel.isVerified() ? View.GONE : View.VISIBLE}" />
             </LinearLayout>
 
@@ -233,11 +232,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="@dimen/mar_btwn_btns"
                     android:fontFamily="@font/helvetica_bold"
                     android:text="@string/settings"
                     android:textAllCaps="true"
-                    android:textColor="#C2C4CB"
+                    android:textColor="@color/thirdTextColor"
                     android:textSize="12sp" />
 
                 <LinearLayout
@@ -254,16 +253,16 @@
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:gravity="center_vertical"
                         android:onClick="@{()->profileFragment.navigateToPremiumFragment()}"
                         android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                        android:paddingVertical="18dp">
+                        android:paddingVertical="@dimen/button_padding_normal_vertically">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
-                            android:fontFamily="sans-serif-medium"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/helvetica_roman"
                             android:text="@string/buy_translations"
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/profile_left_side_sp"
@@ -274,7 +273,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:fontFamily="sans-serif-medium"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/helvetica_roman"
                             android:text="@{viewmodel.translationCount}"
                             android:textColor="@color/colorPrimaryDark"
                             android:textSize="@dimen/profile_left_side_sp"
@@ -289,16 +289,16 @@
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:gravity="center_vertical"
                         android:onClick="@{()->profileFragment.navigateToChangeAppLanguage()}"
                         android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                        android:paddingVertical="18dp">
+                        android:paddingVertical="@dimen/button_padding_normal_vertically">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
-                            android:fontFamily="sans-serif-medium"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/helvetica_roman"
                             android:text="@string/language_of_the_app"
                             android:textColor="@color/secondTextColor"
                             android:textSize="@dimen/profile_left_side_sp"
@@ -309,7 +309,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:fontFamily="sans-serif-medium"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/helvetica_roman"
                             android:textColor="@color/secondTextColor"
                             android:textSize="@dimen/profile_left_side_sp"
                             tools:ignore="RelativeOverlap" />
@@ -323,16 +324,16 @@
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:gravity="center_vertical"
                         android:onClick="@{()->profileFragment.onClickContactUs()}"
                         android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                        android:paddingVertical="18dp">
+                        android:paddingVertical="@dimen/button_padding_normal_vertically">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
-                            android:fontFamily="sans-serif-medium"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/helvetica_roman"
                             android:text="@string/contact_us"
                             android:textColor="@color/secondTextColor"
                             android:textSize="@dimen/profile_left_side_sp"
@@ -342,6 +343,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
                             app:srcCompat="@drawable/ic_arrow_right"
                             app:tint="@color/secondTextColor"
                             tools:ignore="ContentDescription" />
@@ -354,16 +356,16 @@
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:gravity="center_vertical"
                         android:onClick="@{()->profileFragment.logout()}"
                         android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                        android:paddingVertical="18dp">
+                        android:paddingVertical="@dimen/button_padding_normal_vertically">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
-                            android:fontFamily="sans-serif-medium"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/helvetica_roman"
                             android:text="@string/logout"
                             android:textColor="@color/secondTextColor"
                             android:textSize="@dimen/profile_left_side_sp"
@@ -373,6 +375,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
                             app:srcCompat="@drawable/ic_arrow_right"
                             app:tint="@color/secondTextColor"
                             tools:ignore="ContentDescription" />

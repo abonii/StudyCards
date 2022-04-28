@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/selectLanguageFragment2"
-        android:name="abm.co.studycards.ui.language.SelectLanguageFragment"
+        android:name="abm.co.studycards.ui.select_language_anywhere.SelectLanguageFragment"
         android:label="SelectLanguageFragment" />
     <dialog
         android:id="@+id/languageOfTheAppDialogFragment"

@@ -83,7 +83,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/first_page_second_title"
                 android:textColor="@color/secondTextColor"
-                android:textSize="@dimen/first_page_subtitle_sp" />
+                android:textSize="@dimen/normal_text_sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -195,7 +195,7 @@
                 android:onClick="@{()->viewmodel.navigateToRegistration()}"
                 android:text="@string/don_t_have_account"
                 android:textColor="@color/select_text_as_button"
-                android:textSize="@dimen/first_page_subtitle_sp" />
+                android:textSize="@dimen/normal_text_sp" />
         </LinearLayout>
 
         <ProgressBar

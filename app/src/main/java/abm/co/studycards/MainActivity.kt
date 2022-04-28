@@ -6,10 +6,14 @@ import abm.co.studycards.util.base.BaseBindingActivity
 import abm.co.studycards.util.setupWithNavController
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -47,7 +51,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
     }
 
     private fun checkIfLoggedIn() {
-        if (viewModel.getCurrentUser() != null) {
+        if (viewModel.getCurrentUser() == null) {
             val i = Intent(this, LoginActivity::class.java)
             startActivity(i)
             finish()
@@ -64,11 +68,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            if (!viewModel.onBackAndNavigateUp() ||
+            if (!viewModel.onBackAndNavigateUp())
                 !viewModel.currentNavController?.value!!.navigateUp()
-            )
-                super.onBackPressed()
-            return true
         }
         return true
     }
@@ -134,6 +135,51 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                 visibility = View.VISIBLE
             }
         }
+    }
+
+//    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+//        if (event != null) {
+//            if (event.action == MotionEvent.ACTION_DOWN) {
+//                val v: View? = currentFocus
+//                if (v is EditText) {
+//                    val outRect = Rect()
+//                    v.getGlobalVisibleRect(outRect)
+//                    if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+//                        v.clearFocus()
+//                        val imm: InputMethodManager? =
+//                            getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?
+//                        imm?.hideSoftInputFromWindow(v.getWindowToken(), 0)
+//                    }
+//                }
+//            }
+//        }
+//        return super.dispatchTouchEvent(event)
+//    }
+
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_DOWN) {
+            /**
+             * It gets into the above IF-BLOCK if anywhere the screen is touched.
+             */
+            val v = currentFocus
+            if (v is EditText) {
+                /**
+                 * Now, it gets into the above IF-BLOCK if an EditText is already in focus, and you tap somewhere else
+                 * to take the focus away from that particular EditText. It could have 2 cases after tapping:
+                 * 1. No EditText has focus
+                 * 2. Focus is just shifted to the other EditText
+                 */
+                val outRect = Rect()
+                v.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    v.clearFocus()
+                    val imm =
+                        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0)
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
 }

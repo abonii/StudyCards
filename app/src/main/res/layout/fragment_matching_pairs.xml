@@ -13,21 +13,18 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:background="@color/background"
-            android:elevation="2dp"
+            android:elevation="@dimen/toolbar_elevation"
+            android:theme="@style/OverFlow"
             app:layout_constraintTop_toTopOf="parent">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/folder_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pair_it"
-                    android:textColor="@color/textColor" />
-
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/folder_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/helvetica_bold"
+                android:text="@string/pair_it"
+                android:layout_gravity="center"
+                android:textColor="@color/textColor" />
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -35,12 +32,12 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:overScrollMode="never"
-            tools:listitem="@layout/item_matching_card"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/second_recycler"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            tools:listitem="@layout/item_matching_card" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/second_recycler"

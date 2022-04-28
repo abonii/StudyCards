@@ -3,13 +3,13 @@ package abm.co.studycards.ui.games.review
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemReviewBinding
+import abm.co.studycards.util.GeneralBindingAdapters.setImageWithGlide
 import android.annotation.SuppressLint
 import android.graphics.BlurMaskFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 
 class ReviewAdapter : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
     var words: MutableList<Word?> = ArrayList()
@@ -39,9 +39,11 @@ class ReviewAdapter : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
     inner class ViewHolder(val binding: ItemReviewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(currentItem: Word) {
             binding.word.text = currentItem.name
-            Glide.with(binding.image)
-                .load(currentItem.imageUrl)
-                .into(binding.image)
+            if (currentItem.imageUrl.length > 6) {
+                binding.wordImageContainer.visibility = View.VISIBLE
+                binding.wordImage.setImageWithGlide(currentItem.imageUrl)
+            }else
+                binding.wordImageContainer.visibility = View.GONE
             binding.translated.text = currentItem.translationsToString()
             val radius: Float = binding.translated.textSize / 3
             val filter = BlurMaskFilter(radius, BlurMaskFilter.Blur.NORMAL)

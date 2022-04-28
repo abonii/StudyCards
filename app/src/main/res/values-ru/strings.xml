@@ -111,7 +111,7 @@
     <string name="translate_count_spend">Больше попыток не осталось. Попробуйте завтра, пожалуйста.</string>
     <string name="name_translation_not_empty">Поля имени или перевода не могут быть пустыми.</string>
     <string name="choose_category">Пожалуйста, выберите категорию для этого слова.</string>
-    <string name="forget_password">Забыли пароль?</string>
+    <string name="forgot_password">Забыли пароль?</string>
     <string name="error_occurred">Произошла ошибка</string>
     <string name="forgot_password_fragment_title">Сбросить пароль</string>
     <string name="finished_pairing">Вы закончили соединить слова в пары.</string>

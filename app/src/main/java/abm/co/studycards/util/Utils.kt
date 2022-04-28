@@ -25,6 +25,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.fragment.app.Fragment
@@ -135,15 +136,35 @@ fun View.flipOutCard(): AnimatorSet {
     return flipInAnimationSet
 }
 
-fun View.changeBackgroundChangesAndFlip(color: Int): ObjectAnimator {
+fun View.changeBackgroundChangesAndFlip(
+    color: Int,
+    currentColor: Int = Color.TRANSPARENT,
+    duration: Long = 400
+): ObjectAnimator {
     val backgroundColorAnimator = ObjectAnimator.ofObject(
         this,
         "backgroundColor",
         ArgbEvaluator(),
-        Color.TRANSPARENT,
+        currentColor,
         color
     )
-    backgroundColorAnimator.duration = 300
+    backgroundColorAnimator.duration = duration
+    backgroundColorAnimator.start()
+    return backgroundColorAnimator
+}
+fun CardView.changeBackgroundChangesAndFlip(
+    color: Int,
+    currentColor: Int = this.getMyColor(R.color.background),
+    duration: Long = 400
+): ObjectAnimator {
+    val backgroundColorAnimator = ObjectAnimator.ofObject(
+        this,
+        "cardBackgroundColor",
+        ArgbEvaluator(),
+        currentColor,
+        color
+    )
+    backgroundColorAnimator.duration = duration
     backgroundColorAnimator.start()
     return backgroundColorAnimator
 }
@@ -247,7 +268,7 @@ fun TextView.leftAndRightDrawable(
     this.setCompoundDrawables(drawableL, null, drawableR, null)
 }
 
-fun Calendar.toStartOfTheDay():Calendar {
+fun Calendar.toStartOfTheDay(): Calendar {
     return this.apply {
         set(Calendar.HOUR_OF_DAY, 0)
         set(Calendar.MINUTE, 0)
@@ -255,7 +276,7 @@ fun Calendar.toStartOfTheDay():Calendar {
     }
 }
 
-fun Calendar.toDay(dayCount: Int):Calendar {
+fun Calendar.toDay(dayCount: Int): Calendar {
     return this.apply {
         add(Calendar.DAY_OF_MONTH, dayCount)
     }

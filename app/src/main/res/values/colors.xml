@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--same-->
-    <color name="colorPrimary">#4484EC</color>
+    <color name="colorPrimary">#00A3F6</color>
     <color name="colorPrimaryNotEnabled">#504484EC</color>
     <color name="colorPrimaryPressed">#002F7A</color>
-    <color name="colorPrimaryDark">#1D6DEF</color>
+    <color name="colorPrimaryDark">#4484EC</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="violet">#450649</color>
@@ -35,7 +35,8 @@
     <color name="swiping_n_know">#FF0000</color>
     <color name="swiping_know">#03DC03</color>
     <color name="swiping_doubted">#CFB323</color>
-    <color name="green">#32CD32</color>
+    <color name="green">#34A853</color>
+    <color name="green_light">#A6CDB0</color>
 
     <color name="blue_light_status">#A8C3EE</color>
 

@@ -59,14 +59,20 @@
         <item name="hintEnabled">false</item>
     </style>
 
+    <style name="WordTextInputLayoutTheme" parent="Widget.Design.TextInputLayout">
+        <item name="endIconDrawable">@drawable/ic_translate</item>
+        <item name="endIconMode">custom</item>
+    </style>
+
     <style name="OverFlow" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="srcCompat">@drawable/ic_back</item>
         <item name="colorControlNormal">@color/textColor</item>
     </style>
+
     <style name="MyCustomEditTextStyle" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/textColor</item>
         <item name="android:textColorHint">@color/secondTextColor</item>
-        <item name="android:fontFamily">@font/helvetica_roman</item>
+        <item name="android:fontFamily">@font/helvetica_light</item>
         <item name="android:textSize">@dimen/edit_text_sp</item>
     </style>
 

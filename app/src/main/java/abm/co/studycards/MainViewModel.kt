@@ -49,6 +49,7 @@ class MainViewModel @Inject constructor(
             R.id.guessingFragment,
             R.id.matchingPairsFragment,
             R.id.toRightOrLeftFragment,
+            R.id.addEditWordFragment,
             R.id.reviewFragment -> {
                 currentNavController?.value?.navigate(
                     R.id.confirmEndFragment, bundleOf(Pair("confirmType", ConfirmText.ON_EXIT))

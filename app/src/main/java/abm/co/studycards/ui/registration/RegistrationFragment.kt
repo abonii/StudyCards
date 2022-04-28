@@ -11,7 +11,6 @@ import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -44,7 +43,7 @@ class RegistrationFragment :
 
     override fun onResume() {
         super.onResume()
-            (activity as LoginActivity).setToolbar(binding.toolbar, R.drawable.ic_clear)
+        (activity as LoginActivity).setToolbar(binding.toolbar, R.drawable.ic_clear)
     }
 
     private fun navigateToMainActivity() {

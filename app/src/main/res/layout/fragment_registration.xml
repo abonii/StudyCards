@@ -109,26 +109,6 @@
                         android:text="@={viewmodel.password}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/mar_btwn_btns"
-                    app:passwordToggleDrawable="@drawable/password_toggle"
-                    app:passwordToggleTint="@color/textColor"
-                    app:passwordToggleEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/verify_password"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:hint="@string/new_password"
-                        android:theme="@style/MyCustomEditTextStyle"
-                        android:inputType="textPassword"
-                        android:maxLines="1"
-                        android:text="@={viewmodel.verifyPassword}" />
-                </com.google.android.material.textfield.TextInputLayout>
-
                 <TextView
                     android:id="@+id/error"
                     android:layout_width="match_parent"

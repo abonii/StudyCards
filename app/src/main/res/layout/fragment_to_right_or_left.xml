@@ -16,12 +16,17 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:background="@color/background"
-            android:elevation="2dp">
+            android:theme="@style/OverFlow"
+            android:elevation="@dimen/toolbar_elevation">
 
             <TextView
                 android:id="@+id/folder_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:fontFamily="@font/helvetica_bold"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                 android:textColor="@color/textColor"
                 tools:text="BASIC" />
 
@@ -46,6 +51,8 @@
             android:text="@string/unknown_swipe_text"
             android:textAlignment="center"
             android:textColor="@color/swiping_n_know"
+            android:fontFamily="@font/helvetica_medium"
+            android:textSize="@dimen/normal_text_sp"
             android:visibility="invisible"
             app:drawableTint="@color/swiping_n_know"
             app:drawableTopCompat="@drawable/ic_arrow_left" />
@@ -59,6 +66,8 @@
             android:layout_marginBottom="30dp"
             android:text="@string/uncertain_swipe_text"
             android:textAlignment="center"
+            android:fontFamily="@font/helvetica_medium"
+            android:textSize="@dimen/normal_text_sp"
             android:textColor="@color/swiping_doubted"
             android:visibility="invisible"
             app:drawableBottomCompat="@drawable/ic_arrow_down"
@@ -71,6 +80,8 @@
             android:layout_below="@id/toolbar"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="30dp"
+            android:fontFamily="@font/helvetica_medium"
+            android:textSize="@dimen/normal_text_sp"
             android:layout_marginEnd="30dp"
             android:text="@string/known_swipe_text"
             android:textAlignment="center"

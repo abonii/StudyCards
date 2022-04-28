@@ -50,7 +50,7 @@
     <string name="one_game">One Game</string>
     <string name="ok">OK</string>
     <string name="great_job">Great job!</string>
-    <string name="add_edit_title">CREATE A WORD</string>
+    <string name="add_edit_title">Create a word</string>
     <string name="image">Image</string>
     <string name="transcription">transcription</string>
     <string name="icon">icon</string>
@@ -110,7 +110,7 @@
     <string name="profile">Profile</string>
     <string name="forgot_password_fragment_title">Reset password</string>
     <string name="new_password">New Password</string>
-    <string name="logout">Logout</string>
+    <string name="logout">Sign out</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="error_occurred">Error occurred</string>
     <string name="socket_timeout_exception">Socket time out exception</string>
@@ -139,7 +139,7 @@
         <item quantity="other"> %d words to repeat</item>
     </plurals>
     <string name="choose_category">Please select a category for this word.</string>
-    <string name="forget_password">Forget password?</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="email_empty">Email cannot be empty</string>
     <string name="name_empty">Name cannot be empty</string>
     <string name="password_empty">Password cannot be empty</string>
@@ -166,9 +166,9 @@
     <string name="add">Add</string>
     <string name="empty_home_fragment">There is no sets yet. Create new one by clicking + button below</string>
     <string name="change_target_and_native">Change target with native language</string>
-    <string name="study_cards_title">Study Cards Premium</string>
+    <string name="study_cards_title">Study Cards Store</string>
     <string name="premium_additional_description">Подписку можно отменить в любое время.</string>
-    <string name="premium_feature1">Неограниченное количество переводов</string>
+    <string name="premium_feature1">Определенное количество переводов</string>
     <string name="premium_feature2">Обучение без рекламы</string>
     <string name="premium_feature3">Неограниченные учебные колоды</string>
     <string name="premium_feature1_des">Можно переводить слова, не выходя из приложения</string>
@@ -187,5 +187,7 @@
     <string name="don_t_have_account">Don\'t you have an account?</string>
     <string name="first_page_title">Learn. Play. Repeat.</string>
     <string name="sign_up">Sign up</string>
+    <string name="image_url">Image URL</string>
+    <string name="add_example">Tap to add example</string>
     <!--    <string name="agree_with_privacy_policy"><![CDATA[By joining, you agree to Study Cards\'s <a href="https://www.freeprivacypolicy.com/live/c663b277–554d-41b6-aebd-dfc34b059928">Terms of Service</a> & Privacy Policy]]></string>-->
 </resources>

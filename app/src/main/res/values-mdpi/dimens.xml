@@ -24,7 +24,7 @@
     <dimen name="button_text_sp">11.9sp</dimen>
     <dimen name="big_text_sp">19.6sp</dimen>
     <dimen name="profile_left_side_sp">9.1sp</dimen>
-    <dimen name="first_page_subtitle_sp">11.2sp</dimen>
+    <dimen name="normal_text_sp">11.2sp</dimen>
     <dimen name="image_first_page_height">169.4dp</dimen>
     <dimen name="image_first_page_width">166.6dp</dimen>
 </resources>

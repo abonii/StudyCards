@@ -82,9 +82,6 @@
         <action
             android:id="@+id/action_addEditWordFragment_to_selectCategoryDialogFragment"
             app:destination="@id/selectCategoryDialogFragment" />
-        <action
-            android:id="@+id/action_addEditWordFragment_to_imageDialogFragment"
-            app:destination="@id/imageDialogFragment" />
         <argument
             android:name="word"
             android:defaultValue="@null"
@@ -102,16 +99,6 @@
             android:id="@+id/action_addEditWordFragment_to_dictionaryDialogFragment"
             app:destination="@id/dictionaryDialogFragment" />
     </fragment>
-    <dialog
-        android:id="@+id/imageDialogFragment"
-        android:name="abm.co.studycards.ui.add_word.dialog.image.ImageDialogFragment"
-        android:label="fragment_image_dialog"
-        tools:layout="@layout/fragment_image_dialog">
-        <argument
-            android:name="wordName"
-            app:argType="string"
-            app:nullable="true" />
-    </dialog>
     <fragment
         android:id="@+id/inCategoryFragment"
         android:name="abm.co.studycards.ui.in_category.InCategoryFragment"

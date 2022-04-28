@@ -23,7 +23,6 @@ class RegistrationViewModel @Inject constructor(
     var email: String = ""
     var name: String = ""
     var password: String = ""
-    var verifyPassword: String = ""
 
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
@@ -47,14 +46,8 @@ class RegistrationViewModel @Inject constructor(
             TextUtils.isEmpty(password) -> {
                 _error.value = App.instance.getString(R.string.password_empty)
             }
-            TextUtils.isEmpty(verifyPassword) -> {
-                _error.value = App.instance.getString(R.string.verify_password_empty)
-            }
-            verifyPassword.length < 5 -> {
+            password.length < 5 -> {
                 _error.value = App.instance.getString(R.string.password_length)
-            }
-            !TextUtils.equals(verifyPassword, password) -> {
-                _error.value = App.instance.getString(R.string.passwords_not_same)
             }
             else -> {
                 firebaseAuth.createUserWithEmailAndPassword(email, password)
