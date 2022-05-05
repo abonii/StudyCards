@@ -4,11 +4,13 @@ import abm.co.studycards.R
 import abm.co.studycards.data.model.LearnOrKnown
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.core.App
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseException
+import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -16,20 +18,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class VocabularyViewModel @Inject constructor(
-    @Named(CATEGORIES_REF)
-    var categoriesDbRef: DatabaseReference,
-    private val repository: ServerCloudRepository
+    private val firebaseRepository: ServerCloudRepository
 ) : BaseViewModel() {
 
     val dispatcher = Dispatchers.IO
+    private val categoriesDbRef = firebaseRepository.getCategoriesReference()
 
     var currentTabType = LearnOrKnown.UNCERTAIN
     var firstBtnType = LearnOrKnown.KNOWN
     var secondBtnType = LearnOrKnown.UNKNOWN
+
+    private var firstTime = true
 
     private val _stateFlow = MutableStateFlow<VocabularyUiState>(
         VocabularyUiState.Loading
@@ -47,12 +49,11 @@ class VocabularyViewModel @Inject constructor(
                             if (categoryId.key?.isBlank() != true) {
                                 categoryId.children.forEach {
                                     try {
-                                        it.getValue(Word::class.java)
-                                            ?.let { word ->
-                                                if (LearnOrKnown.getType(word.learnOrKnown) == currentTabType) {
-                                                    items.add(word)
-                                                }
+                                        it.getValue(Word::class.java)?.let { word ->
+                                            if (LearnOrKnown.getType(word.learnOrKnown) == currentTabType) {
+                                                items.add(word)
                                             }
+                                        }
                                     } catch (e: DatabaseException) {
                                         categoryId.ref.removeValue()
                                     }
@@ -60,9 +61,13 @@ class VocabularyViewModel @Inject constructor(
                             }
                         }
                     }
-                    delay(800)
+                    if(firstTime){
+                        delay(800)
+                        firstTime = false
+                    }
                     if (items.size == 0) {
-                        _stateFlow.value = VocabularyUiState.Error(App.instance.getString(R.string.empty))
+                        _stateFlow.value =
+                            VocabularyUiState.Error(App.instance.getString(R.string.empty))
                     } else _stateFlow.value = VocabularyUiState.Success(items)
                 }
             }
@@ -108,7 +113,7 @@ class VocabularyViewModel @Inject constructor(
 
     private fun updateWordLearnType(word: Word) {
         viewModelScope.launch(dispatcher) {
-            repository.updateWordLearnType(word)
+            firebaseRepository.updateWordLearnType(word)
         }
     }
 

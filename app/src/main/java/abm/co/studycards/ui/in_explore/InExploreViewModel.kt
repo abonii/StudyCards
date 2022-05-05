@@ -3,15 +3,14 @@ package abm.co.studycards.ui.in_explore
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.pref.Prefs
+import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.CATEGORIES_REF
-import abm.co.studycards.util.Constants.EXPLORE_REF
 import abm.co.studycards.util.Constants.WORDS_REF
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,17 +19,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class InExploreViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    @Named(EXPLORE_REF) val exploreDbRef: DatabaseReference,
-    @Named(CATEGORIES_REF) val categoriesDbRef: DatabaseReference,
+    firebaseRepository: ServerCloudRepository,
     prefs: Prefs,
 ) : BaseViewModel() {
 
     private val dispatcher = Dispatchers.IO
+    private val categoriesDbRef = firebaseRepository.getCategoriesReference()
+    private val exploreDbRef = firebaseRepository.getExploreReference()
 
     private val _stateFlow = MutableStateFlow<InExploreUiState>(InExploreUiState.Loading)
     val stateFlow = _stateFlow.asStateFlow()

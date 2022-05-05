@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "111316305374-h9fd1vqj5u8ngcsdp3o0r7q805vqidm8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "abm.co.studycards",
+            "certificate_hash": "1158c58a9074de1f031c3771da4d1a1c867ef099"
+          }
+        },
+        {
           "client_id": "111316305374-21t7ltj94npjvbqrcbmql58ugpstjnu9.apps.googleusercontent.com",
           "client_type": 3
         }

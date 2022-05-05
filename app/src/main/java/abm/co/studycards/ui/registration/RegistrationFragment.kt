@@ -8,11 +8,13 @@ import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegistrationFragment :
@@ -20,11 +22,23 @@ class RegistrationFragment :
 
     private val viewModel: RegistrationViewModel by viewModels()
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        collectData()
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
     override fun initUI(savedInstanceState: Bundle?) {
         binding.run {
             viewmodel = viewModel
             registrationFragment = this@RegistrationFragment
         }
+    }
+
+    private fun collectData() {
         launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.sharedFlow.collect { eventChannel ->
                 when (eventChannel) {
@@ -34,7 +48,7 @@ class RegistrationFragment :
                 }
             }
         }
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             viewModel.toast.collect {
                 toast(it)
             }

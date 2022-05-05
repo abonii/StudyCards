@@ -4,9 +4,7 @@
 	<dimen name="activity_vertical_margin">16dp</dimen>
 	<dimen name="layout_item_margin">8dp</dimen>
 	<dimen name="layout_recycler_margin">8dp</dimen>
-	<dimen name="profile_left_side_sp">13sp</dimen>
-	<dimen name="standard_80">80dp</dimen>
-	<dimen name="standard_160">160dp</dimen>
+	<dimen name="profile_left_side_sp">15sp</dimen>
 	<dimen name="vocabulary_button_width">100dp</dimen>
 	<dimen name="home_page_language_image_size">19dp</dimen>
 	<dimen name="item_select_vertical_padding">12dp</dimen>
@@ -39,4 +37,10 @@
     <dimen name="ic_normal_dp">18dp</dimen>
     <dimen name="profile_user_image_size">100dp</dimen>
     <dimen name="profile_user_image_radius">50dp</dimen>
+	<dimen name="profile_container_height">60dp</dimen>
+    <dimen name="profile_image_margin_vertical">22dp</dimen>
+	<dimen name="top_btn_margin_ver">20dp</dimen>
+    <dimen name="language_image_size">30dp</dimen>
+	<dimen name="toolbar_end_icon_margin">22dp</dimen>
+	<dimen name="toolbar_end_icon_padding">6dp</dimen>
 </resources>

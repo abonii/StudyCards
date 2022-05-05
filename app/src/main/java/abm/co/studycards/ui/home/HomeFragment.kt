@@ -14,7 +14,9 @@ import abm.co.studycards.util.navigate
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -29,13 +31,21 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     private val viewModel: HomeViewModel by viewModels()
     private var categoryAdapter: CategoryAdapter? = null
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        collectData()
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
     override fun initUI(savedInstanceState: Bundle?) {
         binding.homefragment = this
         initFABMenu()
         initRecyclerView()
         changeStatusBar()
         setSourceAndTargetLanguages()
-        collectData()
     }
 
     private fun collectData() {
@@ -74,7 +84,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
         error.visibility = View.GONE
     }
 
-    private fun errorOccurred(errorMsg:String) = binding.run {
+    private fun errorOccurred(errorMsg: String) = binding.run {
         error.visibility = View.VISIBLE
         error.text = errorMsg
         recyclerView.visibility = View.GONE
@@ -129,6 +139,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     }
 
     fun onChangeLanguageClicked() {
+        if (isFabOpen()) return
         viewModel.changePreferenceNativeWithTargetLanguages()
         reCreateItself()
     }
@@ -142,8 +153,10 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     private fun initRecyclerView() {
         categoryAdapter = CategoryAdapter(this)
         binding.recyclerView.run {
+            setOnTouchListener(RVClickHandler(this))
             adapter = categoryAdapter
             addItemDecoration(getItemDecoration())
+            setOnClickListener { isFabOpen() }
         }
     }
 
@@ -200,15 +213,18 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     }
 
     override fun onLongClickCategory(category: Category) {
+        if (isFabOpen()) return
         showAlertToDeleteCategory(category)
     }
 
-    fun navigateToSelectLanguages() {
-        val nav = HomeFragmentDirections.actionHomeFragmentToSelectLanguageFragment()
+    fun navigateToSelectLanguages(isTarget: Boolean) {
+        if (isFabOpen()) return
+        val nav = HomeFragmentDirections
+                .actionHomeFragmentToSelectLanguageAnyWhereFragment(isTarget)
         navigate(nav)
     }
 
-    private fun isFabOpen(): Boolean {
+    fun isFabOpen(): Boolean {
         if (viewModel.fabMenuOpened) {
             closeFABMenu()
             return true
@@ -229,6 +245,9 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
 
     override fun onDestroyView() {
         viewModel.fabMenuOpened = false
+        binding.floatingActionButton.animate().cancel()
+        binding.floatingActionButtonWord.animate().cancel()
+        binding.floatingActionButtonCategory.animate().cancel()
         super.onDestroyView()
     }
 }

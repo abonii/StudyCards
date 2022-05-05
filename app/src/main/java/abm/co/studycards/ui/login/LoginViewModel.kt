@@ -3,6 +3,7 @@ package abm.co.studycards.ui.login
 import abm.co.studycards.R
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.core.App
+import abm.co.studycards.util.firebaseError
 import android.content.Intent
 import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -48,7 +50,7 @@ class LoginViewModel @Inject constructor(
         _sharedFlow.emit(LoginEventChannel.NavigateToMainActivity)
     }
 
-    fun setLoading(b:Boolean){
+    fun setLoading(b: Boolean) {
         _loading.value = b
     }
 
@@ -60,13 +62,13 @@ class LoginViewModel @Inject constructor(
                 if (it.isSuccessful) {
                     checkUserExistence()
                 } else {
-                    makeToast("${it.exception?.message}")
+                    makeToast(firebaseError(it.exception))
                 }
                 _loading.value = false
             }
             .addOnFailureListener {
                 _loading.value = false
-                makeToast("${it.message}")
+                makeToast(firebaseError(it))
             }
     }
 
@@ -100,7 +102,7 @@ class LoginViewModel @Inject constructor(
                         if (it.isSuccessful) {
                             checkUserExistence()
                         } else {
-                            _error.value = it.exception?.localizedMessage
+                            _error.value = firebaseError(it.exception)
                         }
                     }
             }
@@ -121,6 +123,7 @@ class LoginViewModel @Inject constructor(
                 if (task.isSuccessful) {
                     checkUserExistence()
                 } else {
+                    makeToast(firebaseError(task.exception))
                     checkUserExistence(null)
                 }
             }

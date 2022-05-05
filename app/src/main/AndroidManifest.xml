@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="abm.co.studycards">
 
     <uses-permission android:name="com.android.vending.BILLING" />
 
-<!--    android:screenOrientation="portrait"-->
+    <!--    android:screenOrientation="portrait"-->
     <application
         android:name=".util.core.App"
         android:allowBackup="true"
@@ -17,8 +16,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            tools:ignore="LockedOrientationActivity">
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,8 +25,7 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"
-            tools:ignore="LockedOrientationActivity" />
+            android:windowSoftInputMode="adjustPan" />
     </application>
     <!--            android:screenOrientation="portrait"-->
 

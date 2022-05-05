@@ -6,18 +6,17 @@ import abm.co.studycards.util.base.BaseBindingActivity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginActivity : BaseBindingActivity<ActivitySignBinding>(R.layout.activity_sign) {
 
     override fun initViews(savedInstanceState: Bundle?) {
-
+        FirebaseAuth.getInstance().useAppLanguage()
     }
 
-    fun setToolbar(toolbar: Toolbar, backIcon:Int) {
+    fun setToolbar(toolbar: Toolbar, backIcon: Int) {
         setSupportActionBar(toolbar)
         toolbar.navigationIcon = getImg(backIcon)
         supportActionBar?.setDisplayShowTitleEnabled(false)

@@ -8,13 +8,15 @@ import abm.co.studycards.util.base.BaseDialogFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class SelectCategoryDialogFragment :
@@ -25,26 +27,35 @@ class SelectCategoryDialogFragment :
     private val viewModel: SelectCategoryDialogViewModel by viewModels()
     private lateinit var selectAdapter: SelectCategoryAdapter
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        collectData()
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
     override fun initUI(savedInstanceState: Bundle?) {
         initRV()
         setOnClickListeners()
     }
 
     private fun setOnClickListeners() {
+        binding.run {
+            createCategory.setOnClickListener { directToCreateCategory() }
+            clear.setOnClickListener { dismiss() }
+            save.setOnClickListener { onDone() }
+        }
+    }
+
+    fun collectData() {
         launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.categoryStateFlow.collect {
                 if (it != null) {
                     selectAdapter.checkedId = it.id
                 }
             }
-        }
-
-        binding.run {
-            createCategory.setOnClickListener {
-                directToCreateCategory()
-            }
-            clear.setOnClickListener { dismiss() }
-            save.setOnClickListener { onDone() }
         }
     }
 

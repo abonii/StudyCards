@@ -45,6 +45,7 @@ class AvailableLanguages {
             }
             return ""
         }
+
         fun getLanguageShortNameByCode(context: Context, c: String): String {
             for (i in availableLanguages) {
                 if (i.code == c) {
@@ -64,3 +65,4 @@ class AvailableLanguages {
         }
     }
 }
+fun List<Language>.f(codes: List<String>) = filter { lang -> codes.any { it == lang.code } }

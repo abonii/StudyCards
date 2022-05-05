@@ -1,9 +1,11 @@
 package abm.co.studycards.ui.add_category
 
+import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.base.BaseViewModel
+import abm.co.studycards.util.core.App
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,8 +29,13 @@ class AddEditCategoryViewModel @Inject constructor(
 
     fun saveCategory() {
         if (category != null) {
-            val updatedCategory = category.copy(mainName = mainName.value)
-            updateCategory(updatedCategory)
+            if (category.id.isNotEmpty()) {
+                val updatedCategory = category.copy(mainName = mainName.value)
+                updateCategory(updatedCategory)
+            } else {
+                val updatedCategory = category.copy(mainName = App.instance.getString(R.string.remove_this_category))
+                updateCategory(updatedCategory)
+            }
         } else {
             val newCategory = Category(
                 mainName = mainName.value,

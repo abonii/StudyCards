@@ -4,6 +4,7 @@ import abm.co.studycards.R
 import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.core.App
+import abm.co.studycards.util.firebaseError
 import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,13 +53,12 @@ class RegistrationViewModel @Inject constructor(
             else -> {
                 firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener {
+                        _loading.value = false
                         if (it.isSuccessful) {
                             sendVerificationEmail()
-                            repository.addUserName(name)
                         } else {
-                            _error.value = "${it.exception?.localizedMessage}"
+                            _error.value = firebaseError(it.exception)
                         }
-                        _loading.value = false
                     }
             }
         }
@@ -67,11 +67,14 @@ class RegistrationViewModel @Inject constructor(
     private fun sendVerificationEmail() {
         firebaseAuth.currentUser?.sendEmailVerification()
             ?.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    makeToast(R.string.we_send_verification)
-                    navigateToMainActivity()
-                } else {
-                    makeToast(R.string.we_couldnt_send_verification)
+                viewModelScope.launch {
+                    if (task.isSuccessful) {
+                        repository.addUserName(firebaseAuth.currentUser?.uid ?: "0_user", name)
+                        makeToast(R.string.we_send_verification)
+                        navigateToMainActivity()
+                    } else {
+                        makeToast(firebaseError(task.exception))
+                    }
                 }
             }
     }

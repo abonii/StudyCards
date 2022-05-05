@@ -24,17 +24,26 @@
             android:id="@+id/action_homeFragment_to_addEditWordFragment"
             app:destination="@id/addEditWordFragment"
             app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out" />
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_homeFragment_to_inCategoryFragment"
             app:destination="@id/inCategoryFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:exitAnim="@anim/stay_on_in_right"
+            app:popEnterAnim="@anim/slide_out_left"
+            app:popExitAnim="@anim/stay_on_out_left" />
         <action
             android:id="@+id/action_homeFragment_to_selectGamesTypeDialogFragment"
             app:destination="@id/selectGamesTypeDialogFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_selectLanguageAnyWhereFragment"
+            app:destination="@id/selectLanguageAnyWhereFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/stay_on_slide_up"
+            app:popEnterAnim="@anim/stay_on_slide_down"
+            app:popExitAnim="@anim/slide_down"/>
     </fragment>
     <fragment
         android:id="@+id/selectLanguageFragment"
@@ -107,9 +116,9 @@
             android:id="@+id/action_inCategoryFragment_to_addEditWordFragment"
             app:destination="@id/addEditWordFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:exitAnim="@anim/stay_on_in_right"
+            app:popEnterAnim="@anim/slide_out_left"
+            app:popExitAnim="@anim/stay_on_out_left" />
         <argument
             android:name="category"
             app:argType="abm.co.studycards.data.model.vocabulary.Category" />
@@ -228,10 +237,8 @@
         <action
             android:id="@+id/action_confirmEndFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
+            app:enterAnim="@anim/slide_out_left"
+            app:exitAnim="@anim/stay_on_out_left"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
     </dialog>
@@ -251,4 +258,13 @@
             app:argType="boolean"
             android:defaultValue="false" />
     </dialog>
+    <fragment
+        android:id="@+id/selectLanguageAnyWhereFragment"
+        android:name="abm.co.studycards.ui.select_language_anywhere.SelectLanguageAnyWhereFragment"
+        android:label="fragment_select_language_any_where"
+        tools:layout="@layout/fragment_select_language_any_where" >
+        <argument
+            android:name="fromTarget"
+            app:argType="boolean" />
+    </fragment>
 </navigation>

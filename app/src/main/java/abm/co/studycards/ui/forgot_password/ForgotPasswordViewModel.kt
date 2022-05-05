@@ -3,6 +3,7 @@ package abm.co.studycards.ui.forgot_password
 import abm.co.studycards.R
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.core.App
+import abm.co.studycards.util.firebaseError
 import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -34,7 +35,7 @@ class ForgotPasswordViewModel @Inject constructor(
                 if (it.isSuccessful) {
                     makeToast(App.instance.getString(R.string.we_send_reset_password))
                 } else {
-                    makeToast(App.instance.getString(R.string.we_couldnt_send_verification))
+                    makeToast(firebaseError(it.exception))
                 }
             }
     }

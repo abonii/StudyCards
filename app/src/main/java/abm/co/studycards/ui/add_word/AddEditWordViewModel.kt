@@ -8,16 +8,17 @@ import abm.co.studycards.data.model.vocabulary.*
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.DictionaryRepository
 import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants.API_KEYS
+import abm.co.studycards.util.Constants.CAN_TRANSLATE_TIME_EVERY_DAY
 import abm.co.studycards.util.Constants.OXFORD_CAN_TRANSLATE_MAP
-import abm.co.studycards.util.Constants.USERS_REF
+import abm.co.studycards.util.Constants.OXFORD_ID
+import abm.co.studycards.util.Constants.OXFORD_KEY
+import abm.co.studycards.util.Constants.YANDEX_KEY
 import abm.co.studycards.util.base.BaseViewModel
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -27,13 +28,10 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class AddEditWordViewModel @Inject constructor(
     private val repository: DictionaryRepository,
-    @Named(USERS_REF) var userRef: DatabaseReference,
-    @Named(API_KEYS) var apiKeys: DatabaseReference,
     private val firebaseRepository: ServerCloudRepository,
     prefs: Prefs,
     savedStateHandle: SavedStateHandle,
@@ -42,6 +40,9 @@ class AddEditWordViewModel @Inject constructor(
     private val dispatcher = Dispatchers.IO
 
     var translateCounts: Long = 0
+
+    private val apiKeys = firebaseRepository.getApiReference()
+    private val userRef = firebaseRepository.getUserReference()
 
     val word = savedStateHandle.get<Word>("word")
     private var categoryName = savedStateHandle.get<String>("categoryName") ?: ""
@@ -81,10 +82,12 @@ class AddEditWordViewModel @Inject constructor(
     private var oxfordApiId = "why_do_you_need_this_id_?"
     private var yandexApiKey = "why_do_you_need_this_api_key_?"
 
+    var backPressedTime: Long = 0
+
     init {
         userRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.child("canTranslateTimeEveryDay").value?.let {
+                snapshot.child(CAN_TRANSLATE_TIME_EVERY_DAY).value?.let {
                     translateCounts = it as Long
                 }
             }
@@ -96,13 +99,13 @@ class AddEditWordViewModel @Inject constructor(
         apiKeys.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 viewModelScope.launch(dispatcher) {
-                    snapshot.child("oxford_key").value?.let {
+                    snapshot.child(OXFORD_KEY).value?.let {
                         oxfordApiKey = it.toString()
                     }
-                    snapshot.child("oxford_id").value?.let {
+                    snapshot.child(OXFORD_ID).value?.let {
                         oxfordApiId = it.toString()
                     }
-                    snapshot.child("yandex_key").value?.let {
+                    snapshot.child(YANDEX_KEY).value?.let {
                         yandexApiKey = it.toString()
                     }
                 }
@@ -226,7 +229,7 @@ class AddEditWordViewModel @Inject constructor(
 
     private fun changeTranslateCount() {
         viewModelScope.launch(dispatcher) {
-            userRef.updateChildren(mapOf("canTranslateTimeEveryDay" to translateCounts - 1))
+            firebaseRepository.updateUserTranslateCount(translateCounts - 1)
         }
     }
 

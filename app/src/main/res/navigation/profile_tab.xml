@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_profileFragment_to_buyPremiumFragment"
             app:destination="@id/buyPremiumFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/selectLanguageFragment2"
@@ -32,4 +35,9 @@
         android:name="abm.co.studycards.ui.premium.BuyPremiumFragment"
         android:label="fragment_buy_premium"
         tools:layout="@layout/fragment_buy_premium" />
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="abm.co.studycards.ui.change_password.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" />
 </navigation>

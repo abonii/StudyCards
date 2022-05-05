@@ -8,6 +8,9 @@ import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -24,16 +27,16 @@ class LoginFragment : BaseBindingFragment<FragmentLoginBinding>(R.layout.fragmen
         checkIfUserLaunchedFirstTime()
     }
 
-    private fun checkIfUserLaunchedFirstTime() {
-//        val n = LoginFragmentDirections.actionLoginFragmentToFirstPageFragment()
-//        navigate(n)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        collectData()
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
-    override fun initUI(savedInstanceState: Bundle?) {
-        binding.run {
-            viewmodel = viewModel
-            (activity as LoginActivity).setToolbar(toolbar, R.drawable.ic_clear)
-        }
+    private fun collectData() {
         launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.sharedFlow.collect { eventChannel ->
                 when (eventChannel) {
@@ -46,6 +49,18 @@ class LoginFragment : BaseBindingFragment<FragmentLoginBinding>(R.layout.fragmen
                     else -> {}
                 }
             }
+        }
+    }
+
+    private fun checkIfUserLaunchedFirstTime() {
+//        val n = LoginFragmentDirections.actionLoginFragmentToFirstPageFragment()
+//        navigate(n)
+    }
+
+    override fun initUI(savedInstanceState: Bundle?) {
+        binding.run {
+            viewmodel = viewModel
+            (activity as LoginActivity).setToolbar(toolbar, R.drawable.ic_clear)
         }
     }
 

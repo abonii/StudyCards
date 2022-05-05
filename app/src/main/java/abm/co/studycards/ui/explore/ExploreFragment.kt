@@ -8,7 +8,9 @@ import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,10 +22,16 @@ class ExploreFragment : BaseBindingFragment<FragmentExploreBinding>(R.layout.fra
     private val viewModel: ExploreViewModel by viewModels()
     private var parentAdapter: ParentExploreAdapter? = null
 
-    override fun initUI(savedInstanceState: Bundle?) {
-        requireActivity().setDefaultStatusBar()
-        parentAdapter = ParentExploreAdapter(::onClickItem)
-        binding.parentRecyclerView.adapter = parentAdapter
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        collectData()
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    private fun collectData() {
         launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.stateFlow.collectLatest {
                 when (it) {
@@ -39,6 +47,12 @@ class ExploreFragment : BaseBindingFragment<FragmentExploreBinding>(R.layout.fra
                 }
             }
         }
+    }
+
+    override fun initUI(savedInstanceState: Bundle?) {
+        requireActivity().setDefaultStatusBar()
+        parentAdapter = ParentExploreAdapter(::onClickItem)
+        binding.parentRecyclerView.adapter = parentAdapter
     }
 
     private fun onSuccess(value: List<ParentExploreUI>) = binding.run {

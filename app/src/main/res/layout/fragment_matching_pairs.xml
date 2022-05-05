@@ -14,7 +14,6 @@
             android:layout_height="?actionBarSize"
             android:background="@color/background"
             android:elevation="@dimen/toolbar_elevation"
-            android:theme="@style/OverFlow"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView

@@ -4,25 +4,21 @@ import abm.co.studycards.MainActivity
 import abm.co.studycards.R
 import abm.co.studycards.data.model.AvailableLanguages
 import abm.co.studycards.data.model.Language
-import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.databinding.FragmentSelectLanguageBinding
 import abm.co.studycards.util.base.BaseBindingFragment
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SelectLanguageFragment :
     BaseBindingFragment<FragmentSelectLanguageBinding>(R.layout.fragment_select_language),
     LanguageAdapter.OnClickWithPosition {
 
-    @Inject
-    lateinit var prefs: Prefs
-    private var nativeLanguagePosition = ""
-    private var targetLanguagePosition = ""
+    private val viewModel: SelectLanguageViewModel by viewModels()
 
     override fun initUI(savedInstanceState: Bundle?) {
         setBindings()
@@ -31,35 +27,33 @@ class SelectLanguageFragment :
 
     private fun setBindings() {
         setToolbar()
-        if (prefs.getSourceLanguage().isEmpty() || prefs.getTargetLanguage().isEmpty()) {
-            (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        }
-        val nativeAdapter = LanguageAdapter(requireContext(), this, false)
-        val targetAdapter = LanguageAdapter(requireContext(), this, true)
+        val nativeAdapter = LanguageAdapter(this, false)
+        val targetAdapter = LanguageAdapter(this, true)
         nativeAdapter.addItems(AvailableLanguages.availableLanguages)
         targetAdapter.addItems(AvailableLanguages.availableLanguages)
         binding.run {
             rvNativeLanguage.adapter = nativeAdapter
             rvLearnLanguage.adapter = targetAdapter
-            readBtn.setOnClickListener {
-                onReadBtnClicked()
-            }
+            readBtn.setOnClickListener { onReadBtnClicked() }
         }
     }
 
     private fun setToolbar() {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
         binding.toolbar.setNavigationIcon(R.drawable.ic_clear)
+        if (viewModel.prefs.getSourceLanguage().isEmpty() || viewModel.prefs.getTargetLanguage()
+                .isEmpty()
+        ) {
+            (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        }
     }
 
     private fun onReadBtnClicked() {
         if (binding.readBtn.alpha == 1f) {
-            prefs.setSourceLanguage(nativeLanguagePosition)
-            prefs.setTargetLanguage(targetLanguagePosition)
-//            findNavController().navigate(SelectLanguageFragmentDirections.actionSelectLanguageFragmentToHomeFragment())
+            viewModel.onSaveLanguages()
             reCreateItself()
         }
-        }
+    }
 
     private fun reCreateItself() {
         val intent = Intent(requireContext(), MainActivity::class.java)
@@ -68,35 +62,27 @@ class SelectLanguageFragment :
     }
 
 
-    override fun onClickWithPosition(
+    override fun onClickWithCode(
         lang: Language,
         isTargetLanguage: Boolean,
     ) {
-        if (isTargetLanguage) {
-            targetLanguagePosition = lang.code
-        } else {
-            nativeLanguagePosition = lang.code
-        }
+        viewModel.onClickWithCode(lang, isTargetLanguage)
         checkIfSelectedCorrectly()
     }
 
     private fun checkIfSelectedCorrectly() {
-        if (nativeLanguagePosition.isNotBlank()
-            && targetLanguagePosition.isNotBlank()
-            && nativeLanguagePosition != targetLanguagePosition
-        ) {
+        if (viewModel.isSelectedCorrectly()) {
             binding.readBtn.alpha = 1f
         } else {
             binding.readBtn.alpha = 0.6f
         }
     }
 
-    private val callback = object : OnBackPressedCallback(
-        true
-        /** true means that the callback is enabled */
-    ) {
+    private val callback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            if (prefs.getSourceLanguage().isNotEmpty() && prefs.getTargetLanguage().isNotEmpty()) {
+            if (viewModel.prefs.getSourceLanguage()
+                    .isNotEmpty() && viewModel.prefs.getTargetLanguage().isNotEmpty()
+            ) {
                 findNavController().popBackStack()
                 isEnabled = false
             } else {

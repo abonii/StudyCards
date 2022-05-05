@@ -7,7 +7,6 @@ import abm.co.studycards.data.model.Language
 import abm.co.studycards.databinding.FragmentProfileBinding
 import abm.co.studycards.helpers.LocaleHelper
 import abm.co.studycards.ui.login.LoginActivity
-import abm.co.studycards.util.Constants
 import abm.co.studycards.util.Constants.DEV_ACCOUNT_LINK
 import abm.co.studycards.util.Constants.REQUEST_SYSTEM_LANGUAGE_KEY
 import abm.co.studycards.util.base.BaseBindingFragment
@@ -27,7 +26,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fragment_profile) {
@@ -48,6 +46,14 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
             }
         }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.launchWhenStarted {
+            viewModel.toast.collectLatest {
+                toast(it)
+            }
+        }
+    }
 
     override fun initUI(savedInstanceState: Bundle?) {
         binding.run {
@@ -67,11 +73,6 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
                 onSelectSystemLanguage(language)
             }
         }
-        lifecycleScope.launch {
-            viewModel.toast.collectLatest {
-                toast(it)
-            }
-        }
     }
 
     fun navigateToChangeAppLanguage() {
@@ -79,6 +80,7 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
             navigate(it)
         }
     }
+
     fun navigateToPremiumFragment() {
         ProfileFragmentDirections.actionProfileFragmentToBuyPremiumFragment().also {
             navigate(it)
@@ -126,7 +128,7 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
     }
 
     fun logout() {
-        if (viewModel.isAnonymous()) {
+        if (viewModel.isAnonymous.value) {
             logoutAnonymousUser()
         } else {
             simpleLogout()
@@ -139,14 +141,15 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
         startActivity(i)
     }
 
+    fun onChangePassword() {
+        val n = ProfileFragmentDirections.actionProfileFragmentToChangePasswordFragment()
+        navigate(n)
+    }
+
     private fun logoutAnonymousUser() {
-        val currentUser = viewModel.firebaseAuthInstance.currentUser
-        Firebase.auth.signOut()
-        viewModel.googleSignInClient.signOut()
-            .addOnCompleteListener(requireActivity()) {
-                currentUser?.delete()
-                navigateToLoginActivity()
-            }
+        viewModel.removeDatabaseOfUser {
+            navigateToLoginActivity()
+        }
     }
 
     private fun simpleLogout() {

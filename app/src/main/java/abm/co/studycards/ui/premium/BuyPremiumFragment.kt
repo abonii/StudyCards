@@ -23,10 +23,14 @@ class BuyPremiumFragment :
     private val viewModel: BuyPremiumViewModel by viewModels()
     private var productsAdapter: ProductAdapter? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        collectData()
+    }
+
     override fun initUI(savedInstanceState: Bundle?) {
         (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
         initRV()
-        collectData()
     }
 
     private fun collectData() {
@@ -37,7 +41,7 @@ class BuyPremiumFragment :
                 }
             }
         }
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted{
             viewModel.toast.collectLatest {
                 toast(it)
             }

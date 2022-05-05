@@ -5,6 +5,7 @@
     tools:context=".ui.profile.ProfileFragment">
 
     <data>
+        <import type="android.text.TextUtils" />
 
         <import type="android.view.View" />
 
@@ -49,9 +50,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginVertical="@dimen/mar_btwn_btns"
+                android:layout_marginTop="@dimen/mar_btwn_btns"
                 android:orientation="vertical"
-                android:visibility="@{viewmodel.isAnonymous() ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewmodel.isAnonymous ? View.VISIBLE : View.GONE}"
                 app:layout_constraintTop_toBottomOf="@id/toolbar">
 
                 <TextView
@@ -109,12 +110,12 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/mar_btwn_btns"
                     android:nextFocusDown="@id/login_btn"
                     app:errorEnabled="true"
                     app:errorText="@{viewmodel.passwordError}"
                     app:hintAnimationEnabled="false"
                     app:hintEnabled="false"
+                    app:passwordToggleDrawable="@drawable/password_toggle"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -134,7 +135,6 @@
                     android:id="@+id/register"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:onClick="@{()->viewmodel.onClickRegistration()}"
                     android:text="@string/sign_up"
                     android:textColor="@color/white"
@@ -148,7 +148,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingHorizontal="@dimen/mar_btwn_btns"
-                android:visibility="@{viewmodel.isVerified() ? View.VISIBLE : View.GONE}"
                 app:layout_constraintTop_toBottomOf="@id/login_container">
 
                 <androidx.cardview.widget.CardView
@@ -156,10 +155,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="25dp"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginVertical="@dimen/profile_image_margin_vertical"
                     android:backgroundTint="@color/second_color"
-                    android:visibility="@{viewmodel.userPhotoUrl != null ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewmodel.isVerified() ? View.VISIBLE : View.GONE}"
                     app:cardCornerRadius="@dimen/profile_user_image_radius">
 
                     <androidx.cardview.widget.CardView
@@ -175,7 +173,7 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:scaleType="centerCrop"
-                            app:imageWithGlide="@{viewmodel.userPhotoUrl}"
+                            app:imageForProfileWithGlide="@{viewmodel.userPhotoUrl}"
                             app:srcCompat="@color/colorPrimary"
                             tools:ignore="ContentDescription" />
 
@@ -191,7 +189,7 @@
                     android:fontFamily="@font/helvetica_medium"
                     android:text="@{viewmodel.userName}"
                     android:textColor="@color/specialTextColor"
-                    android:visibility="@{viewmodel.userName!=null ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{TextUtils.isEmpty(viewmodel.userName) ? View.GONE : View.VISIBLE}"
                     tools:text="aboni" />
 
                 <TextView
@@ -203,7 +201,7 @@
                     android:fontFamily="@font/helvetica_medium"
                     android:text="@{viewmodel.email}"
                     android:textColor="@color/specialTextColor"
-                    android:visibility="@{viewmodel.email!=null ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{TextUtils.isEmpty(viewmodel.emailDisplay) ? View.GONE : View.VISIBLE}"
                     tools:text="abo@mail.ru" />
 
                 <TextView
@@ -217,7 +215,7 @@
                     android:gravity="center"
                     android:text="@string/we_send_verification"
                     android:textColor="@color/specialTextColor"
-                    android:visibility="@{viewmodel.isVerified() ? View.GONE : View.VISIBLE}" />
+                    android:visibility="@{viewmodel.isAnonymousButVerified ? View.GONE : View.VISIBLE}" />
             </LinearLayout>
 
             <LinearLayout
@@ -237,7 +235,7 @@
                     android:text="@string/settings"
                     android:textAllCaps="true"
                     android:textColor="@color/thirdTextColor"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/normal_text_sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -249,13 +247,12 @@
                     <RelativeLayout
                         android:id="@+id/premium_container"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/profile_container_height"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
                         android:onClick="@{()->profileFragment.navigateToPremiumFragment()}"
-                        android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                        android:paddingVertical="@dimen/button_padding_normal_vertically">
+                        android:paddingHorizontal="@dimen/activity_horizontal_margin">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -285,13 +282,12 @@
                     <RelativeLayout
                         android:id="@+id/language_of_the_app"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/profile_container_height"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
                         android:onClick="@{()->profileFragment.navigateToChangeAppLanguage()}"
-                        android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                        android:paddingVertical="@dimen/button_padding_normal_vertically">
+                        android:paddingHorizontal="@dimen/activity_horizontal_margin">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -318,15 +314,78 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/change_password_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/profile_container_height"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="@{()->profileFragment.onChangePassword()}"
+                        android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                        android:visibility="@{viewmodel.isVerified ? View.VISIBLE : View.GONE}">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/helvetica_roman"
+                            android:text="@string/change_password"
+                            android:textColor="@color/secondTextColor"
+                            android:textSize="@dimen/profile_left_side_sp"
+                            tools:ignore="RelativeOverlap" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:srcCompat="@drawable/ic_arrow_right"
+                            app:tint="@color/secondTextColor"
+                            tools:ignore="ContentDescription" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/send_confirmation_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/profile_container_height"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="@{()->viewmodel.sendVerificationEmail()}"
+                        android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                        android:visibility="@{viewmodel.isAnonymousButVerified ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/helvetica_roman"
+                            android:text="@string/send_confirmation"
+                            android:textColor="@color/secondTextColor"
+                            android:textSize="@dimen/profile_left_side_sp"
+                            tools:ignore="RelativeOverlap" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:srcCompat="@drawable/ic_arrow_right"
+                            app:tint="@color/secondTextColor"
+                            tools:ignore="ContentDescription" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
                         android:id="@+id/contact_us_container"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/profile_container_height"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
                         android:onClick="@{()->profileFragment.onClickContactUs()}"
-                        android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                        android:paddingVertical="@dimen/button_padding_normal_vertically">
+                        android:paddingHorizontal="@dimen/activity_horizontal_margin">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -352,13 +411,12 @@
                     <RelativeLayout
                         android:id="@+id/logout_container"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/profile_container_height"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
                         android:onClick="@{()->profileFragment.logout()}"
-                        android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                        android:paddingVertical="@dimen/button_padding_normal_vertically">
+                        android:paddingHorizontal="@dimen/activity_horizontal_margin">
 
                         <TextView
                             android:layout_width="wrap_content"

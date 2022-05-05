@@ -3,6 +3,7 @@ package abm.co.studycards.ui.in_category
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.FragmentInCategoryBinding
 import abm.co.studycards.helpers.SwipeToDeleteCallback
 import abm.co.studycards.setDefaultStatusBar
@@ -10,9 +11,12 @@ import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.fromHtml
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
+import android.content.Intent
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -21,8 +25,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import java.util.*
+
 
 @AndroidEntryPoint
 class InCategoryFragment :
@@ -33,12 +37,20 @@ class InCategoryFragment :
     private var snackbar: Snackbar? = null
     private lateinit var textToSpeech: TextToSpeech
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        collectData()
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
     override fun initUI(savedInstanceState: Bundle?) {
         binding.inCategoryFragment = this
         initTextToSpeech()
         setToolbar()
         initFAB()
-        collectData()
         setUpRecyclerView()
     }
 
@@ -91,11 +103,23 @@ class InCategoryFragment :
     private fun initTextToSpeech() {
         textToSpeech = TextToSpeech(requireContext()) {
             if (it != TextToSpeech.ERROR) {
-                textToSpeech.language = Locale(viewModel.targetLang)
-                viewModel.isLanguageInstalled =
-                    textToSpeech.voices.contains(textToSpeech.voice)
+                viewModel.isLanguageInstalled = isLanguageAvailable(Locale(viewModel.targetLang))
             }
         }
+    }
+
+    private fun isLanguageAvailable(language: Locale): Boolean {
+        var available = false
+        when (textToSpeech.isLanguageAvailable(language)) {
+            TextToSpeech.LANG_AVAILABLE, TextToSpeech.LANG_COUNTRY_AVAILABLE, TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE -> {
+                textToSpeech.language = language
+                val voice = textToSpeech.voice
+                val features = voice.features
+                if (features != null && !features.contains(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED))
+                    available = true
+            }
+        }
+        return available
     }
 
     private fun setUpRecyclerView() {
@@ -134,6 +158,12 @@ class InCategoryFragment :
         navigate(action)
     }
 
+    private fun openDownloadTTSDialog(){
+        val installIntent = Intent()
+        installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
+        startActivity(installIntent)
+    }
+
     fun onFloatingActionWordClick() {
         val action =
             InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
@@ -156,9 +186,10 @@ class InCategoryFragment :
 
     private fun onAudioClicked(word: Word) {
         if (!viewModel.isLanguageInstalled) {
-            toast("Occurred some problem with audio, it seems you don't have the language to speech")
+            toast(getString(R.string.you_do_n_have_language_to_speech))
+            openDownloadTTSDialog()
         } else {
-            val newText = word.translations.joinToString(", ")
+            val newText = word.translationsToString()
             textToSpeech.speak(
                 newText,
                 TextToSpeech.QUEUE_FLUSH,

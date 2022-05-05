@@ -4,17 +4,13 @@ import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemMatchingCardBinding
-import abm.co.studycards.util.Constants.TAG
 import abm.co.studycards.util.changeBackgroundChangesAndFlip
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
-import android.graphics.Color
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 

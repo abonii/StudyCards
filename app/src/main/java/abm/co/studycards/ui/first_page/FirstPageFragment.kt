@@ -11,6 +11,9 @@ import abm.co.studycards.util.navigate
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -21,6 +24,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class FirstPageFragment :
     BaseBindingFragment<FragmentFirstPageBinding>(R.layout.fragment_first_page) {
+
+    private val viewModel: LoginViewModel by viewModels()
 
     private var launchSomeActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -33,14 +38,24 @@ class FirstPageFragment :
                 } catch (e: ApiException) {
                     toast("error " + e.message)
                 }
-            }else
+            } else
                 viewModel.setLoading(false)
         }
 
-    private val viewModel: LoginViewModel by viewModels()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        collectData()
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
 
     override fun initUI(savedInstanceState: Bundle?) = binding.run {
         viewmodel = viewModel
+    }
+
+    fun collectData() {
         launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.sharedFlow.collect { eventChannel ->
                 when (eventChannel) {

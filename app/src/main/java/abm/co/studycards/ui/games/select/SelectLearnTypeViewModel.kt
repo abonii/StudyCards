@@ -4,7 +4,7 @@ import abm.co.studycards.R
 import abm.co.studycards.data.model.LearnOrKnown
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.util.Constants
+import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.base.BaseViewModel
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
@@ -12,22 +12,21 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Named
 
 
 @HiltViewModel
 class SelectLearnTypeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    @Named(Constants.CATEGORIES_REF) val categoriesDbRef: DatabaseReference,
+    private val firebaseRepository: ServerCloudRepository
 ) : BaseViewModel() {
     val category = savedStateHandle.get<Category>("category")!!
+    val categoriesDbRef = firebaseRepository.getCategoriesReference()
     private val currentCategory = categoriesDbRef.child(category.id).child("words")
     val categoryName = category.mainName
     var undefinedWordsListLive = MutableLiveData<MutableList<Word>>()

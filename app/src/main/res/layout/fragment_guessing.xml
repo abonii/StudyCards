@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/background"
-            android:theme="@style/OverFlow"
             android:elevation="@dimen/toolbar_elevation">
 
             <TextView

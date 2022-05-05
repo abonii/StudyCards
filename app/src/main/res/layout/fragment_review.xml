@@ -15,8 +15,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:background="@color/background"
-            android:elevation="@dimen/toolbar_elevation"
-            android:theme="@style/OverFlow">
+            android:elevation="@dimen/toolbar_elevation">
 
             <TextView
                 android:id="@+id/folder_name"

@@ -8,7 +8,9 @@ import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -24,11 +26,19 @@ class AddYourselfFragment :
     private var wordsAdapter: ExploreWordsForSelectingAdapter? = null
     private val viewModel: AddYourselfViewModel by viewModels()
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        collectData()
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
     override fun initUI(savedInstanceState: Bundle?) {
         binding.fragment = this
         binding.viewmodel = viewModel
         setToolbarAndStatusBar()
-        collectData()
         setUpRecyclerView()
     }
 

@@ -7,20 +7,21 @@
         android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
         android:layout_marginVertical="4dp"
+        android:padding="7dp"
         app:cardBackgroundColor="@color/colorPrimary"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="22dp"
         app:cardElevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp">
 
             <ImageView
                 android:id="@+id/image"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="@dimen/language_image_size"
+                android:layout_height="@dimen/language_image_size"
                 android:layout_marginVertical="7dp"
                 android:src="@drawable/flag_china"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -32,9 +33,9 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/layout_recycler_margin"
                 android:fontFamily="@font/helvetica_roman"
-                android:text="China"
+                tools:text="China"
                 android:textColor="@color/textColor"
                 android:textSize="@dimen/normal_text_sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -43,10 +44,12 @@
 
             <CheckBox
                 android:id="@+id/checkbox"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="10dp"
+                android:layout_width="@dimen/language_image_size"
+                android:layout_height="@dimen/language_image_size"
                 android:button="@drawable/custom_checkbox"
+                android:buttonTint="@color/colorPrimary"
+                android:background="@android:color/transparent"
+                android:clickable="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

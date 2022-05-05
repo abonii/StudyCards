@@ -12,7 +12,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -48,47 +47,6 @@ fun Number.px(): Int {
 fun Number.dp(): Int {
     return (this.toInt() / Resources.getSystem().displayMetrics.density).toInt()
 }
-
-//fun Number.sp(): Int {
-//    return (this.toInt() / Resources.getSystem().displayMetrics.density).toInt()
-//}
-
-//fun SearchView.setTypeFace(font: Typeface?) {
-//    val searchText = this.findViewById<TextView>(androidx.appcompat.R.id.search_src_text)
-//    searchText.apply {
-//        setTextColor(ContextCompat.getColor(this.context, R.color.textColor))
-//        gravity = Gravity.BOTTOM
-//        typeface = font
-//    }
-//}
-
-//fun ImageView.setImageWithGlide(url: String) {
-//    Glide.with(this.context)
-//        .load(url)
-//        .placeholder(R.drawable.ic_image)
-//        .into(this)
-//}
-
-//fun View.setNewWidthAndHeightForView(newWidth: Int, newHeight: Int) {
-//    this.apply {
-//        layoutParams = layoutParams.apply {
-//            width = newWidth
-//            height = newHeight
-//        }
-//    }
-//}
-
-//fun View.setNewHeightForView(newHeight: Int) {
-//    this.apply {
-//        layoutParams = layoutParams.apply {
-//            height = newHeight
-//        }
-//    }
-//}
-
-//fun Fragment.getMyColor(id: Int): Int {
-//    return resources.getColor(id, null)
-//}
 
 fun View.getMyColor(id: Int): Int {
     return resources.getColor(id, null)
@@ -136,22 +94,6 @@ fun View.flipOutCard(): AnimatorSet {
     return flipInAnimationSet
 }
 
-fun View.changeBackgroundChangesAndFlip(
-    color: Int,
-    currentColor: Int = Color.TRANSPARENT,
-    duration: Long = 400
-): ObjectAnimator {
-    val backgroundColorAnimator = ObjectAnimator.ofObject(
-        this,
-        "backgroundColor",
-        ArgbEvaluator(),
-        currentColor,
-        color
-    )
-    backgroundColorAnimator.duration = duration
-    backgroundColorAnimator.start()
-    return backgroundColorAnimator
-}
 fun CardView.changeBackgroundChangesAndFlip(
     color: Int,
     currentColor: Int = this.getMyColor(R.color.background),
@@ -180,19 +122,6 @@ fun Context.getProgressBarDrawable(): Drawable {
 
     return drawable
 }
-
-//fun View?.setClickableForAllChildren(isIt: Boolean) {
-//    if (this != null) {
-//        this.isClickable = isIt
-//        if (this is EditText)
-//            this.isCursorVisible = isIt
-//        if (this is ViewGroup) {
-//            for (i in 0 until this.childCount) {
-//                this.getChildAt(i).setClickableForAllChildren(isIt)
-//            }
-//        }
-//    }
-//}
 
 @Suppress("DEPRECATION")
 fun String?.fromHtml(): CharSequence {
@@ -296,3 +225,4 @@ inline fun Fragment.launchAndRepeatWithViewLifecycle(
         }
     }
 }
+

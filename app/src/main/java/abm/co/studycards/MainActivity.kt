@@ -137,27 +137,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         }
     }
 
-//    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
-//        if (event != null) {
-//            if (event.action == MotionEvent.ACTION_DOWN) {
-//                val v: View? = currentFocus
-//                if (v is EditText) {
-//                    val outRect = Rect()
-//                    v.getGlobalVisibleRect(outRect)
-//                    if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
-//                        v.clearFocus()
-//                        val imm: InputMethodManager? =
-//                            getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?
-//                        imm?.hideSoftInputFromWindow(v.getWindowToken(), 0)
-//                    }
-//                }
-//            }
-//        }
-//        return super.dispatchTouchEvent(event)
-//    }
-
-    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
-        if (event?.action == MotionEvent.ACTION_DOWN) {
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev?.action == MotionEvent.ACTION_DOWN) {
             /**
              * It gets into the above IF-BLOCK if anywhere the screen is touched.
              */
@@ -171,7 +152,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                  */
                 val outRect = Rect()
                 v.getGlobalVisibleRect(outRect)
-                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
                     v.clearFocus()
                     val imm =
                         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -179,7 +160,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                 }
             }
         }
-        return super.dispatchTouchEvent(event)
+        return super.dispatchTouchEvent(ev)
     }
 
 }

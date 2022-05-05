@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 class LanguageAdapter(
-    val context: Context,
     val listener: OnClickWithPosition,
     val isTargetLanguage: Boolean
 ) : RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder>() {
@@ -29,7 +28,7 @@ class LanguageAdapter(
 
         init {
             binding.root.setOnClickListener {
-                listener.onClickWithPosition(items[absoluteAdapterPosition], isTargetLanguage)
+                listener.onClickWithCode(items[absoluteAdapterPosition], isTargetLanguage)
                 currentItemCard = binding.item
                 changeSelectedPosition()
                 lastItemCard = currentItemCard
@@ -37,12 +36,12 @@ class LanguageAdapter(
         }
 
         fun bind(currentItem: Language) {
-            binding.apply {
-                item.apply {
+            binding.run {
+                item.run {
                     text = currentItem.getLanguageName(root.context)
                 }
                 image.setImageDrawable(
-                    currentItem.getDrawable(context)
+                    currentItem.getDrawable(binding.root.context)
                 )
             }
         }
@@ -67,11 +66,11 @@ class LanguageAdapter(
         }
 
         fun defaultCardStroke(view: TextView = binding.item) {
-            view.setTextColor(ContextCompat.getColor(context, R.color.textColor))
+            view.setTextColor(ContextCompat.getColor(view.context, R.color.textColor))
         }
 
         fun selectedCardStroke() {
-            binding.item.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
+            binding.item.setTextColor(ContextCompat.getColor(binding.root.context, R.color.colorPrimaryDark))
         }
     }
 
@@ -99,7 +98,7 @@ class LanguageAdapter(
     override fun getItemCount() = items.size
 
     interface OnClickWithPosition {
-        fun onClickWithPosition(lang: Language, isTargetLanguage: Boolean)
+        fun onClickWithCode(lang: Language, isTargetLanguage: Boolean)
     }
 
 }

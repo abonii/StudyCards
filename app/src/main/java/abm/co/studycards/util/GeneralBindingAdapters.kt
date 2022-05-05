@@ -29,12 +29,9 @@ object GeneralBindingAdapters {
     }
 
     @JvmStatic
-    @BindingAdapter("app:imageWithGlide")
-    fun ImageView.setImageWithGlide(url: Uri?) {
-        if (url != null) {
-            Glide.with(context)
-                .load(url)
-                .into(this)
-        }
+    @BindingAdapter("app:imageForProfileWithGlide")
+    fun ImageView.setProfileImageWithGlide(url: Uri?) {
+        Glide.with(context).load(url ?: R.drawable.ic_profile).into(this)
+
     }
 }

@@ -57,7 +57,7 @@
     <string name="matching">Matching</string>
     <string name="pairing">Pairing</string>
     <string name="guessing">Guessing</string>
-    <string name="cancel" >Cancel</string>
+    <string name="cancel">Cancel</string>
     <string name="arrow">Arrow</string>
 
     <string name="upper_doubt">DOUBTED</string>
@@ -115,6 +115,10 @@
     <string name="error_occurred">Error occurred</string>
     <string name="socket_timeout_exception">Socket time out exception</string>
     <string name="some_problems_occurred">Some problems occurred</string>
+    <string name="password_successfully_changed">Password Successfully Modified</string>
+    <string name="password_unsuccessfully_changed">Password not changed</string>
+    <string name="error_wrong_password">Wrong Password</string>
+    <string name="something_went_wrong">Something went wrong. Please try again later</string>
     <string name="translated_with_oxford" translatable="false">Translated with Oxford Dictionaries API</string>
     <string name="translated_with_yandex" translatable="false">Translated with Yandex Translate API</string>
 
@@ -189,5 +193,24 @@
     <string name="sign_up">Sign up</string>
     <string name="image_url">Image URL</string>
     <string name="add_example">Tap to add example</string>
+    <string name="change_password">Change password</string>
+    <string name="current_password">Current Password</string>
+    <string name="send_confirmation">Send confirmation</string>
+    <string name="error_invalid_email">Invalid email</string>
+    <string name="error_user_not_found">User not found</string>
+    <string name="back_click_again_to_exit">Press the back button again to go back</string>
+    <string name="you_do_n_have_language_to_speech">You don\'t have the language to speech, download it please</string>
+    <string name="error_user_disabled">User disabled</string>
+    <string name="erro_invalid_credential">"Wrong email or password "</string>
+    <string name="error_email_already_in_use">Email already in use</string>
+    <string name="error_too_many_requests">Too many requests</string>
+    <string name="error_account_exists_with_diff_credential">Account exists with different credential</string>
+    <string name="error_account_already_linked">Account already linked</string>
+    <string name="error_network_failed">Network request failed</string>
+    <string name="error_weak_password">Weak password</string>
+    <string name="remove_this_category">Remove this set</string>
+    <string name="recently_selected_languages">Recently selected languages</string>
+    <string name="all_languages">All languages</string>
+    <string name="u_don_t_selected_word">You didn\'t select any words. Please select one.</string>
     <!--    <string name="agree_with_privacy_policy"><![CDATA[By joining, you agree to Study Cards\'s <a href="https://www.freeprivacypolicy.com/live/c663b277–554d-41b6-aebd-dfc34b059928">Terms of Service</a> & Privacy Policy]]></string>-->
 </resources>

@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.google.firebase.auth.FirebaseAuth
 
 abstract class BaseActivity : AppCompatActivity(), IResourcesIDListener {
 

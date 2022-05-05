@@ -11,11 +11,14 @@ import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -33,11 +36,32 @@ class AddEditWordFragment :
 
     private val viewModel: AddEditWordViewModel by viewModels()
 
+    private val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (viewModel.backPressedTime + 2000 > System.currentTimeMillis()) {
+                findNavController().popBackStack()
+                isEnabled = false
+            } else {
+                toast(getString(R.string.back_click_again_to_exit))
+            }
+            viewModel.backPressedTime = System.currentTimeMillis()
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        collectData()
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
     override fun initUI(savedInstanceState: Bundle?) {
         setToolbar()
         initBindings()
-        collectData()
         setResultListener()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     private fun setToolbar() {
@@ -69,6 +93,7 @@ class AddEditWordFragment :
                     AddEditWordEventChannel.ShakeCategory -> {
                         shakeView(binding.category)
                     }
+
                     is AddEditWordEventChannel.ChangeImageVisibility -> {
                         if (it.enabled && !binding.wordImageContainer.isVisible) {
                             binding.containerLayout.animate().translationY(

@@ -21,7 +21,7 @@
 	<dimen name="first_page_btn_sp">13.6sp</dimen>
 	<dimen name="button_text_sp">13.6sp</dimen>
 	<dimen name="big_text_sp">22.4sp</dimen>
-	<dimen name="profile_left_side_sp">10.4sp</dimen>
+	<dimen name="profile_left_side_sp">12sp</dimen>
 	<dimen name="normal_text_sp">12.8sp</dimen>
 	<dimen name="ic_default_dp">19.2dp</dimen>
 	<dimen name="ic_google_dp">22.4dp</dimen>
@@ -39,4 +39,5 @@
 	<dimen name="edit_text_category_height">76dp</dimen>
 	<dimen name="button_padding_normal_vertically">14.4dp</dimen>
 	<dimen name="profile_user_image_size">80dp</dimen>
+	<dimen name="profile_container_height">48dp</dimen>
 </resources>
