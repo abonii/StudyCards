@@ -3,7 +3,6 @@ package abm.co.studycards.data.network
 import abm.co.studycards.R
 import abm.co.studycards.data.ErrorStatus
 import abm.co.studycards.data.ResultWrapper
-import abm.co.studycards.util.core.App
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -22,9 +21,8 @@ suspend fun <T> safeApiCall(
             when (throwable) {
                 is UnknownHostException -> {
                     ResultWrapper.Error(
-                        ErrorStatus.NO_CONNECTION, null, App.instance.getString(
-                            R.string.no_internet_connection
-                        )
+                        ErrorStatus.NO_CONNECTION, null,
+                        errorRes = R.string.no_internet_connection
                     )
                 }
                 is HttpException -> {
@@ -39,7 +37,7 @@ suspend fun <T> safeApiCall(
                     ResultWrapper.Error(
                         ErrorStatus.TIMEOUT,
                         null,
-                        App.instance.getString(R.string.socket_timeout_exception)
+                        errorRes = R.string.socket_timeout_exception
                     )
                 }
                 else -> {

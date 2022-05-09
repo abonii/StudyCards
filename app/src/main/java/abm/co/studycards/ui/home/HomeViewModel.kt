@@ -5,7 +5,8 @@ import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.core.App
+import abm.co.studycards.util.firebaseError
+import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -62,13 +63,13 @@ class HomeViewModel @Inject constructor(
                         _stateFlow.value = CategoryUiState.Success(items.take(500))
                     } else {
                         _stateFlow.value =
-                            CategoryUiState.Error(App.instance.getString(R.string.empty_home_fragment))
+                            CategoryUiState.Error(R.string.empty_home_fragment)
                     }
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                _stateFlow.value = CategoryUiState.Error(error.message)
+                _stateFlow.value = CategoryUiState.Error(firebaseError(error.code))
             }
         })
     }
@@ -91,5 +92,5 @@ class HomeViewModel @Inject constructor(
 sealed class CategoryUiState {
     data class Success(val value: List<Category>) : CategoryUiState()
     object Loading : CategoryUiState()
-    data class Error(val msg: String) : CategoryUiState()
+    data class Error(@StringRes val msg: Int) : CategoryUiState()
 }

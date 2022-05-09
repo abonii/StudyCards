@@ -7,6 +7,8 @@ import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.Constants.WORDS_REF
 import abm.co.studycards.util.base.BaseViewModel
+import abm.co.studycards.util.firebaseError
+import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
@@ -41,7 +43,7 @@ class AddYourselfViewModel @Inject constructor(
 
     var category = savedStateHandle.get<Category>("category")!!
 
-    private val selectedWords: MutableList<WordX> = ArrayList()
+    val selectedWords: MutableList<WordX> = ArrayList()
 
     fun isSelectedAllWords() = selectedWords.count { it.isChecked } == selectedWords.size
 
@@ -49,7 +51,7 @@ class AddYourselfViewModel @Inject constructor(
         val wordsRef = exploreDbRef.child(CATEGORIES_REF).child(category.id).child(WORDS_REF)
 
         viewModelScope.launch(dispatcher) {
-            wordsRef.addValueEventListener(object : ValueEventListener {
+            wordsRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     selectedWords.clear()
                     snapshot.children.forEach {
@@ -59,17 +61,17 @@ class AddYourselfViewModel @Inject constructor(
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    _stateFlow.value = AddYourselfUiState.Error(error.message)
+                    _stateFlow.value = AddYourselfUiState.Error(firebaseError(error.code))
                 }
             })
         }
     }
 
-    fun checkAllWords(isChecked: Boolean) {
+    fun checkAllWords() {
         viewModelScope.launch(dispatcher) {
-            selectedWords.forEach { it.isChecked = isChecked }
+            _isAllSelected.value = !_isAllSelected.value
+            selectedWords.forEach { it.isChecked = _isAllSelected.value }
         }
-        _isAllSelected.value = isChecked
     }
 
     fun onAddClicked() {
@@ -89,7 +91,7 @@ class AddYourselfViewModel @Inject constructor(
 sealed class AddYourselfUiState {
     data class Success(val value: List<WordX>) : AddYourselfUiState()
     object Loading : AddYourselfUiState()
-    data class Error(val msg: String) : AddYourselfUiState()
+    data class Error(@StringRes val msg: Int) : AddYourselfUiState()
 }
 
 sealed class AddYourselfEventChannel {

@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardBackgroundColor="@android:color/transparent"
-        app:cardCornerRadius="6dp"
+        app:cardCornerRadius="@dimen/default_6dp"
         app:cardElevation="0dp">
 
         <com.google.android.material.card.MaterialCardView
@@ -15,8 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/activity_horizontal_margin"
-            app:cardCornerRadius="6dp"
-            app:cardElevation="10dp">
+            app:cardCornerRadius="@dimen/default_6dp"
+            app:cardElevation="@dimen/default_10dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -30,16 +30,15 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="@dimen/default_16dp"
+                    android:layout_marginTop="@dimen/default_20dp"
                     android:background="@drawable/border_color_green"
                     android:fontFamily="@font/helvetica_bold"
-                    android:padding="8dp"
+                    android:padding="@dimen/default_8dp"
                     android:rotation="-20"
                     android:text="@string/know"
                     android:textColor="@color/swiping_know"
-                    android:textSize="@dimen/normal_text_sp"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/bigger_text_sp" />
 
                 <TextView
                     android:id="@+id/bottom_overlay"
@@ -47,14 +46,13 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginTop="@dimen/default_30dp"
                     android:background="@drawable/border_color_yellow"
                     android:fontFamily="@font/helvetica_bold"
-                    android:padding="8dp"
+                    android:padding="@dimen/default_8dp"
                     android:text="@string/uncertain_lower"
                     android:textColor="@color/swiping_doubted"
-                    android:textSize="@dimen/normal_text_sp"
-                    android:textStyle="bold"
+                    android:textSize="@dimen/bigger_text_sp"
                     app:drawableTint="@color/colorPrimary" />
 
                 <TextView
@@ -63,15 +61,15 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginTop="@dimen/default_20dp"
+                    android:layout_marginEnd="@dimen/default_16dp"
                     android:background="@drawable/border_color_red"
                     android:fontFamily="@font/helvetica_bold"
-                    android:padding="8dp"
+                    android:padding="@dimen/default_8dp"
                     android:rotation="20"
                     android:text="@string/unknown_lower"
                     android:textColor="@color/swiping_n_know"
-                    android:textSize="@dimen/normal_text_sp" />
+                    android:textSize="@dimen/bigger_text_sp" />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/word_image_container"
@@ -80,8 +78,8 @@
                     android:layout_above="@id/word"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
-                    android:visibility="invisible"
-                    app:cardCornerRadius="7dp">
+                    android:visibility="gone"
+                    app:cardCornerRadius="@dimen/default_7dp">
 
                     <ImageView
                         android:id="@+id/word_image"
@@ -89,7 +87,7 @@
                         android:layout_height="@dimen/square_word_image_height"
                         android:layout_gravity="center"
                         android:contentDescription="@string/image"
-                        android:scaleType="centerCrop"
+                        android:scaleType="fitXY"
                         tools:srcCompat="@drawable/ic_image" />
                 </androidx.cardview.widget.CardView>
 
@@ -100,10 +98,10 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@id/word"
-                    android:padding="6dp"
+                    android:padding="@dimen/default_6dp"
                     app:srcCompat="@drawable/ic_play"
                     app:tint="@color/colorPrimary"
-                    tools:ignore="ContentDescription" />
+                    android:contentDescription="@string/play" />
 
                 <TextView
                     android:id="@+id/word"
@@ -115,7 +113,7 @@
                     android:maxLines="6"
                     android:paddingVertical="@dimen/activity_vertical_margin"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/big_text_sp"
+                    android:textSize="@dimen/bigger_text_sp"
                     tools:text="order" />
 
                 <TextView
@@ -129,7 +127,7 @@
                     android:fontFamily="@font/helvetica_roman"
                     android:maxLines="5"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/normal_text_sp"
+                    android:textSize="@dimen/bigger_text_sp"
                     android:visibility="invisible" />
 
             </RelativeLayout>

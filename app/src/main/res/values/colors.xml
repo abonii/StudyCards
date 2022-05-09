@@ -39,6 +39,7 @@
     <color name="green_light">#A6CDB0</color>
 
     <color name="blue_light_status">#A8C3EE</color>
+    <color name="ic_colors">#151515</color>
     <color name="select_languages_card_background">#E6F6FF</color>
 
     <array name="colors">

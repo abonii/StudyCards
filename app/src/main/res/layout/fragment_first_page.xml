@@ -135,9 +135,9 @@
                 android:focusable="@{!viewmodel.loading}"
                 android:minHeight="@dimen/btn_min_height"
                 android:onClick="@{()->viewmodel.navigateToEmailFragment()}"
-                app:cardCornerRadius="4dp"
+                app:cardCornerRadius="@dimen/default_4dp"
                 app:strokeColor="@color/grey"
-                app:strokeWidth="1dp">
+                app:strokeWidth="@dimen/default_1dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -165,7 +165,7 @@
                 android:minHeight="@dimen/btn_min_height"
                 android:onClick="@{()->viewmodel.loginViaGoogle()}"
                 app:cardBackgroundColor="@color/colorPrimary"
-                app:cardCornerRadius="4dp">
+                app:cardCornerRadius="@dimen/default_4dp">
 
                 <TextView
                     android:layout_width="match_parent"

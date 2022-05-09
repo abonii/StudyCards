@@ -28,7 +28,7 @@ class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.f
     private lateinit var adapter: OptionsAdapter
 
     override fun initUI(savedInstanceState: Bundle?) {
-        (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
+        (activity as MainActivity).setToolbar(binding.toolbar)
         adapter = OptionsAdapter(::onClick)
         binding.run {
             word.text = viewModel.getWord().name

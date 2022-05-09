@@ -118,7 +118,7 @@
             android:layout_marginBottom="@dimen/fab_margin"
             android:backgroundTint="@color/colorPrimary"
             android:contentDescription="@string/add_word"
-            android:drawableLeft="@drawable/ic_note"
+            android:drawableLeft="@drawable/ic_vocabulary_tab"
             android:drawableTint="@color/white"
             android:onClick="@{()->homefragment.onFloatingActionWordClick()}"
             android:text="@string/create_word"
@@ -175,21 +175,6 @@
 
                 <include layout="@layout/item_category_shimmer" />
 
-                <include layout="@layout/item_category_shimmer" />
-
-                <include layout="@layout/item_category_shimmer" />
-
-                <include layout="@layout/item_category_shimmer" />
-
-                <include layout="@layout/item_category_shimmer" />
-
-                <include layout="@layout/item_category_shimmer" />
-
-                <include layout="@layout/item_category_shimmer" />
-
-                <include layout="@layout/item_category_shimmer" />
-
-                <include layout="@layout/item_category_shimmer" />
             </LinearLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
 

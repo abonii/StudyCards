@@ -6,7 +6,6 @@ import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.CAN_TRANSLATE_TIME_EVERY_DAY
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.core.App
 import abm.co.studycards.util.firebaseError
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -41,24 +40,28 @@ class ProfileViewModel @Inject constructor(
     val userName = MutableStateFlow(currentUser?.displayName ?: "")
     val userPhotoUrl = MutableStateFlow(currentUser?.photoUrl)
 
-    private val _emailError = MutableStateFlow<String?>(null)
+    private val _emailError = MutableStateFlow<Int?>(null)
     val emailError = _emailError.asStateFlow()
 
-    private val _passwordError = MutableStateFlow<String?>(null)
+    private val _passwordError = MutableStateFlow<Int?>(null)
     val passwordError = _passwordError.asStateFlow()
 
     val isAnonymous = MutableStateFlow(currentUser?.isAnonymous == true)
 
     val isVerified = MutableStateFlow(currentUser?.isEmailVerified == true)
 
-    val isAnonymousButVerified =
-        MutableStateFlow(currentUser?.isAnonymous == true || currentUser?.isEmailVerified == true)
+    val isEmailAuth = MutableStateFlow(currentUser?.isEmailVerified == true)
+
+    val isAnonymousOrVerified =
+        MutableStateFlow(currentUser?.isAnonymous == true
+                || currentUser?.isEmailVerified == true)
 
     val translationCount = MutableStateFlow("0")
 
     init {
         FirebaseAuth.getInstance().useAppLanguage()
-        firebaseRepository.getUserReference().addValueEventListener(object : ValueEventListener {
+        firebaseRepository.getUserReference()
+            .addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 viewModelScope.launch(Dispatchers.IO) {
                     if (snapshot.child("name").exists()) {
@@ -95,12 +98,13 @@ class ProfileViewModel @Inject constructor(
     private fun updateUser() {
         viewModelScope.launch(Dispatchers.IO) {
             if (currentUser != null) {
+                currentUser.reload()
                 userName.value = currentUser.displayName ?: ""
                 emailDisplay.value = currentUser.email ?: ""
                 userPhotoUrl.value = currentUser.photoUrl
                 isAnonymous.value = currentUser.isAnonymous
                 isVerified.value = currentUser.isEmailVerified
-                isAnonymousButVerified.value =
+                isAnonymousOrVerified.value =
                     isAnonymous.value == true || isVerified.value == true
             }
         }
@@ -122,15 +126,15 @@ class ProfileViewModel @Inject constructor(
         val email = this.email.value.trim()
         val password = this.password.trim()
         if (email.isBlank()) {
-            _emailError.value = App.instance.getString(R.string.email_empty)
+            _emailError.value = R.string.email_empty
         } else {
             _emailError.value = null
             when {
                 password.isEmpty() -> {
-                    _passwordError.value = App.instance.getString(R.string.password_empty)
+                    _passwordError.value = R.string.password_empty
                 }
                 password.length <= 5 -> {
-                    _passwordError.value = App.instance.getString(R.string.password_length)
+                    _passwordError.value = R.string.password_length
                 }
                 else -> {
                     _passwordError.value = null

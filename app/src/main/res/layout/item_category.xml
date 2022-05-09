@@ -6,13 +6,13 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:paddingHorizontal="@dimen/activity_horizontal_margin"
-    android:paddingVertical="10dp">
+    android:paddingVertical="@dimen/default_10dp">
 
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="@dimen/default_5dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@id/play"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +27,7 @@
             android:lines="1"
             android:maxLines="1"
             android:textColor="@color/textColor"
-            android:textSize="16sp"
+            android:textSize="@dimen/default_17sp"
             tools:text="@string/profile" />
 
         <TextView
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/helvetica_ultra_light"
             android:textColor="@color/secondTextColor"
-            android:textSize="14sp"
+            android:textSize="@dimen/normal_text_sp"
             tools:text="12 words" />
     </LinearLayout>
 
@@ -44,15 +44,15 @@
         android:id="@+id/play"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginVertical="5dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginVertical="@dimen/default_5dp"
+        android:layout_marginEnd="@dimen/default_10dp"
         android:background="@drawable/dashed_button"
-        android:padding="2dp"
+        android:padding="@dimen/default_2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="H,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_play"
         app:tint="@color/colorPrimary"
-        tools:ignore="ContentDescription" />
+        android:contentDescription="@string/play" />
 </androidx.constraintlayout.widget.ConstraintLayout>

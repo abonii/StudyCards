@@ -7,6 +7,8 @@ import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.Constants.WORDS_REF
 import abm.co.studycards.util.base.BaseViewModel
+import abm.co.studycards.util.firebaseError
+import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
@@ -71,7 +73,7 @@ class InExploreViewModel @Inject constructor(
             }
 
             override fun onCancelled(error: DatabaseError) {
-                _stateFlow.value = InExploreUiState.Error(error.message)
+                _stateFlow.value = InExploreUiState.Error(firebaseError(error.code))
             }
         })
     }
@@ -81,5 +83,5 @@ class InExploreViewModel @Inject constructor(
 sealed class InExploreUiState {
     data class Success(val value: List<Word>) : InExploreUiState()
     object Loading : InExploreUiState()
-    data class Error(val msg: String) : InExploreUiState()
+    data class Error(@StringRes val msg: Int) : InExploreUiState()
 }

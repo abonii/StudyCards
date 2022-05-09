@@ -19,15 +19,15 @@ class MatchingViewHolder(
     private val isTranslatedWords: Boolean,
     clickPosition: (Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
-    private val defaultTextColor =
+    private val primaryColor =
         ContextCompat.getColor(binding.root.context, R.color.colorPrimary)
-    private val correctTextColor =
+    private val whiteColor =
         ContextCompat.getColor(binding.root.context, R.color.white)
-    private val correctBackgroundColor =
-        ContextCompat.getColor(binding.root.context, R.color.green)
-    private val defaultBackgroundColor =
+    private val itselfColor =
         ContextCompat.getColor(binding.root.context, R.color.color_itself)
-    private val selectedStrokeColor =
+    private val greenColor =
+        ContextCompat.getColor(binding.root.context, R.color.green)
+    private val redColor =
         ContextCompat.getColor(binding.root.context, R.color.red)
 
     init {
@@ -43,33 +43,50 @@ class MatchingViewHolder(
     }
 
     fun bindCorrectWord() = binding.run {
-        word.setTextColor(correctTextColor)
-        root.strokeColor = correctBackgroundColor
-        root.changeBackgroundChangesAndFlip(currentColor = defaultBackgroundColor,
-            color = correctBackgroundColor).run {
+        word.setTextColor(whiteColor)
+        card.strokeColor = greenColor
+        card.changeBackgroundChangesAndFlip(currentColor = itselfColor,
+            color = greenColor).run {
             doOnEnd {
-                disappearCards(root)
+                disappearCards(card)
             }
         }
     }
 
     fun bindDefaultWord() = binding.run {
-        root.setCardBackgroundColor(defaultBackgroundColor)
-        word.setTextColor(defaultTextColor)
-        root.strokeColor = defaultBackgroundColor
+        card.setCardBackgroundColor(itselfColor)
+        word.setTextColor(primaryColor)
+        card.strokeColor = itselfColor
+    }
+
+    private fun bindUnCorrectWord() = binding.run {
+        card.setCardBackgroundColor(itselfColor)
+        word.setTextColor(primaryColor)
+        card.strokeColor = redColor
     }
 
     fun bindSelectedWord() = binding.run {
-        root.setCardBackgroundColor(defaultBackgroundColor)
-        word.setTextColor(defaultTextColor)
-        root.strokeColor = selectedStrokeColor
+        card.setCardBackgroundColor(itselfColor)
+        word.setTextColor(primaryColor)
+        card.strokeColor = primaryColor
     }
 
     fun shakeUnCorrectWord() = binding.run {
-        bindDefaultWord()
         val shake: Animation =
-            AnimationUtils.loadAnimation(root.context, R.anim.shake)
-        root.startAnimation(shake)
+            AnimationUtils.loadAnimation(card.context, R.anim.shake)
+        card.startAnimation(shake)
+        shake.setAnimationListener(object:Animation.AnimationListener{
+            override fun onAnimationStart(p0: Animation?) {
+                bindUnCorrectWord()
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                bindDefaultWord()
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+        })
     }
 
     private fun disappearCards(card: View) {

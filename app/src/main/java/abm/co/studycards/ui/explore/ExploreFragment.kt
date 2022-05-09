@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import dagger.hilt.android.AndroidEntryPoint
@@ -79,8 +80,8 @@ class ExploreFragment : BaseBindingFragment<FragmentExploreBinding>(R.layout.fra
         parentRecyclerView.visibility = View.GONE
     }
 
-    private fun errorOccurred(value: String) = binding.run {
-        error.text = value
+    private fun errorOccurred(@StringRes value: Int) = binding.run {
+        error.text = getString(value)
         error.visibility = View.VISIBLE
         parentRecyclerView.visibility = View.GONE
         stopShimmer()

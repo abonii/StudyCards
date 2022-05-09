@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:viewportWidth="640"
     android:viewportHeight="640"
-    android:width="200dp"
-    android:height="200dp">
+    android:width="@dimen/vocabulary_tab_size"
+    android:height="@dimen/vocabulary_tab_size">
     <path
         android:pathData="M555.28 642L642 642L624.66 615.33L600.08 562L555.28 642Z"
         android:fillColor="@color/background" />

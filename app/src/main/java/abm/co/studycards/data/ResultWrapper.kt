@@ -1,5 +1,7 @@
 package abm.co.studycards.data
 
+import androidx.annotation.StringRes
+
 /**
  * A generic class that holds a value with its loading status.
  * @param <T>
@@ -9,7 +11,8 @@ sealed class ResultWrapper<out T> {
     data class Error(
         val status: ErrorStatus? = null,
         val code: Int? = null,
-        val error: String? = null
+        val error: String? = null,
+        @StringRes val errorRes: Int? = null
     ) : ResultWrapper<Nothing>()
 }
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.games.rightleft.ToRightOrLeftFragment">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -12,9 +12,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:background="@color/background"
             android:elevation="@dimen/toolbar_elevation">
 
@@ -34,23 +34,26 @@
         <com.yuyakaido.android.cardstackview.CardStackView
             android:id="@+id/card_stack"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             android:layout_below="@id/toolbar"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/default_8dp"
             tools:listitem="@layout/item_card" />
 
         <TextView
             android:id="@+id/my_left_overlay"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/toolbar"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintEnd_toStartOf="@id/my_right_overlay"
+            android:layout_marginStart="@dimen/default_30dp"
+            android:layout_marginTop="@dimen/default_30dp"
+            android:fontFamily="@font/helvetica_medium"
             android:text="@string/unknown_swipe_text"
             android:textAlignment="center"
             android:textColor="@color/swiping_n_know"
-            android:fontFamily="@font/helvetica_medium"
             android:textSize="@dimen/normal_text_sp"
             android:visibility="invisible"
             app:drawableTint="@color/swiping_n_know"
@@ -60,9 +63,10 @@
             android:id="@+id/my_bottom_overlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="@dimen/default_30dp"
             android:text="@string/uncertain_swipe_text"
             android:textAlignment="center"
             android:fontFamily="@font/helvetica_medium"
@@ -74,14 +78,16 @@
 
         <TextView
             android:id="@+id/my_right_overlay"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/toolbar"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintStart_toEndOf="@id/my_left_overlay"
+            android:layout_marginTop="@dimen/default_30dp"
             android:fontFamily="@font/helvetica_medium"
             android:textSize="@dimen/normal_text_sp"
-            android:layout_marginEnd="30dp"
+            android:layout_marginEnd="@dimen/default_30dp"
             android:text="@string/known_swipe_text"
             android:textAlignment="center"
             android:textColor="@color/swiping_know"
@@ -89,5 +95,5 @@
             app:drawableTint="@color/swiping_know"
             app:drawableTopCompat="@drawable/ic_arrow_right" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

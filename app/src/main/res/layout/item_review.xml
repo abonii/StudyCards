@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/activity_horizontal_margin"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="@dimen/default_10dp"
+    app:cardElevation="@dimen/default_4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                 android:layout_height="@dimen/square_word_image_height"
                 android:layout_gravity="center"
                 android:contentDescription="@string/image"
-                android:scaleType="centerCrop"
+                android:scaleType="fitXY"
                 tools:srcCompat="@drawable/ic_image" />
         </androidx.cardview.widget.CardView>
 
@@ -40,7 +40,7 @@
             android:paddingVertical="@dimen/activity_horizontal_margin"
             android:maxLines="7"
             android:textColor="@color/textColor"
-            android:textStyle="bold"
+            android:fontFamily="@font/helvetica_bold"
             tools:text="order" />
 
         <TextView

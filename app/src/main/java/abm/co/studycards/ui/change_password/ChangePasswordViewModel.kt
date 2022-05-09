@@ -1,15 +1,14 @@
 package abm.co.studycards.ui.change_password
 
 import abm.co.studycards.R
-import abm.co.studycards.util.Constants.TAG
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.core.App
 import abm.co.studycards.util.firebaseError
 import android.text.TextUtils
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.EmailAuthProvider
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,12 +18,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChangePasswordViewModel @Inject constructor(
-    firebaseAuth: FirebaseAuth
 ) : BaseViewModel() {
 
     var oldPassword: String = ""
     var newPassword: String = ""
-    private var user = firebaseAuth.currentUser
+    private var user = Firebase.auth.currentUser
     private var email = user?.email ?: ""
 
     private val _loading = MutableStateFlow(false)
@@ -32,10 +30,10 @@ class ChangePasswordViewModel @Inject constructor(
 
     fun changePassword() = viewModelScope.launch {
         if (TextUtils.isEmpty(oldPassword) || TextUtils.isEmpty(newPassword)) {
-            makeToast(App.instance.getString(R.string.password_empty))
+            makeToast(R.string.password_empty)
             return@launch
         } else if (newPassword.length <= 5) {
-            makeToast(App.instance.getString(R.string.password_length))
+            makeToast(R.string.password_length)
             return@launch
         }
         _loading.value = true
@@ -44,7 +42,7 @@ class ChangePasswordViewModel @Inject constructor(
             if (task.isSuccessful) {
                 user?.updatePassword(newPassword)?.addOnCompleteListener {
                     if (task.isSuccessful) {
-                        makeToast(App.instance.getString(R.string.password_successfully_changed))
+                        makeToast(R.string.password_successfully_changed)
                     } else {
                         makeToast(firebaseError(it.exception))
                     }

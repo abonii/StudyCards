@@ -45,9 +45,10 @@ class ExploreWordsForSelectingAdapter(private val onChecked: (WordX) -> Unit) :
         viewType: Int
     ): ExploreWordForSelectingViewHolder {
         return ExploreWordForSelectingViewHolder.create(parent) { pos, checked ->
-            onChecked(getItem(pos).apply {
+            val item = getItem(pos).apply {
                 isChecked = checked
-            })
+            }
+            onChecked(item)
         }
     }
 

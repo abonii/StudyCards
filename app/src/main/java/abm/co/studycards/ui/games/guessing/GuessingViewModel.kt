@@ -54,10 +54,10 @@ class GuessingViewModel @Inject constructor(
         val calendar = Calendar.getInstance()
         when (repeatCount) {
             0 -> {
-                calendar.add(Calendar.HOUR_OF_DAY, 1)
+                calendar.add(Calendar.HOUR_OF_DAY, 12)
             }
             1 -> {
-                calendar.add(Calendar.HOUR_OF_DAY, 2)
+                calendar.add(Calendar.DAY_OF_MONTH, 1)
             }
             else -> {
                 calendar.add(Calendar.HOUR_OF_DAY, 3)

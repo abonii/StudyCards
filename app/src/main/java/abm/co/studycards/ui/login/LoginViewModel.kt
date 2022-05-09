@@ -2,15 +2,15 @@ package abm.co.studycards.ui.login
 
 import abm.co.studycards.R
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.core.App
 import abm.co.studycards.util.firebaseError
 import android.content.Intent
 import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -25,15 +25,15 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val googleSignInClient: GoogleSignInClient,
-    private val firebaseAuthInstance: FirebaseAuth
 ) : BaseViewModel() {
 
     var email: String = ""
     var password: String = ""
 
     val dispatcher = Dispatchers.IO
+    private val firebaseAuthInstance = Firebase.auth
 
-    private val _error = MutableStateFlow<String?>(null)
+    private val _error = MutableStateFlow<Int?>(null)
     val error = _error.asStateFlow()
 
     private val _loading = MutableStateFlow(false)
@@ -89,10 +89,10 @@ class LoginViewModel @Inject constructor(
     fun loginViaEmail() = viewModelScope.launch(dispatcher) {
         when {
             TextUtils.isEmpty(email.trim()) -> {
-                _error.value = App.instance.getString(R.string.email_empty)
+                _error.value = R.string.email_empty
             }
             TextUtils.isEmpty(password) -> {
-                _error.value = App.instance.getString(R.string.password_empty)
+                _error.value = R.string.password_empty
             }
             else -> {
                 _loading.value = true

@@ -7,7 +7,7 @@
     android:paddingHorizontal="@dimen/activity_horizontal_margin"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
-    android:paddingVertical="6dp"
+    android:paddingVertical="@dimen/default_6dp"
     android:focusable="true"
     android:orientation="horizontal">
 
@@ -20,14 +20,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:backgroundTint="#EDF1FF"
-        app:cardCornerRadius="50dp">
+        app:cardCornerRadius="@dimen/default_25dp">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/default_50dp"
+            android:layout_height="@dimen/default_50dp"
             android:layout_gravity="center"
-            android:layout_margin="1dp"
-            app:cardCornerRadius="50dp">
+            android:layout_margin="@dimen/default_1dp"
+            app:cardCornerRadius="@dimen/default_25dp">
 
             <ImageView
                 android:id="@+id/image"
@@ -36,7 +36,7 @@
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
                 app:srcCompat="@color/colorPrimary"
-                tools:ignore="ContentDescription" />
+                android:contentDescription="@string/just_image"/>
 
         </androidx.cardview.widget.CardView>
     </androidx.cardview.widget.CardView>
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
         android:textColor="@color/textColor"
-        android:textSize="16sp"
+        android:textSize="@dimen/normal_text_sp"
         android:fontFamily="@font/helvetica_medium"
         app:layout_constraintBottom_toTopOf="@id/translation"
         tools:text="asdad"
@@ -60,9 +60,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginHorizontal="8dp"
+        android:layout_marginHorizontal="@dimen/default_8dp"
         android:gravity="start"
-        android:textSize="16sp"
+        android:textSize="@dimen/normal_text_sp"
         android:fontFamily="@font/helvetica_roman"
         android:textColor="@color/textColor"
         tools:text = "weqweq"

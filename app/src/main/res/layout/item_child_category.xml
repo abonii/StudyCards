@@ -30,7 +30,7 @@
                 android:id="@+id/outer_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="8dp"
+                app:cardCornerRadius="@dimen/default_8dp"
                 app:cardElevation="0dp">
 
                 <androidx.cardview.widget.CardView
@@ -38,16 +38,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="2dp">
+                    app:cardCornerRadius="@dimen/default_8dp"
+                    app:cardElevation="@dimen/default_2dp">
 
                     <ImageView
                         android:id="@+id/image"
-                        android:layout_width="140dp"
-                        android:layout_height="200dp"
+                        android:layout_width="@dimen/default_140dp"
+                        android:layout_height="@dimen/default_200dp"
                         android:scaleType="centerCrop"
                         app:imageWithGlide="@{item.imageUrl}"
-                        tools:ignore="ContentDescription" />
+                        android:contentDescription="@string/just_image" />
 
                 </androidx.cardview.widget.CardView>
             </androidx.cardview.widget.CardView>
@@ -62,8 +62,8 @@
                 android:lines="2"
                 android:text="@{item.mainName}"
                 android:textColor="@color/textColor"
-                android:textSize="13sp"
-                android:textStyle="bold"
+                android:textSize="@dimen/default_13sp"
+                android:fontFamily="@font/helvetica_bold"
                 tools:text="The best title" />
 
         </LinearLayout>

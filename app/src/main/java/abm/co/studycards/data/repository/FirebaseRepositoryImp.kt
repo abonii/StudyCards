@@ -10,8 +10,9 @@ import abm.co.studycards.util.Constants.SELECTED_LANGUAGES
 import abm.co.studycards.util.Constants.USERS_REF
 import abm.co.studycards.util.Constants.USER_REF
 import abm.co.studycards.util.Constants.WORDS_REF
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -26,12 +27,10 @@ import javax.inject.Named
 class FirebaseRepositoryImp @Inject constructor(
     @Named(EXPLORE_REF) private val exploreDbRef: DatabaseReference,
     @Named(CATEGORIES_REF) private val categoriesDbRef: DatabaseReference,
-    @Named(USERS_REF) var userDbRef: DatabaseReference,
-    @Named(USER_REF) var rootUserDbRef: DatabaseReference,
-    @Named(API_REF) var apiKeys: DatabaseReference,
-    override val firebaseAuth: FirebaseAuth
+    @Named(USERS_REF) private var userDbRef: DatabaseReference,
+    @Named(USER_REF) private var rootUserDbRef: DatabaseReference,
+    @Named(API_REF) private var apiKeys: DatabaseReference
 ) : ServerCloudRepository {
-
 
     private val _error = MutableSharedFlow<String>(
         extraBufferCapacity = 1,
@@ -41,7 +40,7 @@ class FirebaseRepositoryImp @Inject constructor(
 
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    override fun getCurrentUser() = firebaseAuth.currentUser
+    override fun getCurrentUser() = Firebase.auth.currentUser
 
     override suspend fun updateCategoryName(category: Category) {
         withContext(Dispatchers.IO) {
@@ -147,11 +146,11 @@ class FirebaseRepositoryImp @Inject constructor(
         }
     }
 
+    override fun getExploreReference() = this.exploreDbRef
+
     override fun getUserReference() = this.userDbRef
 
     override fun getApiReference() = this.apiKeys
 
     override fun getCategoriesReference() = this.categoriesDbRef
-
-    override fun getExploreReference() = this.exploreDbRef
 }

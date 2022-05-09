@@ -17,6 +17,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -84,9 +85,9 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
         error.visibility = View.GONE
     }
 
-    private fun errorOccurred(errorMsg: String) = binding.run {
+    private fun errorOccurred(@StringRes errorId: Int) = binding.run {
         error.visibility = View.VISIBLE
-        error.text = errorMsg
+        error.text = getStr(errorId)
         recyclerView.visibility = View.GONE
         stopShimmer()
     }
@@ -220,7 +221,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     fun navigateToSelectLanguages(isTarget: Boolean) {
         if (isFabOpen()) return
         val nav = HomeFragmentDirections
-                .actionHomeFragmentToSelectLanguageAnyWhereFragment(isTarget)
+            .actionHomeFragmentToSelectLanguageAnyWhereFragment(isTarget)
         navigate(nav)
     }
 

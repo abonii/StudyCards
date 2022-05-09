@@ -11,14 +11,15 @@ import abm.co.studycards.util.Constants.USER_ID
 import abm.co.studycards.util.Constants.USER_REF
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
 import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,10 +31,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object FirebaseModule {
-
-    @Singleton
-    @Provides
-    fun provideFirebaseAuthInstance() = FirebaseAuth.getInstance()
 
     @Singleton
     @Provides
@@ -59,16 +56,16 @@ object FirebaseModule {
 
     @Named(USER_ID)
     @Provides
-    fun provideUserId() = FirebaseAuth.getInstance().uid ?: "no-user"
+    fun provideUserId() = Firebase.auth.currentUser?.uid ?: "no-user"
 
     @Provides
     fun provideFirebaseDatabase(): FirebaseDatabase {
-        return FirebaseDatabase.getInstance()
+        return Firebase.database
     }
 
     @Provides
     @Named(API_REF)
-    fun provideApiKeys(db: FirebaseDatabase) = db.reference.child(API_REF)
+    fun provideApiKeys(db: FirebaseDatabase): DatabaseReference = db.reference.child(API_REF)
 
     @Provides
     @Named(CATEGORIES_REF)
@@ -95,6 +92,7 @@ object FirebaseModule {
             .apply { keepSynced(true) }
 
     }
+
     @Named(USER_REF)
     @Provides
     fun provideRealtimeDatabaseRootUser(
@@ -108,8 +106,10 @@ object FirebaseModule {
     fun provideRealtimeDatabaseExplore(
         db: FirebaseDatabase,
         prefs: Prefs
-    ) = db.reference.child(EXPLORE_REF).child(SETS_REF)
-        .child("${prefs.getSourceLanguage()}-${prefs.getTargetLanguage()}").apply {
-            keepSynced(true)
-        }
+    ): DatabaseReference {
+        return db.reference.child(EXPLORE_REF).child(SETS_REF)
+            .child("${prefs.getSourceLanguage()}-${prefs.getTargetLanguage()}").apply {
+                keepSynced(true)
+            }
+    }
 }

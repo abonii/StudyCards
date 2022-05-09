@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!--Languages-->
     <string name="arabic">Arabic</string>
@@ -49,7 +49,7 @@
     <string name="repeat_upper">REPEAT</string>
     <string name="one_game">One Game</string>
     <string name="ok">OK</string>
-    <string name="great_job">Great job!</string>
+    <string name="great_job">Great job! Keep it up!</string>
     <string name="add_edit_title">Create a word</string>
     <string name="image">Image</string>
     <string name="transcription">transcription</string>
@@ -115,12 +115,12 @@
     <string name="error_occurred">Error occurred</string>
     <string name="socket_timeout_exception">Socket time out exception</string>
     <string name="some_problems_occurred">Some problems occurred</string>
-    <string name="password_successfully_changed">Password Successfully Modified</string>
+    <string name="password_successfully_changed">Password changed successfully</string>
     <string name="password_unsuccessfully_changed">Password not changed</string>
     <string name="error_wrong_password">Wrong Password</string>
     <string name="something_went_wrong">Something went wrong. Please try again later</string>
-    <string name="translated_with_oxford" translatable="false">Translated with Oxford Dictionaries API</string>
-    <string name="translated_with_yandex" translatable="false">Translated with Yandex Translate API</string>
+    <string name="translated_with_oxford">Translated with Oxford Dictionaries API</string>
+    <string name="translated_with_yandex">Translated with Yandex Translate API</string>
 
     <string name="translate_count_spend">There are no more attempts left. Try it tomorrow, please.</string>
     <string name="name_translation_not_empty">The name or translation fields cannot be empty</string>
@@ -141,6 +141,16 @@
         <item quantity="one"> %d word to repeat</item>
         <item quantity="zero"> no words to repeat</item>
         <item quantity="other"> %d words to repeat</item>
+    </plurals>
+    <plurals name="repeat_time_hour">
+        <item quantity="one">in a hour</item>
+        <item quantity="zero">in a hour</item>
+        <item quantity="other"> in %d hours</item>
+    </plurals>
+    <plurals name="repeat_time_minute">
+        <item quantity="one">in a minute</item>
+        <item quantity="zero">in a minute</item>
+        <item quantity="other"> in %d minutes</item>
     </plurals>
     <string name="choose_category">Please select a category for this word.</string>
     <string name="forgot_password">Forgot password?</string>
@@ -168,16 +178,10 @@
     <string name="select_all_words">Select all words</string>
     <string name="select_words">Select words</string>
     <string name="add">Add</string>
-    <string name="empty_home_fragment">There is no sets yet. Create new one by clicking + button below</string>
-    <string name="change_target_and_native">Change target with native language</string>
+    <string name="empty_home_fragment">There is no sets of words yet. Create new one by clicking + button below</string>
+    <string name="change_target_and_native">Change target language with native language</string>
     <string name="study_cards_title">Study Cards Store</string>
-    <string name="premium_additional_description">Подписку можно отменить в любое время.</string>
-    <string name="premium_feature1">Определенное количество переводов</string>
-    <string name="premium_feature2">Обучение без рекламы</string>
-    <string name="premium_feature3">Неограниченные учебные колоды</string>
-    <string name="premium_feature1_des">Можно переводить слова, не выходя из приложения</string>
-    <string name="premium_feature2_des">наслаждайся тишиной</string>
-    <string name="premium_feature3_des">только две колоды бесплатно</string>
+    <string name="premium_feature1">You will get a certain number of word translations</string>
     <string name="just_image">Just Image</string>
     <string name="subscribe">Subscribe</string>
     <string name="empty_in_explore">The administrators still haven\'t added a single set of words.</string>
@@ -186,7 +190,7 @@
     <string name="verify_account">Verify your account</string>
     <string name="buy_translations">Buy more translations</string>
     <string name="welcome">Welcome to Study Cards!</string>
-    <string name="first_page_second_title">See how millions of rely an StudyCards to stay organized and get more done.</string>
+    <string name="first_page_second_title">Learn with the Study Cards. Play games to memorize. Repeat to fix in your memory.</string>
     <string name="continue_with_email">Continue with Email</string>
     <string name="don_t_have_account">Don\'t you have an account?</string>
     <string name="first_page_title">Learn. Play. Repeat.</string>
@@ -208,9 +212,28 @@
     <string name="error_account_already_linked">Account already linked</string>
     <string name="error_network_failed">Network request failed</string>
     <string name="error_weak_password">Weak password</string>
+    <string name="error_disconnected_from_server">The operation had to be aborted due to a network disconnect</string>
+    <string name="error_dont_have_permission">This client does not have permission to perform this         operation</string>
+    <string name="error_service_unavailable">The service is unavailable</string>
+    <string name="error_user_code">User code called from the Firebase Database runloop threw an exception</string>
+    <string name="error_network">The operation could not be performed due to a network error.</string>
+    <string name="error_write_canceled">The write was canceled locally</string>
+    <string name="error_unknown">An unknown error occurred</string>
+    <string name="error_token_expired">The supplied auth token has expired</string>
+    <string name="error_too_many_retries">The transaction had too many retries</string>
+    <string name="error_token_invalid">The supplied auth token was invalid</string>
     <string name="remove_this_category">Remove this set</string>
     <string name="recently_selected_languages">Recently selected languages</string>
     <string name="all_languages">All languages</string>
     <string name="u_don_t_selected_word">You didn\'t select any words. Please select one.</string>
-    <!--    <string name="agree_with_privacy_policy"><![CDATA[By joining, you agree to Study Cards\'s <a href="https://www.freeprivacypolicy.com/live/c663b277–554d-41b6-aebd-dfc34b059928">Terms of Service</a> & Privacy Policy]]></string>-->
+    <string name="premium_additional_description">You can cancel your subscription at any time</string>
+    <string name="premium_feature3_des">only two decks are free</string>
+    <string name="premium_feature2_des">enjoy the silence</string>
+    <string name="premium_feature1_des">You can translate words without leaving the app</string>
+    <string name="premium_feature3">Unlimited Training decks</string>
+    <string name="premium_feature2">Training without advertising</string>
+    <string name="zvezda" translatable="false">***</string>
+    <!--    <string name="agree_with_privacy_policy"><![CDATA[By joining, you agree to Study Cards\
+    's <a href="https://www.freeprivacypolicy.com/live/c663b277–554d-41b6-aebd-dfc34b059928">Terms of
+     Service</a> & Privacy Policy]]></string>-->
 </resources>

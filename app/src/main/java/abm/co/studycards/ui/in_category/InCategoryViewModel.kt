@@ -6,6 +6,8 @@ import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.WORDS_REF
 import abm.co.studycards.util.base.BaseViewModel
+import abm.co.studycards.util.firebaseError
+import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
@@ -51,7 +53,7 @@ class InCategoryViewModel @Inject constructor(
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    _stateFlow.value = InCategoryUiState.Error(error.message)
+                    _stateFlow.value = InCategoryUiState.Error(firebaseError(error.code))
                 }
             })
             wordsRef.addValueEventListener(object : ValueEventListener {
@@ -64,7 +66,7 @@ class InCategoryViewModel @Inject constructor(
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    _stateFlow.value = InCategoryUiState.Error(error.message)
+                    _stateFlow.value = InCategoryUiState.Error(firebaseError(error.code))
                 }
             })
         }
@@ -88,5 +90,5 @@ class InCategoryViewModel @Inject constructor(
 sealed class InCategoryUiState {
     data class Success(val value: List<Word>) : InCategoryUiState()
     object Loading : InCategoryUiState()
-    data class Error(val msg: String) : InCategoryUiState()
+    data class Error(@StringRes val msg: Int) : InCategoryUiState()
 }

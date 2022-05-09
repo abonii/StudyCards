@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class ReviewAdapter : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
+
     var words: MutableList<Word?> = ArrayList()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
@@ -48,7 +49,7 @@ class ReviewAdapter : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
             val radius: Float = binding.translated.textSize / 3
             val filter = BlurMaskFilter(radius, BlurMaskFilter.Blur.NORMAL)
             binding.translated.paint.maskFilter = filter
-            binding.translated.animate().setDuration(1200).alpha(1f).withEndAction {
+            binding.translated.animate().setDuration(1500).alpha(1f).withEndAction {
                 binding.translated.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
                 binding.translated.paint.maskFilter = null
             }

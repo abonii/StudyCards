@@ -2,13 +2,11 @@ package abm.co.studycards.data.repository
 
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.model.vocabulary.Word
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 
 
 interface ServerCloudRepository {
-    val firebaseAuth:FirebaseAuth
     suspend fun updateCategoryName(category: Category)
     suspend fun addCategory(category: Category)
     suspend fun addWords(category: Category)

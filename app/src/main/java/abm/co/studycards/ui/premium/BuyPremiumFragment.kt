@@ -4,17 +4,17 @@ import abm.co.studycards.MainActivity
 import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentBuyPremiumBinding
 import abm.co.studycards.util.base.BaseBindingFragment
+import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.SkuDetails
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class BuyPremiumFragment :
@@ -25,25 +25,25 @@ class BuyPremiumFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        collectData()
+        lifecycleScope.launchWhenStarted {
+            viewModel.toast.collectLatest {
+                toast(it)
+            }
+        }
     }
 
     override fun initUI(savedInstanceState: Bundle?) {
-        (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
+        (activity as MainActivity).setToolbar(binding.toolbar)
+        collectData()
         initRV()
     }
 
     private fun collectData() {
-        lifecycleScope.launchWhenResumed {
+        launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.skusStateFlow.collectLatest { subscriptions ->
                 if (subscriptions.isNotEmpty()) {
                     setProductsList(subscriptions)
                 }
-            }
-        }
-        lifecycleScope.launchWhenStarted{
-            viewModel.toast.collectLatest {
-                toast(it)
             }
         }
     }

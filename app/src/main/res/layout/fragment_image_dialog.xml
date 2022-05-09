@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/background"
-                android:elevation="2dp"
+                android:elevation="@dimen/default_2dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -42,10 +42,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:background="@null"
-                        android:paddingHorizontal="12dp"
+                        android:background="@android:color/transparent"
+                        android:paddingHorizontal="@dimen/default_12dp"
                         app:srcCompat="@drawable/ic_delete"
-                        tools:ignore="ContentDescription" />
+                        android:contentDescription="@string/remove_this_category" />
 
                 </RelativeLayout>
             </androidx.appcompat.widget.Toolbar>
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/default_8dp"
                 android:background="@drawable/edit_text_border"
                 android:hint="@string/url"
                 app:boxStrokeColor="@color/colorPrimary"
@@ -75,20 +75,20 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_marginTop="18dp"
+                android:layout_width="@dimen/default_200dp"
+                android:layout_height="@dimen/default_200dp"
+                android:layout_marginTop="@dimen/default_18dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/url_layout"
-                tools:ignore="ContentDescription" />
+                android:contentDescription="@string/just_image" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/save"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="30dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginHorizontal="@dimen/default_30dp"
+                android:layout_marginTop="@dimen/default_12dp"
                 android:text="@string/save"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"

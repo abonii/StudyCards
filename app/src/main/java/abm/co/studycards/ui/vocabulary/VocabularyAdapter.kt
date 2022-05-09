@@ -4,6 +4,7 @@ import abm.co.studycards.data.model.LearnOrKnown
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemVocabularyTabBinding
+import abm.co.studycards.util.GeneralBindingAdapters.setImageWithGlide
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,7 +12,6 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection
@@ -26,7 +26,7 @@ class VocabularyAdapter(
     val onChangeType: (word: Word, type: LearnOrKnown) -> Unit,
     vararg types: LearnOrKnown
 ) :
-    ListAdapter<Word, VocabularyAdapter.ViewHolder>(DIFF_UTIL) {
+    ListAdapter<Word, VocabularyAdapter.VocabularyViewHolder>(DIFF_UTIL) {
 
     val firstButton = types[1]
     val secondButton = types[2]
@@ -37,8 +37,7 @@ class VocabularyAdapter(
 
     private val expansionsCollection = ExpansionLayoutCollection()
 
-
-    inner class ViewHolder(val binding: ItemVocabularyTabBinding) :
+    inner class VocabularyViewHolder(val binding: ItemVocabularyTabBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val swipeRevealLayout = binding.swipeRevealLayout
         private val expansionLayout = binding.expansionLayout
@@ -76,9 +75,7 @@ class VocabularyAdapter(
             translation.text = currentItem.translationsToString()
             image.isVisible = currentItem.imageUrl.isNotEmpty()
             if (currentItem.imageUrl.isNotEmpty()) {
-                Glide.with(root.context)
-                    .load(currentItem.imageUrl)
-                    .into(image)
+                image.setImageWithGlide(currentItem.imageUrl)
             }
         }
 
@@ -94,13 +91,13 @@ class VocabularyAdapter(
         return super.getItem(position)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VocabularyViewHolder {
         val binding =
             ItemVocabularyTabBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return VocabularyViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: VocabularyViewHolder, position: Int) {
         val item = getItem(position)
         viewBinderHelper.bind(holder.swipeRevealLayout, item.wordId)
         holder.bind(item)

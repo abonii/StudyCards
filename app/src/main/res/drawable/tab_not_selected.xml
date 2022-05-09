@@ -2,8 +2,8 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
     android:viewportWidth="640"
     android:viewportHeight="640"
-    android:width="200dp"
-    android:height="200dp">
+    android:width="@dimen/vocabulary_tab_size"
+    android:height="@dimen/vocabulary_tab_size">
     <path
         android:pathData="M555.28 642L642 642L624.66 615.33L600.08 562L555.28 642Z"
         android:fillColor="@color/tab_background" />

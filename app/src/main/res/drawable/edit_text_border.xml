@@ -5,10 +5,10 @@
         android:color="@color/second_color"/>
 
     <corners
-        android:bottomRightRadius="12dp"
-        android:bottomLeftRadius="12dp"
-        android:topLeftRadius="12dp"
-        android:topRightRadius="12dp"/>
+        android:bottomRightRadius="@dimen/edit_text_border_dp"
+        android:bottomLeftRadius="@dimen/edit_text_border_dp"
+        android:topLeftRadius="@dimen/edit_text_border_dp"
+        android:topRightRadius="@dimen/edit_text_border_dp"/>
     <stroke
         android:color="@color/lighter_darker"
         android:width="0.1dp"/>

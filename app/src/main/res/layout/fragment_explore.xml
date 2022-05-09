@@ -23,7 +23,7 @@
                 android:fontFamily="@font/helvetica_bold"
                 android:text="@string/title_explore"
                 android:textColor="@color/textColor"
-                android:textSize="17sp" />
+                android:textSize="@dimen/default_17sp" />
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -53,8 +53,7 @@
                 <include layout="@layout/item_category_explore_shimmer"/>
                 <include layout="@layout/item_parent_explore_shimmer"/>
                 <include layout="@layout/item_category_explore_shimmer"/>
-                <include layout="@layout/item_parent_explore_shimmer"/>
-                <include layout="@layout/item_category_explore_shimmer"/>
+
             </LinearLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -64,6 +63,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/textColor"
             android:visibility="gone"
+            android:gravity="center"
             android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
             android:fontFamily="@font/helvetica_medium"
             app:layout_constraintTop_toTopOf="parent"

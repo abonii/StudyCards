@@ -11,7 +11,6 @@ import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.navigate
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,7 +22,7 @@ class MatchingPairsFragment :
     private var adapterWords: MatchingAdapter? = null
 
     override fun initUI(savedInstanceState: Bundle?) {
-        (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
+        (activity as MainActivity).setToolbar(binding.toolbar)
         initRV()
     }
 
@@ -54,12 +53,16 @@ class MatchingPairsFragment :
         } else {
             viewModel.wordClickedItem = currentItemId
         }
+        if (currentItemId.isEmpty()) {
+            return null
+        }
         return checkIfSameWord(isTranslatedWord)
     }
 
     /**
      * @param isTranslatedWord is just clicked adapter determiner
-     * I had a problem, two notifyItemChanged methods intersect. And the latter will not be called.
+     * I had a problem, two notifyItemChanged methods intersect.
+     * And the latter will not be called.
      * That is why I am using @param isTranslatedWord.
      **/
     private fun checkIfSameWord(isTranslatedWord: Boolean): Boolean? {
@@ -76,12 +79,12 @@ class MatchingPairsFragment :
     }
 
     private fun bothSideCorrect(isTranslatedWord: Boolean) {
+        viewModel.countOfElements++
         if (isTranslatedWord) {
             adapterWords?.run { notifyItemChanged(selectedItemPos, CORRECT) }
         } else {
             adapterTranslatedWords?.run { notifyItemChanged(selectedItemPos, CORRECT) }
         }
-        viewModel.countOfElements++
         resetChecking()
         checkIsFinished()
     }

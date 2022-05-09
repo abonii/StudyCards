@@ -5,7 +5,8 @@ import abm.co.studycards.data.model.LearnOrKnown
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.core.App
+import abm.co.studycards.util.firebaseError
+import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -61,19 +62,19 @@ class VocabularyViewModel @Inject constructor(
                             }
                         }
                     }
-                    if(firstTime){
+                    if (firstTime) {
                         delay(800)
                         firstTime = false
                     }
                     if (items.size == 0) {
                         _stateFlow.value =
-                            VocabularyUiState.Error(App.instance.getString(R.string.empty))
+                            VocabularyUiState.Error(R.string.empty)
                     } else _stateFlow.value = VocabularyUiState.Success(items)
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                _stateFlow.value = VocabularyUiState.Error(error.message)
+                _stateFlow.value = VocabularyUiState.Error(firebaseError(error.code))
             }
 
         })
@@ -122,6 +123,6 @@ class VocabularyViewModel @Inject constructor(
 
 sealed class VocabularyUiState {
     data class Success(val value: List<Word>) : VocabularyUiState()
-    data class Error(val error: String) : VocabularyUiState()
+    data class Error(@StringRes val error: Int) : VocabularyUiState()
     object Loading : VocabularyUiState()
 }

@@ -17,9 +17,9 @@ import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -56,7 +56,7 @@ class InCategoryFragment :
 
     private fun setToolbar() {
         requireActivity().setDefaultStatusBar()
-        (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
+        (activity as MainActivity).setToolbar(binding.toolbar)
     }
 
 
@@ -93,9 +93,9 @@ class InCategoryFragment :
         recyclerView.visibility = View.GONE
     }
 
-    private fun errorOccurred(text: String) = binding.run {
+    private fun errorOccurred(@StringRes text: Int) = binding.run {
         error.visibility = View.VISIBLE
-        error.text = text
+        error.text = getString(text)
         progressBar.visibility = View.GONE
         recyclerView.visibility = View.GONE
     }
@@ -158,7 +158,7 @@ class InCategoryFragment :
         navigate(action)
     }
 
-    private fun openDownloadTTSDialog(){
+    private fun openDownloadTTSDialog() {
         val installIntent = Intent()
         installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
         startActivity(installIntent)

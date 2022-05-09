@@ -10,7 +10,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="2dp"
+            android:elevation="@dimen/toolbar_elevation"
             android:background="@color/background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -23,11 +23,13 @@
                 android:fontFamily="@font/helvetica_medium"
                 android:text="@string/select_language_toolbar_title"
                 android:textColor="@color/textColor" />
-            <ImageView
+            <ImageButton
                 android:id="@+id/save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:background="@android:color/transparent"
+                android:foreground="?attr/selectableItemBackground"
                 android:layout_gravity="end|center_vertical"
                 android:src="@drawable/ic_save"
                 android:padding="6dp"

@@ -8,11 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
-
+        ignore
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="20dp">
+            android:paddingBottom="@dimen/default_20dp">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -28,7 +28,7 @@
                     android:fontFamily="@font/helvetica_bold"
                     android:text="@string/study_cards_title"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="17sp" />
+                    android:textSize="@dimen/default_17sp" />
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -55,9 +55,9 @@
 
             <ImageView
                 android:id="@+id/premium_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_width="@dimen/buy_page_image_width"
+                android:layout_height="@dimen/buy_page_image_height"
+                android:layout_marginTop="@dimen/default_20dp"
                 android:contentDescription="@string/just_image"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +69,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="@dimen/default_16dp"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -80,12 +80,12 @@
                     android:id="@+id/feature1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="@dimen/default_16dp"
+                    android:layout_marginEnd="@dimen/default_16dp"
                     android:fontFamily="@font/helvetica_bold"
                     android:text="@string/premium_feature1"
                     android:textColor="@color/textColor"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/default_14sp"
                     android:gravity="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -99,7 +99,7 @@
                     android:text="@string/premium_feature1_des"
                     android:textColor="@color/thirdTextColor"
                     android:gravity="center"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/default_13sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/feature1"
                     app:layout_constraintStart_toStartOf="@+id/feature1"
@@ -112,12 +112,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="50dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/default_10dp"
                 android:fontFamily="@font/helvetica_thin"
                 android:gravity="center"
                 android:text="@string/premium_additional_description"
                 android:textColor="@color/thirdTextColor"
-                android:textSize="13sp"
+                android:textSize="@dimen/default_13sp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recycler_view_products" />
@@ -126,7 +127,7 @@
                 android:id="@+id/recycler_view_products"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="@dimen/default_30dp"
                 android:overScrollMode="never"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

@@ -28,12 +28,16 @@ class MatchingAdapter(
             isTranslatedWords
         ) { pos ->
             changeSelectedPosition(pos)
-            val isSameTwoWords = onClickCard(items[pos].word.wordId, isTranslatedWords)
+            val wordId = if (!items[pos].isSelected) {
+                items[pos].word.wordId
+            } else ""
+            val isSameTwoWords = onClickCard(wordId, isTranslatedWords)
             sameTwoWords(isSameTwoWords, pos)
+            lastItemSelectedPos = pos
         }
     }
 
-    private fun sameTwoWords(isIt:Boolean?, pos:Int){
+    private fun sameTwoWords(isIt: Boolean?, pos: Int) {
         if (isIt != null) {
             if (isIt) notifyItemChanged(pos, CORRECT)
             else notifyItemChanged(pos, NOT_CORRECT)
@@ -70,7 +74,6 @@ class MatchingAdapter(
                 notifyItemChanged(lastItemSelectedPos, NOT_SELECTED)
             }
         }
-        lastItemSelectedPos = position
     }
 
     override fun onBindViewHolder(

@@ -6,14 +6,12 @@ import abm.co.studycards.data.model.Language
 import abm.co.studycards.databinding.FragmentSelectLanguageAnyWhereBinding
 import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
-import abm.co.studycards.util.core.App
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -44,7 +42,7 @@ class SelectLanguageAnyWhereFragment :
 
     private fun setBindings() = binding.run {
         requireActivity().setDefaultStatusBar()
-        (activity as MainActivity).setToolbar(toolbar, findNavController())
+        (activity as MainActivity).setToolbar(toolbar)
         toolbar.navigationIcon = getImg(R.drawable.ic_clear)
         parentLanguageAdapter = LanguageAnyWhereParentAdapter().apply {
             selectedItemPos = viewModel.selectedItemPos
@@ -59,7 +57,7 @@ class SelectLanguageAnyWhereFragment :
                 ) {
                     reCreateItself()
                 }
-            else toast(App.instance.getString(R.string.u_don_t_selected_word))
+            else toast(R.string.u_don_t_selected_word)
 
         }
         nestedLanguagesRv.adapter = parentLanguageAdapter

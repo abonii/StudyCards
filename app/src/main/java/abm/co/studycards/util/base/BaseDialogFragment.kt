@@ -1,6 +1,5 @@
 package abm.co.studycards.util.base
 
-import abm.co.studycards.MainActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

@@ -20,7 +20,7 @@ class MatchingPairsViewModel @Inject constructor(
     fun getDefaultWords() = words.take(ONE_TIME_CYCLE_GAME).shuffled().map {
         WordMatching(it, isSelected = false, isSelectedCorrect = null)
     }
-    val wordsSize = words.size
+    val wordsSize = getDefaultWords().size
 
     fun getLastWords(): Array<Word> {
         return words.takeLast(words.size - ONE_TIME_CYCLE_GAME).toTypedArray()

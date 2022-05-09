@@ -10,7 +10,6 @@ import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.navigate
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
@@ -25,7 +24,7 @@ class ReviewFragment : BaseBindingFragment<FragmentReviewBinding>(R.layout.fragm
     private lateinit var reviewAdapter: ReviewAdapter
 
     override fun initUI(savedInstanceState: Bundle?) {
-        (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
+        (activity as MainActivity).setToolbar(binding.toolbar)
         reviewAdapter = ReviewAdapter().apply {
             words = if (viewModel.isRepeat) viewModel.getFiveWords()
             else viewModel.words.toMutableList()

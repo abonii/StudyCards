@@ -8,8 +8,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class LanguageAnyWhereParentAdapter(
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class LanguageAnyWhereParentAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var items: List<LanguageVHUI> = ArrayList()
         @SuppressLint("NotifyDataSetChanged")
@@ -19,7 +18,7 @@ class LanguageAnyWhereParentAdapter(
         }
     var selectedItemPos = -1
     var lastItemSelectedPos = -1
-    var currentTime: Long = 0
+    private var currentTime: Long = 0
 
 
     override fun onCreateViewHolder(

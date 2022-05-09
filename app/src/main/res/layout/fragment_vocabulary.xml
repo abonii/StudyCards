@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.vocabulary.VocabularyFragment">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"
-        tools:context=".ui.vocabulary.VocabularyFragment">
+        android:background="@color/background">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
@@ -16,7 +17,7 @@
             android:background="@color/blue_light_status"
             app:tabBackground="@drawable/tab_background"
             app:tabIndicatorHeight="0dp"
-            app:tabRippleColor="@null" />
+            app:tabRippleColor="@android:color/transparent" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pager"

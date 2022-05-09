@@ -8,15 +8,13 @@ import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
@@ -26,25 +24,17 @@ class AddYourselfFragment :
     private var wordsAdapter: ExploreWordsForSelectingAdapter? = null
     private val viewModel: AddYourselfViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        collectData()
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun initUI(savedInstanceState: Bundle?) {
         binding.fragment = this
         binding.viewmodel = viewModel
+        collectData()
         setToolbarAndStatusBar()
         setUpRecyclerView()
     }
 
     private fun setToolbarAndStatusBar() {
         requireActivity().setDefaultStatusBar()
-        (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
+        (activity as MainActivity).setToolbar(binding.toolbar)
         binding.toolbar.setNavigationIcon(R.drawable.ic_clear)
         binding.toolbarTitle.text = getString(R.string.select_words)
     }
@@ -68,7 +58,7 @@ class AddYourselfFragment :
         }
         launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.sharedFlow.collectLatest {
-                when(it){
+                when (it) {
                     AddYourselfEventChannel.NavigateBack -> {
                         findNavController().popBackStack()
                     }
@@ -90,9 +80,9 @@ class AddYourselfFragment :
         recyclerView.visibility = View.GONE
     }
 
-    private fun errorOccurred(text: String) = binding.run {
+    private fun errorOccurred(@StringRes text: Int) = binding.run {
         error.visibility = View.VISIBLE
-        error.text = text
+        error.text = getString(text)
         progressBar.visibility = View.GONE
         recyclerView.visibility = View.GONE
     }
@@ -100,13 +90,13 @@ class AddYourselfFragment :
     private fun setUpRecyclerView() {
         wordsAdapter = ExploreWordsForSelectingAdapter {
             binding.checkAll.isChecked = viewModel.isSelectedAllWords()
+
         }
         binding.recyclerView.run {
             adapter = wordsAdapter
             addItemDecoration(getItemDecoration())
         }
     }
-
 
 
     private fun getItemDecoration() =

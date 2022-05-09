@@ -62,6 +62,7 @@ class CardStackAdapter constructor(
 
         fun bind(currentItem: Word) {
             binding.wordImage.setImageWithGlide(currentItem.imageUrl)
+            binding.wordImageContainer.isVisible = currentItem.imageUrl.isNotBlank()
             binding.translated.text = currentItem.name
             binding.word.text = currentItem.translationsToString()
             bindFrontLayout()
@@ -80,12 +81,10 @@ class CardStackAdapter constructor(
         }
 
         private fun bindBackLayout() {
-            binding.wordImageContainer.isVisible = true
             binding.translated.isVisible = true
         }
 
         private fun bindFrontLayout() {
-            binding.wordImageContainer.isVisible = false
             binding.translated.isVisible = false
         }
     }

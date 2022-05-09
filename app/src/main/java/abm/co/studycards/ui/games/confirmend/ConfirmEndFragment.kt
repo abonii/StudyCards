@@ -17,38 +17,54 @@ class ConfirmEndFragment :
     private val viewModel: ConfirmEndViewModel by viewModels()
 
     override fun initUI(savedInstanceState: Bundle?) {
-        dialog?.setCancelable(false)
-        dialog?.setCanceledOnTouchOutside(false)
-        binding.ok.setOnClickListener {
-            val action = ConfirmEndFragmentDirections.actionConfirmEndFragmentToHomeFragment()
-            navigate(action)
+        cancelableEnabled()
+        binding.run {
+            ok.setOnClickListener {
+                onOkClicked()
+            }
+            okBtn.setOnClickListener {
+                onOkClicked()
+            }
+            no.setOnClickListener {
+                dismiss()
+            }
+            image.isVisible = viewModel.confirmType != ConfirmText.ON_EXIT
+            okBtn.isVisible = viewModel.confirmType != ConfirmText.ON_EXIT
+            ok.isVisible = viewModel.confirmType == ConfirmText.ON_EXIT
+            no.isVisible = viewModel.confirmType == ConfirmText.ON_EXIT
+            when (viewModel.confirmType) {
+                ConfirmText.FINISH_REPEAT -> {
+//                secondText.text = getString(R.string.finished_repeating)
+                }
+                ConfirmText.FINISH_LEARN -> {
+//                secondText.text = getString(R.string.finished_learning)
+                }
+                ConfirmText.FINISH_REVIEW -> {
+//                secondText.text = getString(R.string.finished_review)
+                }
+                ConfirmText.FINISH_GUESS -> {
+//                secondText.text = getString(R.string.finished_guessing)
+                }
+                ConfirmText.FINISH_PAIR -> {
+//                secondText.text = getString(R.string.finished_pairing)
+                }
+                else -> {
+                    text.text = getString(R.string.do_u_want_to_exit)
+                    no.isVisible = true
+                }
+            }
         }
-        binding.no.setOnClickListener {
-            dismiss()
-        }
-        when (viewModel.confirmType) {
-            ConfirmText.FINISH_REPEAT -> {
-                binding.secondText.text = getString(R.string.finished_repeating)
-            }
-            ConfirmText.FINISH_LEARN -> {
-                binding.secondText.text = getString(R.string.finished_learning)
-            }
-            ConfirmText.FINISH_REVIEW -> {
-                binding.secondText.text = getString(R.string.finished_review)
-            }
-            ConfirmText.FINISH_GUESS -> {
-                binding.secondText.text = getString(R.string.finished_guessing)
-            }
-            ConfirmText.FINISH_PAIR -> {
-                binding.secondText.text = getString(R.string.finished_pairing)
-            }
-            else -> {
-                binding.text.text = getString(R.string.do_u_want_to_exit)
-                binding.no.isVisible = true
-                dialog?.setCancelable(true)
-                dialog?.setCanceledOnTouchOutside(true)
-            }
-        }
+    }
+
+    private fun cancelableEnabled() {
+        val isExitMode = viewModel.confirmType == ConfirmText.ON_EXIT
+        dialog?.setCancelable(isExitMode)
+        dialog?.setCanceledOnTouchOutside(isExitMode)
+    }
+
+    private fun onOkClicked() {
+        val action = ConfirmEndFragmentDirections.actionConfirmEndFragmentToHomeFragment()
+        navigate(action)
     }
 
 }

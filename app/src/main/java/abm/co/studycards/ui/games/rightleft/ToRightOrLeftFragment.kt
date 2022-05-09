@@ -12,11 +12,9 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.yuyakaido.android.cardstackview.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
-
 
 @AndroidEntryPoint
 class ToRightOrLeftFragment :
@@ -29,7 +27,7 @@ class ToRightOrLeftFragment :
     private lateinit var textToSpeech: TextToSpeech
 
     override fun initUI(savedInstanceState: Bundle?) {
-        (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
+        (activity as MainActivity).setToolbar(binding.toolbar)
         setTextToSpeech()
         cardAdapter = CardStackAdapter(::onShakeCard, ::onAudioClicked)
             .apply { words = viewModel.words }
@@ -49,7 +47,7 @@ class ToRightOrLeftFragment :
         binding.run {
             folderName.text = viewModel.category.uppercase()
             cardStack.layoutManager = cardLayoutManager
-            cardStack .adapter = cardAdapter
+            cardStack.adapter = cardAdapter
         }
     }
 

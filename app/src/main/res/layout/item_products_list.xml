@@ -7,12 +7,12 @@
         android:id="@+id/card"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
+        android:layout_marginHorizontal="@dimen/default_8dp"
         app:cardBackgroundColor="@color/colorPrimary"
-        app:cardCornerRadius="1dp"
-        app:cardElevation="2dp"
+        app:cardCornerRadius="@dimen/default_1dp"
+        app:cardElevation="@dimen/default_2dp"
         app:strokeColor="@color/colorPrimary"
-        app:strokeWidth="1dp">
+        app:strokeWidth="@dimen/default_1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="6dp">
+            android:padding="@dimen/default_6dp">
 
             <TextView
                 android:id="@+id/product_name"
@@ -29,7 +29,7 @@
                 android:fontFamily="@font/helvetica_roman"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="13sp"
+                android:textSize="@dimen/default_13sp"
                 app:layout_constraintBottom_toTopOf="@id/price"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -43,7 +43,7 @@
                 android:fontFamily="@font/helvetica_black"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="12sp"
+                android:textSize="@dimen/default_12dp"
                 app:layout_constraintTop_toBottomOf="@id/product_name"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

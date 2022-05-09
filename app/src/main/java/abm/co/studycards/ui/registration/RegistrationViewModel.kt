@@ -3,10 +3,11 @@ package abm.co.studycards.ui.registration
 import abm.co.studycards.R
 import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.core.App
 import abm.co.studycards.util.firebaseError
 import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,12 +21,12 @@ class RegistrationViewModel @Inject constructor(
     private val repository: ServerCloudRepository
 ) : BaseViewModel() {
 
-    private val firebaseAuth = repository.firebaseAuth
+    private val firebaseAuth = Firebase.auth
     var email: String = ""
     var name: String = ""
     var password: String = ""
 
-    private val _error = MutableStateFlow<String?>(null)
+    private val _error = MutableStateFlow<Int?>(null)
     val error = _error.asStateFlow()
 
     private val _loading = MutableStateFlow(false)
@@ -39,16 +40,16 @@ class RegistrationViewModel @Inject constructor(
         _loading.value = true
         when {
             TextUtils.isEmpty(name) -> {
-                _error.value = App.instance.getString(R.string.email_empty)
+                _error.value = R.string.email_empty
             }
             TextUtils.isEmpty(email) -> {
-                _error.value = App.instance.getString(R.string.email_empty)
+                _error.value = R.string.email_empty
             }
             TextUtils.isEmpty(password) -> {
-                _error.value = App.instance.getString(R.string.password_empty)
+                _error.value = R.string.password_empty
             }
             password.length < 5 -> {
-                _error.value = App.instance.getString(R.string.password_length)
+                _error.value = R.string.password_length
             }
             else -> {
                 firebaseAuth.createUserWithEmailAndPassword(email, password)

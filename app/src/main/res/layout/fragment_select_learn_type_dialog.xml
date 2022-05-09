@@ -25,9 +25,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="12dp"
+                android:layout_marginEnd="@dimen/default_12dp"
                 android:contentDescription="@string/icon"
-                android:padding="5dp"
+                android:padding="@dimen/default_5dp"
                 app:srcCompat="@drawable/ic_play"
                 app:tint="@color/colorPrimary" />
 
@@ -39,14 +39,14 @@
                 android:fontFamily="@font/helvetica_medium"
                 android:text="@string/learn"
                 android:textColor="@color/textColor"
-                android:textSize="16sp" />
+                android:textSize="@dimen/normal_text_sp" />
 
             <TextView
                 android:id="@+id/learn_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/learn_title"
-                android:textSize="16sp"
+                android:textSize="@dimen/normal_text_sp"
                 android:fontFamily="@font/helvetica_light"
                 android:textColor="@color/secondTextColor"
                 android:layout_toEndOf="@id/learn_image" />
@@ -68,9 +68,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="12dp"
+                android:layout_marginEnd="@dimen/default_12dp"
                 android:contentDescription="@string/icon"
-                android:padding="5dp"
+                android:padding="@dimen/default_5dp"
                 app:srcCompat="@drawable/ic_repeat"
                 app:tint="@color/lighter_darker" />
 
@@ -79,18 +79,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/repeat_image"
+                android:fontFamily="@font/helvetica_medium"
                 android:text="@string/repeat"
                 android:textColor="@color/textColor"
-                android:textSize="16sp" />
+                android:textSize="@dimen/normal_text_sp" />
 
             <TextView
                 android:id="@+id/repeat_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/repeat_title"
-                android:textSize="16sp"
+                android:textSize="@dimen/normal_text_sp"
                 android:fontFamily="@font/helvetica_light"
                 android:textColor="@color/secondTextColor"
+                android:layout_toEndOf="@id/repeat_image" />
+            <TextView
+                android:id="@+id/repeat_subtitle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/repeat_subtitle"
+                android:textSize="@dimen/normal_text_sp"
+                android:fontFamily="@font/helvetica_light"
+                android:textColor="@color/secondTextColor"
+                android:visibility="gone"
                 android:layout_toEndOf="@id/repeat_image" />
         </RelativeLayout>
 
@@ -110,9 +121,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginEnd="@dimen/default_12dp"
                     android:contentDescription="@string/icon"
-                    android:padding="5dp"
+                    android:padding="@dimen/default_5dp"
                     app:srcCompat="@drawable/ic_repeat_one"
                     app:tint="@color/lighter_darker" />
 
@@ -121,18 +132,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/one_game_image"
+                    android:fontFamily="@font/helvetica_medium"
                     android:text="@string/one_game"
-                    android:textColor="@color/textColor" />
+                    android:textColor="@color/textColor"
+                    android:textSize="@dimen/normal_text_sp" />
 
                 <TextView
                     android:id="@+id/one_game_subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/one_game_title"
-                    android:textSize="16sp"
+                    android:layout_toEndOf="@id/one_game_image"
                     android:fontFamily="@font/helvetica_light"
                     android:textColor="@color/secondTextColor"
-                    android:layout_toEndOf="@id/one_game_image"
+                    android:textSize="@dimen/normal_text_sp"
                     tools:text="wsgdf" />
 
                 <TextView
@@ -140,10 +153,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/one_game_subtitle"
-                    android:textSize="16sp"
+                    android:layout_toEndOf="@id/one_game_image"
                     android:fontFamily="@font/helvetica_light"
                     android:textColor="@color/secondTextColor"
-                    android:layout_toEndOf="@id/one_game_image"
+                    android:textSize="@dimen/normal_text_sp"
                     tools:text="wsgdf" />
 
             </RelativeLayout>
@@ -164,7 +177,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                    android:paddingVertical="6dp">
+                    android:paddingVertical="@dimen/default_6dp">
 
                     <ImageView
                         android:id="@+id/pairing_image"
@@ -172,9 +185,9 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="12dp"
+                        android:layout_marginEnd="@dimen/default_12dp"
                         android:contentDescription="@string/icon"
-                        android:padding="5dp"
+                        android:padding="@dimen/default_5dp"
                         app:srcCompat="@drawable/ic_pairing"
                         app:tint="@color/lighter_darker" />
 
@@ -184,9 +197,10 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@id/pairing_image"
+                        android:fontFamily="@font/helvetica_medium"
                         android:text="@string/pairing"
                         android:textColor="@color/textColor"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/normal_text_sp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -197,7 +211,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                    android:paddingVertical="6dp">
+                    android:paddingVertical="@dimen/default_6dp">
 
                     <ImageView
                         android:id="@+id/guessing_image"
@@ -205,9 +219,9 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="12dp"
+                        android:layout_marginEnd="@dimen/default_12dp"
                         android:contentDescription="@string/icon"
-                        android:padding="5dp"
+                        android:padding="@dimen/default_5dp"
                         app:srcCompat="@drawable/ic_quiz"
                         app:tint="@color/lighter_darker" />
 
@@ -217,6 +231,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@id/guessing_image"
+                        android:fontFamily="@font/helvetica_medium"
                         android:text="@string/guessing"
                         android:textColor="@color/textColor" />
 
@@ -239,9 +254,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="12dp"
+                android:layout_marginEnd="@dimen/default_12dp"
                 android:contentDescription="@string/icon"
-                android:padding="5dp"
+                android:padding="@dimen/default_5dp"
                 app:srcCompat="@drawable/ic_refresh"
                 app:tint="@color/lighter_darker" />
 
@@ -250,8 +265,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:fontFamily="@font/helvetica_medium"
                 android:layout_toEndOf="@id/review_image"
                 android:text="@string/review_words"
+                android:textSize="@dimen/normal_text_sp"
                 android:textColor="@color/textColor" />
         </RelativeLayout>
     </LinearLayout>

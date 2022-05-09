@@ -39,7 +39,7 @@ class SelectLanguageFragment :
     }
 
     private fun setToolbar() {
-        (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
+        (activity as MainActivity).setToolbar(binding.toolbar)
         binding.toolbar.setNavigationIcon(R.drawable.ic_clear)
         if (viewModel.prefs.getSourceLanguage().isEmpty() || viewModel.prefs.getTargetLanguage()
                 .isEmpty()

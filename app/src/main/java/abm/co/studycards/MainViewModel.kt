@@ -8,6 +8,7 @@ import abm.co.studycards.util.Constants
 import abm.co.studycards.util.Constants.CAN_TRANSLATE_TIME_EVERY_DAY
 import abm.co.studycards.util.Constants.CAN_TRANSLATE_TIME_IN_MILLS
 import abm.co.studycards.util.base.BaseViewModel
+import abm.co.studycards.util.firebaseError
 import abm.co.studycards.util.toDay
 import abm.co.studycards.util.toStartOfTheDay
 import androidx.core.os.bundleOf
@@ -29,7 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     val prefs: Prefs,
-    private val firebaseRepository: ServerCloudRepository,
+    firebaseRepository: ServerCloudRepository,
     pricingRepository: PricingRepository
 ) : BaseViewModel() {
 
@@ -119,7 +120,7 @@ class MainViewModel @Inject constructor(
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                makeToast(firebaseError(error.code))
             }
         })
     }

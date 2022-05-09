@@ -66,7 +66,7 @@ class AddEditWordFragment :
 
     private fun setToolbar() {
         requireActivity().setDefaultStatusBar()
-        (activity as MainActivity).setToolbar(binding.toolbar, findNavController())
+        (activity as MainActivity).setToolbar(binding.toolbar)
     }
 
     private fun setResultListener() {

@@ -7,7 +7,7 @@ import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.SELECTED_LANGUAGES
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.core.App
+import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
@@ -49,7 +49,7 @@ class SelectLanguageAnyWhereViewModel @Inject constructor(
                         val recentlySelectedLang = mutableListOf<LanguageVHUI>()
                         recentlySelectedLang.add(
                             LanguageVHUI.TitleLanguages(
-                                App.instance.getString(R.string.recently_selected_languages)
+                                R.string.recently_selected_languages
                             )
                         )
                         recentlySelectedLang.addAll(
@@ -58,7 +58,7 @@ class SelectLanguageAnyWhereViewModel @Inject constructor(
                             })
                         recentlySelectedLang.add(
                             LanguageVHUI.TitleLanguages(
-                                App.instance.getString(R.string.all_languages)
+                                R.string.all_languages
                             )
                         )
                         recentlySelectedLang.addAll(
@@ -76,7 +76,7 @@ class SelectLanguageAnyWhereViewModel @Inject constructor(
     fun save(selectedLang: LanguageSelectable, onFinish: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             if (!selectedLang.isSelected) {
-                makeToast(App.instance.getString(R.string.u_don_t_selected_word))
+                makeToast(R.string.u_don_t_selected_word)
                 return@launch
             }
             if (fromTarget) {
@@ -94,6 +94,6 @@ class SelectLanguageAnyWhereViewModel @Inject constructor(
 }
 
 sealed class LanguageVHUI {
-    class TitleLanguages(val value: String) : LanguageVHUI()
+    class TitleLanguages(@StringRes val value: Int) : LanguageVHUI()
     class Language(val value: LanguageSelectable) : LanguageVHUI()
 }

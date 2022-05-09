@@ -111,7 +111,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         setupBottomNavigationBar()
     }
 
-    fun setToolbar(toolbar: Toolbar, _n: NavController) {
+    fun setToolbar(toolbar: Toolbar) {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.navigationIcon = getImg(R.drawable.ic_back)

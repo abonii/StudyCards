@@ -4,11 +4,15 @@ import abm.co.studycards.R
 import abm.co.studycards.anim.Animations
 import abm.co.studycards.databinding.FragmentSelectLearnTypeDialogBinding
 import abm.co.studycards.util.base.BaseDialogFragment
+import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
 import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import java.util.*
+import kotlin.math.ceil
 
 @AndroidEntryPoint
 class SelectLearnTypeDialogFragment :
@@ -18,7 +22,7 @@ class SelectLearnTypeDialogFragment :
 
     override fun initUI(savedInstanceState: Bundle?) {
         setClickListeners()
-        setViewModels()
+        setupViewModel()
     }
 
     private fun setClickListeners() {
@@ -44,8 +48,15 @@ class SelectLearnTypeDialogFragment :
         }
     }
 
-
-    private fun setViewModels() {
+    private fun setupViewModel() {
+        launchAndRepeatWithViewLifecycle {
+            viewModel.repeatAvailableInCalendar.collectLatest {
+                val isVisibleTime = viewModel.repeatWordsList.isEmpty() && it != null
+                binding.repeatSubtitle2.isVisible = isVisibleTime
+                binding.repeatSubtitle.isVisible = !isVisibleTime
+                binding.repeatSubtitle2.text = getLeftHours(it)
+            }
+        }
         viewModel.undefinedWordsListLive.observe(viewLifecycleOwner) {
             val subtitleText = viewModel.getTextForLearnSubtitle(requireContext(), it.size)
             binding.run {
@@ -70,6 +81,19 @@ class SelectLearnTypeDialogFragment :
         }
     }
 
+    private fun getLeftHours(calendar: Calendar?): String {
+        if (calendar == null) return "-"
+        val currentMills = Calendar.getInstance().timeInMillis
+        val givenMills = calendar.timeInMillis
+        val duration = givenMills - currentMills
+        val hours = ceil(duration / (1000 * 60 * 60.0)).toInt()
+        if (hours <= 0) {
+            val min = ceil(duration / (1000 * 60.0)).toInt()
+            return viewModel.getTextForRepeatTimeMinute(requireContext(), min)
+        }
+        return viewModel.getTextForRepeatTimeHour(requireContext(), hours)
+    }
+
     private fun onOneTypeGameClicked() {
         val animations = Animations()
         if (binding.oneGame.isVisible) {
@@ -79,22 +103,22 @@ class SelectLearnTypeDialogFragment :
     }
 
     private fun onGuessingClicked() {
-        if (viewModel.unlearnedWordsList.isNotEmpty()) {
+        if (viewModel.allWordsList.isNotEmpty()) {
             val action =
                 SelectLearnTypeDialogFragmentDirections.actionSelectGamesTypeDialogFragmentToGuessingFragment(
                     isRepeat = false,
-                    words = viewModel.getUnlearnedWordsInTypedArray()
+                    words = viewModel.getAllWordsInTypedArray()
                 )
             navigate(action)
         }
     }
 
     private fun onPairingClicked() {
-        if (viewModel.unlearnedWordsList.isNotEmpty()) {
+        if (viewModel.allWordsList.isNotEmpty()) {
             val action =
                 SelectLearnTypeDialogFragmentDirections.actionSelectGamesTypeDialogFragmentToMatchingPairsFragment(
                     isRepeat = false,
-                    words = viewModel.getUnlearnedWordsInTypedArray()
+                    words = viewModel.getAllWordsInTypedArray()
                 )
             navigate(action)
         }

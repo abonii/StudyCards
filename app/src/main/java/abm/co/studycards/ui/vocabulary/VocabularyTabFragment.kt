@@ -3,11 +3,11 @@ package abm.co.studycards.ui.vocabulary
 import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.FragmentVocabularyTabBinding
-import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.Constants.VOCABULARY_TAB_POSITION
 import abm.co.studycards.util.base.BaseBindingFragment
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -56,9 +56,9 @@ class VocabularyTabFragment :
         setUpRecyclerView()
     }
 
-    private fun errorOccurred(errorMsg:String) = binding.run {
+    private fun errorOccurred(@StringRes errorMsg: Int) = binding.run {
         text.visibility = View.VISIBLE
-        text.text = errorMsg
+        text.text = getText(errorMsg)
         recyclerView.visibility = View.GONE
         shimmerLayout.stopShimmer()
         shimmerLayout.hideShimmer()
@@ -71,6 +71,7 @@ class VocabularyTabFragment :
 
     private fun onSuccess(value: List<Word>) = binding.run {
         recyclerView.visibility = View.VISIBLE
+        text.visibility = View.GONE
         shimmerLayout.stopShimmer()
         shimmerLayout.hideShimmer()
         shimmerLayout.visibility = View.GONE
@@ -81,6 +82,7 @@ class VocabularyTabFragment :
         shimmerLayout.startShimmer()
         shimmerLayout.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
+        text.visibility = View.GONE
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

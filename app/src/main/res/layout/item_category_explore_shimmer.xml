@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_marginVertical="8dp"
-    android:layout_height="200dp">
+    android:layout_marginVertical="@dimen/default_8dp"
+    android:layout_height="@dimen/default_200dp">
 
     <View
         android:id="@+id/item_shimmer"
-        android:layout_width="140dp"
+        android:layout_width="@dimen/default_140dp"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -16,7 +16,7 @@
         android:background="@color/shimmer"/>
     <View
         android:id="@+id/item_shimmer2"
-        android:layout_width="140dp"
+        android:layout_width="@dimen/default_140dp"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/item_shimmer"
@@ -24,7 +24,7 @@
         android:background="@color/shimmer"/>
     <View
         android:id="@+id/item_shimmer3"
-        android:layout_width="140dp"
+        android:layout_width="@dimen/default_140dp"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/item_shimmer2"
@@ -32,7 +32,7 @@
         android:background="@color/shimmer"/>
     <View
         android:id="@+id/item_shimmer4"
-        android:layout_width="140dp"
+        android:layout_width="@dimen/default_140dp"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/item_shimmer3"

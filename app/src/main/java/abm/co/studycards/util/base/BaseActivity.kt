@@ -2,7 +2,6 @@ package abm.co.studycards.util.base
 
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.helpers.LocaleHelper
-import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -10,12 +9,8 @@ import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.firebase.auth.FirebaseAuth
 
 abstract class BaseActivity : AppCompatActivity(), IResourcesIDListener {
-
-    private var dialogForKMFLoader: Dialog? = null
-    private var isShowMsg = false
 
     //  Initialize all widget in layout
     protected abstract fun initViews(savedInstanceState: Bundle?)
@@ -27,12 +22,12 @@ abstract class BaseActivity : AppCompatActivity(), IResourcesIDListener {
         this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 
-    override fun attachBaseContext(newBase: Context) {
-        val lang = getLang(newBase)
+    override fun attachBaseContext(newBase: Context?) {
+        val lang = newBase?.let { getLang(it) }
         if (lang != null) {
             val context = LocaleHelper.setLocale(newBase, lang)
             super.attachBaseContext(context)
-        }else
+        } else
             super.attachBaseContext(newBase)
     }
 
@@ -40,7 +35,6 @@ abstract class BaseActivity : AppCompatActivity(), IResourcesIDListener {
         val sf = context.getSharedPreferences(Prefs.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         return sf.getString(Prefs.SELECTED_APP_LANGUAGE, null)
     }
-
 
     /*  Modal windows  */
     open fun toast(context: Context?, msg: Any, isDuration: Boolean = false) {

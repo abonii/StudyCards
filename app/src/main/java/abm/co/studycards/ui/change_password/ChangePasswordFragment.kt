@@ -28,7 +28,7 @@ class ChangePasswordFragment :
     override fun initUI(savedInstanceState: Bundle?) {
         binding.run {
             viewmodel = viewModel
-            (activity as MainActivity).setToolbar(toolbar, findNavController())
+            (activity as MainActivity).setToolbar(toolbar)
         }
     }
 

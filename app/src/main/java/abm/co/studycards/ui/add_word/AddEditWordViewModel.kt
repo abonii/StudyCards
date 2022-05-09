@@ -14,6 +14,7 @@ import abm.co.studycards.util.Constants.OXFORD_ID
 import abm.co.studycards.util.Constants.OXFORD_KEY
 import abm.co.studycards.util.Constants.YANDEX_KEY
 import abm.co.studycards.util.base.BaseViewModel
+import abm.co.studycards.util.firebaseError
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -112,7 +113,7 @@ class AddEditWordViewModel @Inject constructor(
             }
 
             override fun onCancelled(error: DatabaseError) {
-                makeToast(error.message)
+                makeToast(firebaseError(error.code))
             }
         })
     }
@@ -152,7 +153,7 @@ class AddEditWordViewModel @Inject constructor(
             when (val wrapper =
                 repository.getYandexWord(translatedYandexWord, sl, tl, yandexApiKey)) {
                 is ResultWrapper.Error -> {
-                    makeToast(wrapper.error ?: "")
+                    makeToast(wrapper.errorRes ?: "")
                     stopLoadingIcon(fromSource)
                 }
                 is ResultWrapper.Success -> {

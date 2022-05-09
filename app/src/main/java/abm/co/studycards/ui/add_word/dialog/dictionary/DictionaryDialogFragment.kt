@@ -21,7 +21,6 @@ class DictionaryDialogFragment :
     private val viewModel: DictionaryViewModel by viewModels()
 
     override fun initUI(savedInstanceState: Bundle?) {
-
         val tAdapter = TranslatedCategoryAdapter(this)
         tAdapter.items = viewModel.entries?.lexicalEntries
         binding.run {

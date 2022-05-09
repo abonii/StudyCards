@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:visibility="@{viewmodel.imageVisibleStateFlow ? View.VISIBLE : View.GONE}"
-                    app:cardCornerRadius="7dp">
+                    app:cardCornerRadius="@dimen/default_7dp">
 
                     <ImageView
                         android:id="@+id/word_image"
@@ -71,7 +71,7 @@
                         android:layout_gravity="center"
                         android:contentDescription="@string/image"
                         android:onClick="@{()->wordFragment.shakeImageContainer()}"
-                        android:scaleType="centerCrop"
+                        android:scaleType="fitXY"
                         app:imageWithGlide="@{viewmodel.imageCanSetUrlStateFlow ? viewmodel.imageStateFlow : ``}"
                         tools:srcCompat="@drawable/ic_image" />
                 </androidx.cardview.widget.CardView>
@@ -81,8 +81,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:layout_marginTop="10dp"
-                    android:drawablePadding="8dp"
+                    android:layout_marginTop="@dimen/default_10dp"
+                    android:drawablePadding="@dimen/default_8dp"
                     android:fontFamily="@font/helvetica_roman"
                     android:gravity="start|center_vertical"
                     android:onClick="@{()->wordFragment.directToCategoryDialogFragment()}"
@@ -100,7 +100,7 @@
                     android:languageText="@{viewmodel.sourceLanguage}"
                     android:textAllCaps="true"
                     android:textColor="@color/textColor"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/default_14sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/word_layout"
@@ -133,7 +133,7 @@
                     android:languageText="@{viewmodel.targetLanguage}"
                     android:textAllCaps="true"
                     android:textColor="@color/textColor"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/default_14sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/translated_layout"
@@ -165,7 +165,7 @@
                     android:text="@string/example"
                     android:textAllCaps="true"
                     android:textColor="@color/textColor"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/default_14sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/example_layout"
@@ -174,7 +174,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/mar_btwn_btns"
-                    android:lineSpacingExtra="5dp"
+                    android:lineSpacingExtra="@dimen/default_5dp"
                     app:boxStrokeColor="@color/grey"
                     app:boxStrokeWidth="1dp">
 
@@ -188,7 +188,7 @@
                         android:paddingStart="0dp"
                         android:paddingTop="0dp"
                         android:paddingEnd="0dp"
-                        android:paddingBottom="5dp"
+                        android:paddingBottom="@dimen/default_5dp"
                         android:text="@={viewmodel.examplesStateFlow}"
                         android:textSize="@dimen/normal_text_sp" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -202,7 +202,7 @@
                     android:text="@string/image"
                     android:textAllCaps="true"
                     android:textColor="@color/textColor"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/default_14sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/image_layout"
@@ -212,7 +212,7 @@
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/mar_btwn_btns"
                     app:boxStrokeColor="@color/grey"
-                    app:boxStrokeWidth="1dp"
+                    app:boxStrokeWidth="@dimen/default_1dp"
                     app:endIconDrawable="@{TextUtils.isEmpty(viewmodel.imageStateFlow) ? null : @drawable/ic_clear}"
                     app:endIconMode="custom"
                     app:endIconTint="@color/colorPrimary">
@@ -222,7 +222,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/ic_link"
-                        android:drawablePadding="6dp"
+                        android:drawablePadding="@dimen/default_6dp"
                         android:ellipsize="end"
                         android:hint="@string/image_url"
                         android:imeOptions="actionDone"
@@ -254,7 +254,7 @@
                     android:layout_margin="@dimen/activity_horizontal_margin"
                     android:fontFamily="@font/helvetica_bold"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/normal_text_sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
             </LinearLayout>

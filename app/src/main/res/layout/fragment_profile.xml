@@ -41,7 +41,7 @@
                     android:fontFamily="@font/helvetica_bold"
                     android:text="@string/profile"
                     android:textColor="@color/textColor"
-                    android:textSize="17sp" />
+                    android:textSize="@dimen/default_17sp" />
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -63,7 +63,7 @@
                     android:gravity="center"
                     android:text="@string/register_in_order_to"
                     android:textColor="@color/textColor"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/default_15sp" />
 
                 <com.google.android.gms.common.SignInButton
                     android:id="@+id/google_sign_in"
@@ -74,12 +74,12 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
+                    android:layout_marginVertical="@dimen/default_10dp"
                     android:fontFamily="@font/helvetica_bold"
                     android:gravity="center"
                     android:text="@string/or"
                     android:textColor="@color/textColor"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/default_15sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/email_container"
@@ -88,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:nextFocusDown="@id/password_container"
                     app:errorEnabled="true"
-                    app:errorText="@{viewmodel.emailError}"
+                    app:errorText="@{(viewmodel.emailError > 0) ? context.getString(viewmodel.emailError): ``}"
                     app:hintAnimationEnabled="false"
                     app:hintEnabled="false">
 
@@ -112,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:nextFocusDown="@id/login_btn"
                     app:errorEnabled="true"
-                    app:errorText="@{viewmodel.passwordError}"
+                    app:errorText="@{(viewmodel.passwordError > 0) ? context.getString(viewmodel.passwordError): ``}"
                     app:hintAnimationEnabled="false"
                     app:hintEnabled="false"
                     app:passwordToggleDrawable="@drawable/password_toggle"
@@ -164,7 +164,7 @@
                         android:layout_width="@dimen/profile_user_image_size"
                         android:layout_height="@dimen/profile_user_image_size"
                         android:layout_gravity="center"
-                        android:layout_margin="1dp"
+                        android:layout_margin="@dimen/default_1dp"
                         app:cardCornerRadius="@dimen/profile_user_image_radius">
 
                         <ImageView
@@ -175,7 +175,7 @@
                             android:scaleType="centerCrop"
                             app:imageForProfileWithGlide="@{viewmodel.userPhotoUrl}"
                             app:srcCompat="@color/colorPrimary"
-                            tools:ignore="ContentDescription" />
+                            android:contentDescription="@string/just_image" />
 
                     </androidx.cardview.widget.CardView>
                 </androidx.cardview.widget.CardView>
@@ -185,7 +185,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="@dimen/default_6dp"
                     android:fontFamily="@font/helvetica_medium"
                     android:text="@{viewmodel.userName}"
                     android:textColor="@color/specialTextColor"
@@ -197,7 +197,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/default_4dp"
                     android:fontFamily="@font/helvetica_medium"
                     android:text="@{viewmodel.email}"
                     android:textColor="@color/specialTextColor"
@@ -209,13 +209,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="@dimen/default_14dp"
                     android:fontFamily="@font/helvetica_medium"
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
                     android:text="@string/we_send_verification"
                     android:textColor="@color/specialTextColor"
-                    android:visibility="@{viewmodel.isAnonymousButVerified ? View.GONE : View.VISIBLE}" />
+                    android:visibility="@{viewmodel.isAnonymousOrVerified ? View.GONE : View.VISIBLE}" />
             </LinearLayout>
 
             <LinearLayout
@@ -223,7 +223,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="24dp"
+                android:paddingTop="@dimen/default_25dp"
                 app:layout_constraintTop_toBottomOf="@id/profile_information">
 
                 <TextView
@@ -322,7 +322,7 @@
                         android:focusable="true"
                         android:onClick="@{()->profileFragment.onChangePassword()}"
                         android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                        android:visibility="@{viewmodel.isVerified ? View.VISIBLE : View.GONE}">
+                        android:visibility="@{viewmodel.isEmailAuth ? View.VISIBLE : View.GONE}">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -342,7 +342,7 @@
                             android:layout_centerVertical="true"
                             app:srcCompat="@drawable/ic_arrow_right"
                             app:tint="@color/secondTextColor"
-                            tools:ignore="ContentDescription" />
+                            android:contentDescription="@string/icon" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -354,7 +354,7 @@
                         android:focusable="true"
                         android:onClick="@{()->viewmodel.sendVerificationEmail()}"
                         android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                        android:visibility="@{viewmodel.isAnonymousButVerified ? View.GONE : View.VISIBLE}">
+                        android:visibility="@{viewmodel.isAnonymousOrVerified ? View.GONE : View.VISIBLE}">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -374,7 +374,7 @@
                             android:layout_centerVertical="true"
                             app:srcCompat="@drawable/ic_arrow_right"
                             app:tint="@color/secondTextColor"
-                            tools:ignore="ContentDescription" />
+                            android:contentDescription="@string/icon" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -405,7 +405,7 @@
                             android:layout_centerVertical="true"
                             app:srcCompat="@drawable/ic_arrow_right"
                             app:tint="@color/secondTextColor"
-                            tools:ignore="ContentDescription" />
+                            android:contentDescription="@string/icon" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -436,7 +436,7 @@
                             android:layout_centerVertical="true"
                             app:srcCompat="@drawable/ic_arrow_right"
                             app:tint="@color/secondTextColor"
-                            tools:ignore="ContentDescription" />
+                            android:contentDescription="@string/icon" />
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>

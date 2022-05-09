@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.games.confirmend.ConfirmEndFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="25dp"
-        android:paddingTop="12dp">
+        android:paddingHorizontal="@dimen/default_25dp"
+        android:paddingTop="@dimen/default_12dp">
 
         <ImageView
             android:id="@+id/image"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="@dimen/default_150dp"
+            android:layout_height="@dimen/default_250dp"
+            android:layout_marginTop="@dimen/default_10dp"
             android:layout_centerHorizontal="true"
+            android:contentDescription="@string/just_image"
             android:visibility="gone"
-            tools:ignore="ContentDescription" />
+            app:srcCompat="@drawable/image_finished" />
 
         <TextView
             android:id="@+id/text"
@@ -23,9 +26,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/image"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/default_20dp"
+            android:fontFamily="@font/helvetica_roman"
             android:text="@string/great_job"
-            android:textColor="@color/textColor" />
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/toolbar_title_sp" />
 
         <TextView
             android:id="@+id/second_text"
@@ -34,7 +39,6 @@
             android:layout_below="@id/text"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:text=""
             android:textColor="@color/textColor"
             android:visibility="gone" />
 
@@ -44,27 +48,39 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/second_text"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="8dp"
-            android:paddingVertical="15dp"
-            android:paddingStart="15dp"
+            android:layout_marginTop="@dimen/default_8dp"
+            android:fontFamily="@font/helvetica_bold"
+            android:paddingVertical="@dimen/default_15dp"
+            android:paddingStart="@dimen/default_15dp"
             android:paddingEnd="0dp"
             android:text="@string/ok"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold" />
+            android:textColor="@color/colorPrimaryDark" />
 
         <TextView
             android:id="@+id/no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/second_text"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/default_8dp"
             android:layout_toStartOf="@id/ok"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="15dp"
+            android:fontFamily="@font/helvetica_bold"
+            android:paddingHorizontal="@dimen/default_15dp"
+            android:paddingVertical="@dimen/default_15dp"
             android:text="@string/cancel"
             android:textColor="@color/red"
-            android:textStyle="bold"
-            android:visibility="invisible" />
+            android:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ok_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text"
+            android:layout_marginHorizontal="@dimen/default_12dp"
+            android:layout_marginTop="@dimen/default_25dp"
+            android:layout_marginBottom="@dimen/default_15dp"
+                android:text="@string/ok"
+                android:textAllCaps="false"
+            app:cornerRadius="5dp" />
 
     </RelativeLayout>
 </layout>
