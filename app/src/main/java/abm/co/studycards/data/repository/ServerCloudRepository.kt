@@ -2,6 +2,7 @@ package abm.co.studycards.data.repository
 
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.model.vocabulary.Word
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 
@@ -25,4 +26,5 @@ interface ServerCloudRepository {
     suspend fun removeCategory(category: Category)
     suspend fun setSelectedLanguages(vararg languageCodes: String)
     suspend fun updateSelectedLanguages(vararg languageCodes: String)
+    fun getFirebaseAuth(): FirebaseAuth
 }

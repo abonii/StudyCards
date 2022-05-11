@@ -1,7 +1,7 @@
 <resources>
 	<dimen name="toolbar_elevation">1.8dp</dimen>
 	<dimen name="item_select_vertical_padding">10.8dp</dimen>
-	<dimen name="standard_80">68dp</dimen>
+	<dimen name="standard_80">35.1dp</dimen>
 	<dimen name="button_padding_vertically">13.5dp</dimen>
 	<dimen name="first_page_default_margin">14.4dp</dimen>
 	<dimen name="button_corner_radius_dp">4.5dp</dimen>
@@ -12,7 +12,7 @@
 	<dimen name="clickable_text_min_height">43.2dp</dimen>
 	<dimen name="layout_recycler_margin">7.2dp</dimen>
 	<dimen name="activity_horizontal_margin">14.4dp</dimen>
-	<dimen name="standard_160">136dp</dimen>
+	<dimen name="standard_160">70.2dp</dimen>
 	<dimen name="vocabulary_button_width">90dp</dimen>
 	<dimen name="home_page_language_image_size">17.1dp</dimen>
 	<dimen name="btn_min_height">49.5dp</dimen>

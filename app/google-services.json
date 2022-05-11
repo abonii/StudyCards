@@ -8,25 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:111316305374:android:5be57e5c3fcb71cce7c94f",
+        "mobilesdk_app_id": "1:111316305374:android:d0dc4cad79a58953e7c94f",
         "android_client_info": {
-          "package_name": "abm.co.studycards"
+          "package_name": "abc.co.studycardsadmin"
         }
       },
       "oauth_client": [
         {
-          "client_id": "111316305374-d8jmekjftue9ljs0pvfkgn70k7lqlk06.apps.googleusercontent.com",
+          "client_id": "111316305374-f76ehbk7dni7pj14buokds0qnvaps7a3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "abm.co.studycards",
-            "certificate_hash": "461d9527bd67c0dbe053a9ea8afeb1690e81ad86"
-          }
-        },
-        {
-          "client_id": "111316305374-h9fd1vqj5u8ngcsdp3o0r7q805vqidm8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "abm.co.studycards",
+            "package_name": "abc.co.studycardsadmin",
             "certificate_hash": "1158c58a9074de1f031c3771da4d1a1c867ef099"
           }
         },
@@ -36,6 +28,49 @@
         }
       ],
       "api_key": [
+        {
+          "current_key": "AIzaSyCWU1kUt11A0IZmSYZrkaE15jJFOEVewRs"
+        },
+        {
+          "current_key": "AIzaSyAyAVA1WrxOdZlenkazz8C3WqPtWfwyZBA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "111316305374-21t7ltj94npjvbqrcbmql58ugpstjnu9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111316305374:android:5be57e5c3fcb71cce7c94f",
+        "android_client_info": {
+          "package_name": "abm.co.studycards"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "111316305374-73e9uc9b1o5g7qdqnmot3dsgc411s9vf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "abm.co.studycards",
+            "certificate_hash": "461d9527bd67c0dbe053a9ea8afeb1690e81ad86"
+          }
+        },
+        {
+          "client_id": "111316305374-21t7ltj94npjvbqrcbmql58ugpstjnu9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWU1kUt11A0IZmSYZrkaE15jJFOEVewRs"
+        },
         {
           "current_key": "AIzaSyAyAVA1WrxOdZlenkazz8C3WqPtWfwyZBA"
         }

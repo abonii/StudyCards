@@ -4,6 +4,7 @@ import abm.co.studycards.data.PricingRepository
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +14,8 @@ import javax.inject.Inject
 @HiltViewModel
 class BuyPremiumViewModel @Inject constructor(
     val prefs: Prefs,
-    private val pricingRepository: PricingRepository
+    private val pricingRepository: PricingRepository,
+    private val firebaseAuth: FirebaseAuth
 ) : BaseViewModel() {
     val skusStateFlow = pricingRepository.skusStateFlow
     fun getBillingClient() = pricingRepository.billingClient
@@ -21,6 +23,6 @@ class BuyPremiumViewModel @Inject constructor(
         pricingRepository.startConnection()
     }
 
-    fun isUserAnonymous() = Firebase.auth.currentUser?.isAnonymous ?: true
-    fun isUserNotVerified() = !(Firebase.auth.currentUser?.isEmailVerified ?: false)
+    fun isUserAnonymous() = firebaseAuth.currentUser?.isAnonymous ?: true
+    fun isUserNotVerified() = !(firebaseAuth.currentUser?.isEmailVerified ?: false)
 }

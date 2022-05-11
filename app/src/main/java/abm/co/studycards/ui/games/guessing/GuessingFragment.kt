@@ -12,11 +12,9 @@ import abm.co.studycards.util.flipOutCard
 import abm.co.studycards.util.navigate
 import android.graphics.Color
 import android.os.Bundle
-import android.view.View
 import androidx.cardview.widget.CardView
 import androidx.core.animation.doOnEnd
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 

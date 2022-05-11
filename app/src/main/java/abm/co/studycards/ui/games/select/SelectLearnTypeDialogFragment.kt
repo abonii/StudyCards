@@ -103,22 +103,22 @@ class SelectLearnTypeDialogFragment :
     }
 
     private fun onGuessingClicked() {
-        if (viewModel.allWordsList.isNotEmpty()) {
+        if (viewModel.undefinedWordsList.isNotEmpty() || viewModel.unlearnedWordsList.isNotEmpty()) {
             val action =
                 SelectLearnTypeDialogFragmentDirections.actionSelectGamesTypeDialogFragmentToGuessingFragment(
                     isRepeat = false,
-                    words = viewModel.getAllWordsInTypedArray()
+                    words = viewModel.getUnlearnedWordsInTypedArray()
                 )
             navigate(action)
         }
     }
 
     private fun onPairingClicked() {
-        if (viewModel.allWordsList.isNotEmpty()) {
+        if (viewModel.undefinedWordsList.isNotEmpty() || viewModel.unlearnedWordsList.isNotEmpty()) {
             val action =
                 SelectLearnTypeDialogFragmentDirections.actionSelectGamesTypeDialogFragmentToMatchingPairsFragment(
                     isRepeat = false,
-                    words = viewModel.getAllWordsInTypedArray()
+                    words = viewModel.getUnlearnedWordsInTypedArray()
                 )
             navigate(action)
         }

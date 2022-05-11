@@ -3,19 +3,15 @@ package abm.co.studycards.ui.select_language_anywhere
 import abm.co.studycards.R
 import abm.co.studycards.databinding.ItemLanguageAnyWhereBinding
 import abm.co.studycards.databinding.ItemParentSelectLanguageAnywhereBinding
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-class LanguageAnyWhereParentAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class LanguageAnyWhereParentAdapter :
+    ListAdapter<LanguageVHUI, RecyclerView.ViewHolder>(DIFF_UTIL) {
 
-    var items: List<LanguageVHUI> = ArrayList()
-        @SuppressLint("NotifyDataSetChanged")
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
     var selectedItemPos = -1
     var lastItemSelectedPos = -1
     private var currentTime: Long = 0
@@ -61,7 +57,7 @@ class LanguageAnyWhereParentAdapter: RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (val currentItem = items[position]) {
+        when (val currentItem = getItem(position)) {
             is LanguageVHUI.TitleLanguages -> {
                 (holder as ParentLanguageAnywhereViewHolder).bind(currentItem.value)
             }
@@ -71,10 +67,8 @@ class LanguageAnyWhereParentAdapter: RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    override fun getItemCount() = items.size
-
     override fun getItemViewType(position: Int): Int {
-        return when (items[position]) {
+        return when (getItem(position)) {
             is LanguageVHUI.TitleLanguages -> {
                 R.layout.item_parent_select_language_anywhere
             }
@@ -92,15 +86,37 @@ class LanguageAnyWhereParentAdapter: RecyclerView.Adapter<RecyclerView.ViewHolde
         if (payloads.isNotEmpty()) {
             when (payloads[0]) {
                 0 -> {
-                    val lang = (items[position] as LanguageVHUI.Language).value
+                    val lang = (getItem(position) as LanguageVHUI.Language).value
                     lang.isSelected = !lang.isSelected
                 }
                 2 -> {
-                    val lang = (items[position] as LanguageVHUI.Language).value
+                    val lang = (getItem(position) as LanguageVHUI.Language).value
                     lang.isSelected = false
                 }
             }
         }
         super.onBindViewHolder(holder, position, payloads)
+    }
+
+    companion object {
+        private val DIFF_UTIL = object : DiffUtil.ItemCallback<LanguageVHUI>() {
+            override fun areItemsTheSame(
+                oldItem: LanguageVHUI,
+                newItem: LanguageVHUI
+            ): Boolean =
+                (oldItem is LanguageVHUI.Language &&
+                        newItem is LanguageVHUI.Language &&
+                        oldItem.value.language.code == newItem.value.language.code)
+                        || (oldItem is LanguageVHUI.TitleLanguages &&
+                                newItem is LanguageVHUI.TitleLanguages &&
+                                oldItem.value == newItem.value)
+
+
+            override fun areContentsTheSame(
+                oldItem: LanguageVHUI,
+                newItem: LanguageVHUI
+            ): Boolean =
+                oldItem == newItem
+        }
     }
 }

@@ -439,6 +439,20 @@
                             android:contentDescription="@string/icon" />
                     </RelativeLayout>
                 </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/default_20dp"
+                    android:layout_marginTop="@dimen/default_15dp"
+                    android:fontFamily="@font/helvetica_roman"
+                    tools:text="Version: 1.0"
+                    android:layout_gravity="center"
+                    android:textColor="@color/thirdTextColor"
+                    android:textSize="@dimen/default_12sp" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,7 @@ import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.firebaseError
 import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,10 +19,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
-    private val repository: ServerCloudRepository
+    private val repository: ServerCloudRepository,
+    private val firebaseAuth: FirebaseAuth
 ) : BaseViewModel() {
 
-    private val firebaseAuth = Firebase.auth
     var email: String = ""
     var name: String = ""
     var password: String = ""

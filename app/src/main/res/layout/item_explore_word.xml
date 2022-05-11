@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="@dimen/activity_horizontal_margin"
-    android:background="?attr/selectableItemBackground"
+    android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
-    android:paddingVertical="@dimen/default_6dp"
+    android:paddingStart="0dp"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
     android:focusable="true"
     android:orientation="horizontal">
 
@@ -16,10 +16,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
         app:layout_constraintTop_toTopOf="parent"
+        app:cardBackgroundColor="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:backgroundTint="#EDF1FF"
+        android:layout_marginVertical="@dimen/default_6dp"
         app:cardCornerRadius="@dimen/default_25dp">
 
         <androidx.cardview.widget.CardView
@@ -27,6 +30,7 @@
             android:layout_height="@dimen/default_50dp"
             android:layout_gravity="center"
             android:layout_margin="@dimen/default_1dp"
+            app:cardElevation="@dimen/default_1dp"
             app:cardCornerRadius="@dimen/default_25dp">
 
             <ImageView

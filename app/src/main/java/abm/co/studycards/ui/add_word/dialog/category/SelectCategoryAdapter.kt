@@ -53,7 +53,4 @@ class SelectCategoryAdapter(
     interface SelectCategoryAdapterListener {
         fun onRadioClicked(currentItem: Category)
     }
-
-
-
 }

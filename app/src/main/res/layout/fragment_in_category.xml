@@ -5,7 +5,6 @@
     tools:context=".ui.in_category.InCategoryFragment">
 
     <data>
-
         <variable
             name="inCategoryFragment"
             type="abm.co.studycards.ui.in_category.InCategoryFragment" />
@@ -44,7 +43,7 @@
                     app:layout_constraintEnd_toStartOf="@id/edit"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="BASIC" />
+                    tools:text="Basic" />
 
                 <ImageButton
                     android:id="@+id/edit"

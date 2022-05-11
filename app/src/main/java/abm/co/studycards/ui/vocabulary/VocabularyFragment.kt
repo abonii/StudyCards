@@ -18,7 +18,7 @@ class VocabularyFragment :
         setStatusBarColor()
         adapterP = PagerAdapter(requireActivity())
         fragmentsArray = resources.getStringArray(R.array.vocabulary_tabs)
-        binding.pager.apply {
+        binding.pager.run {
             adapter = adapterP
             isUserInputEnabled = false
 //            offscreenPageLimit = 1

@@ -14,12 +14,10 @@ import android.content.Context
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
 import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,7 +34,9 @@ object FirebaseModule {
     @Provides
     fun provideFirebaseFunctionsInstance() = FirebaseFunctions.getInstance()
 
-    @Singleton
+    @Provides
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+
     @Provides
     fun provideGoogleSignInOptions(application: Application): GoogleSignInOptions {
         return GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -45,7 +45,6 @@ object FirebaseModule {
             .build()
     }
 
-    @Singleton
     @Provides
     fun provideGoogleSignInClient(
         signInOptions: GoogleSignInOptions,
@@ -56,11 +55,11 @@ object FirebaseModule {
 
     @Named(USER_ID)
     @Provides
-    fun provideUserId() = Firebase.auth.currentUser?.uid ?: "no-user"
+    fun provideUserId(firebaseAuth: FirebaseAuth) = firebaseAuth.currentUser?.uid ?: "no-user"
 
     @Provides
     fun provideFirebaseDatabase(): FirebaseDatabase {
-        return Firebase.database
+        return FirebaseDatabase.getInstance()
     }
 
     @Provides

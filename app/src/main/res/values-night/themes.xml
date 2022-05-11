@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.StudyCards" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -10,8 +10,8 @@
         <item name="colorSecondaryVariant">@color/third_color</item>
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/background</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar">false</item>
         <!-- Customize your theme here. -->
         <!-- BottomSheet-->
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
@@ -36,6 +36,7 @@
         <item name="android:fontFamily">@font/helvetica_medium</item>
         <item name="android:textSize">13sp</item>
     </style>
+
     <style name="BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="itemIconTint">@drawable/bottom_navigation_background</item>
         <item name="android:textColor">@drawable/bottom_navigation_background</item>

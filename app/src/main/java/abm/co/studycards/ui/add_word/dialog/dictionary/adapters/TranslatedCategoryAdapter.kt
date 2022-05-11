@@ -2,50 +2,39 @@ package abm.co.studycards.ui.add_word.dialog.dictionary.adapters
 
 import abm.co.studycards.data.model.oxford.LexicalEntry
 import abm.co.studycards.databinding.ItemTranslatedCategoryBinding
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 
 class TranslatedCategoryAdapter(
-    private val listener: TranslatedWordAdapter.OnCheckBoxClicked
-) :
-    RecyclerView.Adapter<TranslatedCategoryAdapter.ViewHolder>() {
+    private val onExampleSelected: (example: String, isPressed: Boolean) -> Unit,
+    private val onTranslationSelected: (example: String, isPressed: Boolean) -> Unit
+) : ListAdapter<LexicalEntry, TranslatedCategoryViewHolder>(DIFF_UTIL) {
 
-    var items: List<LexicalEntry>? = ArrayList()
-        @SuppressLint("NotifyDataSetChanged")
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
 
-    inner class ViewHolder(private val binding: ItemTranslatedCategoryBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(currentItem: LexicalEntry?) {
-            val tAdapter = TranslatedWordAdapter(listener)
-            tAdapter.items = currentItem?.entries?.get(0)?.senses!!
-            binding.run {
-                category.text = currentItem.lexicalCategory?.text
-                listView.adapter = tAdapter
-                listView.layoutManager = LinearLayoutManager(binding.root.context)
-            }
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): TranslatedCategoryViewHolder {
         val binding = ItemTranslatedCategoryBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-        return ViewHolder(binding)
+        return TranslatedCategoryViewHolder(binding, onExampleSelected, onTranslationSelected)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentItem = items?.get(position)
+    override fun onBindViewHolder(holder: TranslatedCategoryViewHolder, position: Int) {
+        val currentItem = getItem(position)
         holder.bind(currentItem)
     }
 
-    override fun getItemCount(): Int {
-        return items?.size ?: 0
+    companion object {
+        private val DIFF_UTIL = object : DiffUtil.ItemCallback<LexicalEntry>() {
+            override fun areItemsTheSame(oldItem: LexicalEntry, newItem: LexicalEntry): Boolean =
+                oldItem.text == newItem.text
+
+            override fun areContentsTheSame(oldItem: LexicalEntry, newItem: LexicalEntry): Boolean =
+                oldItem == newItem
+        }
     }
 }

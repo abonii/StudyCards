@@ -7,10 +7,9 @@ import android.content.Intent
 import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -21,17 +20,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val googleSignInClient: GoogleSignInClient,
+    val firebaseAuth: FirebaseAuth
 ) : BaseViewModel() {
 
     var email: String = ""
     var password: String = ""
-
     val dispatcher = Dispatchers.IO
-    private val firebaseAuthInstance = Firebase.auth
 
     private val _error = MutableStateFlow<Int?>(null)
     val error = _error.asStateFlow()
@@ -57,7 +54,7 @@ class LoginViewModel @Inject constructor(
     fun loginAnonymously() = viewModelScope.launch(dispatcher) {
         delay(200)
         _loading.value = true
-        firebaseAuthInstance.signInAnonymously()
+        firebaseAuth.signInAnonymously()
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     checkUserExistence()
@@ -96,7 +93,7 @@ class LoginViewModel @Inject constructor(
             }
             else -> {
                 _loading.value = true
-                firebaseAuthInstance.signInWithEmailAndPassword(email.trim(), password)
+                firebaseAuth.signInWithEmailAndPassword(email.trim(), password)
                     .addOnCompleteListener {
                         _loading.value = false
                         if (it.isSuccessful) {
@@ -109,7 +106,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun checkUserExistence(currentUser: FirebaseUser? = firebaseAuthInstance.currentUser) {
+    fun checkUserExistence(currentUser: FirebaseUser? = firebaseAuth.currentUser) {
         _loading.value = false
         if (currentUser != null) {
             navigateToMainActivity()
@@ -118,7 +115,7 @@ class LoginViewModel @Inject constructor(
 
     fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
-        firebaseAuthInstance.signInWithCredential(credential)
+        firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     checkUserExistence()

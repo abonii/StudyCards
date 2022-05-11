@@ -1,104 +1,89 @@
 package abm.co.studycards.ui.language
 
-import abm.co.studycards.R
 import abm.co.studycards.data.model.Language
 import abm.co.studycards.databinding.ItemLanguageBinding
-import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Color
+import abm.co.studycards.ui.select_language_anywhere.LanguageSelectable
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 
 class LanguageAdapter(
-    val listener: OnClickWithPosition,
-    val isTargetLanguage: Boolean
-) : RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder>() {
+    private val onClickWithCode: (lang: Language, isTargetLanguage: Boolean) -> Unit,
+    private val isTargetLanguage: Boolean
+) : ListAdapter<LanguageSelectable, LanguageViewHolder>(DIFF_UTIL) {
 
-    var selectedItemPos = -1
-    var lastItemSelectedPos = -1
-    lateinit var lastItemCard: TextView
-    lateinit var currentItemCard: TextView
-    var items: List<Language> = ArrayList()
-
-    inner class LanguageViewHolder(private val binding: ItemLanguageBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        init {
-            binding.root.setOnClickListener {
-                listener.onClickWithCode(items[absoluteAdapterPosition], isTargetLanguage)
-                currentItemCard = binding.item
-                changeSelectedPosition()
-                lastItemCard = currentItemCard
-            }
-        }
-
-        fun bind(currentItem: Language) {
-            binding.run {
-                item.run {
-                    text = currentItem.getLanguageName(root.context)
-                }
-                image.setImageDrawable(
-                    currentItem.getDrawable(binding.root.context)
-                )
-            }
-        }
-
-        private fun changeSelectedPosition() {
-            selectedItemPos = absoluteAdapterPosition
-            if (lastItemSelectedPos == selectedItemPos) {
-                if (lastItemCard.currentTextColor == Color.BLUE) {
-                    defaultCardStroke()
-                } else {
-                    selectedCardStroke()
-                }
-                return
-            }
-            lastItemSelectedPos = if (lastItemSelectedPos == -1)
-                selectedItemPos
-            else {
-                defaultCardStroke(lastItemCard)
-                selectedItemPos
-            }
-            notifyItemChanged(selectedItemPos, 0)
-        }
-
-        fun defaultCardStroke(view: TextView = binding.item) {
-            view.setTextColor(ContextCompat.getColor(view.context, R.color.textColor))
-        }
-
-        fun selectedCardStroke() {
-            binding.item.setTextColor(ContextCompat.getColor(binding.root.context, R.color.colorPrimaryDark))
-        }
-    }
+    private var selectedItemPos = -1
+    private var lastItemSelectedPos = -1
+    private var currentTime: Long = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LanguageViewHolder {
         val binding =
-            ItemLanguageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return LanguageViewHolder(binding)
+            ItemLanguageBinding.inflate(
+                LayoutInflater.from
+                    (parent.context), parent, false
+            )
+        return LanguageViewHolder(binding) { position ->
+            if (currentTime + 100 < System.currentTimeMillis()){
+                changeSelectedPosition(position)
+                onClickWithCode(getItem(position).language, isTargetLanguage)
+            }
+            currentTime = System.currentTimeMillis()
+
+        }
     }
 
     override fun onBindViewHolder(holder: LanguageViewHolder, position: Int) {
-        val currentItem = items[position]
-        if (position == selectedItemPos)
+        val currentItem = getItem(position)
+        if (currentItem.isSelected)
             holder.selectedCardStroke()
         else
             holder.defaultCardStroke()
-        holder.bind(currentItem)
+        holder.bind(currentItem.language)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun addItems(it: List<Language>) {
-        this.items = it
-        notifyDataSetChanged()
+    override fun onBindViewHolder(
+        holder: LanguageViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isNotEmpty()) {
+            when (payloads.first()) {
+                CLICKED -> {
+                    getItem(position).isSelected = true
+                }
+                NOT_SELECTED -> {
+                    getItem(position).isSelected = false
+                }
+            }
+        }
+        super.onBindViewHolder(holder, position, payloads)
     }
 
-    override fun getItemCount() = items.size
-
-    interface OnClickWithPosition {
-        fun onClickWithCode(lang: Language, isTargetLanguage: Boolean)
+    private fun changeSelectedPosition(position: Int) {
+        selectedItemPos = position
+        if (lastItemSelectedPos != -1 && lastItemSelectedPos != selectedItemPos) {
+            notifyItemChanged(lastItemSelectedPos, NOT_SELECTED)
+        }
+        notifyItemChanged(selectedItemPos, CLICKED)
+        lastItemSelectedPos = position
     }
 
+    companion object {
+        const val CLICKED = 0
+        const val NOT_SELECTED = 1
+        private val DIFF_UTIL = object : DiffUtil.ItemCallback<LanguageSelectable>() {
+            override fun areItemsTheSame(
+                oldItem: LanguageSelectable,
+                newItem: LanguageSelectable
+            ): Boolean =
+                oldItem.language.code == newItem.language.code
+
+            override fun areContentsTheSame(
+                oldItem: LanguageSelectable,
+                newItem: LanguageSelectable
+            ): Boolean =
+                oldItem == newItem
+        }
+    }
 }

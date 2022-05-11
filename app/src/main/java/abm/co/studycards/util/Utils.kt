@@ -1,9 +1,6 @@
 package abm.co.studycards.util
 
 import abm.co.studycards.R
-import abm.co.studycards.helpers.LinkTouchMovementMethod
-import abm.co.studycards.helpers.TouchableSpan
-import abm.co.studycards.ui.add_word.dialog.dictionary.adapters.TranslatedWordAdapter
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.animation.ArgbEvaluator
@@ -18,7 +15,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.SpannableString
-import android.text.Spanned
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
@@ -37,6 +33,7 @@ import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.apache.commons.lang3.StringUtils
 import java.util.*
 
 
@@ -138,45 +135,6 @@ fun String?.fromHtml(): CharSequence {
     }
 }
 
-fun TextView.makeClickable(
-    text: String,
-    listener: TranslatedWordAdapter.OnCheckBoxClicked,
-    isExample: Boolean
-) {
-    val spannableString = SpannableString(this.text)
-    var startIndexOfLink = -1
-    if (text.isNotEmpty()) {
-        val defaultColor =
-            if (isExample) getMyColor(R.color.secondTextColor)
-            else getMyColor(R.color.textColor)
-        val selectedColor =
-            if (isExample) getMyColor(R.color.colorPrimary)
-            else getMyColor(R.color.colorPrimaryDark)
-        val clickableSpan = object : TouchableSpan(
-            defaultColor,
-            selectedColor
-        ) {
-            override fun onClick(view: View) {
-                if (isExample) {
-                    listener.onExampleSelected(text, myPressed)
-                } else {
-                    listener.onTranslationSelected(text, myPressed)
-                }
-                setMyPressed()
-            }
-
-        }
-        startIndexOfLink = this.text.toString().indexOf(text, startIndexOfLink + 1)
-        spannableString.setSpan(
-            clickableSpan, startIndexOfLink, startIndexOfLink + text.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    }
-    this.movementMethod =
-        LinkTouchMovementMethod()
-    this.setText(spannableString, TextView.BufferType.SPANNABLE)
-}
-
 @Suppress("DEPRECATION")
 fun TextView.leftAndRightDrawable(
     @DrawableRes left: Int = 0,
@@ -226,3 +184,6 @@ inline fun Fragment.launchAndRepeatWithViewLifecycle(
     }
 }
 
+fun String.stripAccents(): String {
+    return StringUtils.stripAccents(this)
+}

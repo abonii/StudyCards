@@ -2,11 +2,11 @@ package abm.co.studycards.ui.change_password
 
 import abm.co.studycards.R
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.core.App
 import abm.co.studycards.util.firebaseError
 import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,11 +18,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChangePasswordViewModel @Inject constructor(
+    private val firebaseAuth: FirebaseAuth
 ) : BaseViewModel() {
 
     var oldPassword: String = ""
     var newPassword: String = ""
-    private var user = Firebase.auth.currentUser
+    private var user = firebaseAuth.currentUser
     private var email = user?.email ?: ""
 
     private val _loading = MutableStateFlow(false)

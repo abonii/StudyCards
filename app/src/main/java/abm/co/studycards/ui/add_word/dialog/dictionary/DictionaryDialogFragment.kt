@@ -3,7 +3,6 @@ package abm.co.studycards.ui.add_word.dialog.dictionary
 import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentDictionaryDialogBinding
 import abm.co.studycards.ui.add_word.dialog.dictionary.adapters.TranslatedCategoryAdapter
-import abm.co.studycards.ui.add_word.dialog.dictionary.adapters.TranslatedWordAdapter
 import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseDialogFragment
 import android.os.Bundle
@@ -15,14 +14,13 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DictionaryDialogFragment :
-    BaseDialogFragment<FragmentDictionaryDialogBinding>(R.layout.fragment_dictionary_dialog),
-    TranslatedWordAdapter.OnCheckBoxClicked {
+    BaseDialogFragment<FragmentDictionaryDialogBinding>(R.layout.fragment_dictionary_dialog) {
 
     private val viewModel: DictionaryViewModel by viewModels()
 
     override fun initUI(savedInstanceState: Bundle?) {
-        val tAdapter = TranslatedCategoryAdapter(this)
-        tAdapter.items = viewModel.entries?.lexicalEntries
+        val tAdapter = TranslatedCategoryAdapter(::onExampleSelected, ::onTranslationSelected)
+        tAdapter.submitList(viewModel.entries?.lexicalEntries)
         binding.run {
             word.text = viewModel.wordName.uppercase()
             recyclerView.adapter = tAdapter
@@ -59,11 +57,11 @@ class DictionaryDialogFragment :
         dialog!!.window?.setBackgroundDrawableResource(R.drawable.round_corner)
     }
 
-    override fun onExampleSelected(example: String, isPressed: Boolean) {
+    private fun onExampleSelected(example: String, isPressed: Boolean) {
         viewModel.onExampleSelected(example, isPressed)
     }
 
-    override fun onTranslationSelected(translation: String, isPressed: Boolean) {
+    private fun onTranslationSelected(translation: String, isPressed: Boolean) {
         viewModel.onTranslationSelected(translation, isPressed)
     }
 

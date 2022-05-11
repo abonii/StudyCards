@@ -12,11 +12,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +30,7 @@ class ProfileViewModel @Inject constructor(
     private val firebaseRepository: ServerCloudRepository,
 ) : BaseViewModel() {
 
-    private val currentUser = FirebaseAuth.getInstance().currentUser
+    private val currentUser = firebaseRepository.getFirebaseAuth().currentUser
     val appLanguage = prefs.getAppLanguage()
     var email = MutableStateFlow(currentUser?.email ?: "")
     var password: String = ""
@@ -53,8 +51,10 @@ class ProfileViewModel @Inject constructor(
     val isEmailAuth = MutableStateFlow(currentUser?.isEmailVerified == true)
 
     val isAnonymousOrVerified =
-        MutableStateFlow(currentUser?.isAnonymous == true
-                || currentUser?.isEmailVerified == true)
+        MutableStateFlow(
+            currentUser?.isAnonymous == true
+                    || currentUser?.isEmailVerified == true
+        )
 
     val translationCount = MutableStateFlow("0")
 
@@ -62,20 +62,20 @@ class ProfileViewModel @Inject constructor(
         FirebaseAuth.getInstance().useAppLanguage()
         firebaseRepository.getUserReference()
             .addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                viewModelScope.launch(Dispatchers.IO) {
-                    if (snapshot.child("name").exists()) {
-                        userName.value = (snapshot.child("name").value as String?).toString()
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        if (snapshot.child("name").exists()) {
+                            userName.value = (snapshot.child("name").value as String?).toString()
+                        }
+                        translationCount.value =
+                            (snapshot.child(CAN_TRANSLATE_TIME_EVERY_DAY).value as Long?).toString()
                     }
-                    translationCount.value =
-                        (snapshot.child(CAN_TRANSLATE_TIME_EVERY_DAY).value as Long?).toString()
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                translationCount.value = "0"
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    translationCount.value = "0"
+                }
+            })
     }
 
     fun setAppLanguage(language: Language) {
@@ -152,7 +152,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun signOut(onFinish: () -> Unit) {
-        Firebase.auth.signOut()
+        firebaseRepository.getFirebaseAuth().signOut()
         googleSignInClient.signOut()
             .addOnCompleteListener() {
                 currentUser?.delete()
@@ -168,6 +168,14 @@ class ProfileViewModel @Inject constructor(
                 } else {
                     makeToast(firebaseError(task.exception))
                 }
+            }
+    }
+
+    fun simpleLogout(onFinish: () -> Unit) {
+        firebaseRepository.getFirebaseAuth().signOut()
+        googleSignInClient.signOut()
+            .addOnCompleteListener() {
+                onFinish.invoke()
             }
     }
 }

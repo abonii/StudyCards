@@ -2,7 +2,7 @@
 	<dimen name="toolbar_elevation">2dp</dimen>
 	<dimen name="image_first_page_height">242dp</dimen>
 	<dimen name="item_select_vertical_padding">12dp</dimen>
-	<dimen name="standard_80">80dp</dimen>
+	<dimen name="standard_80">39dp</dimen>
 	<dimen name="button_padding_vertically">15dp</dimen>
 	<dimen name="first_page_default_margin">16dp</dimen>
 	<dimen name="image_first_page_width">238dp</dimen>
@@ -15,7 +15,7 @@
 	<dimen name="clickable_text_min_height">48dp</dimen>
 	<dimen name="layout_recycler_margin">8dp</dimen>
 	<dimen name="activity_horizontal_margin">16dp</dimen>
-	<dimen name="standard_160">160dp</dimen>
+	<dimen name="standard_160">78dp</dimen>
 	<dimen name="vocabulary_button_width">100dp</dimen>
 	<dimen name="home_page_language_image_size">19dp</dimen>
 	<dimen name="btn_min_height">55dp</dimen>

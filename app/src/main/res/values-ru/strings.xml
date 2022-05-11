@@ -27,14 +27,14 @@
     <string name="one_game">Одной игрой</string>
     <string name="ok">ОК</string>
     <string name="great_job">Прекрасная работа! Так держать!</string>
-    <string name="add_edit_title">СОЗДАНИЕ СЛОВО</string>
+    <string name="add_edit_title">Создание слова</string>
     <string name="image">Изображение</string>
     <string name="transcription">Транскрипция</string>
     <string name="icon">иконка</string>
     <string name="matching">Создай пару</string>
     <string name="pairing">Создать пару</string>
     <string name="guessing">Догадайся</string>
-    <string name="cancel">ОТМЕНА</string>
+    <string name="cancel">Отмена</string>
     <string name="arrow">стрела</string>
 
     <string name="upper_doubt">СОМНЕВАЮСЬ</string>
@@ -227,5 +227,6 @@
     <string name="something_went_wrong">Что-то пошло не так. Пожалуйста, повторите попытку позже</string>
     <string name="translated_with_oxford">Переведено с помощью Oxford Dictionaries API</string>
     <string name="translated_with_yandex">premium_feature2_des</string>
+    <string name="version">Версия: %1$s</string>
 
 </resources>

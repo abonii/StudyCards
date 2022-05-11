@@ -78,9 +78,10 @@
             android:layout_marginHorizontal="@dimen/default_12dp"
             android:layout_marginTop="@dimen/default_25dp"
             android:layout_marginBottom="@dimen/default_15dp"
-                android:text="@string/ok"
-                android:textAllCaps="false"
-            app:cornerRadius="5dp" />
+            android:textSize="@dimen/default_14sp"
+            android:text="@string/ok"
+            android:textAllCaps="false"
+            app:cornerRadius="8dp" />
 
     </RelativeLayout>
 </layout>

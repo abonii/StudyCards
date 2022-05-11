@@ -114,6 +114,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
     fun setToolbar(toolbar: Toolbar) {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
         toolbar.navigationIcon = getImg(R.drawable.ic_back)
     }
 

@@ -109,9 +109,9 @@ class SelectLearnTypeViewModel @Inject constructor(
         return allWordsList.toTypedArray()
     }
 
-//    fun getUnlearnedWordsInTypedArray(): Array<Word> {
-//        return unlearnedWordsList.toTypedArray()
-//    }
+    fun getUnlearnedWordsInTypedArray(): Array<Word> {
+        return (unlearnedWordsList + undefinedWordsList).toTypedArray()
+    }
 
     fun getTextForLearnSubtitle(context: Context, size: Int): String {
         return context.resources.getQuantityString(R.plurals.learn_words, size, size)

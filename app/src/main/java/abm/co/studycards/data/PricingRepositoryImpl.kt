@@ -6,9 +6,8 @@ import abm.co.studycards.util.Constants.VERIFY_PRODUCT_FUN
 import android.content.Context
 import android.widget.Toast
 import com.android.billingclient.api.*
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +22,8 @@ import javax.inject.Singleton
 class PricingRepositoryImpl @Inject constructor(
     @ApplicationContext val context: Context,
     private val firebaseFunctions: FirebaseFunctions,
-    private val coroutineScope: CoroutineScope
+    private val coroutineScope: CoroutineScope,
+    private val firebaseAuth: FirebaseAuth
 ) : PricingRepository, BillingClientStateListener, PurchasesUpdatedListener {
 
     private val _skusLiveData = MutableStateFlow<List<SkuDetails>>(emptyList())
@@ -70,7 +70,7 @@ class PricingRepositoryImpl @Inject constructor(
             "sku_id" to purchase.skus.getOrNull(0),
             "purchase_token" to purchase.purchaseToken,
             "package_name" to purchase.packageName,
-            "user_id" to (Firebase.auth.currentUser?.uid ?: "000000"),
+            "user_id" to (firebaseAuth.currentUser?.uid ?: "000000"),
         )
         firebaseFunctions.getHttpsCallable(VERIFY_PRODUCT_FUN).call(data).continueWith { task ->
             try {

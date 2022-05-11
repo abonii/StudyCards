@@ -2,12 +2,10 @@ package abm.co.studycards.ui.forgot_password
 
 import abm.co.studycards.R
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.core.App
 import abm.co.studycards.util.firebaseError
 import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,10 +14,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ForgotPasswordViewModel @Inject constructor(
+    private val firebaseAuth: FirebaseAuth
 ) : BaseViewModel() {
 
     var email: String = ""
-    private val firebaseAuthInstance = Firebase.auth
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
 
@@ -29,7 +27,7 @@ class ForgotPasswordViewModel @Inject constructor(
             return@launch
         }
         _loading.value = true
-        firebaseAuthInstance.sendPasswordResetEmail(email.trim())
+        firebaseAuth.sendPasswordResetEmail(email.trim())
             .addOnCompleteListener {
                 _loading.value = false
                 if (it.isSuccessful) {

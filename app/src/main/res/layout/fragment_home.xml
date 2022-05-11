@@ -186,6 +186,7 @@
             android:fontFamily="@font/helvetica_medium"
             android:gravity="center"
             android:textColor="@color/textColor"
+            android:textSize="@dimen/normal_text_sp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -16,7 +16,6 @@ import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection
 
-
 /**
  * types: at position 0 is current fragment type f.e: UNKNOWN
  * at position 1 is first button's type f.e: UNCERTAIN
@@ -25,8 +24,7 @@ import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection
 class VocabularyAdapter(
     val onChangeType: (word: Word, type: LearnOrKnown) -> Unit,
     vararg types: LearnOrKnown
-) :
-    ListAdapter<Word, VocabularyAdapter.VocabularyViewHolder>(DIFF_UTIL) {
+) : ListAdapter<Word, VocabularyAdapter.VocabularyViewHolder>(DIFF_UTIL) {
 
     val firstButton = types[1]
     val secondButton = types[2]
@@ -42,9 +40,7 @@ class VocabularyAdapter(
         val swipeRevealLayout = binding.swipeRevealLayout
         private val expansionLayout = binding.expansionLayout
         private val swipeListener = object : SwipeRevealLayout.SwipeListener {
-            override fun onClosed(view: SwipeRevealLayout?) {
-
-            }
+            override fun onClosed(view: SwipeRevealLayout?) {}
 
             override fun onOpened(view: SwipeRevealLayout?) {
                 if (expansionLayout.isExpanded) expansionLayout.collapse(true)

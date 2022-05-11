@@ -2,7 +2,6 @@ package abm.co.studycards.ui.language
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.AvailableLanguages
 import abm.co.studycards.data.model.Language
 import abm.co.studycards.databinding.FragmentSelectLanguageBinding
 import abm.co.studycards.util.base.BaseBindingFragment
@@ -15,8 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SelectLanguageFragment :
-    BaseBindingFragment<FragmentSelectLanguageBinding>(R.layout.fragment_select_language),
-    LanguageAdapter.OnClickWithPosition {
+    BaseBindingFragment<FragmentSelectLanguageBinding>(R.layout.fragment_select_language) {
 
     private val viewModel: SelectLanguageViewModel by viewModels()
 
@@ -27,10 +25,10 @@ class SelectLanguageFragment :
 
     private fun setBindings() {
         setToolbar()
-        val nativeAdapter = LanguageAdapter(this, false)
-        val targetAdapter = LanguageAdapter(this, true)
-        nativeAdapter.addItems(AvailableLanguages.availableLanguages)
-        targetAdapter.addItems(AvailableLanguages.availableLanguages)
+        val nativeAdapter = LanguageAdapter(::onClickWithCode, false)
+        val targetAdapter = LanguageAdapter(::onClickWithCode, true)
+        nativeAdapter.submitList(viewModel.getAvailableLanguages())
+        targetAdapter.submitList(viewModel.getAvailableLanguages())
         binding.run {
             rvNativeLanguage.adapter = nativeAdapter
             rvLearnLanguage.adapter = targetAdapter
@@ -39,12 +37,10 @@ class SelectLanguageFragment :
     }
 
     private fun setToolbar() {
-        (activity as MainActivity).setToolbar(binding.toolbar)
-        binding.toolbar.setNavigationIcon(R.drawable.ic_clear)
-        if (viewModel.prefs.getSourceLanguage().isEmpty() || viewModel.prefs.getTargetLanguage()
-                .isEmpty()
+        if (viewModel.prefs.getSourceLanguage().isNotEmpty() && viewModel.prefs.getTargetLanguage()
+                .isNotEmpty()
         ) {
-            (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            binding.toolbar.setNavigationIcon(R.drawable.ic_clear)
         }
     }
 
@@ -62,7 +58,7 @@ class SelectLanguageFragment :
     }
 
 
-    override fun onClickWithCode(
+    private fun onClickWithCode(
         lang: Language,
         isTargetLanguage: Boolean,
     ) {
@@ -90,5 +86,4 @@ class SelectLanguageFragment :
             }
         }
     }
-
 }

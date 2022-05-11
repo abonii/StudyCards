@@ -15,18 +15,22 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class YandexNetworkModule {
+    @Singleton
     @Provides
     @YandexNetwork(URL)
     fun provideYandexUrl() = Constants.BASE_URL_YANDEX
 
+    @Singleton
     @Provides
     @YandexNetwork(GSON)
     fun provideGson(): Gson = GsonBuilder().setLenient().create()
 
+    @Singleton
     @Provides
     @YandexNetwork(OKHTTP)
     fun provideOkHttpClient(): OkHttpClient =
@@ -44,6 +48,7 @@ class YandexNetworkModule {
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .build()
 
+    @Singleton
     @Provides
     @YandexNetwork(RETROFIT)
     fun provideRetrofit(
@@ -57,6 +62,7 @@ class YandexNetworkModule {
             .build()
     }
 
+    @Singleton
     @Provides
     @YandexNetwork(APISERVICE)
     fun provideYandexApiService(

@@ -35,7 +35,7 @@ class SelectLanguageAnyWhereFragment :
         setBindings()
         launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.parentLanguageStateFlow.collectLatest {
-                parentLanguageAdapter.items = it
+                parentLanguageAdapter.submitList(it)
             }
         }
     }
@@ -52,7 +52,7 @@ class SelectLanguageAnyWhereFragment :
             if (parentLanguageAdapter.selectedItemPos != -1)
                 viewModel.save(
                     (parentLanguageAdapter
-                        .items[parentLanguageAdapter.selectedItemPos]
+                        .currentList[parentLanguageAdapter.selectedItemPos]
                             as LanguageVHUI.Language).value
                 ) {
                     reCreateItself()

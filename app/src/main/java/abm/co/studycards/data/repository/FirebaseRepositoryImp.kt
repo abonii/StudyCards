@@ -10,9 +10,8 @@ import abm.co.studycards.util.Constants.SELECTED_LANGUAGES
 import abm.co.studycards.util.Constants.USERS_REF
 import abm.co.studycards.util.Constants.USER_REF
 import abm.co.studycards.util.Constants.WORDS_REF
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +28,8 @@ class FirebaseRepositoryImp @Inject constructor(
     @Named(CATEGORIES_REF) private val categoriesDbRef: DatabaseReference,
     @Named(USERS_REF) private var userDbRef: DatabaseReference,
     @Named(USER_REF) private var rootUserDbRef: DatabaseReference,
-    @Named(API_REF) private var apiKeys: DatabaseReference
+    @Named(API_REF) private var apiKeys: DatabaseReference,
+    private var _firebaseAuth: FirebaseAuth,
 ) : ServerCloudRepository {
 
     private val _error = MutableSharedFlow<String>(
@@ -40,7 +40,7 @@ class FirebaseRepositoryImp @Inject constructor(
 
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    override fun getCurrentUser() = Firebase.auth.currentUser
+    override fun getCurrentUser() = _firebaseAuth.currentUser
 
     override suspend fun updateCategoryName(category: Category) {
         withContext(Dispatchers.IO) {
@@ -153,4 +153,6 @@ class FirebaseRepositoryImp @Inject constructor(
     override fun getApiReference() = this.apiKeys
 
     override fun getCategoriesReference() = this.categoriesDbRef
+
+    override fun getFirebaseAuth() = this._firebaseAuth
 }

@@ -36,10 +36,10 @@ class FirstPageFragment :
                     val account = task.getResult(ApiException::class.java)!!
                     viewModel.firebaseAuthWithGoogle(account.idToken!!)
                 } catch (e: ApiException) {
-                    toast("error " + e.message)
+                    e.message?.let { toast(it) }
                 }
-            } else
-                viewModel.setLoading(false)
+            }
+            viewModel.setLoading(false)
         }
 
     override fun onCreateView(

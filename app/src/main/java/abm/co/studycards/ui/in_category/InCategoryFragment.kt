@@ -12,6 +12,7 @@ import abm.co.studycards.util.fromHtml
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
@@ -73,7 +74,7 @@ class InCategoryFragment :
         launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.categoryStateFlow.collect {
                 if (it.mainName.isNotEmpty()) {
-                    binding.folderName.text = it.mainName.uppercase()
+                    binding.folderName.text = it.mainName
                     viewModel.category = it
                 }
             }
@@ -159,9 +160,11 @@ class InCategoryFragment :
     }
 
     private fun openDownloadTTSDialog() {
-        val installIntent = Intent()
-        installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
-        startActivity(installIntent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val installIntent = Intent()
+            installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
+            startActivity(installIntent)
+        }
     }
 
     fun onFloatingActionWordClick() {

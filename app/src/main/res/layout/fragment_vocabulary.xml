@@ -7,8 +7,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background">
+        android:layout_height="match_parent">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
@@ -17,6 +16,7 @@
             android:background="@color/blue_light_status"
             app:tabBackground="@drawable/tab_background"
             app:tabIndicatorHeight="0dp"
+            app:tabTextAppearance="@style/tab_text"
             app:tabRippleColor="@android:color/transparent" />
 
         <androidx.viewpager2.widget.ViewPager2

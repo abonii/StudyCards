@@ -23,6 +23,17 @@ object GeneralBindingAdapters {
             Glide.with(context)
                 .load(url)
                 .timeout(4000)
+                .error(R.color.second_color)
+                .into(this)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("app:imageWithGlideAndErrorImage")
+    fun ImageView.setImageWithGlideAndErrorImage(url: String?) {
+        if (url?.isNotBlank() == true) {
+            Glide.with(context)
+                .load(url)
                 .error(R.drawable.ic_image)
                 .into(this)
         }
@@ -31,7 +42,7 @@ object GeneralBindingAdapters {
     @JvmStatic
     @BindingAdapter("app:imageForProfileWithGlide")
     fun ImageView.setProfileImageWithGlide(url: Uri?) {
-        Glide.with(context).load(url ?: R.drawable.ic_profile_selected).into(this)
+        Glide.with(context).load(url).into(this)
 
     }
 }

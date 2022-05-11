@@ -6,7 +6,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -26,6 +27,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/select_language_toolbar_title"
+                    android:fontFamily="@font/helvetica_bold"
                     android:textColor="@color/textColor" />
             </androidx.appcompat.widget.Toolbar>
 
@@ -37,6 +39,7 @@
                 android:layout_marginStart="@dimen/default_24dp"
                 android:text="@string/select_language_native_language"
                 android:textColor="@color/textColor"
+                android:textSize="@dimen/normal_text_sp"
                 android:fontFamily="@font/helvetica_bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -60,6 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/default_24dp"
+                android:textSize="@dimen/normal_text_sp"
                 android:text="@string/select_language_learn_lan"
                 android:textColor="@color/textColor"
                 android:fontFamily="@font/helvetica_bold"
@@ -78,14 +82,13 @@
                 android:orientation="horizontal"
                 tools:listitem="@layout/item_language" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/read_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/default_12dp"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/default_30dp"
                 android:alpha="0.6"
-                android:backgroundTint="@color/colorPrimaryDark"
                 android:text="@string/select_language_continue"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"

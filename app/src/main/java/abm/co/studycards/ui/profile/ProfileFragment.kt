@@ -1,5 +1,6 @@
 package abm.co.studycards.ui.profile
 
+import abm.co.studycards.BuildConfig
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
 import abm.co.studycards.data.model.AvailableLanguages
@@ -22,8 +23,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -59,6 +58,7 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
         binding.run {
             profileFragment = this@ProfileFragment
             viewmodel = viewModel
+            version.text = getString(R.string.version, BuildConfig.VERSION_NAME)
             setLanguage()
             initGoogleSignBtn()
         }
@@ -153,11 +153,9 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
     }
 
     private fun simpleLogout() {
-        Firebase.auth.signOut()
-        viewModel.googleSignInClient.signOut()
-            .addOnCompleteListener(requireActivity()) {
-                navigateToLoginActivity()
-            }
+        viewModel.simpleLogout {
+            navigateToLoginActivity()
+        }
     }
 
     private fun navigateToLoginActivity() {

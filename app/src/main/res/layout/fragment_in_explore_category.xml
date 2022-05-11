@@ -34,6 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:textColor="@color/textColor"
+                android:fontFamily="@font/helvetica_bold"
+                android:layout_gravity="center"
                 tools:text="BASIC" />
 
         </androidx.appcompat.widget.Toolbar>

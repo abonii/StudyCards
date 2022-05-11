@@ -136,15 +136,15 @@ class AddEditWordFragment :
             viewModel.fetchWord(false)
         }
         imageLayout.setEndIconOnClickListener {
-            binding.image.setText("")
+            binding.imageEdit.setText("")
             viewModel.changeEditableImageUrl(false)
         }
-        image.setOnFocusChangeListener { _, hasFocus ->
+        imageEdit.setOnFocusChangeListener { _, hasFocus ->
             viewModel.changeEditableImageUrl(hasFocus)
         }
-        image.setOnEditorActionListener { _, actionId, _ ->
+        imageEdit.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                image.clearFocus()
+                imageEdit.clearFocus()
             }
             false
         }
