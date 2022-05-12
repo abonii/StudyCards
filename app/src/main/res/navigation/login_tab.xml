@@ -14,10 +14,10 @@
             android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
             app:destination="@id/forgotPasswordFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
+            app:exitAnim="@anim/stay_on_in_right"
             app:launchSingleTop="false"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_out_left"
+            app:popExitAnim="@anim/stay_on_out_left"
             app:popUpToInclusive="false" />
     </fragment>
     <fragment

@@ -56,7 +56,7 @@ class ProductAdapter(
             }
             itemView.layoutParams = itemView.layoutParams.apply {
                 width = newWidth
-                height = (newWidth*1.05).toInt()
+                height = (newWidth * 1.1).toInt()
             }
         }
 
@@ -80,7 +80,11 @@ class ProductAdapter(
 
         }
 
-        private fun setBackgroundAndTextColor(textColor: Int, backgroundColor: Int, strokeColor: Int) =
+        private fun setBackgroundAndTextColor(
+            textColor: Int,
+            backgroundColor: Int,
+            strokeColor: Int
+        ) =
             binding.run {
                 productName.setTextColor(textColor)
                 price.setTextColor(textColor)

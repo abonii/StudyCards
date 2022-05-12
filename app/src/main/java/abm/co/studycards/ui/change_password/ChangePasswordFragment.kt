@@ -7,8 +7,8 @@ import abm.co.studycards.util.base.BaseBindingFragment
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class ChangePasswordFragment :
@@ -19,7 +19,7 @@ class ChangePasswordFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launchWhenStarted {
-            viewModel.toast.collect {
+            viewModel.toast.collectLatest {
                 toast(it)
             }
         }

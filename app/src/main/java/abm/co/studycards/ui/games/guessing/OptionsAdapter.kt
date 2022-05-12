@@ -6,13 +6,10 @@ import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemOptionBinding
 import abm.co.studycards.util.getMyColor
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.card.MaterialCardView
 
 class OptionsAdapter(private val onClickCard: (CardView, String) -> Unit) :
     RecyclerView.Adapter<OptionsAdapter.ViewHolder>() {
@@ -46,7 +43,7 @@ class OptionsAdapter(private val onClickCard: (CardView, String) -> Unit) :
 
         fun bind(currentItem: Word) {
             binding.option.text = currentItem.translationsToString()
-            binding.root.setCardBackgroundColor(binding.root.getMyColor(R.color.background))
+            binding.card.setCardBackgroundColor(binding.card.getMyColor(R.color.background))
         }
     }
 

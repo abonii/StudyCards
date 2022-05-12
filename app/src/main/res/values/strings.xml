@@ -85,7 +85,7 @@
         <item name="known">KNOWN</item>
     </string-array>
 
-    <string name="select_category_done">DONE</string>
+    <string name="select_category_done">Done</string>
     <string name="select_image_title">ENTER URL OF IMAGE</string>
     <string name="url" translatable="false">Url</string>
     <string name="undo">Undo</string>

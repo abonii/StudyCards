@@ -15,8 +15,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -31,9 +29,9 @@ class SelectLearnTypeViewModel @Inject constructor(
     private val categoriesDbRef = firebaseRepository.getCategoriesReference()
     private val currentCategory = categoriesDbRef.child(category.id).child("words")
     val categoryName = category.mainName
+    private var leftHours = 0L
     var undefinedWordsListLive = MutableLiveData<MutableList<Word>>()
-    private val _repeatAvailableInCalendar = MutableStateFlow<Calendar?>(null)
-    val repeatAvailableInCalendar = _repeatAvailableInCalendar.asStateFlow()
+    val repeatAvailableInCalendar = MutableLiveData<Long>()
     var unlearnedWordsListLive = MutableLiveData<MutableList<Word>>()
     var repeatWordsLive = MutableLiveData<MutableList<Word>>()
     val allWordsListLive = MutableLiveData<MutableList<Word>>()
@@ -61,25 +59,30 @@ class SelectLearnTypeViewModel @Inject constructor(
         snapshot.children.forEach { words ->
             setupWord(words)
         }
+        if (leftHours > Calendar.getInstance().timeInMillis && repeatWordsList.isEmpty()) {
+            repeatAvailableInCalendar.postValue(leftHours)
+        }
         allWordsListLive.postValue(allWordsList)
         repeatWordsLive.postValue(repeatWordsList)
         undefinedWordsListLive.postValue(undefinedWordsList)
         unlearnedWordsListLive.postValue(unlearnedWordsList)
     }
 
+    var countForNextRepeat = 0
     private fun setupWord(words: DataSnapshot) {
         words.getValue(Word::class.java)?.let { word ->
             val currentTime = Calendar.getInstance().timeInMillis
             val type = LearnOrKnown.getType(word.learnOrKnown)
             if (LearnOrKnown.UNCERTAIN == type || LearnOrKnown.UNKNOWN == type) {
-                val repeatAvailableCalendar = _repeatAvailableInCalendar.value
                 if (word.nextRepeatTime <= currentTime) {
                     repeatWordsList.add(word)
                 }
-                if (word.nextRepeatTime > currentTime && (repeatAvailableCalendar == null
-                    || repeatAvailableCalendar.timeInMillis > word.nextRepeatTime)) {
-                    _repeatAvailableInCalendar.value =
-                        Calendar.getInstance().apply { timeInMillis = word.nextRepeatTime }
+                if (currentTime < word.nextRepeatTime) {
+                    if (countForNextRepeat++ == 0)
+                        leftHours = word.nextRepeatTime
+                    else if (leftHours > word.nextRepeatTime) {
+                        leftHours = word.nextRepeatTime
+                    }
                 }
                 unlearnedWordsList.add(word)
             }
@@ -98,7 +101,7 @@ class SelectLearnTypeViewModel @Inject constructor(
     }
 
     fun getLearnWordsInTypedArray(): Array<Word> {
-        return undefinedWordsList.toTypedArray()
+        return undefinedWordsList.take(50).toTypedArray()
     }
 
     fun getRepeatWordsInTypedArray(): Array<Word> {

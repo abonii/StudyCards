@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.StudyCards" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -10,8 +10,8 @@
         <item name="colorSecondaryVariant">@color/third_color</item>
         <item name="colorOnSecondary">@color/background</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" >@color/background</item>
-        <item name="android:windowLightStatusBar" >true</item>
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar">true</item>
         <!-- BottomSheet-->
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <!--Toolbar-->
@@ -24,6 +24,9 @@
         <item name="android:listDivider">@drawable/divider</item>
 
         <item name="android:editTextStyle">@style/MyCustomEditTextStyle</item>
+
+        <!--progressbar-->
+        <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
     <!--bottomSheet-->
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
@@ -33,7 +36,7 @@
     <!--tabs-->
     <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
         <item name="android:fontFamily">@font/helvetica_medium</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">@dimen/default_11sp</item>
     </style>
 
     <style name="MyButtonStyle" parent="Widget.MaterialComponents.Button">

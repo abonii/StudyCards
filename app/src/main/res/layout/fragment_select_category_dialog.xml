@@ -12,7 +12,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/activity_horizontal_margin">
+            android:layout_marginHorizontal="@dimen/default_horizontal_margin">
 
             <TextView
                 android:id="@+id/text_view"
@@ -42,7 +42,7 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/default_horizontal_margin"
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -69,7 +69,7 @@
                 android:id="@+id/save"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginTop="@dimen/default_10dp"
                 android:text="@string/select_category_done"
                 android:textColor="@color/white"
                 android:fontFamily="@font/helvetica_bold"

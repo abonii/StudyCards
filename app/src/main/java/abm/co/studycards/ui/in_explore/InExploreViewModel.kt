@@ -37,10 +37,11 @@ class InExploreViewModel @Inject constructor(
     val stateFlow = _stateFlow.asStateFlow()
 
     var category = savedStateHandle.get<Category>("category")!!
+    var setId = savedStateHandle.get<String>("set_id")!!
 
     val categoryPhotoUrl = category.imageUrl
 
-    private val wordsRef = exploreDbRef.child(CATEGORIES_REF).child(category.id).child(WORDS_REF)
+    private val wordsRef = exploreDbRef.child(setId).child(CATEGORIES_REF).child(category.id).child(WORDS_REF)
 
     val targetLang = prefs.getTargetLanguage()
 

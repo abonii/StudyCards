@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -43,8 +42,8 @@
 
                     <ImageView
                         android:id="@+id/image"
-                        android:layout_width="@dimen/default_140dp"
-                        android:layout_height="@dimen/default_200dp"
+                        android:layout_width="@dimen/default_110dp"
+                        android:layout_height="@dimen/default_150dp"
                         android:scaleType="centerCrop"
                         app:imageWithGlide="@{item.imageUrl}"
                         android:contentDescription="@string/just_image" />
@@ -57,14 +56,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:gravity="top|center"
+                android:gravity="top|center_horizontal"
                 android:maxLines="2"
                 android:lines="2"
                 android:text="@{item.mainName}"
+                android:layout_marginTop="@dimen/default_5dp"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/default_13sp"
+                android:textSize="@dimen/default_11sp"
                 android:fontFamily="@font/helvetica_bold"
-                tools:text="The best title" />
+                tools:text="The best title The best title The best title The best title " />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

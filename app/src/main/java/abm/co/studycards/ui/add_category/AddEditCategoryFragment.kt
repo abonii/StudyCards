@@ -5,15 +5,13 @@ import abm.co.studycards.databinding.FragmentAddEditCategoryBinding
 import abm.co.studycards.util.base.BaseDialogFragment
 import android.content.res.Resources
 import android.os.Bundle
-import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddEditCategoryFragment : BaseDialogFragment<FragmentAddEditCategoryBinding>(R.layout.fragment_add_edit_category) {
+class AddEditCategoryFragment :
+    BaseDialogFragment<FragmentAddEditCategoryBinding>(R.layout.fragment_add_edit_category) {
 
     private val viewModel: AddEditCategoryViewModel by viewModels()
 

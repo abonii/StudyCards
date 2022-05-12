@@ -72,7 +72,7 @@
     <string name="korean">Корейский</string>
     <string name="turkish">Турецкий</string>
     <string name="russian">Русский</string>
-    <string name="select_category_done">ВЫПОЛНЕНО</string>
+    <string name="select_category_done">Выполнено</string>
     <string name="select_image_title">ВВЕДИТЕ URL ИЗОБРАЖЕНИЯ</string>
     <string name="undo">Отменить</string>
     <string name="do_u_want_to_delete">Вы хотите удалить эти слова?</string>

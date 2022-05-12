@@ -176,7 +176,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                    android:paddingHorizontal="@dimen/default_horizontal_margin"
                     android:paddingVertical="@dimen/default_6dp">
 
                     <ImageView
@@ -210,7 +210,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                    android:paddingHorizontal="@dimen/default_horizontal_margin"
                     android:paddingVertical="@dimen/default_6dp">
 
                     <ImageView

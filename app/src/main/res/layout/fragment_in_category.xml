@@ -28,7 +28,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginEnd="@dimen/default_horizontal_margin"
                 android:orientation="horizontal">
 
                 <TextView
@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/textColor"
                     android:gravity="center"
-                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginEnd="@dimen/default_horizontal_margin"
                     android:fontFamily="@font/helvetica_bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/edit"

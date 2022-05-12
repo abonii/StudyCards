@@ -4,7 +4,7 @@ import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.CATEGORIES_REF
-import abm.co.studycards.util.Constants.TAG
+import abm.co.studycards.util.Constants.NAME_REF
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.firebaseError
 import android.util.Log
@@ -37,37 +37,38 @@ class ExploreViewModel @Inject constructor(
         firebaseRepository.getExploreReference()
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    Log.i(TAG, "onDataChange: what")
-                    val items = mutableListOf<ParentExploreUI>()
-                    val sets1 = mutableListOf<Category>()
                     viewModelScope.launch(dispatcher) {
-                        val setName = snapshot.child("name").getValue<String>() ?: ""
-                        viewModelScope.launch(dispatcher) {
-                            snapshot.child(CATEGORIES_REF).children.forEach {
-                                try {
-                                    it.getValue(Category::class.java)?.let { it1 ->
-                                        sets1.add(it1)
+                        val items = mutableListOf<ParentExploreUI>()
+                        snapshot.children.forEach { set ->
+                            val sets1 = mutableListOf<Category>()
+                            var setName: String
+                            var setId: String
+                            viewModelScope.launch(dispatcher) {
+                                setName = set.child(NAME_REF).getValue<String>().toString()
+                                setId = set.key.toString()
+                                viewModelScope.launch(dispatcher) {
+                                    set.child(CATEGORIES_REF).children.forEach {
+                                        it.getValue(Category::class.java)?.let { it1 ->
+                                            sets1.add(it1)
+                                        }
                                     }
-                                } catch (e: DatabaseException) {
-                                    makeToast(firebaseError(e))
-                                }
-                            }
-                        }.join()
-                        delay(500)
-                        items.add(
-                            ParentExploreUI.SetUI(
-                                sets1.map {
-                                    ChildExploreVHUI.VHCategory(it)
-                                }, setName
-                            )
-                        )
-                        if (sets1.isNotEmpty()) {
+                                }.join()
+                                items.add(
+                                    ParentExploreUI.SetUI(
+                                        sets1.map {
+                                            ChildExploreVHUI.VHCategory(it)
+                                        }, setName, setId
+                                    )
+                                )
+                            }.join()
+                        }
+                        delay(300)
+                        if (items.isNotEmpty()) {
                             _stateFlow.value = ParentExploreUiState.Success(items)
                         } else {
                             _stateFlow.value =
-                                ParentExploreUiState.Error(R.string.empty_in_explore)
+                                ParentExploreUiState.Error(R.string.empty)
                         }
-
                     }
                 }
 
@@ -80,7 +81,7 @@ class ExploreViewModel @Inject constructor(
 }
 
 sealed class ParentExploreUI {
-    data class SetUI(val value: List<ChildExploreVHUI.VHCategory>, val title: String) :
+    data class SetUI(val value: List<ChildExploreVHUI.VHCategory>, val title: String, val setId:String) :
         ParentExploreUI()
 }
 

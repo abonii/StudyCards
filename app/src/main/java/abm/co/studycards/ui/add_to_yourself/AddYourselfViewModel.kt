@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -42,29 +43,31 @@ class AddYourselfViewModel @Inject constructor(
     val sharedFlow = _sharedFlow.asSharedFlow()
 
     var category = savedStateHandle.get<Category>("category")!!
+    var setId = savedStateHandle.get<String>("set_id")!!
 
     val selectedWords: MutableList<WordX> = ArrayList()
 
     fun isSelectedAllWords() = selectedWords.count { it.isChecked } == selectedWords.size
 
     init {
-        val wordsRef = exploreDbRef.child(CATEGORIES_REF).child(category.id).child(WORDS_REF)
-
-        viewModelScope.launch(dispatcher) {
-            wordsRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
+        val wordsRef = exploreDbRef.child(setId).child(CATEGORIES_REF).child(category.id).child(WORDS_REF)
+        wordsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                viewModelScope.launch(dispatcher) {
                     selectedWords.clear()
                     snapshot.children.forEach {
-                        it.getValue(Word::class.java)?.let { it1 -> selectedWords.add(WordX(it1)) }
+                        it.getValue(Word::class.java)
+                            ?.let { it1 -> selectedWords.add(WordX(it1)) }
                     }
+                    delay(300)
                     _stateFlow.value = AddYourselfUiState.Success(selectedWords)
                 }
+            }
 
-                override fun onCancelled(error: DatabaseError) {
-                    _stateFlow.value = AddYourselfUiState.Error(firebaseError(error.code))
-                }
-            })
-        }
+            override fun onCancelled(error: DatabaseError) {
+                _stateFlow.value = AddYourselfUiState.Error(firebaseError(error.code))
+            }
+        })
     }
 
     fun checkAllWords() {
@@ -75,14 +78,18 @@ class AddYourselfViewModel @Inject constructor(
     }
 
     fun onAddClicked() {
-        insertWords(selectedWords.toList().filter {
-            it.isChecked
-        })
+        viewModelScope.launch(dispatcher) {
+            _stateFlow.value = AddYourselfUiState.Loading
+            insertWords(selectedWords.toList().filter {
+                it.isChecked
+            })
+        }
     }
 
-    private fun insertWords(words: List<WordX>) {
+    private suspend fun insertWords(words: List<WordX>) {
         viewModelScope.launch(dispatcher) {
             firebaseRepository.addWords(category.copy(words = words.map { it.word }))
+            delay(3000)
             _sharedFlow.emit(AddYourselfEventChannel.NavigateBack)
         }
     }

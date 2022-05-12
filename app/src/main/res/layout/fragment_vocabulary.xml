@@ -16,6 +16,8 @@
             android:background="@color/blue_light_status"
             app:tabBackground="@drawable/tab_background"
             app:tabIndicatorHeight="0dp"
+            app:tabMaxWidth="0dp"
+            app:tabGravity="fill"
             app:tabTextAppearance="@style/tab_text"
             app:tabRippleColor="@android:color/transparent" />
 

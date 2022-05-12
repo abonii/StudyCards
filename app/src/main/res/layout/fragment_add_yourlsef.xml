@@ -15,110 +15,106 @@
             type="abm.co.studycards.ui.add_to_yourself.AddYourselfViewModel" />
     </data>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:background="@color/background">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/background"
-                android:elevation="@dimen/default_2dp"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/toolbar_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_18dp"
-                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:textColor="@color/textColor"
-                    android:fontFamily="@font/helvetica_medium"
-                    tools:text="BASIC" />
-
-            </androidx.appcompat.widget.Toolbar>
-
-            <LinearLayout
-                android:id="@+id/select_all"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_20dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar">
-
-                <CheckBox
-                    android:id="@+id/check_all"
-                    android:onClick="@{()->viewmodel.checkAllWords()}"
-                    android:layout_width="wrap_content"
-                    app:buttonTint="@color/colorPrimary"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/helvetica_roman"
-                    android:text="@string/select_all_words"
-                    android:textColor="@color/textColor"
-                    android:textSize="@dimen/default_14sp" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/default_10dp"
-                android:nestedScrollingEnabled="false"
-                android:layout_marginBottom="@dimen/default_10dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/add_btn"
-                app:layout_constraintTop_toBottomOf="@id/select_all"
-                tools:listitem="@layout/item_explore_word_selection" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/add_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/add"
-                android:layout_marginBottom="@dimen/default_10dp"
-                android:textColor="@color/white"
-                android:onClick="@{()->viewmodel.onAddClicked()}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:elevation="@dimen/default_2dp"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/error"
+                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/error_occurred"
+                android:textSize="@dimen/toolbar_title_sp"
+                android:fontFamily="@font/helvetica_bold"
                 android:textColor="@color/textColor"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                tools:text="BASIC" />
 
-            <ProgressBar
-                android:id="@+id/progress_bar"
+        </androidx.appcompat.widget.Toolbar>
+
+        <LinearLayout
+            android:id="@+id/select_all"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_1dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <CheckBox
+                android:id="@+id/check_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:onClick="@{()->viewmodel.checkAllWords()}"
+                android:checked="true"
+                app:buttonTint="@color/colorPrimary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/helvetica_roman"
+                android:text="@string/select_all_words"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/normal_text_sp" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/default_4dp"
+            android:paddingBottom="@dimen/default_10dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/add_btn"
+            app:layout_constraintTop_toBottomOf="@id/select_all"
+            tools:listitem="@layout/item_explore_word_selection" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_horizontal_margin"
+            android:layout_marginBottom="@dimen/default_2dp"
+            android:onClick="@{()->viewmodel.onAddClicked()}"
+            android:text="@string/add"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/error_occurred"
+            android:textColor="@color/textColor"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

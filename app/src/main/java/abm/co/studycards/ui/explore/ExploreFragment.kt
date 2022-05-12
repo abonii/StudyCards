@@ -87,9 +87,10 @@ class ExploreFragment : BaseBindingFragment<FragmentExploreBinding>(R.layout.fra
         stopShimmer()
     }
 
-    private fun onClickItem(category: Category) {
+    private fun onClickItem(setId:String, category: Category) {
         val nav = ExploreFragmentDirections.actionExploreFragmentToInExploreCategoryFragment(
-            category
+            category = category,
+            setId = setId
         )
         navigate(nav)
     }

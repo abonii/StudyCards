@@ -25,6 +25,8 @@
         <item name="android:listDivider">@drawable/divider</item>
 
         <item name="android:editTextStyle">@style/MyCustomEditTextStyle</item>
+
+        <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
     <!--bottomSheet-->
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
@@ -34,7 +36,7 @@
     <!--tabs-->
     <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
         <item name="android:fontFamily">@font/helvetica_medium</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">@dimen/default_11sp</item>
     </style>
 
     <style name="BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">

@@ -72,12 +72,13 @@ class AddYourselfFragment :
         progressBar.visibility = View.GONE
         error.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
+        recyclerView.alpha = 1f
     }
 
     private fun onLoading() = binding.run {
         error.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
-        recyclerView.visibility = View.GONE
+        recyclerView.alpha = 0.5f
     }
 
     private fun errorOccurred(@StringRes text: Int) = binding.run {

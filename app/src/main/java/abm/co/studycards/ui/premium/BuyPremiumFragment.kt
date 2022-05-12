@@ -51,7 +51,7 @@ class BuyPremiumFragment :
     private fun getNewWidthOfItem(products: Int): Int {
         return ((Resources.getSystem().displayMetrics.widthPixels
                 - (products + 2) * resources
-            .getDimension(R.dimen.activity_horizontal_margin)) / if (products == 1) 2 else products).toInt()
+            .getDimension(R.dimen.default_horizontal_margin)) / if (products == 1) 2 else products).toInt()
     }
 
     private fun initRV() {

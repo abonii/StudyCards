@@ -23,12 +23,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="@dimen/default_5dp"
+                android:layout_marginHorizontal="@dimen/default_3dp"
                 android:fontFamily="@font/helvetica_roman"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 tools:text="@string/know"
-                android:textSize="@dimen/default_12sp"
+                android:textSize="@dimen/default_10sp"
                 app:cornerRadius="@dimen/default_10dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/white"
-                android:layout_marginStart="@dimen/default_5dp"
+                android:layout_marginStart="@dimen/default_3dp"
                 android:textAllCaps="false"
                 android:textSize="@dimen/default_10sp"
                 android:fontFamily="@font/helvetica_roman"
@@ -58,7 +58,7 @@
                 android:layout_margin="@dimen/default_1dp"
                 app:cardCornerRadius="@dimen/default_10dp"
                 app:cardElevation="@dimen/default_1dp"
-                app:contentPadding="@dimen/default_8dp">
+                app:contentPadding="@dimen/default_6dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -98,7 +98,7 @@
                             android:layout_marginStart="@dimen/default_16dp"
                             android:adjustViewBounds="true"
                             android:contentDescription="@string/icon"
-                            android:padding="@dimen/default_4dp"
+                            android:padding="@dimen/default_3dp"
                             app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp"
                             app:tint="@color/darker_than_usual" />
                     </com.github.florent37.expansionpanel.ExpansionHeader>
@@ -120,8 +120,8 @@
 
                             <ImageView
                                 android:id="@+id/image"
-                                android:layout_width="@dimen/default_250dp"
-                                android:layout_height="@dimen/default_250dp"
+                                android:layout_width="@dimen/default_200dp"
+                                android:layout_height="@dimen/default_200dp"
                                 android:layout_below="@id/translation"
                                 android:layout_centerHorizontal="true"
                                 android:visibility="gone"

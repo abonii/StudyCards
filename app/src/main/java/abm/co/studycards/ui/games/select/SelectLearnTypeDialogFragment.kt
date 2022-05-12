@@ -4,13 +4,11 @@ import abm.co.studycards.R
 import abm.co.studycards.anim.Animations
 import abm.co.studycards.databinding.FragmentSelectLearnTypeDialogBinding
 import abm.co.studycards.util.base.BaseDialogFragment
-import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
 import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import java.util.*
 import kotlin.math.ceil
 
@@ -49,13 +47,10 @@ class SelectLearnTypeDialogFragment :
     }
 
     private fun setupViewModel() {
-        launchAndRepeatWithViewLifecycle {
-            viewModel.repeatAvailableInCalendar.collectLatest {
-                val isVisibleTime = viewModel.repeatWordsList.isEmpty() && it != null
-                binding.repeatSubtitle2.isVisible = isVisibleTime
-                binding.repeatSubtitle.isVisible = !isVisibleTime
-                binding.repeatSubtitle2.text = getLeftHours(it)
-            }
+        viewModel.repeatAvailableInCalendar.observe(viewLifecycleOwner) {
+            binding.repeatSubtitle2.isVisible = true
+            binding.repeatSubtitle.isVisible = false
+            binding.repeatSubtitle2.text = getLeftHours(it)
         }
         viewModel.undefinedWordsListLive.observe(viewLifecycleOwner) {
             val subtitleText = viewModel.getTextForLearnSubtitle(requireContext(), it.size)
@@ -81,11 +76,10 @@ class SelectLearnTypeDialogFragment :
         }
     }
 
-    private fun getLeftHours(calendar: Calendar?): String {
-        if (calendar == null) return "-"
+    private fun getLeftHours(timeMills: Long?): String {
+        if (timeMills == null) return "-"
         val currentMills = Calendar.getInstance().timeInMillis
-        val givenMills = calendar.timeInMillis
-        val duration = givenMills - currentMills
+        val duration = timeMills - currentMills
         val hours = ceil(duration / (1000 * 60 * 60.0)).toInt()
         if (hours <= 0) {
             val min = ceil(duration / (1000 * 60.0)).toInt()

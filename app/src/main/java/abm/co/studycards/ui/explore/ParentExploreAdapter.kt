@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-class ParentExploreAdapter(private val onClickItem: (Category) -> Unit) :
+class ParentExploreAdapter(private val onClickItem: (String, Category) -> Unit) :
     ListAdapter<ParentExploreUI, ParentExploreAdapter.ViewHolder>(DIFF_UTIL) {
 
     inner class ViewHolder(
@@ -20,7 +20,9 @@ class ParentExploreAdapter(private val onClickItem: (Category) -> Unit) :
                 when (currentItem) {
                     is ParentExploreUI.SetUI -> {
                         val childAdapter =
-                            ChildExploreAdapter(onClickItem).apply { submitList(currentItem.value) }
+                            ChildExploreAdapter{
+                                onClickItem(currentItem.setId, it)
+                            }.apply { submitList(currentItem.value) }
                         childRV.adapter = childAdapter
                         category.text = currentItem.title
                     }

@@ -5,6 +5,7 @@ import abm.co.studycards.data.model.Language
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.CAN_TRANSLATE_TIME_EVERY_DAY
+import abm.co.studycards.util.Constants.NAME_REF
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.firebaseError
 import androidx.lifecycle.viewModelScope
@@ -32,8 +33,16 @@ class ProfileViewModel @Inject constructor(
 
     private val currentUser = firebaseRepository.getFirebaseAuth().currentUser
     val appLanguage = prefs.getAppLanguage()
-    var email = MutableStateFlow(currentUser?.email ?: "")
+    var email = currentUser?.email ?: ""
+        set(value) {
+            field = value
+            _emailError.value = null
+        }
     var password: String = ""
+        set(value) {
+            field = value
+            _passwordError.value = null
+        }
     var emailDisplay = MutableStateFlow(currentUser?.email ?: "")
     val userName = MutableStateFlow(currentUser?.displayName ?: "")
     val userPhotoUrl = MutableStateFlow(currentUser?.photoUrl)
@@ -64,8 +73,8 @@ class ProfileViewModel @Inject constructor(
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     viewModelScope.launch(Dispatchers.IO) {
-                        if (snapshot.child("name").exists()) {
-                            userName.value = (snapshot.child("name").value as String?).toString()
+                        if (snapshot.child(NAME_REF).exists()) {
+                            userName.value = (snapshot.child(NAME_REF).value as String?).toString()
                         }
                         translationCount.value =
                             (snapshot.child(CAN_TRANSLATE_TIME_EVERY_DAY).value as Long?).toString()
@@ -123,7 +132,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun onClickRegistration() {
-        val email = this.email.value.trim()
+        val email = this.email.trim()
         val password = this.password.trim()
         if (email.isBlank()) {
             _emailError.value = R.string.email_empty
@@ -154,7 +163,7 @@ class ProfileViewModel @Inject constructor(
     private fun signOut(onFinish: () -> Unit) {
         firebaseRepository.getFirebaseAuth().signOut()
         googleSignInClient.signOut()
-            .addOnCompleteListener() {
+            .addOnCompleteListener {
                 currentUser?.delete()
                 onFinish()
             }
@@ -174,7 +183,7 @@ class ProfileViewModel @Inject constructor(
     fun simpleLogout(onFinish: () -> Unit) {
         firebaseRepository.getFirebaseAuth().signOut()
         googleSignInClient.signOut()
-            .addOnCompleteListener() {
+            .addOnCompleteListener {
                 onFinish.invoke()
             }
     }

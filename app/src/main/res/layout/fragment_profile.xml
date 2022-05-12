@@ -22,6 +22,7 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbars="none"
         android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +32,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
@@ -41,7 +42,7 @@
                     android:fontFamily="@font/helvetica_bold"
                     android:text="@string/profile"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/default_17sp" />
+                    android:textSize="@dimen/toolbar_title_sp" />
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -49,8 +50,8 @@
                 android:id="@+id/login_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/mar_btwn_btns"
+                android:layout_marginHorizontal="@dimen/default_horizontal_margin"
+                android:layout_marginTop="@dimen/default_4dp"
                 android:orientation="vertical"
                 android:visibility="@{viewmodel.isAnonymous ? View.VISIBLE : View.GONE}"
                 app:layout_constraintTop_toBottomOf="@id/toolbar">
@@ -58,12 +59,12 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
+                    android:layout_marginBottom="@dimen/default_10dp"
                     android:fontFamily="@font/helvetica_bold"
                     android:gravity="center"
                     android:text="@string/register_in_order_to"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/default_15sp" />
+                    android:textSize="@dimen/default_13sp" />
 
                 <com.google.android.gms.common.SignInButton
                     android:id="@+id/google_sign_in"
@@ -199,7 +200,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/default_4dp"
                     android:fontFamily="@font/helvetica_medium"
-                    android:text="@{viewmodel.email}"
+                    android:text="@{viewmodel.emailDisplay}"
                     android:textColor="@color/specialTextColor"
                     android:visibility="@{TextUtils.isEmpty(viewmodel.emailDisplay) ? View.GONE : View.VISIBLE}"
                     tools:text="abo@mail.ru" />
@@ -229,7 +230,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                    android:layout_marginHorizontal="@dimen/default_horizontal_margin"
                     android:layout_marginBottom="@dimen/mar_btwn_btns"
                     android:fontFamily="@font/helvetica_bold"
                     android:text="@string/settings"
@@ -252,7 +253,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:onClick="@{()->profileFragment.navigateToPremiumFragment()}"
-                        android:paddingHorizontal="@dimen/activity_horizontal_margin">
+                        android:paddingHorizontal="@dimen/default_horizontal_margin">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -287,7 +288,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:onClick="@{()->profileFragment.navigateToChangeAppLanguage()}"
-                        android:paddingHorizontal="@dimen/activity_horizontal_margin">
+                        android:paddingHorizontal="@dimen/default_horizontal_margin">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -321,7 +322,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:onClick="@{()->profileFragment.onChangePassword()}"
-                        android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                        android:paddingHorizontal="@dimen/default_horizontal_margin"
                         android:visibility="@{viewmodel.isEmailAuth ? View.VISIBLE : View.GONE}">
 
                         <TextView
@@ -353,7 +354,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:onClick="@{()->viewmodel.sendVerificationEmail()}"
-                        android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                        android:paddingHorizontal="@dimen/default_horizontal_margin"
                         android:visibility="@{viewmodel.isAnonymousOrVerified ? View.GONE : View.VISIBLE}">
 
                         <TextView
@@ -385,7 +386,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:onClick="@{()->profileFragment.onClickContactUs()}"
-                        android:paddingHorizontal="@dimen/activity_horizontal_margin">
+                        android:paddingHorizontal="@dimen/default_horizontal_margin">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -416,7 +417,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:onClick="@{()->profileFragment.logout()}"
-                        android:paddingHorizontal="@dimen/activity_horizontal_margin">
+                        android:paddingHorizontal="@dimen/default_horizontal_margin">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -445,7 +446,7 @@
                     android:id="@+id/version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                    android:layout_marginHorizontal="@dimen/default_horizontal_margin"
                     android:layout_marginBottom="@dimen/default_20dp"
                     android:layout_marginTop="@dimen/default_15dp"
                     android:fontFamily="@font/helvetica_roman"

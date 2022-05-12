@@ -17,8 +17,8 @@ android {
         applicationId "abm.co.studycards"
         minSdk 23
         targetSdk 32
-        versionCode 45
-        versionName "1.0"
+        versionCode 47
+        versionName "1.02"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         proguardFiles
@@ -46,7 +46,6 @@ android {
     }
     buildFeatures {
         dataBinding true
-        viewBinding true
     }
 }
 
@@ -158,6 +157,10 @@ dependencies {
 
     //text Apache
     implementation 'org.apache.commons:commons-lang3:3.10'
+
+    //textSize
+    implementation 'com.intuit.ssp:ssp-android:1.0.6'
+    implementation 'com.intuit.sdp:sdp-android:1.0.5'
 
     // Local Unit Tests
     implementation "androidx.test:core:1.4.0"

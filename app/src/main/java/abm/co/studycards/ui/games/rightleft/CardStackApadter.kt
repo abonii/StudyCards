@@ -4,9 +4,11 @@ import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemCardBinding
+import abm.co.studycards.util.Constants.TAG
 import abm.co.studycards.util.GeneralBindingAdapters.setImageWithGlide
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,11 +32,13 @@ class CardStackAdapter constructor(
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        Log.i(TAG, "create")
         val inflater = LayoutInflater.from(parent.context)
         return ViewHolder(ItemCardBinding.inflate(inflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.i(TAG, "bind: $position")
         val currentItem = words[position]
         holder.bind(currentItem)
     }
@@ -60,24 +64,30 @@ class CardStackAdapter constructor(
             }
         }
 
-        fun bind(currentItem: Word) {
-            binding.wordImage.setImageWithGlide(currentItem.imageUrl)
-            binding.wordImageContainer.isVisible = currentItem.imageUrl.isNotBlank()
-            binding.translated.text = currentItem.name
-            binding.word.text = currentItem.translationsToString()
+        fun bind(currentItem: Word) =binding.run{
+            wordImage.setImageWithGlide(currentItem.imageUrl)
+            wordImageContainer.isVisible = currentItem.imageUrl.isNotBlank()
+            translated.text = currentItem.name
+            word.text = currentItem.translationsToString()
             bindFrontLayout()
         }
 
         private fun onClickToShowBackSide(view: View = binding.innerCard) {
             val oa1 = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0f)
             val oa2 = ObjectAnimator.ofFloat(view, "scaleX", 0f, 1f)
-            oa1.interpolator = DecelerateInterpolator()
-            oa2.interpolator = AccelerateDecelerateInterpolator()
-            oa1.doOnEnd {
-                bindBackLayout()
-                oa2.start()
+            oa2.run {
+                duration = 200
+                interpolator = AccelerateDecelerateInterpolator()
             }
-            oa1.start()
+            oa1.run {
+                interpolator = DecelerateInterpolator()
+                duration = 200
+                doOnEnd {
+                    oa2.start()
+                    bindBackLayout()
+                }
+                start()
+            }
         }
 
         private fun bindBackLayout() {

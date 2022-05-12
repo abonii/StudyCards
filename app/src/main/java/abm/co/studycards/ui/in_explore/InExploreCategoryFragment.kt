@@ -5,7 +5,6 @@ import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.FragmentInExploreCategoryBinding
 import abm.co.studycards.helpers.MarginItemDecoration
-import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
@@ -33,7 +32,8 @@ class InExploreCategoryFragment :
     }
 
     private fun setToolbarAndStatusBar() {
-        requireActivity().setDefaultStatusBar()
+        requireActivity().window.statusBarColor =
+            resources.getColor(R.color.tab_background, null)
         (activity as MainActivity).setToolbar(binding.toolbar)
         binding.folderName.text = viewModel.category.mainName
     }
@@ -82,7 +82,8 @@ class InExploreCategoryFragment :
     fun addToYourself() {
         val nav =
             InExploreCategoryFragmentDirections.actionInExploreCategoryFragmentToAddYourselfFragment(
-                viewModel.category
+                category = viewModel.category,
+                setId = viewModel.setId
             )
         navigate(nav)
     }

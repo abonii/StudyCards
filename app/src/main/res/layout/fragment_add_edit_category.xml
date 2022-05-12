@@ -34,7 +34,7 @@
                 android:importantForAutofill="no"
                 android:maxLength="70"
                 android:maxLines="2"
-                android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                android:paddingHorizontal="@dimen/default_horizontal_margin"
                 android:text="@={viewmodel.mainName}"
                 android:textColorHint="@color/editTextColor"
                 android:textSize="@dimen/big_text_sp"

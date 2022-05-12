@@ -24,16 +24,15 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background"
-            android:elevation="@dimen/default_2dp"
+            android:background="@color/tab_background"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/folder_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:textColor="@color/textColor"
+                android:textSize="@dimen/toolbar_title_sp"
                 android:fontFamily="@font/helvetica_bold"
                 android:layout_gravity="center"
                 tools:text="BASIC" />
@@ -52,21 +51,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/default_20dp"
-                android:layout_marginBottom="@dimen/default_12dp"
+                android:layout_marginTop="@dimen/default_4dp"
+                android:layout_marginBottom="@dimen/default_8dp"
                 android:backgroundTint="#EDF1FF"
-                app:cardCornerRadius="@dimen/default_50dp"
+                app:cardCornerRadius="@dimen/default_40dp"
                 app:layout_constraintBottom_toTopOf="@id/words_count"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.cardview.widget.CardView
-                    android:layout_width="@dimen/default_100dp"
-                    android:layout_height="@dimen/default_100dp"
+                    android:layout_width="@dimen/default_80dp"
+                    android:layout_height="@dimen/default_80dp"
                     android:layout_gravity="center"
-                    android:layout_margin="1dp"
-                    app:cardCornerRadius="@dimen/default_50dp">
+                    android:layout_margin="@dimen/default_1dp"
+                    app:cardCornerRadius="@dimen/default_40dp">
 
                     <ImageView
                         android:id="@+id/user_image"
@@ -85,13 +84,13 @@
                 android:id="@+id/words_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/default_12dp"
+                android:layout_marginHorizontal="@dimen/default_horizontal_margin"
+                android:layout_marginBottom="@dimen/default_8dp"
                 android:fontFamily="@font/helvetica_medium"
                 android:gravity="center"
                 android:text="@{@plurals/words(viewmodel.wordsCount,viewmodel.wordsCount)}"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/default_15sp"
+                android:textSize="@dimen/bigger_text_sp"
                 app:layout_constraintBottom_toTopOf="@id/add_to_yourself"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -102,8 +101,8 @@
                 android:id="@+id/add_to_yourself"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/default_20dp"
+                android:layout_marginHorizontal="@dimen/default_horizontal_margin"
+                android:layout_marginBottom="@dimen/default_8dp"
                 android:textColor="@color/white"
                 android:onClick="@{()->inExploreFragment.addToYourself()}"
                 android:text="@string/add_to_yourself"

@@ -7,18 +7,15 @@ import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class ChangePasswordViewModel @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
+    firebaseAuth: FirebaseAuth
 ) : BaseViewModel() {
 
     var oldPassword: String = ""

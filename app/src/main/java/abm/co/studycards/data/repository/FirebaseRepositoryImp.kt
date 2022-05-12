@@ -6,6 +6,7 @@ import abm.co.studycards.util.Constants.API_REF
 import abm.co.studycards.util.Constants.CAN_TRANSLATE_TIME_EVERY_DAY
 import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.Constants.EXPLORE_REF
+import abm.co.studycards.util.Constants.NAME_REF
 import abm.co.studycards.util.Constants.SELECTED_LANGUAGES
 import abm.co.studycards.util.Constants.USERS_REF
 import abm.co.studycards.util.Constants.USER_REF
@@ -51,7 +52,7 @@ class FirebaseRepositoryImp @Inject constructor(
 
     override suspend fun addUserName(uid: String, name: String) {
         withContext(Dispatchers.IO) {
-            rootUserDbRef.child(uid).child("name").setValue(name)
+            rootUserDbRef.child(uid).child(NAME_REF).setValue(name)
         }
     }
 

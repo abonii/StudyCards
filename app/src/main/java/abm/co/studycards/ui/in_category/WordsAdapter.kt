@@ -2,6 +2,8 @@ package abm.co.studycards.ui.in_category
 
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.ItemWordBinding
+import abm.co.studycards.util.Constants.TAG
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -19,7 +21,6 @@ class WordsAdapter(
     public override fun getItem(position: Int): Word {
         return super.getItem(position)
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordViewHolder {
         return WordViewHolder(

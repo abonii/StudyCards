@@ -4,8 +4,9 @@ import com.android.billingclient.api.BillingClient
 
 object Constants {
     const val TAG = "IM_CHECKING"
-    const val APP_NAME = "Study Cards"
+    const val APP_NAME = "Study Cards: learn languages"
     const val CAN_TRANSLATE_EVERY_DAY_ANONYMOUS = 4
+    const val ADJUST_DAY_BOUGHT_USER = 2
     const val CAN_TRANSLATE_EVERY_DAY = 12
     const val ONE_TIME_CYCLE_GAME = 5
     const val VOCABULARY_NUM_TABS = 3
@@ -31,6 +32,7 @@ object Constants {
     const val USER_REF = "user"
     const val EXPLORE_REF = "explore"
     const val SETS_REF = "sets"
+    const val NAME_REF = "name"
 
     const val VOCABULARY_TAB_POSITION = "VOCABULARY_TAB_POSITION"
     const val REQUEST_SYSTEM_LANGUAGE_KEY = "REQUEST_SYSTEM_LANGUAGE_KEY"

@@ -106,8 +106,9 @@ object FirebaseModule {
         db: FirebaseDatabase,
         prefs: Prefs
     ): DatabaseReference {
-        return db.reference.child(EXPLORE_REF).child(SETS_REF)
-            .child("${prefs.getSourceLanguage()}-${prefs.getTargetLanguage()}").apply {
+        return db.reference.child(EXPLORE_REF)
+            .child("${prefs.getSourceLanguage()}-${prefs.getTargetLanguage()}")
+            .child(SETS_REF).apply {
                 keepSynced(true)
             }
     }

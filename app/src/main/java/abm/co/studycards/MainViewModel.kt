@@ -4,7 +4,9 @@ import abm.co.studycards.data.PricingRepository
 import abm.co.studycards.data.model.ConfirmText
 import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants
+import abm.co.studycards.util.Constants.ADJUST_DAY_BOUGHT_USER
+import abm.co.studycards.util.Constants.CAN_TRANSLATE_EVERY_DAY
+import abm.co.studycards.util.Constants.CAN_TRANSLATE_EVERY_DAY_ANONYMOUS
 import abm.co.studycards.util.Constants.CAN_TRANSLATE_TIME_EVERY_DAY
 import abm.co.studycards.util.Constants.CAN_TRANSLATE_TIME_IN_MILLS
 import abm.co.studycards.util.base.BaseViewModel
@@ -82,10 +84,10 @@ class MainViewModel @Inject constructor(
                     if (!snapshot.child(CAN_TRANSLATE_TIME_EVERY_DAY).exists()) {
                         when (getCurrentUser()?.isAnonymous) {
                             true -> {
-                                count.setValue(Constants.CAN_TRANSLATE_EVERY_DAY_ANONYMOUS)
+                                count.setValue(CAN_TRANSLATE_EVERY_DAY_ANONYMOUS)
                             }
                             else -> {
-                                count.setValue(Constants.CAN_TRANSLATE_EVERY_DAY)
+                                count.setValue(CAN_TRANSLATE_EVERY_DAY)
                             }
                         }
                     }
@@ -101,14 +103,14 @@ class MainViewModel @Inject constructor(
                         userDbRef.updateChildren(
                             mapOf(
                                 CAN_TRANSLATE_TIME_EVERY_DAY to when {
-                                    currentTimes > Constants.CAN_TRANSLATE_EVERY_DAY -> {
-                                        currentTimes + Constants.CAN_TRANSLATE_EVERY_DAY_ANONYMOUS
+                                    currentTimes > CAN_TRANSLATE_EVERY_DAY -> {
+                                        currentTimes + ADJUST_DAY_BOUGHT_USER
                                     }
                                     getCurrentUser()?.isAnonymous == true -> {
-                                        Constants.CAN_TRANSLATE_EVERY_DAY_ANONYMOUS
+                                        CAN_TRANSLATE_EVERY_DAY_ANONYMOUS
                                     }
                                     else -> {
-                                        Constants.CAN_TRANSLATE_EVERY_DAY
+                                        CAN_TRANSLATE_EVERY_DAY
                                     }
                                 }
                             )
