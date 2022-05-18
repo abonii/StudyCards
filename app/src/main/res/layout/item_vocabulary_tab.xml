@@ -7,8 +7,8 @@
         android:id="@+id/swipe_reveal_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/default_3dp"
         app:dragEdge="right"
+        android:layout_marginVertical="@dimen/default_1dp"
         app:revealMode="same_level">
 
         <LinearLayout
@@ -21,28 +21,24 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/first_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_height="match_parent"
                 android:layout_marginHorizontal="@dimen/default_3dp"
                 android:fontFamily="@font/helvetica_roman"
-                android:textAllCaps="false"
                 android:textColor="@color/white"
-                tools:text="@string/know"
                 android:textSize="@dimen/default_10sp"
-                app:cornerRadius="@dimen/default_10dp" />
+                app:cornerRadius="@dimen/default_10dp"
+                tools:text="@string/know" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/second_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textColor="@color/white"
+                android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/default_3dp"
-                android:textAllCaps="false"
-                android:textSize="@dimen/default_10sp"
                 android:fontFamily="@font/helvetica_roman"
-                tools:text="@string/unknown"
-                app:cornerRadius="@dimen/default_10dp" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/default_10sp"
+                app:cornerRadius="@dimen/default_10dp"
+                tools:text="@string/unknown" />
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
@@ -83,9 +79,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentStart="true"
+                                android:fontFamily="@font/helvetica_bold"
                                 android:text="@string/review_words"
-                                android:textColor="@color/textColor"
-                                android:fontFamily="@font/helvetica_bold" />
+                                android:textColor="@color/textColor" />
 
 
                         </RelativeLayout>
@@ -124,8 +120,8 @@
                                 android:layout_height="@dimen/default_200dp"
                                 android:layout_below="@id/translation"
                                 android:layout_centerHorizontal="true"
-                                android:visibility="gone"
-                                android:contentDescription="@string/just_image"/>
+                                android:contentDescription="@string/just_image"
+                                android:visibility="gone" />
 
                             <TextView
                                 android:id="@+id/example"

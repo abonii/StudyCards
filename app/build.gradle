@@ -17,8 +17,8 @@ android {
         applicationId "abm.co.studycards"
         minSdk 23
         targetSdk 32
-        versionCode 47
-        versionName "1.02"
+        versionCode 48
+        versionName "1.03"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         proguardFiles
@@ -47,6 +47,7 @@ android {
     buildFeatures {
         dataBinding true
     }
+    namespace 'abm.co.studycards'
 }
 
 dependencies {

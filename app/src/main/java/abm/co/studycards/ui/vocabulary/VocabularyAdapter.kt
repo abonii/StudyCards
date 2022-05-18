@@ -22,12 +22,14 @@ import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection
  * at position 2 is second button's type f.e: KNOWN
  * */
 class VocabularyAdapter(
-    val onChangeType: (word: Word, type: LearnOrKnown) -> Unit,
+    private val onChangeType: (word: Word, type: LearnOrKnown) -> Unit,
     vararg types: LearnOrKnown
 ) : ListAdapter<Word, VocabularyAdapter.VocabularyViewHolder>(DIFF_UTIL) {
 
     val firstButton = types[1]
     val secondButton = types[2]
+
+    var onLongClickWord: ((word: Word) -> Unit)? = null
 
     private val viewBinderHelper = ViewBinderHelper().apply {
         setOpenOnlyOne(true)
@@ -57,6 +59,10 @@ class VocabularyAdapter(
             }
             binding.secondBtn.setOnClickListener {
                 onChangeType(getItem(absoluteAdapterPosition), secondButton)
+            }
+            binding.expansionHeader.setOnLongClickListener {
+                onLongClickWord?.invoke(getItem(absoluteAdapterPosition))
+                true
             }
             expansionLayout.addListener { _, _ ->
                 if (swipeRevealLayout.isOpened) expansionLayout.collapse(true)

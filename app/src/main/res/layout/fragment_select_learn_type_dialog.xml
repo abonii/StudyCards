@@ -233,6 +233,7 @@
                         android:layout_toEndOf="@id/guessing_image"
                         android:fontFamily="@font/helvetica_medium"
                         android:text="@string/guessing"
+                        android:textSize="@dimen/normal_text_sp"
                         android:textColor="@color/textColor" />
 
                 </RelativeLayout>

@@ -25,6 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fragment_profile) {
@@ -40,14 +41,14 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
                     val account = task.getResult(ApiException::class.java)!!
                     viewModel.firebaseAuthWithGoogle(account.idToken!!)
                 } catch (e: ApiException) {
-                    toast("error " + e.message)
+                    toast(e.message.toString())
                 }
             }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             viewModel.toast.collectLatest {
                 toast(it)
             }

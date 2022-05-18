@@ -13,7 +13,7 @@ abstract class BaseBindingFragment<B : ViewDataBinding>(@LayoutRes private val l
 
     //  Your view data binding
     private var _binding: B? = null
-    val binding get() = _binding!!
+    val binding get() = _binding ?: throw RuntimeException("Binding must not be null")
 
     //  Bind all widgets and start code
     protected abstract fun initUI(savedInstanceState: Bundle?)
@@ -24,8 +24,9 @@ abstract class BaseBindingFragment<B : ViewDataBinding>(@LayoutRes private val l
         savedInstanceState: Bundle?,
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, layoutResID, container, false)
-        _binding?.lifecycleOwner = viewLifecycleOwner
+        binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
+
     }
 
     // Initialize all widget in layout by ID

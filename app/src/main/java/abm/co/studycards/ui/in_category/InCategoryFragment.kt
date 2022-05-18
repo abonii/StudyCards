@@ -11,7 +11,9 @@ import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.fromHtml
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -160,10 +162,21 @@ class InCategoryFragment :
     }
 
     private fun openDownloadTTSDialog() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val installIntent = Intent()
-            installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
-            startActivity(installIntent)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val pm: PackageManager = requireActivity().packageManager
+                val installIntent = Intent()
+                installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
+                val resolveInfo =
+                    pm.resolveActivity(installIntent, PackageManager.MATCH_DEFAULT_ONLY)
+                if (resolveInfo == null) {
+                    toast(getString(R.string.this_function_not_available))
+                } else {
+                    startActivity(installIntent)
+                }
+            }
+        } catch (e: ActivityNotFoundException) {
+            toast(getString(R.string.this_function_not_available))
         }
     }
 

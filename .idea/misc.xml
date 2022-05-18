@@ -16,16 +16,23 @@
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/edit_text_border.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/explore_selector.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_arabic.xml" value="0.184" />
+        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_bangladesh.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_china.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_england.xml" value="0.184" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_france.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_germany.xml" value="0.1" />
+        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_india.xml" value="0.1" />
+        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_indonesia.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_italy.xml" value="0.1" />
+        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_japan.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_kazakhstan.xml" value="0.1" />
+        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_portugal.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_russia.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_saudi_arabia.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_south_korea.xml" value="0.1" />
+        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_spain.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_turkey.xml" value="0.1" />
+        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_ukraine.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/flag_united_kingdom.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/home_selector.xml" value="0.1" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/drawable/ic_add.xml" value="0.1" />
@@ -115,7 +122,7 @@
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_login.xml" value="0.16197916666666667" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_matching_pairs.xml" value="0.19410004275331338" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_notifications.xml" value="0.24728260869565216" />
-        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_profile.xml" value="0.21666666666666667" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_registration.xml" value="0.16197916666666667" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_repeat.xml" value="0.24728260869565216" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_review.xml" value="0.24728260869565216" />
@@ -123,6 +130,7 @@
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_select_language.xml" value="0.19384057971014493" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_select_language_any_where.xml" value="0.19047619047619047" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_select_learn_type_dialog.xml" value="0.4144144144144144" />
+        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_show_example_dialog.xml" value="0.16197916666666667" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_sign_in.xml" value="0.2" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_sign_up.xml" value="0.24728260869565216" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_to_right_or_left.xml" value="0.24728260869565216" />

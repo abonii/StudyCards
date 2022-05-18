@@ -43,7 +43,7 @@ class AddYourselfViewModel @Inject constructor(
     val sharedFlow = _sharedFlow.asSharedFlow()
 
     var category = savedStateHandle.get<Category>("category")!!
-    var setId = savedStateHandle.get<String>("set_id")!!
+    private var setId = savedStateHandle.get<String>("set_id")!!
 
     val selectedWords: MutableList<WordX> = ArrayList()
 
@@ -89,7 +89,6 @@ class AddYourselfViewModel @Inject constructor(
     private suspend fun insertWords(words: List<WordX>) {
         viewModelScope.launch(dispatcher) {
             firebaseRepository.addWords(category.copy(words = words.map { it.word }))
-            delay(3000)
             _sharedFlow.emit(AddYourselfEventChannel.NavigateBack)
         }
     }

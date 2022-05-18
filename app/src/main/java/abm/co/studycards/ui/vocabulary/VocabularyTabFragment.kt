@@ -2,7 +2,9 @@ package abm.co.studycards.ui.vocabulary
 
 import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.data.model.vocabulary.examplesToString
 import abm.co.studycards.databinding.FragmentVocabularyTabBinding
+import abm.co.studycards.ui.show_example_dialog.ShowExampleDialogFragment
 import abm.co.studycards.util.Constants.VOCABULARY_TAB_POSITION
 import abm.co.studycards.util.base.BaseBindingFragment
 import android.os.Bundle
@@ -37,7 +39,9 @@ class VocabularyTabFragment :
             viewModel.currentTabType,
             viewModel.firstBtnType,
             viewModel.secondBtnType
-        )
+        ).apply {
+            onLongClickWord = ::onLongClickWord
+        }
         lifecycleScope.launch {
             viewModel.stateFlow.collectLatest {
                 when (it) {
@@ -88,6 +92,17 @@ class VocabularyTabFragment :
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         adapterV?.saveStates(outState)
+    }
+
+    private fun onLongClickWord(word: Word) {
+        val examples = word.examplesToString()
+        if (examples.isBlank()) {
+            toast(R.string.no_example)
+        } else {
+            val exampleDialogFragment =
+                ShowExampleDialogFragment.newInstance(examples = examples, name = word.name)
+            exampleDialogFragment.show(childFragmentManager, ShowExampleDialogFragment.NAME)
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

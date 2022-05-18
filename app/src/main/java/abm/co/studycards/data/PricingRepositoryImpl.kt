@@ -26,8 +26,8 @@ class PricingRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) : PricingRepository, BillingClientStateListener, PurchasesUpdatedListener {
 
-    private val _skusLiveData = MutableStateFlow<List<SkuDetails>>(emptyList())
-    override val skusStateFlow: StateFlow<List<SkuDetails>> = _skusLiveData.asStateFlow()
+    private val _skusStateFlow = MutableStateFlow<List<SkuDetails>>(emptyList())
+    override val skusStateFlow: StateFlow<List<SkuDetails>> = _skusStateFlow.asStateFlow()
 
     override var billingClient: BillingClient = BillingClient
         .newBuilder(context.applicationContext)
@@ -103,7 +103,7 @@ class PricingRepositoryImpl @Inject constructor(
             if (products != null) {
                 coroutineScope.launch(Dispatchers.IO) {
                     products.sortBy { it.price }
-                    _skusLiveData.emit(products)
+                    _skusStateFlow.emit(products)
                 }
             }
         }
