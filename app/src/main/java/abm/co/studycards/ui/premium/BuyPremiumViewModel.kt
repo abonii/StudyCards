@@ -5,8 +5,6 @@ import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,5 +22,5 @@ class BuyPremiumViewModel @Inject constructor(
     }
 
     fun isUserAnonymous() = firebaseAuth.currentUser?.isAnonymous ?: true
-    fun isUserNotVerified() = !(firebaseAuth.currentUser?.isEmailVerified ?: false)
+//    fun isUserNotVerified() = !(firebaseAuth.currentUser?.isEmailVerified ?: false)
 }

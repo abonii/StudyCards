@@ -17,17 +17,17 @@ import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection
 
 /**
- * types: at position 0 is current fragment type f.e: UNKNOWN
+ * currentType: at position 0 is current fragment type f.e: UNKNOWN
  * at position 1 is first button's type f.e: UNCERTAIN
  * at position 2 is second button's type f.e: KNOWN
  * */
 class VocabularyAdapter(
     private val onChangeType: (word: Word, type: LearnOrKnown) -> Unit,
-    vararg types: LearnOrKnown
+    currentType: LearnOrKnown
 ) : ListAdapter<Word, VocabularyAdapter.VocabularyViewHolder>(DIFF_UTIL) {
 
-    val firstButton = types[1]
-    val secondButton = types[2]
+    val firstButton = currentType.getFirstBtn()
+    val secondButton = currentType.getSecondBtn()
 
     var onLongClickWord: ((word: Word) -> Unit)? = null
 

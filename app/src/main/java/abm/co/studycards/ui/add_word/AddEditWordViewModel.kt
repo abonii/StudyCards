@@ -12,6 +12,7 @@ import abm.co.studycards.util.Constants.CAN_TRANSLATE_TIME_EVERY_DAY
 import abm.co.studycards.util.Constants.OXFORD_CAN_TRANSLATE_MAP
 import abm.co.studycards.util.Constants.OXFORD_ID
 import abm.co.studycards.util.Constants.OXFORD_KEY
+import abm.co.studycards.util.Constants.TAG
 import abm.co.studycards.util.Constants.YANDEX_KEY
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.firebaseError
@@ -40,7 +41,7 @@ class AddEditWordViewModel @Inject constructor(
 
     private val dispatcher = Dispatchers.IO
 
-    var translateCounts: Long = 0
+    var translateCounts: Long = -1
 
     private val apiKeys = firebaseRepository.getApiReference()
     private val userRef = firebaseRepository.getUserReference()
@@ -79,9 +80,9 @@ class AddEditWordViewModel @Inject constructor(
     val imageCanSetUrlStateFlow = MutableStateFlow(true)
     val imageVisibleStateFlow = MutableStateFlow(word?.imageUrl?.isNotBlank() == true)
 
-    private var oxfordApiKey = "why_do_you_need_this_api_key_?"
-    private var oxfordApiId = "why_do_you_need_this_id_?"
-    private var yandexApiKey = "why_do_you_need_this_api_key_?"
+    private var oxfordApiKey = "why_do_you_need_this_b_?"
+    private var oxfordApiId = "why_do_you_need_this_a_?"
+    private var yandexApiKey = "why_do_you_need_this_c_?"
 
     var backPressedTime: Long = 0
 
@@ -94,7 +95,8 @@ class AddEditWordViewModel @Inject constructor(
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.i("ABO_ADD_WORD", error.message)
+                translateCounts = -1
+                Log.i(TAG, error.message)
             }
         })
         apiKeys.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -120,6 +122,7 @@ class AddEditWordViewModel @Inject constructor(
 
     fun fetchWord(fromSource: Boolean) {
         viewModelScope.launch(dispatcher) {
+            Log.i(TAG, "fetchWord: $translateCounts")
             if (translateCounts > 0) {
                 if (fromSource) _sourceTranslatingStateFlow.value = true
                 else _targetTranslatingStateFlow.value = true

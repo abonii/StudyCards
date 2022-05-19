@@ -6,6 +6,7 @@ import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.WORDS_REF
 import abm.co.studycards.util.base.BaseViewModel
+import abm.co.studycards.util.core.App
 import abm.co.studycards.util.firebaseError
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
@@ -15,6 +16,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -30,14 +32,16 @@ class InCategoryViewModel @Inject constructor(
     private val dispatcher = Dispatchers.IO
     private val categoriesDbRef = firebaseRepository.getCategoriesReference()
 
-    private val _stateFlow = MutableStateFlow<InCategoryUiState>(InCategoryUiState.Loading)
-    val stateFlow = _stateFlow.asStateFlow()
-
-    var category = savedStateHandle.get<Category>("category")!!
-    private val _categoryStateFlow = MutableStateFlow(category)
+    var categoryId = savedStateHandle.get<String>("categoryId")!!
+    var categoryName: String = ""
+    private val _categoryStateFlow = MutableStateFlow<Category?>(null)
     val categoryStateFlow = _categoryStateFlow.asStateFlow()
 
-    private val thisCategoryRef = categoriesDbRef.child(category.id)
+    private val _stateFlow =
+        MutableStateFlow<InCategoryUiState>(InCategoryUiState.Loading)
+    val stateFlow = _stateFlow.asStateFlow()
+
+    private val thisCategoryRef = categoriesDbRef.child(categoryId)
     private val wordsRef = thisCategoryRef.child(WORDS_REF)
 
     val targetLang = prefs.getTargetLanguage()
@@ -45,10 +49,15 @@ class InCategoryViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            thisCategoryRef.addValueEventListener(object : ValueEventListener {
+            wordsRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.getValue(Category::class.java)?.let {
-                        _categoryStateFlow.value = it
+                    viewModelScope.launch(dispatcher) {
+                        val items = mutableListOf<Word>()
+                        snapshot.children.forEach {
+                            it.getValue(Word::class.java)?.let { it1 -> items.add(it1) }
+                        }
+                        delay(400)
+                        _stateFlow.value = InCategoryUiState.Success(items)
                     }
                 }
 
@@ -56,13 +65,12 @@ class InCategoryViewModel @Inject constructor(
                     _stateFlow.value = InCategoryUiState.Error(firebaseError(error.code))
                 }
             })
-            wordsRef.addValueEventListener(object : ValueEventListener {
+            thisCategoryRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val items = mutableListOf<Word>()
-                    snapshot.children.forEach {
-                        it.getValue(Word::class.java)?.let { it1 -> items.add(it1) }
+                    snapshot.getValue(Category::class.java)?.let {
+                        _categoryStateFlow.value = it
+                        categoryName = it.mainName
                     }
-                    _stateFlow.value = InCategoryUiState.Success(items)
                 }
 
                 override fun onCancelled(error: DatabaseError) {

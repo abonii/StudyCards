@@ -119,12 +119,12 @@
             app:exitAnim="@anim/stay_on_in_right"
             app:popEnterAnim="@anim/slide_out_left"
             app:popExitAnim="@anim/stay_on_out_left" />
-        <argument
-            android:name="category"
-            app:argType="abm.co.studycards.data.model.vocabulary.Category" />
         <action
             android:id="@+id/action_inCategoryFragment_to_addEditCategoryFragment"
             app:destination="@id/addEditCategoryFragment" />
+        <argument
+            android:name="categoryId"
+            app:argType="string" />
     </fragment>
     <dialog
         android:id="@+id/selectGamesTypeDialogFragment"

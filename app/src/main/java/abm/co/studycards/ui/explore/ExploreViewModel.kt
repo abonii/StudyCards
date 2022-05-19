@@ -7,12 +7,10 @@ import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.Constants.NAME_REF
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.firebaseError
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseException
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -81,7 +79,11 @@ class ExploreViewModel @Inject constructor(
 }
 
 sealed class ParentExploreUI {
-    data class SetUI(val value: List<ChildExploreVHUI.VHCategory>, val title: String, val setId:String) :
+    data class SetUI(
+        val value: List<ChildExploreVHUI.VHCategory>,
+        val title: String,
+        val setId: String
+    ) :
         ParentExploreUI()
 }
 

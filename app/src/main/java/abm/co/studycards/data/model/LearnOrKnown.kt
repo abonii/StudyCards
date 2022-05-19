@@ -26,6 +26,38 @@ enum class LearnOrKnown {
             }
         }
     }
+    fun getFirstBtn(): LearnOrKnown {
+        return when (this) {
+            UNKNOWN -> {
+                UNCERTAIN
+            }
+            KNOWN -> {
+                UNKNOWN
+            }
+            UNCERTAIN -> {
+                UNKNOWN
+            }
+            UNDEFINED -> {
+                UNDEFINED
+            }
+        }
+    }
+    fun getSecondBtn(): LearnOrKnown {
+        return when (this) {
+            UNKNOWN -> {
+                KNOWN
+            }
+            KNOWN -> {
+                UNCERTAIN
+            }
+            UNCERTAIN -> {
+                KNOWN
+            }
+            UNDEFINED -> {
+                UNDEFINED
+            }
+        }
+    }
 
     fun getName(context: Context): String {
         return when (this) {

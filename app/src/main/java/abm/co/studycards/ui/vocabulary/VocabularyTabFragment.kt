@@ -7,15 +7,15 @@ import abm.co.studycards.databinding.FragmentVocabularyTabBinding
 import abm.co.studycards.ui.show_example_dialog.ShowExampleDialogFragment
 import abm.co.studycards.util.Constants.VOCABULARY_TAB_POSITION
 import abm.co.studycards.util.base.BaseBindingFragment
+import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class VocabularyTabFragment :
@@ -31,18 +31,20 @@ class VocabularyTabFragment :
     private var adapterV: VocabularyAdapter? = null
     private val viewModel: VocabularyViewModel by viewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.initWords(arguments?.getInt(VOCABULARY_TAB_POSITION) ?: 0)
+    }
+
 
     override fun initUI(savedInstanceState: Bundle?) {
-        viewModel.initWords(arguments?.getInt(VOCABULARY_TAB_POSITION) ?: 0)
         adapterV = VocabularyAdapter(
             viewModel::changeType,
-            viewModel.currentTabType,
-            viewModel.firstBtnType,
-            viewModel.secondBtnType
+            viewModel.currentTabType
         ).apply {
             onLongClickWord = ::onLongClickWord
         }
-        lifecycleScope.launch {
+        launchAndRepeatWithViewLifecycle {
             viewModel.stateFlow.collectLatest {
                 when (it) {
                     is VocabularyUiState.Error -> {
@@ -106,8 +108,12 @@ class VocabularyTabFragment :
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        adapterV?.restoreStates(savedInstanceState)
+        try {
+            super.onViewStateRestored(savedInstanceState)
+            adapterV?.restoreStates(savedInstanceState)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onDestroyView() {

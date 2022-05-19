@@ -29,8 +29,6 @@ class VocabularyViewModel @Inject constructor(
     private val categoriesDbRef = firebaseRepository.getCategoriesReference()
 
     var currentTabType = LearnOrKnown.UNCERTAIN
-    var firstBtnType = LearnOrKnown.KNOWN
-    var secondBtnType = LearnOrKnown.UNKNOWN
 
     private var firstTime = true
 
@@ -82,20 +80,6 @@ class VocabularyViewModel @Inject constructor(
 
     private fun setTabSettings(pos: Int) {
         currentTabType = LearnOrKnown.getType(pos)
-        when (currentTabType) {
-            LearnOrKnown.KNOWN -> {
-                firstBtnType = LearnOrKnown.UNKNOWN
-                secondBtnType = LearnOrKnown.UNCERTAIN
-            }
-            LearnOrKnown.UNCERTAIN -> {
-                firstBtnType = LearnOrKnown.UNKNOWN
-                secondBtnType = LearnOrKnown.KNOWN
-            }
-            else -> {
-                firstBtnType = LearnOrKnown.UNCERTAIN
-                secondBtnType = LearnOrKnown.KNOWN
-            }
-        }
     }
 
     fun changeType(word: Word, type: LearnOrKnown) {

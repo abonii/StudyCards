@@ -17,9 +17,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -40,18 +38,10 @@ class InCategoryFragment :
     private var snackbar: Snackbar? = null
     private lateinit var textToSpeech: TextToSpeech
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        collectData()
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun initUI(savedInstanceState: Bundle?) {
         binding.inCategoryFragment = this
         initTextToSpeech()
+        collectData()
         setToolbar()
         initFAB()
         setUpRecyclerView()
@@ -64,7 +54,7 @@ class InCategoryFragment :
 
 
     private fun collectData() {
-        launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
+        launchAndRepeatWithViewLifecycle(Lifecycle.State.CREATED) {
             viewModel.stateFlow.collect {
                 when (it) {
                     is InCategoryUiState.Error -> errorOccurred(it.msg)
@@ -73,11 +63,10 @@ class InCategoryFragment :
                 }
             }
         }
-        launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
+        launchAndRepeatWithViewLifecycle(Lifecycle.State.CREATED) {
             viewModel.categoryStateFlow.collect {
-                if (it.mainName.isNotEmpty()) {
+                if (it?.mainName?.isNotEmpty() == true) {
                     binding.folderName.text = it.mainName
-                    viewModel.category = it
                 }
             }
         }
@@ -91,9 +80,8 @@ class InCategoryFragment :
     }
 
     private fun onLoading() = binding.run {
-        error.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
-        recyclerView.visibility = View.GONE
+        error.visibility = View.GONE
     }
 
     private fun errorOccurred(@StringRes text: Int) = binding.run {
@@ -157,7 +145,7 @@ class InCategoryFragment :
 
     fun directToEditCategory() {
         val action =
-            InCategoryFragmentDirections.actionInCategoryFragmentToAddEditCategoryFragment(viewModel.category)
+            InCategoryFragmentDirections.actionInCategoryFragmentToAddEditCategoryFragment(viewModel.categoryStateFlow.value)
         navigate(action)
     }
 
@@ -183,8 +171,8 @@ class InCategoryFragment :
     fun onFloatingActionWordClick() {
         val action =
             InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
-                categoryName = viewModel.category.mainName,
-                categoryId = viewModel.category.id
+                categoryName = viewModel.categoryName,
+                categoryId = viewModel.categoryId
             )
         navigate(action)
     }
@@ -194,8 +182,8 @@ class InCategoryFragment :
         val action =
             InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
                 word = vocabulary,
-                categoryName = viewModel.category.mainName,
-                categoryId = viewModel.category.id
+                categoryName = viewModel.categoryName,
+                categoryId = viewModel.categoryId
             )
         navigate(action)
     }

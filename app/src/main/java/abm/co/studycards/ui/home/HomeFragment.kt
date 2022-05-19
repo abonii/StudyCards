@@ -198,10 +198,11 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
         floatingActionButtonCategory.animate().translationY(0F).duration = 500
     }
 
-    override fun onCategoryClicked(category: Category) {
+    override fun onCategoryClicked(categoryId: String) {
         if (isFabOpen()) return
-        val action =
-            HomeFragmentDirections.actionHomeFragmentToInCategoryFragment(category)
+        val action = HomeFragmentDirections.actionHomeFragmentToInCategoryFragment(
+            categoryId = categoryId
+        )
         navigate(action)
     }
 

@@ -28,7 +28,7 @@ class CategoryAdapter(
         RecyclerView.ViewHolder(binding.root) {
         init {
             itemView.setOnClickListener {
-                listener.onCategoryClicked(getItem(absoluteAdapterPosition))
+                listener.onCategoryClicked(getItem(absoluteAdapterPosition).id)
             }
             itemView.setOnLongClickListener {
                 listener.onLongClickCategory(getItem(absoluteAdapterPosition))
@@ -54,7 +54,7 @@ class CategoryAdapter(
     }
 
     interface CategoryAdapterListener {
-        fun onCategoryClicked(category: Category)
+        fun onCategoryClicked(categoryId: String)
         fun onPlay(category: Category)
         fun onLongClickCategory(category: Category)
     }

@@ -2,8 +2,10 @@ package abm.co.studycards.ui.vocabulary
 
 import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentVocabularyBinding
+import abm.co.studycards.util.Constants.TAG
 import abm.co.studycards.util.base.BaseBindingFragment
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -12,16 +14,19 @@ class VocabularyFragment :
     BaseBindingFragment<FragmentVocabularyBinding>(R.layout.fragment_vocabulary) {
 
     private lateinit var fragmentsArray: Array<String>
-    var adapterP: PagerAdapter? = null
+    private var adapterP: PagerAdapter? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fragmentsArray = resources.getStringArray(R.array.vocabulary_tabs)
+    }
 
     override fun initUI(savedInstanceState: Bundle?) {
         setStatusBarColor()
         adapterP = PagerAdapter(requireActivity())
-        fragmentsArray = resources.getStringArray(R.array.vocabulary_tabs)
         binding.pager.run {
             adapter = adapterP
             isUserInputEnabled = false
-//            offscreenPageLimit = 1
         }
         TabLayoutMediator(binding.tabLayout, binding.pager, false, false) { tab, position ->
             tab.text = fragmentsArray[position]
@@ -36,6 +41,14 @@ class VocabularyFragment :
     override fun onDestroyView() {
         super.onDestroyView()
         adapterP = null
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        try {
+            super.onViewStateRestored(savedInstanceState)
+        }catch (e:Exception){
+            Log.e(TAG, "onViewStateRestored: ${e.message}")
+        }
     }
 
 }

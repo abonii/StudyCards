@@ -228,5 +228,21 @@
     <string name="translated_with_oxford">Переведено с помощью Oxford Dictionaries API</string>
     <string name="translated_with_yandex">premium_feature2_des</string>
     <string name="version">Версия: %1$s</string>
+    <string name="bengali">Бенгальский</string>
+    <string name="hindi">Хинди</string>
+    <string name="indonesian">Индонезийский</string>
+    <string name="japanese">Японский</string>
+    <string name="portuguese">Португальский</string>
+    <string name="spanish">Испанский</string>
+    <string name="ukrainian">Украинский</string>
+    <string name="bengali_short">Бен</string>
+    <string name="hindi_short">Хин</string>
+    <string name="japanese_short">Япо</string>
+    <string name="indonesian_short">Инд</string>
+    <string name="portuguese_short">Пор</string>
+    <string name="spanish_short">Исп</string>
+    <string name="ukrainian_short">Укр</string>
+    <string name="this_function_not_available">Упс! Эта функция недоступна на вашем устройстве.</string>
+    <string name="no_example">Для этого слова нет примеров</string>
 
 </resources>
