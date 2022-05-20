@@ -19,7 +19,7 @@ import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection
 /**
  * currentType: at position 0 is current fragment type f.e: UNKNOWN
  * at position 1 is first button's type f.e: UNCERTAIN
- * at position 2 is second button's type f.e: KNOWN
+ * at position 2 is second button's type f.e: KNOWN.
  * */
 class VocabularyAdapter(
     private val onChangeType: (word: Word, type: LearnOrKnown) -> Unit,
