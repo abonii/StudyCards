@@ -12,11 +12,9 @@ import abm.co.studycards.util.Constants.CAN_TRANSLATE_TIME_EVERY_DAY
 import abm.co.studycards.util.Constants.OXFORD_CAN_TRANSLATE_MAP
 import abm.co.studycards.util.Constants.OXFORD_ID
 import abm.co.studycards.util.Constants.OXFORD_KEY
-import abm.co.studycards.util.Constants.TAG
 import abm.co.studycards.util.Constants.YANDEX_KEY
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.firebaseError
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
@@ -96,7 +94,6 @@ class AddEditWordViewModel @Inject constructor(
 
             override fun onCancelled(error: DatabaseError) {
                 translateCounts = -1
-                Log.i(TAG, error.message)
             }
         })
         apiKeys.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -122,7 +119,6 @@ class AddEditWordViewModel @Inject constructor(
 
     fun fetchWord(fromSource: Boolean) {
         viewModelScope.launch(dispatcher) {
-            Log.i(TAG, "fetchWord: $translateCounts")
             if (translateCounts > 0) {
                 if (fromSource) _sourceTranslatingStateFlow.value = true
                 else _targetTranslatingStateFlow.value = true

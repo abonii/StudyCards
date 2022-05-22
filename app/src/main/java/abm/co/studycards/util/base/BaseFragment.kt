@@ -47,8 +47,6 @@ abstract class BaseFragment : Fragment(), IResourcesIDListener {
         Log.i(name, msg.toString())
     }
 
-    fun showLoader() {
-    }
 
     fun hideLoader() {
         dialogForLoader?.dismiss()

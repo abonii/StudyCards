@@ -11,21 +11,26 @@ import androidx.recyclerview.widget.RecyclerView
 class ParentExploreAdapter(private val onClickItem: (String, Category) -> Unit) :
     ListAdapter<ParentExploreUI, ParentExploreAdapter.ViewHolder>(DIFF_UTIL) {
 
+    var onClickAddSet: ((ParentExploreUI) -> Unit)? = null
+
     inner class ViewHolder(
         val binding: ItemParentExploreBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.addToThis.setOnClickListener {
+                onClickAddSet?.invoke(getItem(absoluteAdapterPosition))
+            }
+        }
 
-        fun bind(currentItem: ParentExploreUI) {
-            binding.run {
-                when (currentItem) {
-                    is ParentExploreUI.SetUI -> {
-                        val childAdapter =
-                            ChildExploreAdapter{
-                                onClickItem(currentItem.setId, it)
-                            }.apply { submitList(currentItem.value) }
-                        childRV.adapter = childAdapter
-                        category.text = currentItem.title
-                    }
+        fun bind(currentItem: ParentExploreUI) = binding.run {
+            when (currentItem) {
+                is ParentExploreUI.SetUI -> {
+                    val childAdapter =
+                        ChildExploreAdapter {
+                            onClickItem(currentItem.setId, it)
+                        }.apply { submitList(currentItem.value) }
+                    childRV.adapter = childAdapter
+                    category.text = currentItem.title
                 }
             }
         }

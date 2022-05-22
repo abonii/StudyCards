@@ -10,17 +10,13 @@ data class Category(
     var sourceLanguage: String = "",
     var targetLanguage: String = "",
     val imageUrl: String = "",
-    @JvmField var words: List<Word> = emptyList(),
+    val creatorName:String = "_",
+    val creatorId:String = "_",
+    var words: List<Word> = emptyList(),
 ) : Parcelable {
 
     companion object{
         const val MAIN_NAME = "mainName"
-    }
-
-    fun getWords() = words
-
-    fun setWords(words: Map<String, Word>) {
-        this.words = ArrayList(words.values)
     }
 
 }

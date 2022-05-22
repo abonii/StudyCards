@@ -195,6 +195,7 @@
     <string name="select_all_words">Select all words</string>
     <string name="select_words">Select words</string>
     <string name="add">Add</string>
+    <string name="exists">This category already exist</string>
     <string name="empty_home_fragment">There is no sets of words yet. Create new one by clicking + button below</string>
     <string name="change_target_and_native">Change target language with native language</string>
     <string name="study_cards_title">Study Cards Store</string>

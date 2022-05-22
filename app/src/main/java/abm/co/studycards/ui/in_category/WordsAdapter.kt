@@ -2,8 +2,6 @@ package abm.co.studycards.ui.in_category
 
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.ItemWordBinding
-import abm.co.studycards.util.Constants.TAG
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil

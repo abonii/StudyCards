@@ -1,15 +1,15 @@
-package abm.co.studycards.ui.home
+package abm.co.studycards.ui.select_explore_category
 
 import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.model.vocabulary.CategoryDto
-import abm.co.studycards.data.pref.Prefs
 import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants.TAG
+import abm.co.studycards.ui.explore.ParentExploreUI
+import abm.co.studycards.ui.home.CategoryUiState
+import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.firebaseError
 import android.util.Log
-import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,54 +19,58 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val prefs: Prefs,
+class SelectExploreCategoryViewModel @Inject constructor(
     private val firebaseRepository: ServerCloudRepository
 ) : BaseViewModel() {
 
-    val dispatcher = Dispatchers.IO
     private val categoriesDbRef = firebaseRepository.getCategoriesReference()
-
-    var defaultCategory: Category? = null
-
-    var fabMenuOpened = false
-
-    var sourceLang = prefs.getSourceLanguage()
-        set(value) {
-            field = value
-            prefs.setSourceLanguage(value)
-        }
-    var targetLang = prefs.getTargetLanguage()
-        set(value) {
-            field = value
-            prefs.setTargetLanguage(value)
-        }
 
     private val _stateFlow = MutableStateFlow<CategoryUiState>(CategoryUiState.Loading)
     val stateFlow = _stateFlow.asStateFlow()
 
+    private var theSetCategories: List<Category> = emptyList()
+
     init {
+        fetchCategories()
+    }
+
+    fun fetchTheSetCategory(setId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            firebaseRepository.fetchExploreSets().collectLatest { listOfSets ->
+                listOfSets.forEach { parentExplore ->
+                    if (parentExplore is ParentExploreUI.SetUI && parentExplore.setId == setId) {
+                        Log.i(Constants.TAG, "ids are same}")
+                        theSetCategories = parentExplore.value.map { it.value }
+                        return@collectLatest
+                    }
+                }
+            }
+        }
+    }
+
+    private fun fetchCategories() {
         categoriesDbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                viewModelScope.launch(dispatcher) {
+                viewModelScope.launch(Dispatchers.IO) {
                     val items = mutableListOf<Category>()
                     snapshot.children.forEach {
                         try {
-                            it.getValue(CategoryDto::class.java)?.let { it1 -> items.add(it1.toCategory()) }
+                            it.getValue(CategoryDto::class.java)
+                                ?.let { it1 -> items.add(it1.toCategory()) }
                         } catch (e: DatabaseException) {
-                            Log.i(TAG, "onDataChange: ${e.message}")
+                            it.ref.removeValue()
                         }
                     }
                     if (items.size > 0) {
-                        defaultCategory = items.first()
                         _stateFlow.value = CategoryUiState.Success(items.take(500))
                     } else {
                         _stateFlow.value =
-                            CategoryUiState.Error(R.string.empty_home_fragment)
+                            CategoryUiState.Error(R.string.empty)
                     }
                 }
             }
@@ -77,23 +81,13 @@ class HomeViewModel @Inject constructor(
         })
     }
 
-    fun removeCategory(category: Category) {
-        viewModelScope.launch(dispatcher) {
-            firebaseRepository.removeCategory(category)
+    fun addUserCategoryToExplore(setId: String, category: Category) {
+        if (!theSetCategories.contains(category)) {
+            firebaseRepository.addExploreCategory(setId, category)
+        } else {
+            makeToast(R.string.exists)
         }
     }
 
-    fun changePreferenceNativeWithTargetLanguages() {
-        //val target = targetLang
-        targetLang = sourceLang.also {
-            sourceLang = targetLang
-        }
 
-    }
-}
-
-sealed class CategoryUiState {
-    data class Success(val value: List<Category>) : CategoryUiState()
-    object Loading : CategoryUiState()
-    data class Error(@StringRes val msg: Int) : CategoryUiState()
 }

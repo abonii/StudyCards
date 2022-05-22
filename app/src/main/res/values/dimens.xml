@@ -57,6 +57,7 @@
     <dimen name="default_8dp">@dimen/_8sdp</dimen>
     <dimen name="default_9dp">@dimen/_9sdp</dimen>
     <dimen name="default_10dp">@dimen/_10sdp</dimen>
+    <dimen name="default_11dp">@dimen/_11sdp</dimen>
     <dimen name="default_12dp">@dimen/_12sdp</dimen>
     <dimen name="default_13dp">@dimen/_13sdp</dimen>
     <dimen name="default_14dp">@dimen/_14sdp</dimen>

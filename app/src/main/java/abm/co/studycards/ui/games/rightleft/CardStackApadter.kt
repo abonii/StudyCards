@@ -4,11 +4,9 @@ import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemCardBinding
-import abm.co.studycards.util.Constants.TAG
 import abm.co.studycards.util.GeneralBindingAdapters.setImageWithGlide
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,13 +30,11 @@ class CardStackAdapter constructor(
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        Log.i(TAG, "create")
         val inflater = LayoutInflater.from(parent.context)
         return ViewHolder(ItemCardBinding.inflate(inflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.i(TAG, "bind: $position")
         val currentItem = words[position]
         holder.bind(currentItem)
     }
@@ -64,7 +60,7 @@ class CardStackAdapter constructor(
             }
         }
 
-        fun bind(currentItem: Word) =binding.run{
+        fun bind(currentItem: Word) = binding.run {
             wordImage.setImageWithGlide(currentItem.imageUrl)
             wordImageContainer.isVisible = currentItem.imageUrl.isNotBlank()
             translated.text = currentItem.name
