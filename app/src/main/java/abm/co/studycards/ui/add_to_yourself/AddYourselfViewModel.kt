@@ -88,7 +88,7 @@ class AddYourselfViewModel @Inject constructor(
 
     private suspend fun insertWords(words: List<WordX>) {
         viewModelScope.launch(dispatcher) {
-            firebaseRepository.addWords(category.copy(words = words.map { it.word }))
+            firebaseRepository.addCategory(category.copy(words = words.map { it.word }))
             _sharedFlow.emit(AddYourselfEventChannel.NavigateBack)
         }
     }

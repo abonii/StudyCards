@@ -5,9 +5,9 @@ import com.android.billingclient.api.BillingClient.SkuType.INAPP
 object Constants {
     const val TAG = "IM_CHECKING"
     const val APP_NAME = "StudyCards: Vocabulary Builder"
-    const val CAN_TRANSLATE_EVERY_DAY_ANONYMOUS = 4
-    const val ADJUST_DAY_BOUGHT_USER = 2
-    const val CAN_TRANSLATE_EVERY_DAY = 12
+    const val CAN_TRANSLATE_EVERY_DAY_ANONYMOUS = 15
+    const val ADJUST_DAY_BOUGHT_USER = 5
+    const val CAN_TRANSLATE_EVERY_DAY = 20
     const val ONE_TIME_CYCLE_GAME = 5
     const val VOCABULARY_NUM_TABS = 3
 

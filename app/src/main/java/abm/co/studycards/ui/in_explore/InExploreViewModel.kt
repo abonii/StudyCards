@@ -41,7 +41,8 @@ class InExploreViewModel @Inject constructor(
 
     val categoryPhotoUrl = category.imageUrl
 
-    private val wordsRef = exploreDbRef.child(setId).child(CATEGORIES_REF).child(category.id).child(WORDS_REF)
+    private val wordsRef = exploreDbRef.child(setId)
+        .child(CATEGORIES_REF).child(category.id).child(WORDS_REF)
 
     val targetLang = prefs.getTargetLanguage()
 
@@ -68,7 +69,6 @@ class InExploreViewModel @Inject constructor(
                     snapshot.children.forEach {
                         it.getValue(Word::class.java)?.let { it1 -> items.add(it1) }
                     }
-                    delay(300)
                     _stateFlow.value = InExploreUiState.Success(items)
                 }
             }

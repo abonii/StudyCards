@@ -4,6 +4,7 @@ import abm.co.studycards.R
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.databinding.FragmentExploreBinding
 import abm.co.studycards.setDefaultStatusBar
+import abm.co.studycards.ui.select_explore_category.SelectExploreCategory
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
@@ -52,7 +53,9 @@ class ExploreFragment : BaseBindingFragment<FragmentExploreBinding>(R.layout.fra
 
     override fun initUI(savedInstanceState: Bundle?) {
         requireActivity().setDefaultStatusBar()
-        parentAdapter = ParentExploreAdapter(::onClickItem)
+        parentAdapter = ParentExploreAdapter(::onClickItem).apply {
+            onClickAddSet = ::onClickAddSet
+        }
         binding.parentRecyclerView.adapter = parentAdapter
     }
 
@@ -87,12 +90,21 @@ class ExploreFragment : BaseBindingFragment<FragmentExploreBinding>(R.layout.fra
         stopShimmer()
     }
 
-    private fun onClickItem(setId:String, category: Category) {
+    private fun onClickItem(setId: String, category: Category) {
         val nav = ExploreFragmentDirections.actionExploreFragmentToInExploreCategoryFragment(
             category = category,
             setId = setId
         )
         navigate(nav)
+    }
+
+    private fun onClickAddSet(item: ParentExploreUI) {
+        when (item) {
+            is ParentExploreUI.SetUI -> {
+                val selectExploreSet = SelectExploreCategory.newInstance(item.setId)
+                selectExploreSet.show(childFragmentManager, SelectExploreCategory.NAME)
+            }
+        }
     }
 
     override fun onDestroyView() {

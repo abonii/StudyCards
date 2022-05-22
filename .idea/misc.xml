@@ -127,6 +127,7 @@
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_repeat.xml" value="0.24728260869565216" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_review.xml" value="0.24728260869565216" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_select_category_dialog.xml" value="0.24728260869565216" />
+        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_select_explore_set.xml" value="0.16197916666666667" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_select_language.xml" value="0.19384057971014493" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_select_language_any_where.xml" value="0.19047619047619047" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/fragment_select_learn_type_dialog.xml" value="0.4144144144144144" />
@@ -144,6 +145,7 @@
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_category_shimmer.xml" value="0.19410004275331338" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_child_category.xml" value="0.19410004275331338" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_child_explore.xml" value="0.19410004275331338" />
+        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_explore_category.xml" value="0.16197916666666667" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_explore_shimmer.xml" value="0.19410004275331338" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_explore_word.xml" value="0.2866817155756208" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_explore_word_selection.xml" value="0.1" />
@@ -152,7 +154,7 @@
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_language_of_the_app.xml" value="0.24728260869565216" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_matching_card.xml" value="0.24728260869565216" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_option.xml" value="0.24728260869565216" />
-        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_parent_explore.xml" value="0.264" />
+        <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_parent_explore.xml" value="0.2302936630602782" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_parent_explore_shimmer.xml" value="0.19410004275331338" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_parent_select_language_anywhere.xml" value="0.13296280461735785" />
         <entry key="..\:/Users/Abdulla/StudioProjects/StudyCards/app/src/main/res/layout/item_products_list.xml" value="0.5226890756302521" />

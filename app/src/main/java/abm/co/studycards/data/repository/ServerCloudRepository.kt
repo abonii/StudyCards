@@ -2,9 +2,11 @@ package abm.co.studycards.data.repository
 
 import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.ui.explore.ParentExploreUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
+import kotlinx.coroutines.flow.StateFlow
 
 
 interface ServerCloudRepository {
@@ -27,4 +29,6 @@ interface ServerCloudRepository {
     suspend fun setSelectedLanguages(vararg languageCodes: String)
     suspend fun updateSelectedLanguages(vararg languageCodes: String)
     fun getFirebaseAuth(): FirebaseAuth
+    fun addExploreCategory(setId: String, category: Category)
+    fun fetchExploreSets(): StateFlow<List<ParentExploreUI>>
 }

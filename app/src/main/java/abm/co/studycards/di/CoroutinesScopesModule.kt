@@ -1,9 +1,12 @@
 package abm.co.studycards.di
 
+import abm.co.studycards.util.Constants.TAG
+import android.util.Log
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -13,10 +16,18 @@ import javax.inject.Singleton
 @Module
 object CoroutinesScopesModule {
 
-    @Singleton // Provide always the same instance
+    @Singleton
     @Provides
-    fun providesCoroutineScope(): CoroutineScope {
+    fun provideCoroutineExceptionHandler(): CoroutineExceptionHandler {
+        return CoroutineExceptionHandler { _, exception ->
+            Log.i(TAG, "provideCoroutineExceptionHandler: ${exception.message}")
+        }
+    }
+
+    @Singleton
+    @Provides
+    fun providesCoroutineScope(coroutineHandler: CoroutineExceptionHandler): CoroutineScope {
         // Run this code when providing an instance of CoroutineScope
-        return CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        return CoroutineScope(SupervisorJob() + Dispatchers.IO + coroutineHandler)
     }
 }
