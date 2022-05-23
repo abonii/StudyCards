@@ -3,8 +3,8 @@ package abm.co.studycards.ui.profile
 import abm.co.studycards.BuildConfig
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.AvailableLanguages
-import abm.co.studycards.data.model.Language
+import abm.co.studycards.domain.model.AvailableLanguages
+import abm.co.studycards.domain.model.Language
 import abm.co.studycards.databinding.FragmentProfileBinding
 import abm.co.studycards.helpers.LocaleHelper
 import abm.co.studycards.ui.login.LoginActivity

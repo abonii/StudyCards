@@ -62,6 +62,7 @@ class RegistrationFragment :
 
     private fun navigateToMainActivity() {
         Intent(requireContext(), MainActivity::class.java).also {
+            it.putExtra(MainActivity.EXTRA_NAME, viewModel.name)
             startActivity(it)
         }
         requireActivity().finish()

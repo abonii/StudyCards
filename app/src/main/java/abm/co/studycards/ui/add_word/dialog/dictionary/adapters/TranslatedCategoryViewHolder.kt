@@ -1,7 +1,7 @@
 package abm.co.studycards.ui.add_word.dialog.dictionary.adapters
 
-import abm.co.studycards.data.model.oxford.LexicalEntry
 import abm.co.studycards.databinding.ItemTranslatedCategoryBinding
+import abm.co.studycards.domain.model.LexicalCategory
 import androidx.recyclerview.widget.RecyclerView
 
 class TranslatedCategoryViewHolder(
@@ -14,13 +14,13 @@ class TranslatedCategoryViewHolder(
     private var tAdapter: TranslatedWordAdapter? = null
 
     init {
-        tAdapter = TranslatedWordAdapter(onExampleSelected ,onTranslationSelected)
+        tAdapter = TranslatedWordAdapter(onExampleSelected, onTranslationSelected)
     }
 
-    fun bind(currentItem: LexicalEntry?) {
-        tAdapter?.submitList(currentItem?.entries?.get(0)?.senses!!)
+    fun bind(currentItem: LexicalCategory) {
+        tAdapter?.submitList(currentItem.details)
         binding.run {
-            category.text = currentItem?.lexicalCategory?.text ?: ""
+            category.text = currentItem.lexicalName
             listView.adapter = tAdapter
         }
     }

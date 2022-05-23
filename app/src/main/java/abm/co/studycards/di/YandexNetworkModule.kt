@@ -1,6 +1,6 @@
 package abm.co.studycards.di
 
-import abm.co.studycards.data.network.yandex.YandexApiService
+import abm.co.studycards.data.network.YandexApiService
 import abm.co.studycards.di.qualifier.TypeEnum.*
 import abm.co.studycards.di.qualifier.YandexNetwork
 import abm.co.studycards.util.Constants

@@ -101,7 +101,7 @@
                     android:languageText="@{viewmodel.sourceLanguage}"
                     android:textAllCaps="true"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/default_14sp" />
+                    android:textSize="@dimen/default_13sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/word_layout"
@@ -134,7 +134,7 @@
                     android:languageText="@{viewmodel.targetLanguage}"
                     android:textAllCaps="true"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/default_14sp" />
+                    android:textSize="@dimen/default_13sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/translated_layout"
@@ -166,7 +166,7 @@
                     android:text="@string/example"
                     android:textAllCaps="true"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/default_14sp" />
+                    android:textSize="@dimen/default_13sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/example_layout"
@@ -203,7 +203,7 @@
                     android:text="@string/image"
                     android:textAllCaps="true"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/default_14sp" />
+                    android:textSize="@dimen/default_13sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/image_layout"

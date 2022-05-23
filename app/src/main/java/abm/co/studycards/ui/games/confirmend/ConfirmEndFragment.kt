@@ -1,7 +1,7 @@
 package abm.co.studycards.ui.games.confirmend
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.ConfirmText
+import abm.co.studycards.domain.model.ConfirmText
 import abm.co.studycards.databinding.FragmentConfirmEndBinding
 import abm.co.studycards.util.base.BaseDialogFragment
 import abm.co.studycards.util.navigate

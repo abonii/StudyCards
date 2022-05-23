@@ -2,7 +2,7 @@ package abm.co.studycards.ui.games.guessing
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.ConfirmText
+import abm.co.studycards.domain.model.ConfirmText
 import abm.co.studycards.databinding.FragmentGuessingBinding
 import abm.co.studycards.util.Constants.ONE_TIME_CYCLE_GAME
 import abm.co.studycards.util.base.BaseBindingFragment

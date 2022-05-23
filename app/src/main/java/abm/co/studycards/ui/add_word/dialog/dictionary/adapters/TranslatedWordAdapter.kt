@@ -1,7 +1,7 @@
 package abm.co.studycards.ui.add_word.dialog.dictionary.adapters
 
-import abm.co.studycards.data.model.oxford.Sense
 import abm.co.studycards.databinding.ItemTranslatedWordBinding
+import abm.co.studycards.domain.model.CategoryDetails
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,7 +11,7 @@ class TranslatedWordAdapter(
     private var onExampleSelected: (example: String, isPressed: Boolean) -> Unit,
     private var onTranslationSelected: (example: String, isPressed: Boolean) -> Unit
 ) :
-    ListAdapter<Sense, TranslatedWordViewHolder>(DIFF_UTIL) {
+    ListAdapter<CategoryDetails, TranslatedWordViewHolder>(DIFF_UTIL) {
     private var countNumber = 1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TranslatedWordViewHolder {
@@ -19,9 +19,7 @@ class TranslatedWordAdapter(
             LayoutInflater.from(parent.context), parent, false
         )
         return TranslatedWordViewHolder(binding, onExampleSelected, onTranslationSelected) {
-            return@TranslatedWordViewHolder if (it) {
-                "${countNumber++}."
-            } else ""
+            return@TranslatedWordViewHolder "${countNumber++}."
         }
     }
 
@@ -31,11 +29,17 @@ class TranslatedWordAdapter(
     }
 
     companion object {
-        private val DIFF_UTIL = object : DiffUtil.ItemCallback<Sense>() {
-            override fun areItemsTheSame(oldItem: Sense, newItem: Sense): Boolean =
-                oldItem.id == newItem.id
+        private val DIFF_UTIL = object : DiffUtil.ItemCallback<CategoryDetails>() {
+            override fun areItemsTheSame(
+                oldItem: CategoryDetails,
+                newItem: CategoryDetails
+            ): Boolean =
+                oldItem.translations == newItem.translations
 
-            override fun areContentsTheSame(oldItem: Sense, newItem: Sense): Boolean =
+            override fun areContentsTheSame(
+                oldItem: CategoryDetails,
+                newItem: CategoryDetails
+            ): Boolean =
                 oldItem == newItem
         }
     }

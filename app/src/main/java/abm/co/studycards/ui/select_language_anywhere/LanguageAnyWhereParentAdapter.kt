@@ -16,7 +16,6 @@ class LanguageAnyWhereParentAdapter :
     var lastItemSelectedPos = -1
     private var currentTime: Long = 0
 
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -104,18 +103,14 @@ class LanguageAnyWhereParentAdapter :
                 oldItem: LanguageVHUI,
                 newItem: LanguageVHUI
             ): Boolean =
-                (oldItem is LanguageVHUI.Language &&
-                        newItem is LanguageVHUI.Language &&
-                        oldItem.value.language.code == newItem.value.language.code)
-                        || (oldItem is LanguageVHUI.TitleLanguages &&
-                                newItem is LanguageVHUI.TitleLanguages &&
-                                oldItem.value == newItem.value)
+                (oldItem is LanguageVHUI.Language
+                        && newItem is LanguageVHUI.Language
+                        && oldItem.value.language.code == newItem.value.language.code) ||
+                    (oldItem is LanguageVHUI.TitleLanguages
+                            && newItem is LanguageVHUI.TitleLanguages
+                            && oldItem.value == newItem.value)
 
-
-            override fun areContentsTheSame(
-                oldItem: LanguageVHUI,
-                newItem: LanguageVHUI
-            ): Boolean =
+            override fun areContentsTheSame(oldItem: LanguageVHUI, newItem: LanguageVHUI): Boolean =
                 oldItem == newItem
         }
     }

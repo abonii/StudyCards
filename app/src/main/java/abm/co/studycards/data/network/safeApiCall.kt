@@ -1,8 +1,8 @@
 package abm.co.studycards.data.network
 
 import abm.co.studycards.R
-import abm.co.studycards.data.ErrorStatus
-import abm.co.studycards.data.ResultWrapper
+import abm.co.studycards.data.model.ErrorStatus
+import abm.co.studycards.data.model.ResultWrapper
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext

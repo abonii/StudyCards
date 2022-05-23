@@ -2,8 +2,8 @@ package abm.co.studycards.ui.in_explore
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.FragmentInExploreCategoryBinding
+import abm.co.studycards.domain.model.Word
 import abm.co.studycards.helpers.MarginItemDecoration
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
@@ -35,7 +35,7 @@ class InExploreCategoryFragment :
         requireActivity().window.statusBarColor =
             resources.getColor(R.color.tab_background, null)
         (activity as MainActivity).setToolbar(binding.toolbar)
-        binding.folderName.text = viewModel.category.mainName
+        binding.folderName.text = viewModel.category.name
     }
 
 
@@ -82,7 +82,7 @@ class InExploreCategoryFragment :
     fun addToYourself() {
         val nav =
             InExploreCategoryFragmentDirections.actionInExploreCategoryFragmentToAddYourselfFragment(
-                category = viewModel.category,
+                categoryId = viewModel.category.id,
                 setId = viewModel.setId
             )
         navigate(nav)

@@ -1,31 +1,18 @@
 package abm.co.studycards.ui.add_word
 
 import abm.co.studycards.R
-import abm.co.studycards.data.ResultWrapper
-import abm.co.studycards.data.model.LearnOrKnown
-import abm.co.studycards.data.model.oxford.ResultsEntry
-import abm.co.studycards.data.model.vocabulary.*
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.DictionaryRepository
-import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants.CAN_TRANSLATE_TIME_EVERY_DAY
+import abm.co.studycards.data.model.ResultWrapper
+import abm.co.studycards.domain.Prefs
+import abm.co.studycards.domain.model.*
+import abm.co.studycards.domain.repository.DictionaryRepository
+import abm.co.studycards.domain.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.OXFORD_CAN_TRANSLATE_MAP
-import abm.co.studycards.util.Constants.OXFORD_ID
-import abm.co.studycards.util.Constants.OXFORD_KEY
-import abm.co.studycards.util.Constants.YANDEX_KEY
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.firebaseError
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,10 +26,7 @@ class AddEditWordViewModel @Inject constructor(
 
     private val dispatcher = Dispatchers.IO
 
-    var translateCounts: Long = -1
-
-    private val apiKeys = firebaseRepository.getApiReference()
-    private val userRef = firebaseRepository.getUserReference()
+    private var translateCounts: Long = -1
 
     val word = savedStateHandle.get<Word>("word")
     private var categoryName = savedStateHandle.get<String>("categoryName") ?: ""
@@ -53,7 +37,7 @@ class AddEditWordViewModel @Inject constructor(
 
     private var translatedOxfordWord: String = "ilm"
     private var translatedYandexWord: String = ""
-    private var translatedOxfordClass: ResultsEntry? = null
+    private var translatedOxfordClass: OxfordResult? = null
 
     private val _eventChannel =
         MutableSharedFlow<AddEditWordEventChannel>()
@@ -78,43 +62,17 @@ class AddEditWordViewModel @Inject constructor(
     val imageCanSetUrlStateFlow = MutableStateFlow(true)
     val imageVisibleStateFlow = MutableStateFlow(word?.imageUrl?.isNotBlank() == true)
 
-    private var oxfordApiKey = "why_do_you_need_this_b_?"
-    private var oxfordApiId = "why_do_you_need_this_a_?"
-    private var yandexApiKey = "why_do_you_need_this_c_?"
+    private lateinit var config: Config
 
     var backPressedTime: Long = 0
 
     init {
-        userRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.child(CAN_TRANSLATE_TIME_EVERY_DAY).value?.let {
-                    translateCounts = it as Long
-                }
+        viewModelScope.launch(dispatcher) {
+            firebaseRepository.fetchUserInfo().collectLatest {
+                translateCounts = it.translateCounts
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                translateCounts = -1
-            }
-        })
-        apiKeys.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                viewModelScope.launch(dispatcher) {
-                    snapshot.child(OXFORD_KEY).value?.let {
-                        oxfordApiKey = it.toString()
-                    }
-                    snapshot.child(OXFORD_ID).value?.let {
-                        oxfordApiId = it.toString()
-                    }
-                    snapshot.child(YANDEX_KEY).value?.let {
-                        yandexApiKey = it.toString()
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                makeToast(firebaseError(error.code))
-            }
-        })
+            config = firebaseRepository.config
+        }
     }
 
     fun fetchWord(fromSource: Boolean) {
@@ -150,19 +108,19 @@ class AddEditWordViewModel @Inject constructor(
             val sl = if (fromSource) sourceLanguage else targetLanguage
             val tl = if (fromSource) targetLanguage else sourceLanguage
             when (val wrapper =
-                repository.getYandexWord(translatedYandexWord, sl, tl, yandexApiKey)) {
+                repository.getYandexWord(translatedYandexWord, sl, tl, config.yandexKey)) {
                 is ResultWrapper.Error -> {
                     makeToast(wrapper.errorRes ?: "")
                     stopLoadingIcon(fromSource)
                 }
                 is ResultWrapper.Success -> {
                     changeTranslateCount()
-                    val translated = wrapper.value.text?.joinToString(", ")
+                    val translated = wrapper.value
                     stopLoadingIcon(fromSource)
                     if (fromSource) {
-                        targetWordStateFlow.value = translated ?: ""
+                        targetWordStateFlow.value = translated
                     } else {
-                        sourceWordStateFlow.value = translated ?: ""
+                        sourceWordStateFlow.value = translated
                     }
                 }
             }
@@ -193,10 +151,7 @@ class AddEditWordViewModel @Inject constructor(
 
             when (val wrapper = repository.getOxfordWord(
                 translatedOxfordWord.trim(),
-                sl,
-                tl,
-                oxfordApiId,
-                oxfordApiKey
+                sl, tl, config.oxfordId, config.oxfordKey
             )) {
                 is ResultWrapper.Error -> {
                     fetchYandexWord(fromSource)
@@ -204,7 +159,7 @@ class AddEditWordViewModel @Inject constructor(
                 is ResultWrapper.Success -> {
                     stopLoadingIcon(fromSource)
                     changeTranslateCount()
-                    translatedOxfordClass = wrapper.value.results[0]
+                    translatedOxfordClass = wrapper.value
                     _eventChannel.emit(
                         AddEditWordEventChannel.NavigateToDictionary(
                             null,
@@ -258,7 +213,7 @@ class AddEditWordViewModel @Inject constructor(
         viewModelScope.launch(dispatcher) {
             if (category != null) {
                 currentCategoryId = category.id
-                categoryName = category.mainName
+                categoryName = category.name
                 _categoryStateFlow.value = categoryName
             }
         }
@@ -298,6 +253,9 @@ class AddEditWordViewModel @Inject constructor(
                     sourceLanguage = sourceLanguage,
                     targetLanguage = targetLanguage,
                     categoryID = currentCategoryId ?: "default",
+                    nextRepeatTime = 0,
+                    repeatCount = 0,
+                    wordId = "default"
                 )
                 firebaseRepository.addWord(word)
             } else {
@@ -310,7 +268,7 @@ class AddEditWordViewModel @Inject constructor(
                     imageUrl = imageStateFlow.value ?: "",
                     repeatCount = 0
                 )
-                firebaseRepository.deleteWord(word.categoryID, word.wordId)
+                firebaseRepository.removeWord(word)
                 firebaseRepository.addWord(uWord)
             }
             _eventChannel.emit(AddEditWordEventChannel.PopBackStack)
@@ -345,7 +303,7 @@ class AddEditWordViewModel @Inject constructor(
 sealed class AddEditWordEventChannel {
     data class NavigateToDictionary(
         val translatedText: String?,
-        val resultsEntry: ResultsEntry?,
+        val resultsEntry: OxfordResult?,
         val fromSource: Boolean
     ) : AddEditWordEventChannel()
 

@@ -2,8 +2,8 @@ package abm.co.studycards.ui.home
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.AvailableLanguages
-import abm.co.studycards.data.model.vocabulary.Category
+import abm.co.studycards.domain.model.AvailableLanguages
+import abm.co.studycards.domain.model.Category
 import abm.co.studycards.databinding.FragmentHomeBinding
 import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
@@ -128,7 +128,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
         val action =
             HomeFragmentDirections.actionHomeFragmentToAddEditWordFragment(
                 word = null,
-                categoryName = viewModel.defaultCategory?.mainName,
+                categoryName = viewModel.defaultCategory?.name,
                 categoryId = viewModel.defaultCategory?.id
             )
         navigate(action)
@@ -209,7 +209,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     override fun onPlay(category: Category) {
         if (isFabOpen()) return
         val action = HomeFragmentDirections.actionHomeFragmentToSelectGamesTypeDialogFragment(
-            category
+            category.id
         )
         navigate(action)
     }
@@ -236,7 +236,7 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
 
     private fun showAlertToDeleteCategory(category: Category) {
         AlertDialog.Builder(requireContext())
-            .setMessage(getString(R.string.do_u_want_to_delete_this, category.mainName).fromHtml())
+            .setMessage(getString(R.string.do_u_want_to_delete_this, category.name).fromHtml())
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 viewModel.removeCategory(category)
             }

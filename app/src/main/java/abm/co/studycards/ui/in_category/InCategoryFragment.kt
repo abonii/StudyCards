@@ -2,9 +2,9 @@ package abm.co.studycards.ui.in_category
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.FragmentInCategoryBinding
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.helpers.SwipeToDeleteCallback
 import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import java.util.*
 
 
@@ -54,29 +55,27 @@ class InCategoryFragment :
 
 
     private fun collectData() {
-        launchAndRepeatWithViewLifecycle(Lifecycle.State.CREATED) {
+        launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.stateFlow.collect {
                 when (it) {
                     is InCategoryUiState.Error -> errorOccurred(it.msg)
                     InCategoryUiState.Loading -> onLoading()
-                    is InCategoryUiState.Success -> onSuccess(it.value)
+                    is InCategoryUiState.Success -> onSuccess(it.category)
                 }
             }
         }
-        launchAndRepeatWithViewLifecycle(Lifecycle.State.CREATED) {
-            viewModel.categoryStateFlow.collect {
-                if (it?.mainName?.isNotEmpty() == true) {
-                    binding.folderName.text = it.mainName
-                }
+        launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
+            viewModel.categoryStateFlow.collectLatest {
+                binding.folderName.text = it?.name ?: ""
             }
         }
     }
 
     private fun onSuccess(value: List<Word>) = binding.run {
         wordsAdapter?.submitList(value)
-        progressBar.visibility = View.GONE
         error.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
     }
 
     private fun onLoading() = binding.run {
@@ -145,9 +144,15 @@ class InCategoryFragment :
 
     fun directToEditCategory() {
         val action =
-            InCategoryFragmentDirections.actionInCategoryFragmentToAddEditCategoryFragment(viewModel.categoryStateFlow.value)
+            InCategoryFragmentDirections
+                .actionInCategoryFragmentToAddEditCategoryFragment(
+                    viewModel.categoryStateFlow.value?.copy(
+                        words = emptyList()
+                    )
+                )
         navigate(action)
     }
+
 
     private fun openDownloadTTSDialog() {
         try {
@@ -171,21 +176,23 @@ class InCategoryFragment :
     fun onFloatingActionWordClick() {
         val action =
             InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
-                categoryName = viewModel.categoryName,
+                categoryName = viewModel.categoryStateFlow.value?.name,
                 categoryId = viewModel.categoryId
             )
         navigate(action)
     }
 
-
-    private fun onItemClick(vocabulary: Word) {
-        val action =
-            InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
-                word = vocabulary,
-                categoryName = viewModel.categoryName,
-                categoryId = viewModel.categoryId
-            )
-        navigate(action)
+    private fun onItemClick(word: Word) {
+        val currentState = viewModel.stateFlow.value
+        if (currentState is InCategoryUiState.Success) {
+            val action =
+                InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
+                    word = word,
+                    categoryName = viewModel.categoryStateFlow.value?.name,
+                    categoryId = viewModel.categoryId
+                )
+            navigate(action)
+        }
     }
 
     private fun onAudioClicked(word: Word) {

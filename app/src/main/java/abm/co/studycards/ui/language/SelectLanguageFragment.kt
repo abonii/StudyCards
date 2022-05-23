@@ -2,7 +2,7 @@ package abm.co.studycards.ui.language
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.Language
+import abm.co.studycards.domain.model.Language
 import abm.co.studycards.databinding.FragmentSelectLanguageBinding
 import abm.co.studycards.util.base.BaseBindingFragment
 import android.content.Intent

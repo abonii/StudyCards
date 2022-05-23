@@ -1,20 +1,14 @@
 package abm.co.studycards.ui.select_explore_category
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Category
-import abm.co.studycards.data.model.vocabulary.CategoryDto
-import abm.co.studycards.data.repository.ServerCloudRepository
+import abm.co.studycards.domain.model.Category
+import abm.co.studycards.domain.repository.ServerCloudRepository
 import abm.co.studycards.ui.explore.ParentExploreUI
 import abm.co.studycards.ui.home.CategoryUiState
 import abm.co.studycards.util.Constants
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.firebaseError
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseException
-import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,8 +21,6 @@ import javax.inject.Inject
 class SelectExploreCategoryViewModel @Inject constructor(
     private val firebaseRepository: ServerCloudRepository
 ) : BaseViewModel() {
-
-    private val categoriesDbRef = firebaseRepository.getCategoriesReference()
 
     private val _stateFlow = MutableStateFlow<CategoryUiState>(CategoryUiState.Loading)
     val stateFlow = _stateFlow.asStateFlow()
@@ -54,40 +46,25 @@ class SelectExploreCategoryViewModel @Inject constructor(
     }
 
     private fun fetchCategories() {
-        categoriesDbRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                viewModelScope.launch(Dispatchers.IO) {
-                    val items = mutableListOf<Category>()
-                    snapshot.children.forEach {
-                        try {
-                            it.getValue(CategoryDto::class.java)
-                                ?.let { it1 -> items.add(it1.toCategory()) }
-                        } catch (e: DatabaseException) {
-                            it.ref.removeValue()
-                        }
-                    }
-                    if (items.size > 0) {
-                        _stateFlow.value = CategoryUiState.Success(items.take(500))
-                    } else {
-                        _stateFlow.value =
-                            CategoryUiState.Error(R.string.empty)
-                    }
+        viewModelScope.launch(Dispatchers.IO) {
+            firebaseRepository.fetchUserCategories().collectLatest {
+                if(it.isNotEmpty()){
+                    _stateFlow.value = CategoryUiState.Success(it)
+                }else{
+                    _stateFlow.value = CategoryUiState.Error(R.string.empty_home_fragment)
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                _stateFlow.value = CategoryUiState.Error(firebaseError(error.code))
-            }
-        })
-    }
-
-    fun addUserCategoryToExplore(setId: String, category: Category) {
-        if (!theSetCategories.contains(category)) {
-            firebaseRepository.addExploreCategory(setId, category)
-        } else {
-            makeToast(R.string.exists)
         }
     }
 
+    fun addUserCategoryToExplore(setId: String, category: Category) {
+        viewModelScope.launch {
+            if (!theSetCategories.contains(category)) {
+                firebaseRepository.addExploreCategory(setId, category)
+            } else {
+                makeToast(R.string.exists)
+            }
+        }
+    }
 
 }

@@ -67,7 +67,7 @@
         <argument
             android:name="category"
             android:defaultValue="@null"
-            app:argType="abm.co.studycards.data.model.vocabulary.Category"
+            app:argType="abm.co.studycards.domain.model.Category"
             app:nullable="true" />
     </dialog>
     <dialog
@@ -94,7 +94,7 @@
         <argument
             android:name="word"
             android:defaultValue="@null"
-            app:argType="abm.co.studycards.data.model.vocabulary.Word"
+            app:argType="abm.co.studycards.domain.model.Word"
             app:nullable="true" />
         <argument
             android:name="categoryName"
@@ -132,8 +132,8 @@
         android:label="fragment_select_games_type_dialog"
         tools:layout="@layout/fragment_select_learn_type_dialog">
         <argument
-            android:name="category"
-            app:argType="abm.co.studycards.data.model.vocabulary.Category" />
+            android:name="category_id"
+            app:argType="string" />
         <action
             android:id="@+id/action_selectGamesTypeDialogFragment_to_toRightOrLeftFragment"
             app:destination="@id/toRightOrLeftFragment" />
@@ -156,7 +156,7 @@
             app:argType="string" />
         <argument
             android:name="words"
-            app:argType="abm.co.studycards.data.model.vocabulary.Word[]" />
+            app:argType="abm.co.studycards.domain.model.Word[]" />
     </fragment>
     <fragment
         android:id="@+id/matchingPairsFragment"
@@ -168,7 +168,7 @@
             app:argType="boolean" />
         <argument
             android:name="words"
-            app:argType="abm.co.studycards.data.model.vocabulary.Word[]" />
+            app:argType="abm.co.studycards.domain.model.Word[]" />
         <action
             android:id="@+id/action_matchingPairsFragment_self"
             app:destination="@id/matchingPairsFragment"
@@ -191,7 +191,7 @@
             app:argType="boolean" />
         <argument
             android:name="words"
-            app:argType="abm.co.studycards.data.model.vocabulary.Word[]" />
+            app:argType="abm.co.studycards.domain.model.Word[]" />
         <action
             android:id="@+id/action_guessingFragment_self"
             app:destination="@id/guessingFragment" />
@@ -212,7 +212,7 @@
             app:destination="@id/reviewFragment" />
         <argument
             android:name="words"
-            app:argType="abm.co.studycards.data.model.vocabulary.Word[]" />
+            app:argType="abm.co.studycards.domain.model.Word[]" />
         <action
             android:id="@+id/action_reviewFragment_to_matchingPairsFragment"
             app:destination="@id/matchingPairsFragment"
@@ -228,11 +228,11 @@
         tools:layout="@layout/fragment_confirm_end">
         <argument
             android:name="confirmType"
-            app:argType="abm.co.studycards.data.model.ConfirmText" />
+            app:argType="abm.co.studycards.domain.model.ConfirmText" />
         <argument
             android:name="category"
             android:defaultValue="@null"
-            app:argType="abm.co.studycards.data.model.vocabulary.Category"
+            app:argType="abm.co.studycards.domain.model.Category"
             app:nullable="true" />
         <action
             android:id="@+id/action_confirmEndFragment_to_homeFragment"
@@ -252,7 +252,7 @@
         tools:layout="@layout/fragment_dictionary_dialog" >
         <argument
             android:name="entry"
-            app:argType="abm.co.studycards.data.model.oxford.ResultsEntry" />
+            app:argType="abm.co.studycards.domain.model.OxfordResult" />
         <argument
             android:name="from_target"
             app:argType="boolean"

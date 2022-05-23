@@ -1,8 +1,8 @@
 package abm.co.studycards.ui.games.review
 
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemReviewBinding
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.util.GeneralBindingAdapters.setImageWithGlide
 import android.annotation.SuppressLint
 import android.graphics.BlurMaskFilter
@@ -43,7 +43,7 @@ class ReviewAdapter : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
             if (currentItem.imageUrl.length > 6) {
                 binding.wordImageContainer.visibility = View.VISIBLE
                 binding.wordImage.setImageWithGlide(currentItem.imageUrl)
-            }else
+            } else
                 binding.wordImageContainer.visibility = View.GONE
             binding.translated.text = currentItem.translationsToString()
             val radius: Float = binding.translated.textSize / 3

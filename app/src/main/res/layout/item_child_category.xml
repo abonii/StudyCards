@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="item"
-            type="abm.co.studycards.data.model.vocabulary.Category" />
-    </data>
-
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/holder"
         android:layout_width="wrap_content"
@@ -45,7 +39,6 @@
                         android:layout_width="@dimen/default_110dp"
                         android:layout_height="@dimen/default_150dp"
                         android:scaleType="centerCrop"
-                        app:imageWithGlide="@{item.imageUrl}"
                         android:contentDescription="@string/just_image" />
 
                 </androidx.cardview.widget.CardView>
@@ -59,7 +52,6 @@
                 android:gravity="top|center_horizontal"
                 android:maxLines="2"
                 android:lines="2"
-                android:text="@{item.mainName}"
                 android:layout_marginTop="@dimen/default_5dp"
                 android:textColor="@color/textColor"
                 android:textSize="@dimen/default_11sp"

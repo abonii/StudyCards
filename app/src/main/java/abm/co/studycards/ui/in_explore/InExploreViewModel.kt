@@ -1,24 +1,20 @@
 package abm.co.studycards.ui.in_explore
 
-import abm.co.studycards.data.model.vocabulary.Category
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants.CATEGORIES_REF
-import abm.co.studycards.util.Constants.WORDS_REF
+import abm.co.studycards.domain.Prefs
+import abm.co.studycards.domain.model.Category
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.domain.repository.ServerCloudRepository
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.firebaseError
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,12 +22,10 @@ import javax.inject.Inject
 class InExploreViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     firebaseRepository: ServerCloudRepository,
-    prefs: Prefs,
+    prefs: Prefs
 ) : BaseViewModel() {
 
     private val dispatcher = Dispatchers.IO
-    private val categoriesDbRef = firebaseRepository.getCategoriesReference()
-    private val exploreDbRef = firebaseRepository.getExploreReference()
 
     private val _stateFlow = MutableStateFlow<InExploreUiState>(InExploreUiState.Loading)
     val stateFlow = _stateFlow.asStateFlow()
@@ -41,42 +35,43 @@ class InExploreViewModel @Inject constructor(
 
     val categoryPhotoUrl = category.imageUrl
 
-    private val wordsRef = exploreDbRef.child(setId)
-        .child(CATEGORIES_REF).child(category.id).child(WORDS_REF)
-
     val targetLang = prefs.getTargetLanguage()
 
     val isThisCategoryExistInMine = MutableStateFlow(true)
 
-    var wordsCount = category.words.size
+    private var databaseRefListener = ArrayList<Pair<DatabaseReference, ValueEventListener>>()
+
+    var wordsCount = MutableStateFlow(0)
 
     init {
-        categoriesDbRef.child(category.id).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                isThisCategoryExistInMine.value = snapshot.exists()
-            }
+        viewModelScope.launch(dispatcher) {
+            val userCategory = firebaseRepository.getTheCategory(category.id)
+            val exploreCategory = firebaseRepository.getExploreCategory(setId, category.id)
 
-            override fun onCancelled(error: DatabaseError) {
+            databaseRefListener.add(userCategory.second to userCategory.third)
+            databaseRefListener.add(exploreCategory.second to exploreCategory.third)
 
-            }
-
-        })
-
-        wordsRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                viewModelScope.launch(dispatcher) {
-                    val items = mutableListOf<Word>()
-                    snapshot.children.forEach {
-                        it.getValue(Word::class.java)?.let { it1 -> items.add(it1) }
+            viewModelScope.launch {
+                exploreCategory.first.collectLatest {
+                    it?.let {
+                        wordsCount.value = it.words.size
+                        _stateFlow.value = InExploreUiState.Success(it.words)
                     }
-                    _stateFlow.value = InExploreUiState.Success(items)
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                _stateFlow.value = InExploreUiState.Error(firebaseError(error.code))
+            viewModelScope.launch {
+                userCategory.first.collectLatest { category ->
+                    isThisCategoryExistInMine.value = category != null
+                }
             }
-        })
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        databaseRefListener.forEach {
+            it.first.removeEventListener(it.second)
+        }
     }
 
 }

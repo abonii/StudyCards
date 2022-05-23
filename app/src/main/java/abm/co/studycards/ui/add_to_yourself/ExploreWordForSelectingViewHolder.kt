@@ -1,8 +1,8 @@
 package abm.co.studycards.ui.add_to_yourself
 
-import abm.co.studycards.data.model.WordX
-import abm.co.studycards.data.model.vocabulary.translationsToString
+import abm.co.studycards.domain.model.WordX
 import abm.co.studycards.databinding.ItemExploreWordSelectionBinding
+import abm.co.studycards.domain.model.translationsToString
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

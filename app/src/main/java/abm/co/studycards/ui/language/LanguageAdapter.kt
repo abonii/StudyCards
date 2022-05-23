@@ -1,6 +1,6 @@
 package abm.co.studycards.ui.language
 
-import abm.co.studycards.data.model.Language
+import abm.co.studycards.domain.model.Language
 import abm.co.studycards.databinding.ItemLanguageBinding
 import abm.co.studycards.ui.select_language_anywhere.LanguageSelectable
 import android.view.LayoutInflater

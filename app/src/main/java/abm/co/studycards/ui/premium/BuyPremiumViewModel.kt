@@ -1,7 +1,7 @@
 package abm.co.studycards.ui.premium
 
-import abm.co.studycards.data.PricingRepository
-import abm.co.studycards.data.pref.Prefs
+import abm.co.studycards.domain.repository.PricingRepository
+import abm.co.studycards.domain.Prefs
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth

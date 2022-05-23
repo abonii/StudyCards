@@ -1,7 +1,7 @@
 package abm.co.studycards.ui.games.matching
 
-import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.ItemMatchingCardBinding
+import abm.co.studycards.domain.model.Word
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup

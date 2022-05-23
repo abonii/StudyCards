@@ -1,9 +1,9 @@
 package abm.co.studycards.ui.add_category
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Category
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.ServerCloudRepository
+import abm.co.studycards.domain.Prefs
+import abm.co.studycards.domain.model.Category
+import abm.co.studycards.domain.repository.ServerCloudRepository
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.core.App
 import androidx.lifecycle.SavedStateHandle
@@ -23,24 +23,30 @@ class AddEditCategoryViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val category = savedStateHandle.get<Category>("category")
-    var mainName = MutableStateFlow(category?.mainName ?: "")
+    var mainName = MutableStateFlow(category?.name ?: "")
 
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
     fun saveCategory() {
         if (category != null) {
             if (category.id.isNotEmpty()) {
-                val updatedCategory = category.copy(mainName = mainName.value)
+                val updatedCategory = category.copy(name = mainName.value)
                 updateCategory(updatedCategory)
             } else {
-                val updatedCategory = category.copy(mainName = App.instance.getString(R.string.remove_this_category))
+                val updatedCategory =
+                    category.copy(name = App.instance.getString(R.string.remove_this_category))
                 updateCategory(updatedCategory)
             }
         } else {
             val newCategory = Category(
-                mainName = mainName.value,
+                name = mainName.value,
                 sourceLanguage = prefs.getSourceLanguage(),
-                targetLanguage = prefs.getTargetLanguage()
+                targetLanguage = prefs.getTargetLanguage(),
+                id = "default",
+                imageUrl = "",
+                creatorId = "me",
+                creatorName = "ku",
+                words = emptyList()
             )
             insertCategory(newCategory)
         }

@@ -1,13 +1,16 @@
 package abm.co.studycards
 
 import abm.co.studycards.databinding.ActivityMainBinding
+import abm.co.studycards.domain.model.ConfirmText
 import abm.co.studycards.ui.login.LoginActivity
+import abm.co.studycards.util.Constants.TAG
 import abm.co.studycards.util.base.BaseBindingActivity
 import abm.co.studycards.util.setupWithNavController
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -16,7 +19,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +31,7 @@ import kotlinx.coroutines.flow.collectLatest
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private val viewModel: MainViewModel by viewModels()
+    private var currentNavController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -35,6 +41,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
 
     override fun initViews(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
+            intent.getStringExtra(EXTRA_NAME)?.let { viewModel.setUserName(it) }
             setupBottomNavigationBar()
         }
         lifecycleScope.launchWhenResumed {
@@ -46,7 +53,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
 
     private fun checkLearnLanguagesSelected() {
         if (viewModel.isTargetAndSourceLangSet()) {
-            viewModel.currentNavController?.value?.navigate(R.id.selectLanguageFragment)
+            currentNavController?.value?.navigate(R.id.selectLanguageFragment)
         }
     }
 
@@ -62,14 +69,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
     }
 
     override fun onBackPressed() {
-        if (!viewModel.onBackAndNavigateUp())
+        if (!onBackAndNavigateUp())
             super.onBackPressed()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            if (!viewModel.onBackAndNavigateUp())
-                !viewModel.currentNavController?.value!!.navigateUp()
+            if (!onBackAndNavigateUp())
+                !currentNavController?.value!!.navigateUp()
         }
         return true
     }
@@ -86,7 +93,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
             containerId = R.id.nav_host_container, intent = intent
         )
 
-        viewModel.currentNavController = controller
+        currentNavController = controller
 
         controller.observe(this) { navController ->
             navController.addOnDestinationChangedListener(listener)
@@ -107,8 +114,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        setupBottomNavigationBar()
+        try {
+            super.onRestoreInstanceState(savedInstanceState)
+            setupBottomNavigationBar()
+        } catch (e: Exception) {
+            Log.e(TAG, "onRestoreInstanceState:${e.message}")
+        }
     }
 
     fun setToolbar(toolbar: Toolbar) {
@@ -116,6 +127,21 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         toolbar.navigationIcon = getImg(R.drawable.ic_back)
+    }
+
+    private fun onBackAndNavigateUp(): Boolean {
+        return when (currentNavController?.value?.currentDestination?.id) {
+            R.id.guessingFragment,
+            R.id.matchingPairsFragment,
+            R.id.toRightOrLeftFragment,
+            R.id.reviewFragment -> {
+                currentNavController?.value?.navigate(
+                    R.id.confirmEndFragment, bundleOf(Pair("confirmType", ConfirmText.ON_EXIT))
+                )
+                true
+            }
+            else -> false
+        }
     }
 
     private fun slideDown() {
@@ -140,28 +166,27 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
-            /**
-             * It gets into the above IF-BLOCK if anywhere the screen is touched.
-             */
             val v = currentFocus
             if (v is EditText) {
-                /**
-                 * Now, it gets into the above IF-BLOCK if an EditText is already in focus, and you tap somewhere else
-                 * to take the focus away from that particular EditText. It could have 2 cases after tapping:
-                 * 1. No EditText has focus
-                 * 2. Focus is just shifted to the other EditText
-                 */
                 val outRect = Rect()
                 v.getGlobalVisibleRect(outRect)
                 if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
                     v.clearFocus()
-                    val imm =
-                        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0)
+                    closeKeyboard(v)//todo e
                 }
             }
         }
         return super.dispatchTouchEvent(ev)
+    }
+
+    private fun closeKeyboard(v:View){
+        val imm =
+            getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(v.windowToken, 0)
+    }
+
+    companion object{
+        const val EXTRA_NAME = "EXTRA_NAME"
     }
 
 }

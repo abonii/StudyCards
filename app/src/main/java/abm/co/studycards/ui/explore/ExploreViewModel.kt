@@ -1,13 +1,12 @@
 package abm.co.studycards.ui.explore
 
-import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants.TAG
+import abm.co.studycards.domain.repository.ServerCloudRepository
 import abm.co.studycards.util.base.BaseViewModel
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -27,7 +26,7 @@ class ExploreViewModel @Inject constructor(
     init {
         viewModelScope.launch(dispatcher) {
             firebaseRepository.fetchExploreSets().collectLatest {
-                Log.i(TAG, "fetched ${it.size}")
+                delay(700)
                 _stateFlow.value = ParentExploreUiState.Success(it)
             }
         }

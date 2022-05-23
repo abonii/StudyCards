@@ -2,7 +2,7 @@ package abm.co.studycards.ui.games.matching
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.ConfirmText
+import abm.co.studycards.domain.model.ConfirmText
 import abm.co.studycards.databinding.FragmentMatchingPairsBinding
 import abm.co.studycards.ui.games.matching.MatchingAdapter.Companion.CORRECT
 import abm.co.studycards.ui.games.matching.MatchingAdapter.Companion.NOT_CORRECT

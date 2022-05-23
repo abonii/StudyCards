@@ -1,8 +1,8 @@
 package abm.co.studycards.ui.games.guessing
 
-import abm.co.studycards.data.model.LearnOrKnown
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.repository.ServerCloudRepository
+import abm.co.studycards.domain.model.LearnOrKnown
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.domain.repository.ServerCloudRepository
 import abm.co.studycards.util.Constants.ONE_TIME_CYCLE_GAME
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.SavedStateHandle

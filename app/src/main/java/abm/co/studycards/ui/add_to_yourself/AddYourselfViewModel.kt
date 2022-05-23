@@ -1,37 +1,27 @@
 package abm.co.studycards.ui.add_to_yourself
 
-import abm.co.studycards.data.model.WordX
-import abm.co.studycards.data.model.vocabulary.Category
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants.CATEGORIES_REF
-import abm.co.studycards.util.Constants.WORDS_REF
+import abm.co.studycards.R
+import abm.co.studycards.domain.model.Category
+import abm.co.studycards.domain.model.WordX
+import abm.co.studycards.domain.repository.ServerCloudRepository
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.firebaseError
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AddYourselfViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val firebaseRepository: ServerCloudRepository
+    private val firebaseRepository: ServerCloudRepository,
 ) : BaseViewModel() {
 
     private val dispatcher = Dispatchers.IO
-    private val exploreDbRef = firebaseRepository.getExploreReference()
 
     private val _stateFlow = MutableStateFlow<AddYourselfUiState>(AddYourselfUiState.Loading)
     val stateFlow = _stateFlow.asStateFlow()
@@ -42,32 +32,30 @@ class AddYourselfViewModel @Inject constructor(
     private val _sharedFlow = MutableSharedFlow<AddYourselfEventChannel>()
     val sharedFlow = _sharedFlow.asSharedFlow()
 
-    var category = savedStateHandle.get<Category>("category")!!
+    private var categoryId = savedStateHandle.get<String>("category_id")!!
     private var setId = savedStateHandle.get<String>("set_id")!!
+    private var category: Category? = null
 
-    val selectedWords: MutableList<WordX> = ArrayList()
+    private var selectedWords: List<WordX> = ArrayList()
 
     fun isSelectedAllWords() = selectedWords.count { it.isChecked } == selectedWords.size
 
     init {
-        val wordsRef = exploreDbRef.child(setId).child(CATEGORIES_REF).child(category.id).child(WORDS_REF)
-        wordsRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                viewModelScope.launch(dispatcher) {
-                    selectedWords.clear()
-                    snapshot.children.forEach {
-                        it.getValue(Word::class.java)
-                            ?.let { it1 -> selectedWords.add(WordX(it1)) }
-                    }
-                    delay(300)
-                    _stateFlow.value = AddYourselfUiState.Success(selectedWords)
+        viewModelScope.launch(Dispatchers.Default) {
+            val exploreCategory = firebaseRepository.getExploreCategory(setId, categoryId)
+            exploreCategory.first.collectLatest { category1 ->
+                category1?.let { category2 ->
+                    this@AddYourselfViewModel.category = category2
+                    selectedWords = category2.words.map { WordX(it) }
+                    delay(400)
+                    if (category2.words.isEmpty())
+                        _stateFlow.value = AddYourselfUiState.Error(R.string.empty)
+                    else _stateFlow.value = AddYourselfUiState.Success(selectedWords)
                 }
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                _stateFlow.value = AddYourselfUiState.Error(firebaseError(error.code))
-            }
-        })
+
+        }
     }
 
     fun checkAllWords() {
@@ -77,18 +65,17 @@ class AddYourselfViewModel @Inject constructor(
         }
     }
 
-    fun onAddClicked() {
+    fun onAddBtnClicked() {
         viewModelScope.launch(dispatcher) {
             _stateFlow.value = AddYourselfUiState.Loading
-            insertWords(selectedWords.toList().filter {
-                it.isChecked
-            })
+            insertCategory(selectedWords.toList().filter { it.isChecked })
         }
     }
 
-    private suspend fun insertWords(words: List<WordX>) {
+    private suspend fun insertCategory(words: List<WordX>) {
         viewModelScope.launch(dispatcher) {
-            firebaseRepository.addCategory(category.copy(words = words.map { it.word }))
+            category?.copy(words = words.map { it.word })
+                ?.let { firebaseRepository.addWithIdCategory(it) }
             _sharedFlow.emit(AddYourselfEventChannel.NavigateBack)
         }
     }

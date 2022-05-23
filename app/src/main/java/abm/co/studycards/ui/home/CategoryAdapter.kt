@@ -1,7 +1,7 @@
 package abm.co.studycards.ui.home
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Category
+import abm.co.studycards.domain.model.Category
 import abm.co.studycards.databinding.ItemCategoryBinding
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -42,7 +42,7 @@ class CategoryAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(currentItem: Category) {
             binding.apply {
-                text.text = currentItem.mainName
+                text.text = currentItem.name
                 wordsCount.text = binding.root.context.resources.getQuantityString(
                     R.plurals.words,
                     currentItem.words.size,
@@ -62,7 +62,7 @@ class CategoryAdapter(
     companion object {
         private val DIFF_UTIL = object : DiffUtil.ItemCallback<Category>() {
             override fun areItemsTheSame(oldItem: Category, newItem: Category): Boolean =
-                oldItem.id == newItem.id && oldItem.mainName == newItem.mainName
+                oldItem.id == newItem.id && oldItem.name == newItem.name
 
             override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean =
                 oldItem == newItem

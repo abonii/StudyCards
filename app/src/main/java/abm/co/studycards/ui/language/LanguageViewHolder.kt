@@ -1,9 +1,8 @@
 package abm.co.studycards.ui.language
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.Language
+import abm.co.studycards.domain.model.Language
 import abm.co.studycards.databinding.ItemLanguageBinding
-import android.graphics.Color
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView

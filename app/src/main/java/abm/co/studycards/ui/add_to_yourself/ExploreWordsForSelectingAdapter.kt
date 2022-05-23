@@ -1,6 +1,6 @@
 package abm.co.studycards.ui.add_to_yourself
 
-import abm.co.studycards.data.model.WordX
+import abm.co.studycards.domain.model.WordX
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter

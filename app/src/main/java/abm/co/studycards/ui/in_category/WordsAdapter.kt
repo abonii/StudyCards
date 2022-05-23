@@ -1,7 +1,7 @@
 package abm.co.studycards.ui.in_category
 
-import abm.co.studycards.data.model.vocabulary.Word
 import abm.co.studycards.databinding.ItemWordBinding
+import abm.co.studycards.domain.model.Word
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil

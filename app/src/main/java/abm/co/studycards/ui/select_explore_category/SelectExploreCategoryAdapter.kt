@@ -1,7 +1,7 @@
 package abm.co.studycards.ui.select_explore_category
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Category
+import abm.co.studycards.domain.model.Category
 import abm.co.studycards.databinding.ItemSelectExploreCategoryBinding
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -38,7 +38,7 @@ class SelectExploreCategoryAdapter(
 
         fun bind(currentItem: Category) {
             binding.run {
-                text.text = currentItem.mainName
+                text.text = currentItem.name
                 wordsCount.text = binding.root.context.resources.getQuantityString(
                     R.plurals.words,
                     currentItem.words.size,
@@ -51,7 +51,7 @@ class SelectExploreCategoryAdapter(
     companion object {
         private val DIFF_UTIL = object : DiffUtil.ItemCallback<Category>() {
             override fun areItemsTheSame(oldItem: Category, newItem: Category): Boolean =
-                oldItem.id == newItem.id && oldItem.mainName == newItem.mainName
+                oldItem.id == newItem.id && oldItem.name == newItem.name
 
             override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean =
                 oldItem == newItem

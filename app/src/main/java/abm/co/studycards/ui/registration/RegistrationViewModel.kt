@@ -1,14 +1,11 @@
 package abm.co.studycards.ui.registration
 
 import abm.co.studycards.R
-import abm.co.studycards.data.repository.ServerCloudRepository
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.firebaseError
 import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +16,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
-    private val repository: ServerCloudRepository,
     private val firebaseAuth: FirebaseAuth
 ) : BaseViewModel() {
 
@@ -71,7 +67,6 @@ class RegistrationViewModel @Inject constructor(
             ?.addOnCompleteListener { task ->
                 viewModelScope.launch {
                     if (task.isSuccessful) {
-                        repository.addUserName(firebaseAuth.currentUser?.uid ?: "0_user", name)
                         makeToast(R.string.we_send_verification)
                         navigateToMainActivity()
                     } else {

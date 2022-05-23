@@ -1,7 +1,7 @@
 package abm.co.studycards.ui.explore
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Category
+import abm.co.studycards.domain.model.Category
 import abm.co.studycards.databinding.ItemChildCategoryBinding
 import android.view.LayoutInflater
 import android.view.ViewGroup

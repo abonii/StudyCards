@@ -1,6 +1,6 @@
 package abm.co.studycards.ui.games.matching
 
-import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.domain.model.Word
 import abm.co.studycards.util.Constants.ONE_TIME_CYCLE_GAME
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -20,6 +20,7 @@ class MatchingPairsViewModel @Inject constructor(
     fun getDefaultWords() = words.take(ONE_TIME_CYCLE_GAME).shuffled().map {
         WordMatching(it, isSelected = false, isSelectedCorrect = null)
     }
+
     val wordsSize = getDefaultWords().size
 
     fun getLastWords(): Array<Word> {

@@ -1,9 +1,9 @@
 package abm.co.studycards.ui.language
 
-import abm.co.studycards.data.model.AvailableLanguages
-import abm.co.studycards.data.model.Language
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.ServerCloudRepository
+import abm.co.studycards.domain.model.AvailableLanguages
+import abm.co.studycards.domain.model.Language
+import abm.co.studycards.domain.Prefs
+import abm.co.studycards.domain.repository.ServerCloudRepository
 import abm.co.studycards.ui.select_language_anywhere.LanguageSelectable
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.viewModelScope
