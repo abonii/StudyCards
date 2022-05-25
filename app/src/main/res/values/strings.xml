@@ -126,6 +126,7 @@
     <string name="new_password">New Password</string>
     <string name="logout">Sign out</string>
     <string name="no_internet_connection">No internet connection</string>
+    <string name="problem_internet_connection">Problem with internet connection</string>
     <string name="error_occurred">Error occurred</string>
     <string name="socket_timeout_exception">Socket time out exception</string>
     <string name="some_problems_occurred">Some problems occurred</string>
@@ -141,6 +142,12 @@
     <string name="this_function_not_available">Oops! The function is not available on your device.</string>
     <string name="no_example">There is no examples for this word</string>
     <string name="version">Version: %1$s</string>
+
+    <plurals name="keep_learning">
+        <item quantity="one"> Keep learning. There are still %d word ahead</item>
+        <item quantity="zero"> Keep learning. There are still %d word ahead</item>
+        <item quantity="other"> Keep learning. There are still %d words ahead</item>
+    </plurals>
 
     <plurals name="words">
         <item quantity="one"> %d word</item>
@@ -190,6 +197,7 @@
     <string name="reset_password">Reset the password</string>
     <string name="problem_with_audio">Occurred some problem with audio</string>
     <string name="contact_us">Contact us</string>
+    <string name="will_be_available_soon">It will be available in future versions</string>
     <string name="set_of_words">Set of words</string>
     <string name="add_to_yourself">Add to yourself</string>
     <string name="select_all_words">Select all words</string>
@@ -202,7 +210,8 @@
     <string name="premium_feature1">You will get a certain number of word translations</string>
     <string name="just_image">Just Image</string>
     <string name="subscribe">Subscribe</string>
-    <string name="empty_in_explore">The administrators still haven\'t added a single set of words.</string>
+    <string name="empty_in_explore">The admins still haven\'t added a single set of words.</string>
+    <string name="empty_in_vocabulary">You haven\'t learned a word yet</string>
     <string name="skus_not_found">No skus found from query</string>
     <string name="link_to_account">User must not be anonymous, link to account</string>
     <string name="verify_account">Verify your account</string>
@@ -250,6 +259,7 @@
     <string name="premium_feature1_des">You can translate words without leaving the app</string>
     <string name="premium_feature3">Unlimited Training decks</string>
     <string name="premium_feature2">Training without advertising</string>
+    <string name="empty_in_category">You still haven\'t added a word</string>
     <string name="zvezda" translatable="false">***</string>
     <!--    <string name="agree_with_privacy_policy"><![CDATA[By joining, you agree to Study Cards\
     's <a href="https://www.freeprivacypolicy.com/live/c663b277–554d-41b6-aebd-dfc34b059928">Terms of

@@ -68,4 +68,6 @@ abstract class BaseActivity : AppCompatActivity(), IResourcesIDListener {
      */
     @ColorInt
     override fun getClr(@ColorRes id: Int): Int = ContextCompat.getColor(this, id)
+
+    override fun getDimen(@DimenRes id: Int): Float = resources.getDimension(id)
 }

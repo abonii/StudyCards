@@ -1,6 +1,6 @@
 package abm.co.studycards.domain.repository
 
-import abm.co.studycards.data.model.ResultWrapper
+import abm.co.studycards.domain.model.ResultWrapper
 import abm.co.studycards.domain.model.OxfordResult
 
 interface DictionaryRepository {

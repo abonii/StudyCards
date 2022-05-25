@@ -27,6 +27,6 @@ class LoginActivity : BaseBindingActivity<ActivitySignBinding>(R.layout.activity
             onBackPressed()
             return true
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 }

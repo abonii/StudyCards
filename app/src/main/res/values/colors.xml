@@ -16,6 +16,7 @@
     <color name="second_color">#DCDCDC</color>
     <color name="third_color">#F5F5F5</color>
     <color name="lighter_darker">#9C9A9A</color>
+    <color name="dialog_background">#607D8B</color>
     <color name="ellipse">#D5D5D5</color>
     <color name="border">#60E4E4E4</color>
     <color name="color_itself">#ffffff</color>

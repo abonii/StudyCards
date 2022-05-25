@@ -3,6 +3,7 @@ package abm.co.studycards.util
 import abm.co.studycards.R
 import android.net.Uri
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputLayout
@@ -23,8 +24,10 @@ object GeneralBindingAdapters {
             Glide.with(context)
                 .load(url)
                 .timeout(4000)
-                .error(R.color.second_color)
+                .error(R.color.third_color)
                 .into(this)
+        } else {
+            setBackgroundColor(ContextCompat.getColor(context, R.color.third_color))
         }
     }
 

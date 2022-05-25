@@ -8,7 +8,6 @@ import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.helpers.SwipeToDeleteCallback
 import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
-import abm.co.studycards.util.fromHtml
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
 import android.content.ActivityNotFoundException
@@ -21,12 +20,16 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -37,15 +40,14 @@ class InCategoryFragment :
     private var wordsAdapter: WordsAdapter? = null
     private val viewModel: InCategoryViewModel by viewModels()
     private var snackbar: Snackbar? = null
-    private lateinit var textToSpeech: TextToSpeech
+    private var textToSpeech: TextToSpeech? = null
 
     override fun initUI(savedInstanceState: Bundle?) {
         binding.inCategoryFragment = this
-        initTextToSpeech()
+        setUpRecyclerView()
         collectData()
         setToolbar()
-        initFAB()
-        setUpRecyclerView()
+        initTextToSpeech()
     }
 
     private fun setToolbar() {
@@ -55,56 +57,55 @@ class InCategoryFragment :
 
 
     private fun collectData() {
-        launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
+        launchAndRepeatWithViewLifecycle(Lifecycle.State.CREATED) {
             viewModel.stateFlow.collect {
                 when (it) {
                     is InCategoryUiState.Error -> errorOccurred(it.msg)
-                    InCategoryUiState.Loading -> onLoading()
                     is InCategoryUiState.Success -> onSuccess(it.category)
                 }
             }
         }
-        launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
+        launchAndRepeatWithViewLifecycle(Lifecycle.State.CREATED) {
             viewModel.categoryStateFlow.collectLatest {
-                binding.folderName.text = it?.name ?: ""
+                binding.folderName.text = it.name
             }
         }
     }
 
     private fun onSuccess(value: List<Word>) = binding.run {
+        wordsAdapter = WordsAdapter(::onItemClick, ::onAudioClicked)
         wordsAdapter?.submitList(value)
-        error.visibility = View.GONE
+        binding.recyclerView.adapter = wordsAdapter
         recyclerView.visibility = View.VISIBLE
-        progressBar.visibility = View.GONE
+        error.visibility = View.GONE
     }
 
-    private fun onLoading() = binding.run {
-        progressBar.visibility = View.VISIBLE
-        error.visibility = View.GONE
-    }
 
     private fun errorOccurred(@StringRes text: Int) = binding.run {
         error.visibility = View.VISIBLE
         error.text = getString(text)
-        progressBar.visibility = View.GONE
         recyclerView.visibility = View.GONE
     }
 
     private fun initTextToSpeech() {
-        textToSpeech = TextToSpeech(requireContext()) {
-            if (it != TextToSpeech.ERROR) {
-                viewModel.isLanguageInstalled = isLanguageAvailable(Locale(viewModel.targetLang))
+        lifecycleScope.launch(Dispatchers.Default) {
+            delay(500)
+            textToSpeech = TextToSpeech(requireContext()) {
+                if (it != TextToSpeech.ERROR) {
+                    viewModel.isLanguageInstalled =
+                        isLanguageAvailable(Locale(viewModel.targetLang))
+                }
             }
         }
     }
 
     private fun isLanguageAvailable(language: Locale): Boolean {
         var available = false
-        when (textToSpeech.isLanguageAvailable(language)) {
+        when (textToSpeech?.isLanguageAvailable(language)) {
             TextToSpeech.LANG_AVAILABLE, TextToSpeech.LANG_COUNTRY_AVAILABLE, TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE -> {
-                textToSpeech.language = language
-                val voice = textToSpeech.voice
-                val features = voice.features
+                textToSpeech?.language = language
+                val voice = textToSpeech?.voice
+                val features = voice?.features
                 if (features != null && !features.contains(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED))
                     available = true
             }
@@ -113,13 +114,11 @@ class InCategoryFragment :
     }
 
     private fun setUpRecyclerView() {
-        wordsAdapter = WordsAdapter(::onItemClick, ::onAudioClicked)
-        binding.recyclerView.run {
-            adapter = wordsAdapter
-            addItemDecoration(getItemDecoration())
-        }
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback())
-        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
+        binding.recyclerView.run {
+            addItemDecoration(getItemDecoration())
+            itemTouchHelper.attachToRecyclerView(this)
+        }
     }
 
     private fun getItemDecoration() =
@@ -129,7 +128,7 @@ class InCategoryFragment :
         )
 
     private fun showUndoSnackBar(deletedWord: Word) {
-        val text = deletedWord.name.fromHtml()
+        val text = deletedWord.name
         snackbar = Snackbar.make(binding.recyclerView, text, Snackbar.LENGTH_LONG)
             .setAction(getString(R.string.undo)) {
                 viewModel.insertWord(deletedWord)
@@ -137,16 +136,11 @@ class InCategoryFragment :
         snackbar?.show()
     }
 
-    private fun initFAB() {
-        binding.floatingActionButton.animate()
-            .rotation(180f).duration = 500
-    }
-
     fun directToEditCategory() {
         val action =
             InCategoryFragmentDirections
                 .actionInCategoryFragmentToAddEditCategoryFragment(
-                    viewModel.categoryStateFlow.value?.copy(
+                    viewModel.categoryStateFlow.value.copy(
                         words = emptyList()
                     )
                 )
@@ -176,8 +170,8 @@ class InCategoryFragment :
     fun onFloatingActionWordClick() {
         val action =
             InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
-                categoryName = viewModel.categoryStateFlow.value?.name,
-                categoryId = viewModel.categoryId
+                categoryName = viewModel.categoryStateFlow.value.name,
+                categoryId = viewModel.category.id
             )
         navigate(action)
     }
@@ -188,8 +182,8 @@ class InCategoryFragment :
             val action =
                 InCategoryFragmentDirections.actionInCategoryFragmentToAddEditWordFragment(
                     word = word,
-                    categoryName = viewModel.categoryStateFlow.value?.name,
-                    categoryId = viewModel.categoryId
+                    categoryName = viewModel.categoryStateFlow.value.name,
+                    categoryId = viewModel.category.id
                 )
             navigate(action)
         }
@@ -201,7 +195,7 @@ class InCategoryFragment :
             openDownloadTTSDialog()
         } else {
             val newText = word.translationsToString()
-            textToSpeech.speak(
+            textToSpeech?.speak(
                 newText,
                 TextToSpeech.QUEUE_FLUSH,
                 null,
@@ -223,7 +217,7 @@ class InCategoryFragment :
 
     override fun onDestroyView() {
         snackbar?.dismiss()
-        textToSpeech.shutdown()
+        textToSpeech?.shutdown()
         wordsAdapter = null
         super.onDestroyView()
     }

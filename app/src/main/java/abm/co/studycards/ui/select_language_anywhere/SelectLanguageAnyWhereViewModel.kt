@@ -5,7 +5,8 @@ import abm.co.studycards.data.model.UserInfoDto.Companion.SELECTED_LANGUAGES_SPL
 import abm.co.studycards.domain.Prefs
 import abm.co.studycards.domain.model.AvailableLanguages
 import abm.co.studycards.domain.model.f
-import abm.co.studycards.domain.repository.ServerCloudRepository
+import abm.co.studycards.domain.usecases.GetUserInfoUseCase
+import abm.co.studycards.domain.usecases.UpdateSelectedLanguageUseCase
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
@@ -20,8 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectLanguageAnyWhereViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val firebaseRepository: ServerCloudRepository,
-    private val prefs: Prefs
+    private val updateSelectedLanguageUseCase: UpdateSelectedLanguageUseCase,
+    private val prefs: Prefs,
+    getUserInfoUseCase: GetUserInfoUseCase
 ) : BaseViewModel() {
 
     private var fromTarget = savedStateHandle.get<Boolean>("fromTarget")!!
@@ -32,16 +34,16 @@ class SelectLanguageAnyWhereViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            firebaseRepository.fetchUserInfo().collectLatest {
+            getUserInfoUseCase().collectLatest {
                 val selectedLang = it.selectedLanguages.split(SELECTED_LANGUAGES_SPLITTER)
-                setupLanguages(selectedLang.ifEmpty {
-                    listOf(
-                        prefs.getTargetLanguage(),
-                        prefs.getSourceLanguage()
-                    )
+                val selectedArray = ArrayList<String>(selectedLang)
+                if (!selectedLang.contains(prefs.getTargetLanguage())) {
+                    selectedArray.add(prefs.getTargetLanguage())
                 }
-                )
-
+                if (!selectedLang.contains(prefs.getSourceLanguage())) {
+                    selectedArray.add(prefs.getSourceLanguage())
+                }
+                setupLanguages(selectedArray)
             }
         }
     }
@@ -84,8 +86,8 @@ class SelectLanguageAnyWhereViewModel @Inject constructor(
                 prefs.setSourceLanguage(selectedLang.language.code)
             }
             listOfRecentlySelectedCodes.add(selectedLang.language.code)
-            firebaseRepository.updateSelectedLanguages(
-                *listOfRecentlySelectedCodes.toTypedArray()
+            updateSelectedLanguageUseCase(
+                listOfRecentlySelectedCodes.toTypedArray()
             )
             onFinish.invoke()
         }

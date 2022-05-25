@@ -11,25 +11,13 @@ class SelectCategoryAdapter :
     ListAdapter<CategorySelectable, SelectCategoryViewHolder>(DIFF_UTIL) {
 
     var selectedItemPos = -1
-    private var lastItemSelectedPos = -1
+    var lastItemSelectedPos = -1
 
     override fun onBindViewHolder(
         holder: SelectCategoryViewHolder,
         position: Int,
         payloads: MutableList<Any>
     ) {
-        if (payloads.isNotEmpty()) {
-            when (payloads[0]) {
-                0 -> {
-                    val item = getItem(position)
-                    item.isSelected = !item.isSelected
-                }
-                2 -> {
-                    val item = getItem(position)
-                    item.isSelected = false
-                }
-            }
-        }
         super.onBindViewHolder(holder, position, payloads)
     }
 
@@ -37,9 +25,13 @@ class SelectCategoryAdapter :
         selectedItemPos = position
         when {
             lastItemSelectedPos != -1 && lastItemSelectedPos != selectedItemPos -> {
+                val item = getItem(lastItemSelectedPos)
+                item.isSelected = false
                 notifyItemChanged(lastItemSelectedPos, 2)
             }
         }
+        val item = getItem(position)
+        item.isSelected = true
         notifyItemChanged(selectedItemPos, 0)
         lastItemSelectedPos = position
     }
@@ -53,7 +45,13 @@ class SelectCategoryAdapter :
     }
 
     override fun onBindViewHolder(holder: SelectCategoryViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val item = getItem(position)
+        holder.bind(item.category)
+        if (item.isSelected) {
+            holder.binding.radio.isChecked = true
+        } else {
+            holder.binding.radioGroup.clearCheck()
+        }
     }
 
     companion object {

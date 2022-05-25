@@ -49,7 +49,7 @@ class ReviewAdapter : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
             val radius: Float = binding.translated.textSize / 3
             val filter = BlurMaskFilter(radius, BlurMaskFilter.Blur.NORMAL)
             binding.translated.paint.maskFilter = filter
-            binding.translated.animate().setDuration(1500).alpha(1f).withEndAction {
+            binding.translated.animate().setDuration(2000).alpha(1f).withEndAction {
                 binding.translated.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
                 binding.translated.paint.maskFilter = null
             }

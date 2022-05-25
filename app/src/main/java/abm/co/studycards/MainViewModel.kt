@@ -2,7 +2,8 @@ package abm.co.studycards
 
 import abm.co.studycards.domain.Prefs
 import abm.co.studycards.domain.repository.PricingRepository
-import abm.co.studycards.domain.repository.ServerCloudRepository
+import abm.co.studycards.domain.usecases.AddUserNameUseCase
+import abm.co.studycards.domain.usecases.UpdateUserInfoUseCase
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -14,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     val prefs: Prefs,
-    private val firebaseRepository: ServerCloudRepository,
+    private val addUserNameUseCase: AddUserNameUseCase,
+    private val updateUserInfoUseCase: UpdateUserInfoUseCase,
     pricingRepository: PricingRepository
 ) : BaseViewModel() {
 
@@ -32,14 +34,13 @@ class MainViewModel @Inject constructor(
 
     fun getCurrentUser() = FirebaseAuth.getInstance().currentUser
 
-
     fun setDailyTranslateTime() {
-        firebaseRepository.updateUserInfo()
+        updateUserInfoUseCase()
     }
 
     fun setUserName(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            firebaseRepository.addUserName(name)
+            addUserNameUseCase(name)
         }
     }
 }

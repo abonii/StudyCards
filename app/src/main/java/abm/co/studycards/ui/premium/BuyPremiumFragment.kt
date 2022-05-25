@@ -56,14 +56,7 @@ class BuyPremiumFragment :
 
     private fun initRV() {
         productsAdapter = ProductAdapter { skuDetails ->
-            when {
-                viewModel.isUserAnonymous() -> {
-                    toast(getString(R.string.link_to_account))
-                }
-                else -> {
-                    launchPurchaseFlow(skuDetails)
-                }
-            }
+            launchPurchaseFlow(skuDetails)
         }
         binding.recyclerViewProducts.adapter = productsAdapter
     }

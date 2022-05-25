@@ -29,9 +29,9 @@
 # Modify this rule to fit the structure of your app.
 
 -keep class abm.co.studycards.data.model.**{ *; }
--keepclassmembers class com.google.firebase.database.GenericTypeIndicator {
-  *;
-}
+-keep class abm.co.studycards.domain.model.**{ *; }
+
+-keepclassmembers class com.google.firebase.database.GenericTypeIndicator { *; }
 -keep class com.google.googlesignin.** { *; }
 -keepnames class com.google.googlesignin.* { *; }
 

@@ -1,8 +1,9 @@
 package abm.co.studycards.ui.games.select
 
 import abm.co.studycards.domain.model.LearnOrKnown
+import abm.co.studycards.domain.model.ResultWrapper
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.domain.repository.ServerCloudRepository
+import abm.co.studycards.domain.usecases.GetUserCategoryUseCase
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -19,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectLearnTypeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    firebaseRepository: ServerCloudRepository
+    getUserCategoryUseCase: GetUserCategoryUseCase
 ) : BaseViewModel() {
     val categoryId = savedStateHandle.get<String>("category_id")!!
     var categoryName: String = ""
@@ -40,13 +41,13 @@ class SelectLearnTypeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
-            val theCategory = firebaseRepository.getTheCategory(categoryId)
+            val theCategory = getUserCategoryUseCase(categoryId)
             databaseRef = theCategory.second
             databaseListener = theCategory.third
-            theCategory.first.collectLatest { category ->
-                category?.let {
-                    categoryName = category.name
-                    setupWord(it.words)
+            theCategory.first.collectLatest { wrapper ->
+                if (wrapper is ResultWrapper.Success) {
+                    categoryName = wrapper.value?.name ?: ""
+                    wrapper.value?.let { setupWord(it.words) }
                 }
             }
         }

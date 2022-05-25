@@ -2,9 +2,9 @@ package abm.co.studycards.ui.home
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
+import abm.co.studycards.databinding.FragmentHomeBinding
 import abm.co.studycards.domain.model.AvailableLanguages
 import abm.co.studycards.domain.model.Category
-import abm.co.studycards.databinding.FragmentHomeBinding
 import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.fromHtml
@@ -14,9 +14,7 @@ import abm.co.studycards.util.navigate
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -32,25 +30,17 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
     private val viewModel: HomeViewModel by viewModels()
     private var categoryAdapter: CategoryAdapter? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        collectData()
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun initUI(savedInstanceState: Bundle?) {
         binding.homefragment = this
         initFABMenu()
         initRecyclerView()
         changeStatusBar()
         setSourceAndTargetLanguages()
+        collectData()
     }
 
     private fun collectData() {
-        launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
+        launchAndRepeatWithViewLifecycle(Lifecycle.State.CREATED) {
             viewModel.stateFlow.collect {
                 when (it) {
                     is CategoryUiState.Error -> errorOccurred(it.msg)
@@ -61,15 +51,14 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
         }
     }
 
-    private fun onSuccess(value: List<Category>) = binding.run {
+    private fun onSuccess(value: List<Category>) = with(binding) {
+        categoryAdapter?.submitList(value)
         recyclerView.visibility = View.VISIBLE
         stopShimmer()
         error.visibility = View.GONE
-        categoryAdapter?.submitList(value)
     }
 
     private fun stopShimmer() = binding.shimmerLayout.run {
-        stopShimmer()
         hideShimmer()
         visibility = View.GONE
     }
@@ -198,10 +187,10 @@ class HomeFragment : BaseBindingFragment<FragmentHomeBinding>(R.layout.fragment_
         floatingActionButtonCategory.animate().translationY(0F).duration = 500
     }
 
-    override fun onCategoryClicked(categoryId: String) {
+    override fun onCategoryClicked(category: Category) {
         if (isFabOpen()) return
         val action = HomeFragmentDirections.actionHomeFragmentToInCategoryFragment(
-            categoryId = categoryId
+            category = category
         )
         navigate(action)
     }

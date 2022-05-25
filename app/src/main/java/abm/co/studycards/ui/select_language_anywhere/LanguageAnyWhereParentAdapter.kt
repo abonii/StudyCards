@@ -47,9 +47,13 @@ class LanguageAnyWhereParentAdapter :
         selectedItemPos = position
         when {
             lastItemSelectedPos != -1 && lastItemSelectedPos != selectedItemPos -> {
+                val lang = (getItem(lastItemSelectedPos) as LanguageVHUI.Language).value
+                lang.isSelected = false
                 notifyItemChanged(lastItemSelectedPos, 2)
             }
         }
+        val lang = (getItem(position) as LanguageVHUI.Language).value
+        lang.isSelected = !lang.isSelected
         notifyItemChanged(selectedItemPos, 0)
         lastItemSelectedPos = position
     }
@@ -82,18 +86,6 @@ class LanguageAnyWhereParentAdapter :
         position: Int,
         payloads: MutableList<Any>
     ) {
-        if (payloads.isNotEmpty()) {
-            when (payloads[0]) {
-                0 -> {
-                    val lang = (getItem(position) as LanguageVHUI.Language).value
-                    lang.isSelected = !lang.isSelected
-                }
-                2 -> {
-                    val lang = (getItem(position) as LanguageVHUI.Language).value
-                    lang.isSelected = false
-                }
-            }
-        }
         super.onBindViewHolder(holder, position, payloads)
     }
 

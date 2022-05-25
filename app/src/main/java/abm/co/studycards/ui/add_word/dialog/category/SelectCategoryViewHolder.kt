@@ -1,11 +1,12 @@
 package abm.co.studycards.ui.add_word.dialog.category
 
 import abm.co.studycards.databinding.ItemSelectCategoryBinding
+import abm.co.studycards.domain.model.Category
 import abm.co.studycards.domain.model.CategorySelectable
 import androidx.recyclerview.widget.RecyclerView
 
 class SelectCategoryViewHolder(
-    private val binding: ItemSelectCategoryBinding,
+    val binding: ItemSelectCategoryBinding,
     onClick: (Int) -> Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -18,14 +19,9 @@ class SelectCategoryViewHolder(
         }
     }
 
-    fun bind(currentItem: CategorySelectable) {
+    fun bind(currentItem: Category) {
         binding.run {
-            category.text = currentItem.category.name
-            if (currentItem.isSelected)
-                radio.isChecked = true
-            else {
-                radioGroup.clearCheck()
-            }
+            category.text = currentItem.name
         }
     }
 

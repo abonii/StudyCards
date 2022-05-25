@@ -17,22 +17,13 @@ class ExploreWordsForSelectingAdapter(private val onChecked: (WordX) -> Unit) :
         position: Int,
         payloads: MutableList<Any>
     ) {
-        if (payloads.isNotEmpty()) {
-            when (payloads[0]) {
-                false -> {
-                    getItem(position).isChecked = false
-                }
-                true -> {
-                    getItem(position).isChecked = true
-                }
-            }
-        }
         super.onBindViewHolder(holder, position, payloads)
     }
 
     fun updateAllWords(isChecked: Boolean) {
         for (i in 0 until itemCount) {
-            notifyItemChanged(i, isChecked)
+            getItem(i).isChecked = isChecked
+            notifyItemChanged(i,0)
         }
     }
 

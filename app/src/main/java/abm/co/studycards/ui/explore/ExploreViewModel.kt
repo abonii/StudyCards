@@ -1,6 +1,7 @@
 package abm.co.studycards.ui.explore
 
-import abm.co.studycards.domain.repository.ServerCloudRepository
+import abm.co.studycards.domain.model.ResultWrapper
+import abm.co.studycards.domain.usecases.GetExploreSetsUseCase
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    firebaseRepository: ServerCloudRepository,
+    getExploreSetsUseCase: GetExploreSetsUseCase
 ) : BaseViewModel() {
 
     val dispatcher = Dispatchers.IO
@@ -25,13 +26,27 @@ class ExploreViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(dispatcher) {
-            firebaseRepository.fetchExploreSets().collectLatest {
-                delay(700)
-                _stateFlow.value = ParentExploreUiState.Success(it)
+            delay(800)
+            getExploreSetsUseCase().collectLatest { wrapper ->
+                when (wrapper) {
+                    is ResultWrapper.Error -> {
+                        _stateFlow.value = ParentExploreUiState.Error(wrapper.res)
+                    }
+                    is ResultWrapper.Success -> {
+                        val sets = wrapper.value.map {
+                            ParentExploreUI.SetUI(it.categories.map { category ->
+                                ChildExploreVHUI.VHCategory(category)
+                            }, title = it.name, setId = it.id)
+                        }
+                        _stateFlow.value = ParentExploreUiState.Success(sets)
+                    }
+                    else -> {
+                        _stateFlow.value = ParentExploreUiState.Loading
+                    }
+                }
             }
         }
     }
-
 }
 
 sealed class ParentExploreUI {

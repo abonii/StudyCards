@@ -2,7 +2,7 @@ package abm.co.studycards.ui.games.guessing
 
 import abm.co.studycards.domain.model.LearnOrKnown
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.domain.repository.ServerCloudRepository
+import abm.co.studycards.domain.usecases.UpdateUserWordUseCase
 import abm.co.studycards.util.Constants.ONE_TIME_CYCLE_GAME
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GuessingViewModel @Inject constructor(
-    private val repository: ServerCloudRepository,
+    private val updateUserWordUseCase: UpdateUserWordUseCase,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel() {
     var isClicked: Boolean = false
@@ -68,7 +68,7 @@ class GuessingViewModel @Inject constructor(
 
     private fun updateWord(word: Word) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateWordRepeatType(word)
+            updateUserWordUseCase.repeatType(word)
         }
     }
 }

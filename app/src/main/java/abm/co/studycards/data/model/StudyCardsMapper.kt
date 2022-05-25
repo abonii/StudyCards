@@ -7,11 +7,15 @@ import abm.co.studycards.data.model.oxford.SenseDto
 import abm.co.studycards.data.model.vocabulary.CategoryDto
 import abm.co.studycards.data.model.vocabulary.WordDto
 import abm.co.studycards.domain.model.*
-import abm.co.studycards.util.Constants.TAG
-import android.util.Log
 import javax.inject.Inject
 
 class StudyCardsMapper @Inject constructor() {
+
+    fun mapSetDtoToMode(dto: ParentSetDto) = ParentSet(
+        name = dto.name,
+        id = dto.id,
+        categories = ArrayList(dto.categories.values).map { mapCategoryDtoToModel(it) }
+    )
 
     fun mapConfigDtoToModel(dto: ConfigDto) = Config(
         oxfordId = dto.oxfordId,
@@ -81,7 +85,6 @@ class StudyCardsMapper @Inject constructor() {
     )
 
     private fun getLexicalCategoriesFromDto(resultsDto: List<ResultsEntryDto>): List<LexicalCategory> {
-        Log.i(TAG, "getLexicalCategoriesFromDto: $resultsDto")
         val lexicalCategories = ArrayList<LexicalCategory>()
         resultsDto.forEach { results ->
             results.lexicalEntries?.forEach { lexical ->

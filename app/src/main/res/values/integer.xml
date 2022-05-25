@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="longEnterAnimTime" type="integer">500</item>
     <item name="mediumEnterAnimTime" type="integer">400</item>
+    <item name="mediumExitAnimTime" type="integer">430</item>
+    <item name="longEnterAnimTime" type="integer">500</item>
     <item name="longExitAnimTime" type="integer">520</item>
-    <item name="mediumExitAnimTime" type="integer">420</item>
 </resources>

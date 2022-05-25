@@ -39,6 +39,8 @@ class SelectCategoryDialogFragment :
         launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.allCategoryStateFlow.collectLatest {
                 selectAdapter.submitList(it)
+                selectAdapter.selectedItemPos = viewModel.selectedPos
+                selectAdapter.lastItemSelectedPos = viewModel.selectedPos
             }
         }
     }

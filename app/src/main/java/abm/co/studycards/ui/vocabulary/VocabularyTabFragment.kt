@@ -13,6 +13,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -44,7 +45,7 @@ class VocabularyTabFragment :
         ).apply {
             onLongClickWord = ::onLongClickWord
         }
-        launchAndRepeatWithViewLifecycle {
+        launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.stateFlow.collectLatest {
                 when (it) {
                     is VocabularyUiState.Error -> {
@@ -66,7 +67,6 @@ class VocabularyTabFragment :
         text.visibility = View.VISIBLE
         text.text = getText(errorMsg)
         recyclerView.visibility = View.GONE
-        shimmerLayout.stopShimmer()
         shimmerLayout.hideShimmer()
         shimmerLayout.visibility = View.GONE
     }
@@ -78,7 +78,6 @@ class VocabularyTabFragment :
     private fun onSuccess(value: List<Word>) = binding.run {
         recyclerView.visibility = View.VISIBLE
         text.visibility = View.GONE
-        shimmerLayout.stopShimmer()
         shimmerLayout.hideShimmer()
         shimmerLayout.visibility = View.GONE
         adapterV?.submitList(value)

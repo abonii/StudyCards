@@ -2,8 +2,12 @@ package abm.co.studycards.ui.in_explore
 
 import abm.co.studycards.domain.Prefs
 import abm.co.studycards.domain.model.Category
+import abm.co.studycards.domain.model.ResultWrapper
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.domain.repository.ServerCloudRepository
+import abm.co.studycards.domain.usecases.DeleteExploreCategoryUseCase
+import abm.co.studycards.domain.usecases.GetCurrentUserUseCase
+import abm.co.studycards.domain.usecases.GetExploreCategoryUseCase
+import abm.co.studycards.domain.usecases.GetUserCategoryUseCase
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
@@ -20,9 +24,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InExploreViewModel @Inject constructor(
+    private val deleteExploreCategoryUseCase: DeleteExploreCategoryUseCase,
+    getCurrentUserUseCase: GetCurrentUserUseCase,
+    getUserCategoryUseCase: GetUserCategoryUseCase,
+    getExploreCategoryUseCase: GetExploreCategoryUseCase,
     savedStateHandle: SavedStateHandle,
-    firebaseRepository: ServerCloudRepository,
-    prefs: Prefs
+    prefs: Prefs,
 ) : BaseViewModel() {
 
     private val dispatcher = Dispatchers.IO
@@ -32,6 +39,8 @@ class InExploreViewModel @Inject constructor(
 
     var category = savedStateHandle.get<Category>("category")!!
     var setId = savedStateHandle.get<String>("set_id")!!
+
+    val iCreatedThisCategory = category.creatorId == getCurrentUserUseCase()?.uid
 
     val categoryPhotoUrl = category.imageUrl
 
@@ -45,23 +54,31 @@ class InExploreViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(dispatcher) {
-            val userCategory = firebaseRepository.getTheCategory(category.id)
-            val exploreCategory = firebaseRepository.getExploreCategory(setId, category.id)
+            val userCategory = getUserCategoryUseCase(category.id)
+            val exploreCategory = getExploreCategoryUseCase(setId, category.id)
 
             databaseRefListener.add(userCategory.second to userCategory.third)
             databaseRefListener.add(exploreCategory.second to exploreCategory.third)
-
             viewModelScope.launch {
                 exploreCategory.first.collectLatest {
-                    it?.let {
-                        wordsCount.value = it.words.size
-                        _stateFlow.value = InExploreUiState.Success(it.words)
+                    when (it) {
+                        is ResultWrapper.Error -> {
+                            _stateFlow.value = InExploreUiState.Error(it.res)
+                        }
+                        ResultWrapper.Loading -> {
+                            _stateFlow.value = InExploreUiState.Loading
+                        }
+                        is ResultWrapper.Success -> {
+                            wordsCount.value = it.value.words.size
+                            _stateFlow.value = InExploreUiState.Success(it.value.words)
+                        }
                     }
                 }
             }
             viewModelScope.launch {
-                userCategory.first.collectLatest { category ->
-                    isThisCategoryExistInMine.value = category != null
+                userCategory.first.collectLatest { wrapper ->
+                    isThisCategoryExistInMine.value =
+                        wrapper is ResultWrapper.Success && wrapper.value != null
                 }
             }
         }
@@ -71,6 +88,12 @@ class InExploreViewModel @Inject constructor(
         super.onCleared()
         databaseRefListener.forEach {
             it.first.removeEventListener(it.second)
+        }
+    }
+
+    fun deleteTheExploreCategory() {
+        viewModelScope.launch(dispatcher) {
+            deleteExploreCategoryUseCase(setId, category)
         }
     }
 

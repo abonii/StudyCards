@@ -71,6 +71,7 @@
     <dimen name="default_30dp">@dimen/_30sdp</dimen>
     <dimen name="default_35dp">@dimen/_35sdp</dimen>
     <dimen name="default_40dp">@dimen/_40sdp</dimen>
+    <dimen name="default_46dp">@dimen/_46sdp</dimen>
     <dimen name="default_50dp">@dimen/_50sdp</dimen>
     <dimen name="default_70dp">@dimen/_70sdp</dimen>
     <dimen name="default_80dp">@dimen/_80sdp</dimen>

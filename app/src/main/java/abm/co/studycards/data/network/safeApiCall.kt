@@ -1,8 +1,7 @@
 package abm.co.studycards.data.network
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.ErrorStatus
-import abm.co.studycards.data.model.ResultWrapper
+import abm.co.studycards.domain.model.ResultWrapper
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -21,27 +20,19 @@ suspend fun <T> safeApiCall(
             when (throwable) {
                 is UnknownHostException -> {
                     ResultWrapper.Error(
-                        ErrorStatus.NO_CONNECTION, null,
-                        errorRes = R.string.no_internet_connection
+                        res = R.string.no_internet_connection
                     )
                 }
                 is HttpException -> {
-                    val code = throwable.code()
-                    val errorResponse =
-                        convertErrorBody(
-                            throwable
-                        )
-                    ResultWrapper.Error(ErrorStatus.BAD_RESPONSE, code, errorResponse)
+                    ResultWrapper.Error(res = R.string.problem_internet_connection)
                 }
                 is SocketTimeoutException -> {
                     ResultWrapper.Error(
-                        ErrorStatus.TIMEOUT,
-                        null,
-                        errorRes = R.string.socket_timeout_exception
+                        res = R.string.socket_timeout_exception
                     )
                 }
                 else -> {
-                    ResultWrapper.Error(ErrorStatus.NOT_DEFINED, null, throwable.message)
+                    ResultWrapper.Error(throwable.message)
                 }
             }
         }

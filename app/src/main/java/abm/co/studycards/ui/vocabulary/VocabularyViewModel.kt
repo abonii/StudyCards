@@ -1,9 +1,10 @@
 package abm.co.studycards.ui.vocabulary
 
-import abm.co.studycards.R
 import abm.co.studycards.domain.model.LearnOrKnown
+import abm.co.studycards.domain.model.ResultWrapper
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.domain.repository.ServerCloudRepository
+import abm.co.studycards.domain.usecases.GetUserWordsUseCase
+import abm.co.studycards.domain.usecases.UpdateUserWordUseCase
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VocabularyViewModel @Inject constructor(
-    private val firebaseRepository: ServerCloudRepository
+    private val getUserWordsUseCase: GetUserWordsUseCase,
+    private val updateUserWordUseCase: UpdateUserWordUseCase
 ) : BaseViewModel() {
 
     val dispatcher = Dispatchers.IO
@@ -31,21 +33,23 @@ class VocabularyViewModel @Inject constructor(
     val stateFlow = _stateFlow.asStateFlow()
 
     fun initWords(pos: Int) {
-        viewModelScope.launch(dispatcher) {
-            setTabSettings(pos)
-            delay(600)
-            firebaseRepository.fetchUserWords().collectLatest { words ->
-                val tabWords =
-                    words.filter { LearnOrKnown.getType(it.learnOrKnown) == currentTabType }
-                if (tabWords.isEmpty()) {
-                    _stateFlow.value = VocabularyUiState.Error(R.string.empty)
-                } else _stateFlow.value = VocabularyUiState.Success(tabWords)
+        viewModelScope.launch(Dispatchers.IO) {
+            currentTabType = LearnOrKnown.getType(pos)
+            delay(800)
+            getUserWordsUseCase(currentTabType).collectLatest {
+                when (it) {
+                    is ResultWrapper.Error -> {
+                        _stateFlow.value = VocabularyUiState.Error(it.res)
+                    }
+                    ResultWrapper.Loading -> {
+                        _stateFlow.value = VocabularyUiState.Loading
+                    }
+                    is ResultWrapper.Success -> {
+                        _stateFlow.value = VocabularyUiState.Success(it.value)
+                    }
+                }
             }
         }
-    }
-
-    private fun setTabSettings(pos: Int) {
-        currentTabType = LearnOrKnown.getType(pos)
     }
 
     fun changeType(word: Word, type: LearnOrKnown) {
@@ -64,10 +68,9 @@ class VocabularyViewModel @Inject constructor(
 
     private fun updateWordLearnType(word: Word) {
         viewModelScope.launch(dispatcher) {
-            firebaseRepository.updateWordLearnType(word)
+            updateUserWordUseCase.learnType(word)
         }
     }
-
 }
 
 sealed class VocabularyUiState {

@@ -1,11 +1,9 @@
 package abm.co.studycards.ui.add_word
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.ResultWrapper
 import abm.co.studycards.domain.Prefs
 import abm.co.studycards.domain.model.*
-import abm.co.studycards.domain.repository.DictionaryRepository
-import abm.co.studycards.domain.repository.ServerCloudRepository
+import abm.co.studycards.domain.usecases.*
 import abm.co.studycards.util.Constants.OXFORD_CAN_TRANSLATE_MAP
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -18,8 +16,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditWordViewModel @Inject constructor(
-    private val repository: DictionaryRepository,
-    private val firebaseRepository: ServerCloudRepository,
+    private val getYandexTranslatedWordUseCase: GetYandexTranslatedWordUseCase,
+    private val getOxfordTranslatedResultUseCase: GetOxfordTranslatedResultUseCase,
+    private val addUserWordUseCase: AddUserWordUseCase,
+    private val updateUserWordUseCase: UpdateUserWordUseCase,
+    private val updateUserTranslateCountUseCase: UpdateUserTranslateCountUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val getConfigUseCase: GetConfigUseCase,
     prefs: Prefs,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel() {
@@ -68,10 +71,12 @@ class AddEditWordViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(dispatcher) {
-            firebaseRepository.fetchUserInfo().collectLatest {
+            getUserInfoUseCase().collectLatest {
                 translateCounts = it.translateCounts
             }
-            config = firebaseRepository.config
+        }
+        viewModelScope.launch {
+            config = getConfigUseCase()
         }
     }
 
@@ -108,9 +113,9 @@ class AddEditWordViewModel @Inject constructor(
             val sl = if (fromSource) sourceLanguage else targetLanguage
             val tl = if (fromSource) targetLanguage else sourceLanguage
             when (val wrapper =
-                repository.getYandexWord(translatedYandexWord, sl, tl, config.yandexKey)) {
+                getYandexTranslatedWordUseCase(translatedYandexWord, sl, tl, config.yandexKey)) {
                 is ResultWrapper.Error -> {
-                    makeToast(wrapper.errorRes ?: "")
+                    makeToast(wrapper.res)
                     stopLoadingIcon(fromSource)
                 }
                 is ResultWrapper.Success -> {
@@ -122,6 +127,9 @@ class AddEditWordViewModel @Inject constructor(
                     } else {
                         sourceWordStateFlow.value = translated
                     }
+                }
+                ResultWrapper.Loading -> {
+
                 }
             }
         }
@@ -149,7 +157,7 @@ class AddEditWordViewModel @Inject constructor(
             translatedOxfordWord =
                 if (fromSource) sourceWordStateFlow.value else targetWordStateFlow.value
 
-            when (val wrapper = repository.getOxfordWord(
+            when (val wrapper = getOxfordTranslatedResultUseCase(
                 translatedOxfordWord.trim(),
                 sl, tl, config.oxfordId, config.oxfordKey
             )) {
@@ -168,6 +176,9 @@ class AddEditWordViewModel @Inject constructor(
                         )
                     )
                 }
+                ResultWrapper.Loading -> {
+
+                }
             }
         }
     }
@@ -184,7 +195,7 @@ class AddEditWordViewModel @Inject constructor(
 
     private fun changeTranslateCount() {
         viewModelScope.launch(dispatcher) {
-            firebaseRepository.updateUserTranslateCount(translateCounts - 1)
+            updateUserTranslateCountUseCase(translateCounts - 1)
         }
     }
 
@@ -257,7 +268,7 @@ class AddEditWordViewModel @Inject constructor(
                     repeatCount = 0,
                     wordId = "default"
                 )
-                firebaseRepository.addWord(word)
+                addUserWordUseCase(word)
             } else {
                 val uWord = word.copy(
                     name = sourceWordStateFlow.value,
@@ -268,8 +279,7 @@ class AddEditWordViewModel @Inject constructor(
                     imageUrl = imageStateFlow.value ?: "",
                     repeatCount = 0
                 )
-                firebaseRepository.removeWord(word)
-                firebaseRepository.addWord(uWord)
+                updateUserWordUseCase(word, uWord)
             }
             _eventChannel.emit(AddEditWordEventChannel.PopBackStack)
         }

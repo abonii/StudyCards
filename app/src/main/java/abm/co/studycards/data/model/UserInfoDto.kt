@@ -11,6 +11,8 @@ data class UserInfoDto(
         const val CAN_TRANSLATE = "translateCounts"
         const val TRANSLATE_COUNT_UPDATE_TIME = "translateCountsUpdateTime"
         const val SELECTED_LANGUAGES = "selectedLanguages"
+        const val EMAIL = "email"
+        const val NAME = "name"
         const val SELECTED_LANGUAGES_SPLITTER = ","
     }
 }

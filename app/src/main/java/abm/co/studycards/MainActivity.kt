@@ -3,7 +3,7 @@ package abm.co.studycards
 import abm.co.studycards.databinding.ActivityMainBinding
 import abm.co.studycards.domain.model.ConfirmText
 import abm.co.studycards.ui.login.LoginActivity
-import abm.co.studycards.util.Constants.TAG
+import abm.co.studycards.util.Constants.TAG_ERROR
 import abm.co.studycards.util.base.BaseBindingActivity
 import abm.co.studycards.util.setupWithNavController
 import android.app.Activity
@@ -77,8 +77,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
         if (item.itemId == android.R.id.home) {
             if (!onBackAndNavigateUp())
                 !currentNavController?.value!!.navigateUp()
+            return true
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setupBottomNavigationBar() {
@@ -118,7 +119,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
             super.onRestoreInstanceState(savedInstanceState)
             setupBottomNavigationBar()
         } catch (e: Exception) {
-            Log.e(TAG, "onRestoreInstanceState:${e.message}")
+            Log.e(TAG_ERROR, "onRestoreInstanceState:${e.message}")
         }
     }
 
@@ -172,20 +173,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
                 v.getGlobalVisibleRect(outRect)
                 if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
                     v.clearFocus()
-                    closeKeyboard(v)//todo e
+                    closeKeyboard(v)
                 }
             }
         }
         return super.dispatchTouchEvent(ev)
     }
 
-    private fun closeKeyboard(v:View){
+    private fun closeKeyboard(v: View) {
         val imm =
             getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(v.windowToken, 0)
     }
 
-    companion object{
+    companion object {
         const val EXTRA_NAME = "EXTRA_NAME"
     }
 

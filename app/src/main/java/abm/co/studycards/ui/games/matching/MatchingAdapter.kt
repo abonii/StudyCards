@@ -18,6 +18,7 @@ class MatchingAdapter(
             field = value
             notifyDataSetChanged()
         }
+
     var selectedItemPos = -1
     var lastItemSelectedPos = -1
 

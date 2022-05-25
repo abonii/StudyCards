@@ -3,7 +3,8 @@ package abm.co.studycards.ui.add_category
 import abm.co.studycards.R
 import abm.co.studycards.domain.Prefs
 import abm.co.studycards.domain.model.Category
-import abm.co.studycards.domain.repository.ServerCloudRepository
+import abm.co.studycards.domain.usecases.AddUserCategoryUseCase
+import abm.co.studycards.domain.usecases.UpdateUserCategoryUseCase
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.core.App
 import androidx.lifecycle.SavedStateHandle
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditCategoryViewModel @Inject constructor(
-    private val repository: ServerCloudRepository,
+    private val addUserCategoryUseCase: AddUserCategoryUseCase,
+    private val updateUserCategoryUseCase: UpdateUserCategoryUseCase,
     private val prefs: Prefs,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel() {
@@ -54,13 +56,13 @@ class AddEditCategoryViewModel @Inject constructor(
 
     private fun insertCategory(category: Category) {
         viewModelScope.launch(dispatcher) {
-            repository.addCategory(category)
+            addUserCategoryUseCase(category)
         }
     }
 
     private fun updateCategory(updatedCategory: Category) {
         viewModelScope.launch(dispatcher) {
-            repository.updateCategoryName(updatedCategory)
+            updateUserCategoryUseCase(updatedCategory)
         }
     }
 

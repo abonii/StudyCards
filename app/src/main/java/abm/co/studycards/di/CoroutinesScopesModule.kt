@@ -1,6 +1,6 @@
 package abm.co.studycards.di
 
-import abm.co.studycards.util.Constants.TAG
+import abm.co.studycards.util.Constants.TAG_ERROR
 import android.util.Log
 import dagger.Module
 import dagger.Provides
@@ -20,14 +20,13 @@ object CoroutinesScopesModule {
     @Provides
     fun provideCoroutineExceptionHandler(): CoroutineExceptionHandler {
         return CoroutineExceptionHandler { _, exception ->
-            Log.i(TAG, "provideCoroutineExceptionHandler: ${exception.message}")
+            Log.e(TAG_ERROR, "provideCoroutineExceptionHandler: ${exception.message}")
         }
     }
 
     @Singleton
     @Provides
     fun providesCoroutineScope(coroutineHandler: CoroutineExceptionHandler): CoroutineScope {
-        // Run this code when providing an instance of CoroutineScope
         return CoroutineScope(SupervisorJob() + Dispatchers.IO + coroutineHandler)
     }
 }

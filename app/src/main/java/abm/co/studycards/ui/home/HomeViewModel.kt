@@ -3,7 +3,9 @@ package abm.co.studycards.ui.home
 import abm.co.studycards.R
 import abm.co.studycards.domain.Prefs
 import abm.co.studycards.domain.model.Category
-import abm.co.studycards.domain.repository.ServerCloudRepository
+import abm.co.studycards.domain.model.ResultWrapper
+import abm.co.studycards.domain.usecases.DeleteUserCategoryUseCase
+import abm.co.studycards.domain.usecases.GetUserCategoriesUseCase
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val prefs: Prefs,
-    private val firebaseRepository: ServerCloudRepository
+    getUserCategoriesUseCase: GetUserCategoriesUseCase,
+    private val deleteUserCategoryUseCase: DeleteUserCategoryUseCase
 ) : BaseViewModel() {
 
     val dispatcher = Dispatchers.IO
@@ -43,12 +46,21 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(dispatcher) {
-            firebaseRepository.fetchUserCategories().collectLatest {
-                if(it.isNotEmpty()){
-                    defaultCategory = it.first()
-                    _stateFlow.value = CategoryUiState.Success(it)
-                }else{
-                    _stateFlow.value = CategoryUiState.Error(R.string.empty_home_fragment)
+            getUserCategoriesUseCase().collectLatest {
+                when (it) {
+                    is ResultWrapper.Error -> {
+                        if (it.res == R.string.empty) _stateFlow.value =
+                            CategoryUiState.Error(R.string.empty_home_fragment)
+                        else _stateFlow.value = CategoryUiState.Error(it.res)
+                    }
+                    ResultWrapper.Loading -> {
+                        _stateFlow.value = CategoryUiState.Loading
+                    }
+                    is ResultWrapper.Success -> {
+                        defaultCategory = it.value.first()
+                        _stateFlow.value = CategoryUiState.Success(it.value)
+
+                    }
                 }
             }
         }
@@ -56,7 +68,7 @@ class HomeViewModel @Inject constructor(
 
     fun removeCategory(category: Category) {
         viewModelScope.launch(dispatcher) {
-            firebaseRepository.removeCategory(category)
+            deleteUserCategoryUseCase(category)
         }
     }
 

@@ -1,13 +1,16 @@
 package abm.co.studycards.ui.add_to_yourself
 
-import abm.co.studycards.R
 import abm.co.studycards.domain.model.Category
+import abm.co.studycards.domain.model.ResultWrapper
 import abm.co.studycards.domain.model.WordX
-import abm.co.studycards.domain.repository.ServerCloudRepository
+import abm.co.studycards.domain.usecases.AddUserCategoryWithIdUseCase
+import abm.co.studycards.domain.usecases.GetExploreCategoryUseCase
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -18,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AddYourselfViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val firebaseRepository: ServerCloudRepository,
+    private val addUserCategoryWithIdUseCase: AddUserCategoryWithIdUseCase,
+    getExploreCategoryUseCase: GetExploreCategoryUseCase
 ) : BaseViewModel() {
 
     private val dispatcher = Dispatchers.IO
@@ -36,21 +40,30 @@ class AddYourselfViewModel @Inject constructor(
     private var setId = savedStateHandle.get<String>("set_id")!!
     private var category: Category? = null
 
+    private var databaseRefListener = ArrayList<Pair<DatabaseReference, ValueEventListener>>()
+
     private var selectedWords: List<WordX> = ArrayList()
 
     fun isSelectedAllWords() = selectedWords.count { it.isChecked } == selectedWords.size
 
     init {
-        viewModelScope.launch(Dispatchers.Default) {
-            val exploreCategory = firebaseRepository.getExploreCategory(setId, categoryId)
-            exploreCategory.first.collectLatest { category1 ->
-                category1?.let { category2 ->
-                    this@AddYourselfViewModel.category = category2
-                    selectedWords = category2.words.map { WordX(it) }
-                    delay(400)
-                    if (category2.words.isEmpty())
-                        _stateFlow.value = AddYourselfUiState.Error(R.string.empty)
-                    else _stateFlow.value = AddYourselfUiState.Success(selectedWords)
+        viewModelScope.launch(dispatcher) {
+            delay(400)
+            val exploreCategory = getExploreCategoryUseCase(setId, categoryId)
+            databaseRefListener.add(exploreCategory.second to exploreCategory.third)
+            exploreCategory.first.collectLatest { wrapper ->
+                when (wrapper) {
+                    is ResultWrapper.Error -> {
+                        _stateFlow.value = AddYourselfUiState.Error(wrapper.res)
+                    }
+                    ResultWrapper.Loading -> {
+                        _stateFlow.value = AddYourselfUiState.Loading
+                    }
+                    is ResultWrapper.Success -> {
+                        selectedWords = wrapper.value.words.map { WordX(it) }
+                        category = wrapper.value
+                        _stateFlow.value = AddYourselfUiState.Success(selectedWords)
+                    }
                 }
             }
 
@@ -67,7 +80,6 @@ class AddYourselfViewModel @Inject constructor(
 
     fun onAddBtnClicked() {
         viewModelScope.launch(dispatcher) {
-            _stateFlow.value = AddYourselfUiState.Loading
             insertCategory(selectedWords.toList().filter { it.isChecked })
         }
     }
@@ -75,10 +87,18 @@ class AddYourselfViewModel @Inject constructor(
     private suspend fun insertCategory(words: List<WordX>) {
         viewModelScope.launch(dispatcher) {
             category?.copy(words = words.map { it.word })
-                ?.let { firebaseRepository.addWithIdCategory(it) }
+                ?.let { addUserCategoryWithIdUseCase(it) }
             _sharedFlow.emit(AddYourselfEventChannel.NavigateBack)
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        databaseRefListener.forEach {
+            it.first.removeEventListener(it.second)
+        }
+    }
+
 }
 
 sealed class AddYourselfUiState {

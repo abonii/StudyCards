@@ -66,12 +66,32 @@
                     android:text="@string/register_in_order_to"
                     android:textColor="@color/textColor"
                     android:textSize="@dimen/default_13sp" />
-
-                <com.google.android.gms.common.SignInButton
-                    android:id="@+id/google_sign_in"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/login_with_google"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="@{()->profileFragment.registerWithGmail()}" />
+                    android:layout_marginTop="@dimen/default_4dp"
+                    android:layout_marginHorizontal="@dimen/default_2dp"
+                    android:minHeight="@dimen/btn_min_height"
+                    android:onClick="@{()->profileFragment.registerWithGmail()}"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="@dimen/default_4dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="@dimen/first_page_btn_hor_margin"
+                        android:layout_marginVertical="@dimen/first_page_default_margin"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/helvetica_medium"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/google_sign"
+                        android:textColor="@color/textColor"
+                        android:textSize="@dimen/first_page_btn_sp"
+                        app:drawableStartCompat="@drawable/ic_google_g" />
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:layout_width="match_parent"

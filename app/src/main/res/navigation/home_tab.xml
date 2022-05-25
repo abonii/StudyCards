@@ -123,8 +123,8 @@
             android:id="@+id/action_inCategoryFragment_to_addEditCategoryFragment"
             app:destination="@id/addEditCategoryFragment" />
         <argument
-            android:name="categoryId"
-            app:argType="string" />
+            android:name="category"
+            app:argType="abm.co.studycards.domain.model.Category" />
     </fragment>
     <dialog
         android:id="@+id/selectGamesTypeDialogFragment"
@@ -240,7 +240,7 @@
             app:enterAnim="@anim/slide_out_left"
             app:exitAnim="@anim/stay_on_out_left"
             app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
     </dialog>
     <action
         android:id="@+id/action_global_confirmEndFragment"

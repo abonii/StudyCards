@@ -1,9 +1,9 @@
 package abm.co.studycards.ui.select_explore_category
 
 import abm.co.studycards.R
+import abm.co.studycards.databinding.FragmentSelectExploreCategoryBinding
 import abm.co.studycards.domain.model.Category
-import abm.co.studycards.databinding.FragmentSelectExploreSetBinding
-import abm.co.studycards.ui.home.CategoryUiState
+import abm.co.studycards.domain.model.ResultWrapper
 import abm.co.studycards.util.base.BaseDialogFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import android.content.res.Resources
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class SelectExploreCategory :
-    BaseDialogFragment<FragmentSelectExploreSetBinding>(R.layout.fragment_select_explore_set) {
+    BaseDialogFragment<FragmentSelectExploreCategoryBinding>(R.layout.fragment_select_explore_category) {
 
     private val viewModel: SelectExploreCategoryViewModel by viewModels()
     private lateinit var exploreSetAdapter: SelectExploreCategoryAdapter
@@ -49,18 +49,18 @@ class SelectExploreCategory :
         launchAndRepeatWithViewLifecycle(Lifecycle.State.CREATED) {
             viewModel.stateFlow.collectLatest {
                 when (it) {
-                    is CategoryUiState.Error -> {
-                        binding.error.text = getString(it.msg)
+                    is ResultWrapper.Error -> {
+                        binding.error.text = getString(it.res)
                         binding.error.isVisible = true
                         binding.progressBar.isVisible = false
                         binding.setsRv.isVisible = false
                     }
-                    CategoryUiState.Loading -> {
+                    ResultWrapper.Loading -> {
                         binding.error.isVisible = false
                         binding.progressBar.isVisible = true
                         binding.setsRv.isVisible = false
                     }
-                    is CategoryUiState.Success -> {
+                    is ResultWrapper.Success -> {
                         binding.error.isVisible = false
                         binding.progressBar.isVisible = false
                         binding.setsRv.isVisible = true
@@ -75,8 +75,8 @@ class SelectExploreCategory :
         super.onStart()
         dialog?.window?.run {
             setLayout(
-                (Resources.getSystem().displayMetrics.widthPixels * 0.9).toInt(),
-                ConstraintLayout.LayoutParams.WRAP_CONTENT
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),
+                (resources.displayMetrics.heightPixels * 0.4).toInt()
             )
             setBackgroundDrawableResource(R.drawable.round_corner)
         }

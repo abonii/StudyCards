@@ -2,67 +2,50 @@ package abm.co.studycards.ui.select_explore_category
 
 import abm.co.studycards.R
 import abm.co.studycards.domain.model.Category
-import abm.co.studycards.domain.repository.ServerCloudRepository
-import abm.co.studycards.ui.explore.ParentExploreUI
-import abm.co.studycards.ui.home.CategoryUiState
-import abm.co.studycards.util.Constants
+import abm.co.studycards.domain.model.ResultWrapper
+import abm.co.studycards.domain.usecases.AddExploreCategoryUseCase
+import abm.co.studycards.domain.usecases.GetExploreSetsUseCase
+import abm.co.studycards.domain.usecases.GetUserCategoriesUseCase
 import abm.co.studycards.util.base.BaseViewModel
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SelectExploreCategoryViewModel @Inject constructor(
-    private val firebaseRepository: ServerCloudRepository
+    getUserCategoriesUseCase: GetUserCategoriesUseCase,
+    private val getExploreSetsUseCase: GetExploreSetsUseCase,
+    private val addExploreCategoryUseCase: AddExploreCategoryUseCase
 ) : BaseViewModel() {
 
-    private val _stateFlow = MutableStateFlow<CategoryUiState>(CategoryUiState.Loading)
-    val stateFlow = _stateFlow.asStateFlow()
+    val stateFlow = getUserCategoriesUseCase()
 
-    private var theSetCategories: List<Category> = emptyList()
-
-    init {
-        fetchCategories()
-    }
+    private var userCategoriesId: List<String> = emptyList()
 
     fun fetchTheSetCategory(setId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            firebaseRepository.fetchExploreSets().collectLatest { listOfSets ->
-                listOfSets.forEach { parentExplore ->
-                    if (parentExplore is ParentExploreUI.SetUI && parentExplore.setId == setId) {
-                        Log.i(Constants.TAG, "ids are same}")
-                        theSetCategories = parentExplore.value.map { it.value }
-                        return@collectLatest
+            getExploreSetsUseCase().collectLatest { listOfSets ->
+                if (listOfSets is ResultWrapper.Success) {
+                    listOfSets.value.forEach { parentExplore ->
+                        if (parentExplore.id == setId) {
+                            userCategoriesId = parentExplore.categories.map { it.id }
+                            return@forEach
+                        }
                     }
                 }
             }
         }
     }
 
-    private fun fetchCategories() {
-        viewModelScope.launch(Dispatchers.IO) {
-            firebaseRepository.fetchUserCategories().collectLatest {
-                if(it.isNotEmpty()){
-                    _stateFlow.value = CategoryUiState.Success(it)
-                }else{
-                    _stateFlow.value = CategoryUiState.Error(R.string.empty_home_fragment)
-                }
-            }
-        }
-    }
-
     fun addUserCategoryToExplore(setId: String, category: Category) {
-        viewModelScope.launch {
-            if (!theSetCategories.contains(category)) {
-                firebaseRepository.addExploreCategory(setId, category)
-            } else {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (userCategoriesId.any { it == category.id }) {
                 makeToast(R.string.exists)
+            } else {
+                addExploreCategoryUseCase(setId, category)
             }
         }
     }

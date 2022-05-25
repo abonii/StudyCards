@@ -1,6 +1,6 @@
 package abm.co.studycards.data.repository
 
-import abm.co.studycards.data.model.ResultWrapper
+import abm.co.studycards.domain.model.ResultWrapper
 import abm.co.studycards.data.model.StudyCardsMapper
 import abm.co.studycards.data.network.OxfordApiService
 import abm.co.studycards.data.network.safeApiCall
@@ -10,8 +10,6 @@ import abm.co.studycards.di.qualifier.TypeEnum
 import abm.co.studycards.di.qualifier.YandexNetwork
 import abm.co.studycards.domain.model.OxfordResult
 import abm.co.studycards.domain.repository.DictionaryRepository
-import abm.co.studycards.util.Constants.TAG
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -40,15 +38,15 @@ class DictionaryRepositoryImp @Inject constructor(
 
     override suspend fun getYandexWord(
         word: String,
-        sl: String,
-        tl: String,
+        sourceLang: String,
+        targetLang: String,
         yandexApiKey: String
     ): ResultWrapper<String> =
         safeApiCall(Dispatchers.IO) {
             yandexApiService.getWordTranslations(
                 APIKey = yandexApiKey,
                 textToTranslate = word,
-                lang = "$sl-$tl"
+                lang = "$sourceLang-$targetLang"
             ).text?.joinToString(", ") ?: ""
         }
 }

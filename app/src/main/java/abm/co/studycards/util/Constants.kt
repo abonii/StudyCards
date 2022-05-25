@@ -3,6 +3,7 @@ package abm.co.studycards.util
 import com.android.billingclient.api.BillingClient.SkuType.INAPP
 
 object Constants {
+    const val TAG_ERROR = "IM_CHECKING_ERROR"
     const val TAG = "IM_CHECKING"
     const val APP_NAME = "StudyCards: Vocabulary Builder"
     const val ADJUST_DAY_BOUGHT_USER = 5

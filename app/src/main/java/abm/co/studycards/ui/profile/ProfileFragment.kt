@@ -3,9 +3,9 @@ package abm.co.studycards.ui.profile
 import abm.co.studycards.BuildConfig
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
+import abm.co.studycards.databinding.FragmentProfileBinding
 import abm.co.studycards.domain.model.AvailableLanguages
 import abm.co.studycards.domain.model.Language
-import abm.co.studycards.databinding.FragmentProfileBinding
 import abm.co.studycards.helpers.LocaleHelper
 import abm.co.studycards.ui.login.LoginActivity
 import abm.co.studycards.util.Constants.DEV_ACCOUNT_LINK
@@ -16,7 +16,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -61,7 +60,6 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
             viewmodel = viewModel
             version.text = getString(R.string.version, BuildConfig.VERSION_NAME)
             setLanguage()
-            initGoogleSignBtn()
         }
         setStatusBar()
         setListeners()
@@ -100,15 +98,6 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(R.layout.fra
     private fun setStatusBar() {
         requireActivity().window.statusBarColor = resources.getColor(R.color.background, null)
     }
-
-    private fun FragmentProfileBinding.initGoogleSignBtn() {
-        googleSignIn.getChildAt(0)?.let {
-            (it as TextView).text = getString(R.string.google_sign)
-            val smaller = it.paddingLeft.coerceAtMost(it.paddingRight)
-            it.setPadding(smaller, it.paddingTop, smaller, it.paddingBottom)
-        }
-    }
-
 
     private fun onSelectSystemLanguage(language: Language) {
         viewModel.setAppLanguage(language)

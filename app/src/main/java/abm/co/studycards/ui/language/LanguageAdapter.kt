@@ -1,7 +1,7 @@
 package abm.co.studycards.ui.language
 
-import abm.co.studycards.domain.model.Language
 import abm.co.studycards.databinding.ItemLanguageBinding
+import abm.co.studycards.domain.model.Language
 import abm.co.studycards.ui.select_language_anywhere.LanguageSelectable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -24,7 +24,7 @@ class LanguageAdapter(
                     (parent.context), parent, false
             )
         return LanguageViewHolder(binding) { position ->
-            if (currentTime + 100 < System.currentTimeMillis()){
+            if (currentTime + 100 < System.currentTimeMillis()) {
                 changeSelectedPosition(position)
                 onClickWithCode(getItem(position).language, isTargetLanguage)
             }
@@ -47,24 +47,16 @@ class LanguageAdapter(
         position: Int,
         payloads: MutableList<Any>
     ) {
-        if (payloads.isNotEmpty()) {
-            when (payloads.first()) {
-                CLICKED -> {
-                    getItem(position).isSelected = true
-                }
-                NOT_SELECTED -> {
-                    getItem(position).isSelected = false
-                }
-            }
-        }
         super.onBindViewHolder(holder, position, payloads)
     }
 
     private fun changeSelectedPosition(position: Int) {
         selectedItemPos = position
         if (lastItemSelectedPos != -1 && lastItemSelectedPos != selectedItemPos) {
+            getItem(lastItemSelectedPos).isSelected = false
             notifyItemChanged(lastItemSelectedPos, NOT_SELECTED)
         }
+        getItem(position).isSelected = true
         notifyItemChanged(selectedItemPos, CLICKED)
         lastItemSelectedPos = position
     }
