@@ -1,8 +1,8 @@
 package abm.co.studycards
 
 import abm.co.studycards.domain.Prefs
-import abm.co.studycards.domain.repository.PricingRepository
 import abm.co.studycards.domain.usecases.AddUserNameUseCase
+import abm.co.studycards.domain.usecases.DoStartPurchaseConnectionUseCase
 import abm.co.studycards.domain.usecases.UpdateUserInfoUseCase
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,11 +17,11 @@ class MainViewModel @Inject constructor(
     val prefs: Prefs,
     private val addUserNameUseCase: AddUserNameUseCase,
     private val updateUserInfoUseCase: UpdateUserInfoUseCase,
-    pricingRepository: PricingRepository
+    startPurchaseConnectionUseCase: DoStartPurchaseConnectionUseCase
 ) : BaseViewModel() {
 
     init {
-        pricingRepository.startConnection()
+        startPurchaseConnectionUseCase()
         if (getCurrentUser()?.isAnonymous == false && getCurrentUser()?.isEmailVerified == false) {
             getCurrentUser()?.reload()
         }

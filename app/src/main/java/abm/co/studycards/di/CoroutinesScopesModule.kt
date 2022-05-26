@@ -10,13 +10,11 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
 object CoroutinesScopesModule {
 
-    @Singleton
     @Provides
     fun provideCoroutineExceptionHandler(): CoroutineExceptionHandler {
         return CoroutineExceptionHandler { _, exception ->
@@ -24,7 +22,6 @@ object CoroutinesScopesModule {
         }
     }
 
-    @Singleton
     @Provides
     fun providesCoroutineScope(coroutineHandler: CoroutineExceptionHandler): CoroutineScope {
         return CoroutineScope(SupervisorJob() + Dispatchers.IO + coroutineHandler)

@@ -6,8 +6,8 @@ data class UserInfoDto(
     val translateCountsUpdateTime: Long = 0,
     val email: String = "",
     val selectedLanguages: String = ""
-){
-    companion object{
+) {
+    companion object {
         const val CAN_TRANSLATE = "translateCounts"
         const val TRANSLATE_COUNT_UPDATE_TIME = "translateCountsUpdateTime"
         const val SELECTED_LANGUAGES = "selectedLanguages"

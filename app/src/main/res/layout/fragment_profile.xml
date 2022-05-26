@@ -88,7 +88,7 @@
                         android:gravity="center"
                         android:maxLines="1"
                         android:text="@string/google_sign"
-                        android:textColor="@color/textColor"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/first_page_btn_sp"
                         app:drawableStartCompat="@drawable/ic_google_g" />
                 </com.google.android.material.card.MaterialCardView>

@@ -218,7 +218,7 @@ class FirebaseRepositoryImp @Inject constructor(
         return Triple(categorySharedFlow.asSharedFlow(), ref, listener)
     }
 
-    private val userInfoStateFlow = MutableStateFlow(UserInfo("", 0, 0, "", ""))
+    private val userInfoStateFlow = MutableStateFlow(UserInfo("", 0, 0, "", emptyList()))
     override fun fetchUserInfo(): StateFlow<UserInfo> {
         if (userInfoStateFlow.value.translateCountsUpdateTime > 0)
             return userInfoStateFlow.asStateFlow()
@@ -247,7 +247,7 @@ class FirebaseRepositoryImp @Inject constructor(
                 snapshot.getValue<ConfigDto>()?.let {
                     _config = mapper.mapConfigDtoToModel(it)
                 }
-                updateUserInfoIfPossible(config)
+                updateUserInfoIfPossible()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -257,54 +257,13 @@ class FirebaseRepositoryImp @Inject constructor(
         })
     }
 
-    private fun updateUserInfoIfPossible(config: Config) {
+    private fun updateUserInfoIfPossible() {
         userDbRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 coroutineScope.launch {
-                    val count = userDbRef.child(CAN_TRANSLATE)
-                    val time = userDbRef.child(TRANSLATE_COUNT_UPDATE_TIME)
-                    val startOfToday = Calendar.getInstance().toStartOfTheDay()
-                    val yesterdayCalendar = Calendar.getInstance().toDay(-1)
-                    if (getCurrentUser()?.isAnonymous == false
-                        && !snapshot.child(EMAIL).exists()
-                    ) {
-                        userDbRef.child(EMAIL).setValue(getCurrentUser()?.email)
-                    }
-                    if (!snapshot.child(CAN_TRANSLATE).exists()) {
-                        when (getCurrentUser()?.isAnonymous) {
-                            true -> {
-                                count.setValue(config.translateCountAnonymous)
-                            }
-                            else -> {
-                                count.setValue(config.translateCount)
-                            }
-                        }
-                    }
-                    if (!snapshot.child(TRANSLATE_COUNT_UPDATE_TIME).exists()) {
-                        time.setValue(startOfToday.timeInMillis)
-                    } else if (snapshot.child(TRANSLATE_COUNT_UPDATE_TIME).value != null
-                        && (snapshot.value as Map<*, *>)[TRANSLATE_COUNT_UPDATE_TIME] as Long
-                        <= yesterdayCalendar.timeInMillis
-                    ) {
-                        userDbRef.updateChildren(mapOf(TRANSLATE_COUNT_UPDATE_TIME to startOfToday.timeInMillis))
-                        val currentTimes =
-                            snapshot.child(CAN_TRANSLATE).value as Long
-                        userDbRef.updateChildren(
-                            mapOf(
-                                CAN_TRANSLATE to when {
-                                    currentTimes > config.translateCount -> {
-                                        currentTimes + Constants.ADJUST_DAY_BOUGHT_USER
-                                    }
-                                    getCurrentUser()?.isAnonymous == true -> {
-                                        config.translateCountAnonymous
-                                    }
-                                    else -> {
-                                        config.translateCount
-                                    }
-                                }
-                            )
-                        )
-                    }
+                    setEmailIfNotExist(snapshot)
+                    setTranslateCountIfNotExist(snapshot)
+                    checkAndUpdateTranslateCountAndTime(snapshot)
                 }
             }
 
@@ -313,7 +272,64 @@ class FirebaseRepositoryImp @Inject constructor(
                 Log.e(TAG_ERROR, "onCancelled: ${error.message}")
             }
         })
-    }    //TODO Modify
+    }
+
+    private fun checkAndUpdateTranslateCountAndTime(snapshot: DataSnapshot) {
+        val time = userDbRef.child(TRANSLATE_COUNT_UPDATE_TIME)
+        val startOfToday = Calendar.getInstance().toStartOfTheDay()
+        val yesterdayCalendar = Calendar.getInstance().toDay(-1)
+        if (!snapshot.child(TRANSLATE_COUNT_UPDATE_TIME).exists()) {
+            time.setValue(startOfToday.timeInMillis)
+        } else if (snapshot.child(TRANSLATE_COUNT_UPDATE_TIME).value != null
+            && (snapshot.value as Map<*, *>)[TRANSLATE_COUNT_UPDATE_TIME] as Long
+            <= yesterdayCalendar.timeInMillis
+        ) {
+            val currentTranslateCounts =
+                snapshot.child(CAN_TRANSLATE).value as Long
+            updateTranslateCountAndTime(currentTranslateCounts, startOfToday.timeInMillis)
+        }
+    }
+
+    private fun updateTranslateCountAndTime(
+        currentTranslateCounts: Long, updatedTime: Long
+    ) {
+        userDbRef.updateChildren(mapOf(TRANSLATE_COUNT_UPDATE_TIME to updatedTime))
+        userDbRef.updateChildren(
+            mapOf(
+                CAN_TRANSLATE to when {
+                    currentTranslateCounts > config.translateCount -> {
+                        currentTranslateCounts + Constants.ADJUST_DAY_BOUGHT_USER
+                    }
+                    getCurrentUser()?.isAnonymous == true ->
+                        config.translateCountAnonymous
+
+                    else -> config.translateCount
+                }
+            )
+        )
+    }
+
+    private fun setTranslateCountIfNotExist(snapshot: DataSnapshot) {
+        val count = userDbRef.child(CAN_TRANSLATE)
+        if (!snapshot.child(CAN_TRANSLATE).exists()) {
+            when (getCurrentUser()?.isAnonymous) {
+                true -> {
+                    count.setValue(config.translateCountAnonymous)
+                }
+                else -> {
+                    count.setValue(config.translateCount)
+                }
+            }
+        }
+    }
+
+    private fun setEmailIfNotExist(snapshot: DataSnapshot) {
+        if (getCurrentUser()?.isAnonymous == false
+            && !snapshot.child(EMAIL).exists()
+        ) {
+            userDbRef.child(EMAIL).setValue(getCurrentUser()?.email)
+        }
+    }
 
     override suspend fun updateCategoryName(category: Category) {
         withContext(dispatcher) {
@@ -337,6 +353,7 @@ class FirebaseRepositoryImp @Inject constructor(
     override suspend fun deleteExploreCategory(setId: String, category: Category) {
         withContext(dispatcher) {
             exploreDbRef.child(setId).child(CATEGORIES_REF).child(category.id).removeValue()
+            delay(50)
         }
     }
 

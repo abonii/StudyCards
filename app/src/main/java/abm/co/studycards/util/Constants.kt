@@ -3,12 +3,14 @@ package abm.co.studycards.util
 import com.android.billingclient.api.BillingClient.SkuType.INAPP
 
 object Constants {
+
     const val TAG_ERROR = "IM_CHECKING_ERROR"
     const val TAG = "IM_CHECKING"
     const val APP_NAME = "StudyCards: Vocabulary Builder"
     const val ADJUST_DAY_BOUGHT_USER = 5
     const val ONE_TIME_CYCLE_GAME = 5
     const val VOCABULARY_NUM_TABS = 3
+    const val PROFILE_DEF_IMAGE = "https://wallpaperaccess.com/full/2329346.jpg"
 
     const val BASE_URL_OXFORD = "https://od-api.oxforddictionaries.com:443/api/v2/"
     const val BASE_URL_YANDEX = "https://translate.yandex.net/api/v1.5/tr.json/"

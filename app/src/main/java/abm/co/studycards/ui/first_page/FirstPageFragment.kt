@@ -39,6 +39,8 @@ class FirstPageFragment :
                     viewModel.setLoading(false)
                     e.message?.let { toast(it) }
                 }
+            }else{
+                viewModel.setLoading(false)
             }
         }
 

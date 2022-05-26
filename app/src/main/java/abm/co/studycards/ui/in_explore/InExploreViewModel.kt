@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -91,9 +92,10 @@ class InExploreViewModel @Inject constructor(
         }
     }
 
-    fun deleteTheExploreCategory() {
-        viewModelScope.launch(dispatcher) {
-            deleteExploreCategoryUseCase(setId, category)
+    suspend fun deleteTheExploreCategory() {
+        withContext(Dispatchers.IO) {
+            _stateFlow.value = InExploreUiState.Loading
+            deleteExploreCategoryUseCase.invoke(setId, category)
         }
     }
 

@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.*
@@ -88,29 +87,28 @@ class InCategoryFragment :
     }
 
     private fun initTextToSpeech() {
-        lifecycleScope.launch(Dispatchers.Default) {
-            delay(500)
-            textToSpeech = TextToSpeech(requireContext()) {
-                if (it != TextToSpeech.ERROR) {
-                    viewModel.isLanguageInstalled =
-                        isLanguageAvailable(Locale(viewModel.targetLang))
-                }
+        textToSpeech = TextToSpeech(requireContext()) {
+            if (it != TextToSpeech.ERROR) {
+                isLanguageAvailable(Locale(viewModel.targetLang))
             }
         }
     }
 
-    private fun isLanguageAvailable(language: Locale): Boolean {
-        var available = false
-        when (textToSpeech?.isLanguageAvailable(language)) {
-            TextToSpeech.LANG_AVAILABLE, TextToSpeech.LANG_COUNTRY_AVAILABLE, TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE -> {
-                textToSpeech?.language = language
-                val voice = textToSpeech?.voice
-                val features = voice?.features
-                if (features != null && !features.contains(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED))
-                    available = true
+    private fun isLanguageAvailable(language: Locale) {
+        lifecycleScope.launch(Dispatchers.Default) {
+            var available = false
+            when (textToSpeech?.isLanguageAvailable(language)) {
+                TextToSpeech.LANG_AVAILABLE, TextToSpeech.LANG_COUNTRY_AVAILABLE,
+                TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE -> {
+                    textToSpeech?.language = language
+                    val voice = textToSpeech?.voice
+                    val features = voice?.features
+                    if (features != null && !features.contains(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED))
+                        available = true
+                }
             }
+            viewModel.isLanguageInstalled = available
         }
-        return available
     }
 
     private fun setUpRecyclerView() {

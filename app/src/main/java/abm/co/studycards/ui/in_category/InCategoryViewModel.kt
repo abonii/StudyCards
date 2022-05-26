@@ -8,9 +8,7 @@ import abm.co.studycards.domain.model.Word
 import abm.co.studycards.domain.usecases.AddUserWordUseCase
 import abm.co.studycards.domain.usecases.DeleteUserWordUseCase
 import abm.co.studycards.domain.usecases.GetUserCategoryUseCase
-import abm.co.studycards.util.Constants.TAG
 import abm.co.studycards.util.base.BaseViewModel
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -76,9 +74,7 @@ class InCategoryViewModel @Inject constructor(
     }
 
     fun insertWord(word: Word) {
-        Log.i(TAG, "insertWord: ")
         viewModelScope.launch(dispatcher) {
-            Log.i(TAG, "insertWord: coroutine")
             addUserWordUseCase(word)
         }
     }

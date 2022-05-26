@@ -5,5 +5,5 @@ data class UserInfo(
     val translateCounts: Long,
     val translateCountsUpdateTime: Long,
     val email: String,
-    val selectedLanguages: String
+    val selectedLanguages: List<String>
 )

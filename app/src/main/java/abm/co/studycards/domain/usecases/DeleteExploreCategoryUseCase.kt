@@ -9,7 +9,7 @@ import javax.inject.Inject
 class DeleteExploreCategoryUseCase @Inject constructor(
     private val serverCloudRepository: ServerCloudRepository
 ) {
-    suspend operator fun invoke(setId: String, category: Category) {
+    suspend operator fun invoke(setId: String, category: Category) =
         serverCloudRepository.deleteExploreCategory(setId, category)
-    }
+
 }

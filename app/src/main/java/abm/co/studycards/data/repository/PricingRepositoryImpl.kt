@@ -31,20 +31,22 @@ class PricingRepositoryImpl @Inject constructor(
     private val _skusStateFlow = MutableStateFlow<List<SkuDetails>>(emptyList())
     override val skusStateFlow: StateFlow<List<SkuDetails>> = _skusStateFlow.asStateFlow()
 
-    override var billingClient: BillingClient = BillingClient
+    private var _billingClient: BillingClient = BillingClient
         .newBuilder(context.applicationContext)
         .enablePendingPurchases()
         .setListener(this)
         .build()
 
+    override val billingClient get() = _billingClient
+
     override fun startConnection() {
         coroutineScope.launch(Dispatchers.IO) {
-            billingClient.startConnection(this@PricingRepositoryImpl)
+            _billingClient.startConnection(this@PricingRepositoryImpl)
         }
     }
 
     private fun listenForPurchase() {
-        billingClient.queryPurchasesAsync(PRODUCT_TYPE) { result, purchases ->
+        _billingClient.queryPurchasesAsync(PRODUCT_TYPE) { result, purchases ->
             coroutineScope.launch(Dispatchers.IO) {
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) {
                     verifySubscriptions(purchases)
@@ -97,11 +99,11 @@ class PricingRepositoryImpl @Inject constructor(
         val consumeParams = ConsumeParams.newBuilder()
             .setPurchaseToken(purchase.purchaseToken)
             .build()
-        billingClient.consumeAsync(consumeParams) { _, _ -> }
+        _billingClient.consumeAsync(consumeParams) { _, _ -> }
     }
 
     private fun getProducts(params: SkuDetailsParams) {
-        billingClient.querySkuDetailsAsync(params) { _, products ->
+        _billingClient.querySkuDetailsAsync(params) { _, products ->
             if (products != null) {
                 coroutineScope.launch(Dispatchers.IO) {
                     products.sortBy { it.price }

@@ -1,5 +1,6 @@
 package abm.co.studycards.data.model
 
+import abm.co.studycards.data.model.UserInfoDto.Companion.SELECTED_LANGUAGES_SPLITTER
 import abm.co.studycards.data.model.oxford.EntryDto
 import abm.co.studycards.data.model.oxford.ResultsEntryDto
 import abm.co.studycards.data.model.oxford.RetrieveEntryDto
@@ -30,7 +31,7 @@ class StudyCardsMapper @Inject constructor() {
         translateCounts = dto.translateCounts,
         translateCountsUpdateTime = dto.translateCountsUpdateTime,
         email = dto.email,
-        selectedLanguages = dto.selectedLanguages
+        selectedLanguages = dto.selectedLanguages.split(SELECTED_LANGUAGES_SPLITTER)
     )
 
     fun mapCategoryDtoToModel(dto: CategoryDto) = Category(

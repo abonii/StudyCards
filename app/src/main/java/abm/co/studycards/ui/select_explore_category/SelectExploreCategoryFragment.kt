@@ -6,9 +6,7 @@ import abm.co.studycards.domain.model.Category
 import abm.co.studycards.domain.model.ResultWrapper
 import abm.co.studycards.util.base.BaseDialogFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
-import android.content.res.Resources
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -16,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class SelectExploreCategory :
+class SelectExploreCategoryFragment :
     BaseDialogFragment<FragmentSelectExploreCategoryBinding>(R.layout.fragment_select_explore_category) {
 
     private val viewModel: SelectExploreCategoryViewModel by viewModels()
@@ -61,10 +59,10 @@ class SelectExploreCategory :
                         binding.setsRv.isVisible = false
                     }
                     is ResultWrapper.Success -> {
+                        exploreSetAdapter.submitList(it.value)
                         binding.error.isVisible = false
                         binding.progressBar.isVisible = false
                         binding.setsRv.isVisible = true
-                        exploreSetAdapter.submitList(it.value)
                     }
                 }
             }
@@ -76,7 +74,7 @@ class SelectExploreCategory :
         dialog?.window?.run {
             setLayout(
                 (resources.displayMetrics.widthPixels * 0.9).toInt(),
-                (resources.displayMetrics.heightPixels * 0.4).toInt()
+                (resources.displayMetrics.heightPixels * 0.35).toInt()
             )
             setBackgroundDrawableResource(R.drawable.round_corner)
         }
@@ -93,7 +91,7 @@ class SelectExploreCategory :
 
         @JvmStatic
         fun newInstance(setId: String) =
-            SelectExploreCategory().apply {
+            SelectExploreCategoryFragment().apply {
                 arguments = Bundle().apply {
                     putString(SET_ID_PARAM, setId)
                 }

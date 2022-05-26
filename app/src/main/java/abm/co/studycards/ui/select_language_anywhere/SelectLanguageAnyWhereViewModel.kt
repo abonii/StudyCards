@@ -1,7 +1,6 @@
 package abm.co.studycards.ui.select_language_anywhere
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.UserInfoDto.Companion.SELECTED_LANGUAGES_SPLITTER
 import abm.co.studycards.domain.Prefs
 import abm.co.studycards.domain.model.AvailableLanguages
 import abm.co.studycards.domain.model.f
@@ -35,7 +34,7 @@ class SelectLanguageAnyWhereViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getUserInfoUseCase().collectLatest {
-                val selectedLang = it.selectedLanguages.split(SELECTED_LANGUAGES_SPLITTER)
+                val selectedLang = it.selectedLanguages
                 val selectedArray = ArrayList<String>(selectedLang)
                 if (!selectedLang.contains(prefs.getTargetLanguage())) {
                     selectedArray.add(prefs.getTargetLanguage())

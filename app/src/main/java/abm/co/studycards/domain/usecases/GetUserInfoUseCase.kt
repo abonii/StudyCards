@@ -10,7 +10,5 @@ import javax.inject.Inject
 class GetUserInfoUseCase @Inject constructor(
     private val serverCloudRepository: ServerCloudRepository
 ) {
-    operator fun invoke(): StateFlow<UserInfo> {
-        return serverCloudRepository.fetchUserInfo()
-    }
+    operator fun invoke(): StateFlow<UserInfo> = serverCloudRepository.fetchUserInfo()
 }
