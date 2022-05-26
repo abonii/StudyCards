@@ -1,11 +1,9 @@
 package abm.co.studycards.ui.profile
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.Language
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants.CAN_TRANSLATE_TIME_EVERY_DAY
-import abm.co.studycards.util.Constants.NAME_REF
+import abm.co.studycards.domain.Prefs
+import abm.co.studycards.domain.model.Language
+import abm.co.studycards.domain.usecases.*
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.firebaseError
 import androidx.lifecycle.viewModelScope
@@ -13,25 +11,25 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val prefs: Prefs,
     val googleSignInClient: GoogleSignInClient,
-    private val firebaseRepository: ServerCloudRepository,
+    currentUserUseCase: GetCurrentUserUseCase,
+    private val firebaseAuthUseCase: GetFirebaseAuthUseCase,
+    private val deleteUserUseCase: DeleteUserUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase
 ) : BaseViewModel() {
 
-    private val currentUser = firebaseRepository.getFirebaseAuth().currentUser
+    private val currentUser = currentUserUseCase()
     val appLanguage = prefs.getAppLanguage()
     var email = currentUser?.email ?: ""
         set(value) {
@@ -61,30 +59,20 @@ class ProfileViewModel @Inject constructor(
 
     val isAnonymousOrVerified =
         MutableStateFlow(
-            currentUser?.isAnonymous == true
-                    || currentUser?.isEmailVerified == true
+            currentUser?.isAnonymous == true || currentUser?.isEmailVerified == true
         )
 
     val translationCount = MutableStateFlow("0")
 
     init {
-        FirebaseAuth.getInstance().useAppLanguage()
-        firebaseRepository.getUserReference()
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        if (snapshot.child(NAME_REF).exists()) {
-                            userName.value = (snapshot.child(NAME_REF).value as String?).toString()
-                        }
-                        translationCount.value =
-                            (snapshot.child(CAN_TRANSLATE_TIME_EVERY_DAY).value as Long?).toString()
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    translationCount.value = "0"
-                }
-            })
+        viewModelScope.launch(Dispatchers.IO) {
+            FirebaseAuth.getInstance().useAppLanguage()
+            getUserInfoUseCase().collectLatest {
+                userName.value = it.name
+                emailDisplay.value = it.email
+                translationCount.value = it.translateCounts.toString()
+            }
+        }
     }
 
     fun setAppLanguage(language: Language) {
@@ -95,11 +83,13 @@ class ProfileViewModel @Inject constructor(
         val credential = EmailAuthProvider.getCredential(email, password)
         currentUser?.linkWithCredential(credential)
             ?.addOnCompleteListener {
-                if (it.isSuccessful) {
-                    sendVerificationEmail()
-                    updateUser()
-                } else {
-                    makeToast(firebaseError(it.exception))
+                viewModelScope.launch {
+                    if (it.isSuccessful) {
+                        sendVerificationEmail()
+                        updateUser()
+                    } else {
+                        makeToast(firebaseError(it.exception))
+                    }
                 }
             }
     }
@@ -108,8 +98,6 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (currentUser != null) {
                 currentUser.reload()
-                userName.value = currentUser.displayName ?: ""
-                emailDisplay.value = currentUser.email ?: ""
                 userPhotoUrl.value = currentUser.photoUrl
                 isAnonymous.value = currentUser.isAnonymous
                 isVerified.value = currentUser.isEmailVerified
@@ -123,10 +111,12 @@ class ProfileViewModel @Inject constructor(
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         currentUser?.linkWithCredential(credential)
             ?.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    updateUser()
-                } else {
-                    makeToast(firebaseError(task.exception))
+                viewModelScope.launch {
+                    if (task.isSuccessful) {
+                        updateUser()
+                    } else {
+                        makeToast(firebaseError(task.exception))
+                    }
                 }
             }
     }
@@ -155,13 +145,13 @@ class ProfileViewModel @Inject constructor(
 
     fun removeDatabaseOfUser(onFinish: () -> Unit) {
         viewModelScope.launch {
-            firebaseRepository.getUserReference().removeValue()
+            deleteUserUseCase()
             signOut(onFinish)
         }
     }
 
     private fun signOut(onFinish: () -> Unit) {
-        firebaseRepository.getFirebaseAuth().signOut()
+        firebaseAuthUseCase().signOut()
         googleSignInClient.signOut()
             .addOnCompleteListener {
                 currentUser?.delete()
@@ -181,7 +171,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun simpleLogout(onFinish: () -> Unit) {
-        firebaseRepository.getFirebaseAuth().signOut()
+        firebaseAuthUseCase().signOut()
         googleSignInClient.signOut()
             .addOnCompleteListener {
                 onFinish.invoke()

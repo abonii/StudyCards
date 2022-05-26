@@ -28,6 +28,21 @@
         <!--progressbar-->
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
+
+    <!--dialog width wrapper-->
+    <style name="WrapContentDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="windowMinWidthMajor">0%</item>
+        <item name="windowMinWidthMinor">0%</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="CircularDeterminateProgressBar">
+        <item name="android:indeterminateOnly">true</item>
+        <item name="android:progressDrawable">@drawable/progress_anim</item>
+    </style>
+
     <!--bottomSheet-->
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowSoftInputMode">adjustResize|stateAlwaysVisible</item>

@@ -1,9 +1,9 @@
 package abm.co.studycards.ui.language
 
-import abm.co.studycards.data.model.AvailableLanguages
-import abm.co.studycards.data.model.Language
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.ServerCloudRepository
+import abm.co.studycards.domain.Prefs
+import abm.co.studycards.domain.model.AvailableLanguages
+import abm.co.studycards.domain.model.Language
+import abm.co.studycards.domain.usecases.AddSelectedLanguageUseCase
 import abm.co.studycards.ui.select_language_anywhere.LanguageSelectable
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,11 +15,11 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectLanguageViewModel @Inject constructor(
     val prefs: Prefs,
-    val firebaseRepository: ServerCloudRepository
+    private val addSelectedLanguageUseCase: AddSelectedLanguageUseCase
 ) : BaseViewModel() {
 
-    var nativeLanguageCode = ""
-    var targetLanguageCode = ""
+    private var nativeLanguageCode = ""
+    private var targetLanguageCode = ""
 
     fun getAvailableLanguages() = AvailableLanguages.availableLanguages.map {
         LanguageSelectable(it, false)
@@ -29,7 +29,7 @@ class SelectLanguageViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             prefs.setSourceLanguage(nativeLanguageCode)
             prefs.setTargetLanguage(targetLanguageCode)
-            firebaseRepository.setSelectedLanguages(nativeLanguageCode, targetLanguageCode)
+            addSelectedLanguageUseCase(nativeLanguageCode, targetLanguageCode)
         }
     }
 

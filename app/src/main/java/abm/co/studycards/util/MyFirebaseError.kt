@@ -1,7 +1,7 @@
 package abm.co.studycards.util
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.MyFirebaseError
+import abm.co.studycards.domain.model.MyFirebaseError
 import androidx.annotation.StringRes
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuthException

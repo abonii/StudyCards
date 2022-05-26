@@ -1,9 +1,10 @@
 package abm.co.studycards.ui.in_category
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.LearnOrKnown
-import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.domain.model.LearnOrKnown
 import abm.co.studycards.databinding.ItemWordBinding
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.util.Constants.TRANSLATIONS_SEPARATOR
 import abm.co.studycards.util.getMyColor
 import android.content.res.ColorStateList
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +27,7 @@ class WordViewHolder(
     fun bind(currentItem: Word) = binding.run {
         stick.backgroundTintList = getStickBackgroundTint(currentItem)
         text.text = currentItem.name
-        translation.text = currentItem.translations.joinToString(", ")
+        translation.text = currentItem.translations.joinToString(TRANSLATIONS_SEPARATOR)
     }
 
     private fun getStickBackgroundTint(currentItem: Word): ColorStateList {

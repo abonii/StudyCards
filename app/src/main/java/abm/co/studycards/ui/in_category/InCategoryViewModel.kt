@@ -1,102 +1,98 @@
 package abm.co.studycards.ui.in_category
 
-import abm.co.studycards.data.model.vocabulary.Category
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants.WORDS_REF
+import abm.co.studycards.R
+import abm.co.studycards.domain.Prefs
+import abm.co.studycards.domain.model.Category
+import abm.co.studycards.domain.model.ResultWrapper
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.domain.usecases.AddUserWordUseCase
+import abm.co.studycards.domain.usecases.DeleteUserWordUseCase
+import abm.co.studycards.domain.usecases.GetUserCategoryUseCase
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.core.App
-import abm.co.studycards.util.firebaseError
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class InCategoryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    firebaseRepository: ServerCloudRepository,
+    private val deleteUserWordUseCase: DeleteUserWordUseCase,
+    private val addUserWordUseCase: AddUserWordUseCase,
+    private val getUserCategoryUseCase: GetUserCategoryUseCase,
     prefs: Prefs,
 ) : BaseViewModel() {
 
     private val dispatcher = Dispatchers.IO
-    private val categoriesDbRef = firebaseRepository.getCategoriesReference()
 
-    var categoryId = savedStateHandle.get<String>("categoryId")!!
-    var categoryName: String = ""
-    private val _categoryStateFlow = MutableStateFlow<Category?>(null)
-    val categoryStateFlow = _categoryStateFlow.asStateFlow()
+    var category = savedStateHandle.get<Category>("category")!!
 
     private val _stateFlow =
-        MutableStateFlow<InCategoryUiState>(InCategoryUiState.Loading)
+        MutableStateFlow<InCategoryUiState>(InCategoryUiState.Success(emptyList()))
     val stateFlow = _stateFlow.asStateFlow()
 
-    private val thisCategoryRef = categoriesDbRef.child(categoryId)
-    private val wordsRef = thisCategoryRef.child(WORDS_REF)
+    private val _categoryStateFlow = MutableStateFlow(category)
+    val categoryStateFlow = _categoryStateFlow.asStateFlow()
 
     val targetLang = prefs.getTargetLanguage()
     var isLanguageInstalled = false
 
+    private var databaseRef: DatabaseReference? = null
+    private var databaseListener: ValueEventListener? = null
+
     init {
-        viewModelScope.launch {
-            wordsRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    viewModelScope.launch(dispatcher) {
-                        val items = mutableListOf<Word>()
-                        snapshot.children.forEach {
-                            it.getValue(Word::class.java)?.let { it1 -> items.add(it1) }
+        viewModelScope.launch(dispatcher) {
+            val theCategory = getUserCategoryUseCase(category.id)
+            databaseRef = theCategory.second
+            databaseListener = theCategory.third
+            theCategory.first.collectLatest { wrapper ->
+                when (wrapper) {
+                    is ResultWrapper.Error -> {
+                        _stateFlow.value = InCategoryUiState.Error(wrapper.res)
+                    }
+                    is ResultWrapper.Success -> {
+                        wrapper.value?.let {
+                            _categoryStateFlow.value = it
+                            if (it.words.isEmpty()) {
+                                _stateFlow.value =
+                                    InCategoryUiState.Error(R.string.empty_in_category)
+                            } else _stateFlow.value = InCategoryUiState.Success(it.words)
                         }
-                        delay(400)
-                        _stateFlow.value = InCategoryUiState.Success(items)
                     }
+                    else -> {}
                 }
-
-                override fun onCancelled(error: DatabaseError) {
-                    _stateFlow.value = InCategoryUiState.Error(firebaseError(error.code))
-                }
-            })
-            thisCategoryRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.getValue(Category::class.java)?.let {
-                        _categoryStateFlow.value = it
-                        categoryName = it.mainName
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    _stateFlow.value = InCategoryUiState.Error(firebaseError(error.code))
-                }
-            })
+            }
         }
     }
 
     fun insertWord(word: Word) {
         viewModelScope.launch(dispatcher) {
-            val ref = categoriesDbRef.child(word.categoryID).child(WORDS_REF).push()
-            ref.setValue(word.copy(wordId = ref.key ?: "empty-key"))
+            addUserWordUseCase(word)
         }
     }
 
     fun deleteWord(word: Word) {
         viewModelScope.launch(dispatcher) {
-            categoriesDbRef.child(word.categoryID).child(WORDS_REF).child(word.wordId).removeValue()
+            deleteUserWordUseCase(word)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        databaseListener?.let { databaseRef?.removeEventListener(it) }
     }
 
 }
 
 sealed class InCategoryUiState {
-    data class Success(val value: List<Word>) : InCategoryUiState()
-    object Loading : InCategoryUiState()
+    data class Success(val category: List<Word>) : InCategoryUiState()
     data class Error(@StringRes val msg: Int) : InCategoryUiState()
 }

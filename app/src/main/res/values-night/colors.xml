@@ -7,6 +7,7 @@
     <color name="second_color">#222222</color>
     <color name="third_color">#3B3B3B</color>
     <color name="lighter_darker">#636363</color>
+    <color name="dialog_background">#B3FFFFFF</color>
     <color name="ellipse">#2A2A2A</color>
     <color name="border">#60151515</color>
     <color name="color_itself">#000000</color>

@@ -1,9 +1,9 @@
 package abm.co.studycards.ui.vocabulary
 
-import abm.co.studycards.data.model.LearnOrKnown
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.model.vocabulary.translationsToString
+import abm.co.studycards.domain.model.LearnOrKnown
 import abm.co.studycards.databinding.ItemVocabularyTabBinding
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.util.GeneralBindingAdapters.setImageWithGlide
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -2,10 +2,10 @@ package abm.co.studycards.ui.games.rightleft
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.ConfirmText
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.FragmentToRightOrLeftBinding
+import abm.co.studycards.domain.model.ConfirmText
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.navigate
 import android.os.Bundle
@@ -102,12 +102,17 @@ class ToRightOrLeftFragment :
 
     private fun onAudioClicked(word: Word) {
         val newText = word.translationsToString()
-        textToSpeech.speak(
-            newText,
-            TextToSpeech.QUEUE_FLUSH,
-            null,
-            newText
-        )
+        try {
+            textToSpeech.speak(
+                newText,
+                TextToSpeech.QUEUE_FLUSH,
+                null,
+                newText
+            )
+        } catch (e: Exception) {
+            toast(R.string.you_do_n_have_language_to_speech)
+        }
+
     }
 
     override fun onDestroyView() {

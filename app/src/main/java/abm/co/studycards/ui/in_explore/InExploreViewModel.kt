@@ -1,37 +1,39 @@
 package abm.co.studycards.ui.in_explore
 
-import abm.co.studycards.data.model.vocabulary.Category
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants.CATEGORIES_REF
-import abm.co.studycards.util.Constants.WORDS_REF
+import abm.co.studycards.domain.Prefs
+import abm.co.studycards.domain.model.Category
+import abm.co.studycards.domain.model.ResultWrapper
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.domain.usecases.DeleteExploreCategoryUseCase
+import abm.co.studycards.domain.usecases.GetCurrentUserUseCase
+import abm.co.studycards.domain.usecases.GetExploreCategoryUseCase
+import abm.co.studycards.domain.usecases.GetUserCategoryUseCase
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.firebaseError
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class InExploreViewModel @Inject constructor(
+    private val deleteExploreCategoryUseCase: DeleteExploreCategoryUseCase,
+    getCurrentUserUseCase: GetCurrentUserUseCase,
+    getUserCategoryUseCase: GetUserCategoryUseCase,
+    getExploreCategoryUseCase: GetExploreCategoryUseCase,
     savedStateHandle: SavedStateHandle,
-    firebaseRepository: ServerCloudRepository,
     prefs: Prefs,
 ) : BaseViewModel() {
 
     private val dispatcher = Dispatchers.IO
-    private val categoriesDbRef = firebaseRepository.getCategoriesReference()
-    private val exploreDbRef = firebaseRepository.getExploreReference()
 
     private val _stateFlow = MutableStateFlow<InExploreUiState>(InExploreUiState.Loading)
     val stateFlow = _stateFlow.asStateFlow()
@@ -39,44 +41,62 @@ class InExploreViewModel @Inject constructor(
     var category = savedStateHandle.get<Category>("category")!!
     var setId = savedStateHandle.get<String>("set_id")!!
 
-    val categoryPhotoUrl = category.imageUrl
+    val iCreatedThisCategory = category.creatorId == getCurrentUserUseCase()?.uid
 
-    private val wordsRef = exploreDbRef.child(setId)
-        .child(CATEGORIES_REF).child(category.id).child(WORDS_REF)
+    val categoryPhotoUrl = category.imageUrl
 
     val targetLang = prefs.getTargetLanguage()
 
     val isThisCategoryExistInMine = MutableStateFlow(true)
 
-    var wordsCount = category.words.size
+    private var databaseRefListener = ArrayList<Pair<DatabaseReference, ValueEventListener>>()
+
+    var wordsCount = MutableStateFlow(0)
 
     init {
-        categoriesDbRef.child(category.id).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                isThisCategoryExistInMine.value = snapshot.exists()
-            }
+        viewModelScope.launch(dispatcher) {
+            val userCategory = getUserCategoryUseCase(category.id)
+            val exploreCategory = getExploreCategoryUseCase(setId, category.id)
 
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
-
-        wordsRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                viewModelScope.launch(dispatcher) {
-                    val items = mutableListOf<Word>()
-                    snapshot.children.forEach {
-                        it.getValue(Word::class.java)?.let { it1 -> items.add(it1) }
+            databaseRefListener.add(userCategory.second to userCategory.third)
+            databaseRefListener.add(exploreCategory.second to exploreCategory.third)
+            viewModelScope.launch {
+                exploreCategory.first.collectLatest {
+                    when (it) {
+                        is ResultWrapper.Error -> {
+                            _stateFlow.value = InExploreUiState.Error(it.res)
+                        }
+                        ResultWrapper.Loading -> {
+                            _stateFlow.value = InExploreUiState.Loading
+                        }
+                        is ResultWrapper.Success -> {
+                            wordsCount.value = it.value.words.size
+                            _stateFlow.value = InExploreUiState.Success(it.value.words)
+                        }
                     }
-                    _stateFlow.value = InExploreUiState.Success(items)
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                _stateFlow.value = InExploreUiState.Error(firebaseError(error.code))
+            viewModelScope.launch {
+                userCategory.first.collectLatest { wrapper ->
+                    isThisCategoryExistInMine.value =
+                        wrapper is ResultWrapper.Success && wrapper.value != null
+                }
             }
-        })
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        databaseRefListener.forEach {
+            it.first.removeEventListener(it.second)
+        }
+    }
+
+    suspend fun deleteTheExploreCategory() {
+        withContext(Dispatchers.IO) {
+            _stateFlow.value = InExploreUiState.Loading
+            deleteExploreCategoryUseCase.invoke(setId, category)
+        }
     }
 
 }

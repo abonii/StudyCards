@@ -1,6 +1,6 @@
 package abm.co.studycards.ui.settings
 
-import abm.co.studycards.data.model.Language
+import abm.co.studycards.domain.model.Language
 import abm.co.studycards.databinding.ItemLanguageOfTheAppBinding
 import android.view.LayoutInflater
 import android.view.ViewGroup

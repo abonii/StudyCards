@@ -1,9 +1,9 @@
 package abm.co.studycards.ui.vocabulary
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.model.vocabulary.examplesToString
 import abm.co.studycards.databinding.FragmentVocabularyTabBinding
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.domain.model.examplesToString
 import abm.co.studycards.ui.show_example_dialog.ShowExampleDialogFragment
 import abm.co.studycards.util.Constants.VOCABULARY_TAB_POSITION
 import abm.co.studycards.util.base.BaseBindingFragment
@@ -13,6 +13,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -44,7 +45,7 @@ class VocabularyTabFragment :
         ).apply {
             onLongClickWord = ::onLongClickWord
         }
-        launchAndRepeatWithViewLifecycle {
+        launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
             viewModel.stateFlow.collectLatest {
                 when (it) {
                     is VocabularyUiState.Error -> {
@@ -66,7 +67,6 @@ class VocabularyTabFragment :
         text.visibility = View.VISIBLE
         text.text = getText(errorMsg)
         recyclerView.visibility = View.GONE
-        shimmerLayout.stopShimmer()
         shimmerLayout.hideShimmer()
         shimmerLayout.visibility = View.GONE
     }
@@ -78,7 +78,6 @@ class VocabularyTabFragment :
     private fun onSuccess(value: List<Word>) = binding.run {
         recyclerView.visibility = View.VISIBLE
         text.visibility = View.GONE
-        shimmerLayout.stopShimmer()
         shimmerLayout.hideShimmer()
         shimmerLayout.visibility = View.GONE
         adapterV?.submitList(value)

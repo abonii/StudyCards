@@ -1,17 +1,15 @@
 package abm.co.studycards.ui.explore
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.databinding.FragmentExploreBinding
+import abm.co.studycards.domain.model.Category
 import abm.co.studycards.setDefaultStatusBar
-import abm.co.studycards.ui.select_explore_category.SelectExploreCategory
+import abm.co.studycards.ui.select_explore_category.SelectExploreCategoryFragment
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -24,13 +22,13 @@ class ExploreFragment : BaseBindingFragment<FragmentExploreBinding>(R.layout.fra
     private val viewModel: ExploreViewModel by viewModels()
     private var parentAdapter: ParentExploreAdapter? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun initUI(savedInstanceState: Bundle?) {
         collectData()
-        return super.onCreateView(inflater, container, savedInstanceState)
+        requireActivity().setDefaultStatusBar()
+        parentAdapter = ParentExploreAdapter(::onClickItem).apply {
+            onClickAddSet = ::onClickAddSet
+        }
+        binding.parentRecyclerView.adapter = parentAdapter
     }
 
     private fun collectData() {
@@ -51,14 +49,6 @@ class ExploreFragment : BaseBindingFragment<FragmentExploreBinding>(R.layout.fra
         }
     }
 
-    override fun initUI(savedInstanceState: Bundle?) {
-        requireActivity().setDefaultStatusBar()
-        parentAdapter = ParentExploreAdapter(::onClickItem).apply {
-            onClickAddSet = ::onClickAddSet
-        }
-        binding.parentRecyclerView.adapter = parentAdapter
-    }
-
     private fun onSuccess(value: List<ParentExploreUI>) = binding.run {
         parentRecyclerView.visibility = View.VISIBLE
         stopShimmer()
@@ -67,7 +57,6 @@ class ExploreFragment : BaseBindingFragment<FragmentExploreBinding>(R.layout.fra
     }
 
     private fun stopShimmer() = binding.shimmerLayout.run {
-        stopShimmer()
         hideShimmer()
         visibility = View.GONE
     }
@@ -101,8 +90,8 @@ class ExploreFragment : BaseBindingFragment<FragmentExploreBinding>(R.layout.fra
     private fun onClickAddSet(item: ParentExploreUI) {
         when (item) {
             is ParentExploreUI.SetUI -> {
-                val selectExploreSet = SelectExploreCategory.newInstance(item.setId)
-                selectExploreSet.show(childFragmentManager, SelectExploreCategory.NAME)
+                val selectExploreSet = SelectExploreCategoryFragment.newInstance(item.setId)
+                selectExploreSet.show(childFragmentManager, SelectExploreCategoryFragment.NAME)
             }
         }
     }

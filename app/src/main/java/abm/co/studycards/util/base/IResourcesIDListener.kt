@@ -12,4 +12,5 @@ interface IResourcesIDListener {
 
     @ColorInt
     fun getClr(@ColorRes id: Int): Int
+    fun getDimen(@DimenRes id: Int): Float
 }

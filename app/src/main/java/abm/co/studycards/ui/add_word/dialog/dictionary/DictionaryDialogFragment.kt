@@ -4,6 +4,8 @@ import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentDictionaryDialogBinding
 import abm.co.studycards.ui.add_word.dialog.dictionary.adapters.TranslatedCategoryAdapter
 import abm.co.studycards.util.Constants
+import abm.co.studycards.util.Constants.EXAMPLES_SEPARATOR
+import abm.co.studycards.util.Constants.TRANSLATIONS_SEPARATOR
 import abm.co.studycards.util.base.BaseDialogFragment
 import android.os.Bundle
 import android.view.ViewGroup
@@ -20,7 +22,7 @@ class DictionaryDialogFragment :
 
     override fun initUI(savedInstanceState: Bundle?) {
         val tAdapter = TranslatedCategoryAdapter(::onExampleSelected, ::onTranslationSelected)
-        tAdapter.submitList(viewModel.entries?.lexicalEntries)
+        tAdapter.submitList(viewModel.entries?.lexicalCategories)
         binding.run {
             word.text = viewModel.wordName.uppercase()
             recyclerView.adapter = tAdapter
@@ -69,8 +71,8 @@ class DictionaryDialogFragment :
         setFragmentResult(
             Constants.REQUEST_DICTIONARY_KEY, bundleOf(
                 "from_target" to viewModel.fromTarget,
-                "selected_examples" to (viewModel.selectedExamples.joinToString(separator = "\n")),
-                "selected_translations" to viewModel.selectedTranslations.joinToString(separator = ", ")
+                "selected_examples" to (viewModel.selectedExamples.joinToString(separator = EXAMPLES_SEPARATOR)),
+                "selected_translations" to viewModel.selectedTranslations.joinToString(separator = TRANSLATIONS_SEPARATOR)
             )
         )
         dismiss()

@@ -2,7 +2,7 @@ package abm.co.studycards.ui.vocabulary
 
 import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentVocabularyBinding
-import abm.co.studycards.util.Constants.TAG
+import abm.co.studycards.util.Constants.TAG_ERROR
 import abm.co.studycards.util.base.BaseBindingFragment
 import android.os.Bundle
 import android.util.Log
@@ -46,8 +46,8 @@ class VocabularyFragment :
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         try {
             super.onViewStateRestored(savedInstanceState)
-        }catch (e:Exception){
-            Log.e(TAG, "onViewStateRestored: ${e.message}")
+        } catch (e: Exception) {
+            Log.e(TAG_ERROR, "onViewStateRestored: ${e.message}")
         }
     }
 

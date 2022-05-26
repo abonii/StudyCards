@@ -1,12 +1,11 @@
 package abm.co.studycards.ui.add_word.dialog.dictionary.adapters
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.oxford.Example
-import abm.co.studycards.data.model.oxford.Sense
-import abm.co.studycards.data.model.oxford.Translation
 import abm.co.studycards.databinding.ItemTranslatedWordBinding
+import abm.co.studycards.domain.model.CategoryDetails
 import abm.co.studycards.helpers.LinkTouchMovementMethod
 import abm.co.studycards.helpers.TouchableSpan
+import abm.co.studycards.util.Constants.EXAMPLES_SEPARATOR
 import abm.co.studycards.util.getMyColor
 import android.text.SpannableString
 import android.text.Spanned
@@ -18,37 +17,37 @@ class TranslatedWordViewHolder(
     private val binding: ItemTranslatedWordBinding,
     private val onExampleSelected: (example: String, isPressed: Boolean) -> Unit,
     private val onTranslationSelected: (example: String, isPressed: Boolean) -> Unit,
-    private val countAdded:(Boolean)->String
+    private val countAdded: (Boolean) -> String
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(currentItem: Sense) = binding.run {
+    fun bind(currentItem: CategoryDetails) = binding.run {
         wordTrans.run {
             text = makeTranslations(currentItem)
             setSelectableTranslationText(this, currentItem)
         }
         examples.run {
-            text = makeExamplesFromList(currentItem)
+            text = currentItem.examples.joinToString(EXAMPLES_SEPARATOR)
             setSelectableExampleText(this, currentItem)
         }
-        number.text = countAdded(currentItem.translations != null)
+        number.text = countAdded(currentItem.translations.isNotEmpty())
     }
 
-    private fun setSelectableExampleText(view: TextView, currentItem: Sense) {
+    private fun setSelectableExampleText(view: TextView, currentItem: CategoryDetails) {
         val currentExamples = currentItem.examples
-        if (currentExamples != null) {
+        if (currentExamples.isNotEmpty()) {
             for (t in currentExamples) {
-                view.makeClickable(makeOneExampleFromList(t), onExampleSelected, true)
+                view.makeClickable(t, onExampleSelected, true)
             }
         }
     }
 
-    private fun setSelectableTranslationText(view: TextView, currentItem: Sense) {
+    private fun setSelectableTranslationText(view: TextView, currentItem: CategoryDetails) {
         val currentTranslations = currentItem.translations
-        if (currentTranslations != null) {
+        if (currentTranslations.isNotEmpty()) {
             for (t in currentTranslations) {
                 view.makeClickable(
-                    makeOneTranslationFromList(t),
+                    t,
                     onTranslationSelected,
                     false
                 )
@@ -56,28 +55,13 @@ class TranslatedWordViewHolder(
         }
     }
 
-    private fun makeTranslations(currentItem: Sense): String {
-        if (currentItem.translations == null) {
-            return "***"
+    private fun makeTranslations(currentItem: CategoryDetails): String {
+        if (currentItem.translations.isEmpty()) {
+            return "______________"
         }
-        return currentItem.translations.joinToString {
-            "${it.getNormalTranslation()}"
-        }
+        return currentItem.translations.joinToString()
     }
 
-    private fun makeExamplesFromList(currentItem: Sense): String? {
-        return currentItem.examples?.joinToString(separator = "\n") {
-            "${it.text} - ${it.translations?.get(0)?.getNormalTranslation()}"
-        }
-    }
-
-    private fun makeOneExampleFromList(example: Example): String {
-        return "${example.text} - ${example.translations?.get(0)?.getNormalTranslation()}"
-    }
-
-    private fun makeOneTranslationFromList(translation: Translation): String {
-        return translation.getNormalTranslation().toString()
-    }
 }
 
 fun TextView.makeClickable(

@@ -1,13 +1,13 @@
 package abm.co.studycards.ui.explore
 
-import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants.TAG
+import abm.co.studycards.domain.model.ResultWrapper
+import abm.co.studycards.domain.usecases.GetExploreSetsUseCase
 import abm.co.studycards.util.base.BaseViewModel
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    firebaseRepository: ServerCloudRepository,
+    getExploreSetsUseCase: GetExploreSetsUseCase
 ) : BaseViewModel() {
 
     val dispatcher = Dispatchers.IO
@@ -26,13 +26,27 @@ class ExploreViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(dispatcher) {
-            firebaseRepository.fetchExploreSets().collectLatest {
-                Log.i(TAG, "fetched ${it.size}")
-                _stateFlow.value = ParentExploreUiState.Success(it)
+            delay(800)
+            getExploreSetsUseCase().collectLatest { wrapper ->
+                when (wrapper) {
+                    is ResultWrapper.Error -> {
+                        _stateFlow.value = ParentExploreUiState.Error(wrapper.res)
+                    }
+                    is ResultWrapper.Success -> {
+                        val sets = wrapper.value.map {
+                            ParentExploreUI.SetUI(it.categories.map { category ->
+                                ChildExploreVHUI.VHCategory(category)
+                            }, title = it.name, setId = it.id)
+                        }
+                        _stateFlow.value = ParentExploreUiState.Success(sets)
+                    }
+                    else -> {
+                        _stateFlow.value = ParentExploreUiState.Loading
+                    }
+                }
             }
         }
     }
-
 }
 
 sealed class ParentExploreUI {

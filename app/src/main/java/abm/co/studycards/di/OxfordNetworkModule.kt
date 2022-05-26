@@ -1,6 +1,6 @@
 package abm.co.studycards.di
 
-import abm.co.studycards.data.network.oxford.OxfordApiService
+import abm.co.studycards.data.network.OxfordApiService
 import abm.co.studycards.di.qualifier.OxfordNetwork
 import abm.co.studycards.di.qualifier.TypeEnum.*
 import abm.co.studycards.util.Constants

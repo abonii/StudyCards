@@ -1,7 +1,7 @@
 package abm.co.studycards.di
 
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.pref.Prefs.Companion.SHARED_PREFERENCES
+import abm.co.studycards.domain.Prefs
+import abm.co.studycards.domain.Prefs.Companion.SHARED_PREFERENCES
 import abm.co.studycards.data.pref.PrefsImpl
 import android.content.Context
 import android.content.SharedPreferences

@@ -1,6 +1,6 @@
 package abm.co.studycards.ui.add_to_yourself
 
-import abm.co.studycards.data.model.WordX
+import abm.co.studycards.domain.model.WordX
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -17,22 +17,13 @@ class ExploreWordsForSelectingAdapter(private val onChecked: (WordX) -> Unit) :
         position: Int,
         payloads: MutableList<Any>
     ) {
-        if (payloads.isNotEmpty()) {
-            when (payloads[0]) {
-                false -> {
-                    getItem(position).isChecked = false
-                }
-                true -> {
-                    getItem(position).isChecked = true
-                }
-            }
-        }
         super.onBindViewHolder(holder, position, payloads)
     }
 
     fun updateAllWords(isChecked: Boolean) {
         for (i in 0 until itemCount) {
-            notifyItemChanged(i, isChecked)
+            getItem(i).isChecked = isChecked
+            notifyItemChanged(i,0)
         }
     }
 

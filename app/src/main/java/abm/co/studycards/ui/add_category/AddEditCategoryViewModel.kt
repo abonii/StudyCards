@@ -1,9 +1,10 @@
 package abm.co.studycards.ui.add_category
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Category
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.ServerCloudRepository
+import abm.co.studycards.domain.Prefs
+import abm.co.studycards.domain.model.Category
+import abm.co.studycards.domain.usecases.AddUserCategoryUseCase
+import abm.co.studycards.domain.usecases.UpdateUserCategoryUseCase
 import abm.co.studycards.util.base.BaseViewModel
 import abm.co.studycards.util.core.App
 import androidx.lifecycle.SavedStateHandle
@@ -17,30 +18,37 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditCategoryViewModel @Inject constructor(
-    private val repository: ServerCloudRepository,
+    private val addUserCategoryUseCase: AddUserCategoryUseCase,
+    private val updateUserCategoryUseCase: UpdateUserCategoryUseCase,
     private val prefs: Prefs,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel() {
 
     val category = savedStateHandle.get<Category>("category")
-    var mainName = MutableStateFlow(category?.mainName ?: "")
+    var mainName = MutableStateFlow(category?.name ?: "")
 
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
     fun saveCategory() {
         if (category != null) {
             if (category.id.isNotEmpty()) {
-                val updatedCategory = category.copy(mainName = mainName.value)
+                val updatedCategory = category.copy(name = mainName.value)
                 updateCategory(updatedCategory)
             } else {
-                val updatedCategory = category.copy(mainName = App.instance.getString(R.string.remove_this_category))
+                val updatedCategory =
+                    category.copy(name = App.instance.getString(R.string.remove_this_category))
                 updateCategory(updatedCategory)
             }
         } else {
             val newCategory = Category(
-                mainName = mainName.value,
+                name = mainName.value,
                 sourceLanguage = prefs.getSourceLanguage(),
-                targetLanguage = prefs.getTargetLanguage()
+                targetLanguage = prefs.getTargetLanguage(),
+                id = "default",
+                imageUrl = "",
+                creatorId = "me",
+                creatorName = "ku",
+                words = emptyList()
             )
             insertCategory(newCategory)
         }
@@ -48,13 +56,13 @@ class AddEditCategoryViewModel @Inject constructor(
 
     private fun insertCategory(category: Category) {
         viewModelScope.launch(dispatcher) {
-            repository.addCategory(category)
+            addUserCategoryUseCase(category)
         }
     }
 
     private fun updateCategory(updatedCategory: Category) {
         viewModelScope.launch(dispatcher) {
-            repository.updateCategoryName(updatedCategory)
+            updateUserCategoryUseCase(updatedCategory)
         }
     }
 

@@ -1,9 +1,9 @@
 package abm.co.studycards.ui.games.guessing
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemOptionBinding
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.util.getMyColor
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

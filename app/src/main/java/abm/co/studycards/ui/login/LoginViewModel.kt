@@ -123,6 +123,7 @@ class LoginViewModel @Inject constructor(
                     makeToast(firebaseError(task.exception))
                     checkUserExistence(null)
                 }
+                setLoading(false)
             }
     }
 

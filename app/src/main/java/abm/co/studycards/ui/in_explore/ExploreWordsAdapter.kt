@@ -1,6 +1,6 @@
 package abm.co.studycards.ui.in_explore
 
-import abm.co.studycards.data.model.vocabulary.Word
+import abm.co.studycards.domain.model.Word
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter

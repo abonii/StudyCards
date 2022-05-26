@@ -2,7 +2,7 @@ package abm.co.studycards.ui.games.review
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.ConfirmText
+import abm.co.studycards.domain.model.ConfirmText
 import abm.co.studycards.databinding.FragmentReviewBinding
 import abm.co.studycards.helpers.CenterZoomLayoutManager
 import abm.co.studycards.helpers.SnapHelperOneByOne

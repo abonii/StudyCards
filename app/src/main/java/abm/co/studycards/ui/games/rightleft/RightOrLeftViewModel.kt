@@ -1,9 +1,9 @@
 package abm.co.studycards.ui.games.rightleft
 
-import abm.co.studycards.data.model.LearnOrKnown
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.ServerCloudRepository
+import abm.co.studycards.domain.Prefs
+import abm.co.studycards.domain.model.LearnOrKnown
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.domain.usecases.UpdateUserWordUseCase
 import abm.co.studycards.util.base.BaseViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RightOrLeftViewModel @Inject constructor(
-    private val firebaseRepository: ServerCloudRepository,
+    private val updateUserWordUseCase: UpdateUserWordUseCase,
     savedStateHandle: SavedStateHandle,
     prefs: Prefs
 ) : BaseViewModel() {
@@ -42,7 +42,7 @@ class RightOrLeftViewModel @Inject constructor(
 
     private fun updateWord(word: Word) {
         viewModelScope.launch(Dispatchers.IO) {
-            firebaseRepository.updateWord(word)
+            updateUserWordUseCase(null, word)
         }
     }
 }

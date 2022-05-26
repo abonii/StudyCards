@@ -1,8 +1,10 @@
 package abm.co.studycards.util
 
 import abm.co.studycards.R
+import abm.co.studycards.util.Constants.PROFILE_DEF_IMAGE
 import android.net.Uri
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputLayout
@@ -23,7 +25,12 @@ object GeneralBindingAdapters {
             Glide.with(context)
                 .load(url)
                 .timeout(4000)
-                .error(R.color.second_color)
+                .error(R.color.third_color)
+                .into(this)
+        } else {
+            Glide.with(context)
+                .load("https://wallpaperaccess.com/full/3222084.jpg")
+                .timeout(4000)
                 .into(this)
         }
     }
@@ -42,7 +49,7 @@ object GeneralBindingAdapters {
     @JvmStatic
     @BindingAdapter("app:imageForProfileWithGlide")
     fun ImageView.setProfileImageWithGlide(url: Uri?) {
-        Glide.with(context).load(url).into(this)
-
+        if (url != null) Glide.with(context).load(url).error(PROFILE_DEF_IMAGE).into(this)
+        else Glide.with(context).load(PROFILE_DEF_IMAGE).into(this)
     }
 }

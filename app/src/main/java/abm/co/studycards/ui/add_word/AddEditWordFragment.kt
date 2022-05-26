@@ -2,8 +2,8 @@ package abm.co.studycards.ui.add_word
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.oxford.ResultsEntry
 import abm.co.studycards.databinding.FragmentAddEditWordBinding
+import abm.co.studycards.domain.model.OxfordResult
 import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.Constants.REQUEST_CATEGORY_KEY
 import abm.co.studycards.util.Constants.REQUEST_DICTIONARY_KEY
@@ -87,7 +87,12 @@ class AddEditWordFragment :
             viewModel.eventChannel.collectLatest {
                 when (it) {
                     is AddEditWordEventChannel.NavigateToDictionary -> {
-                        directToOxfordWordsDialog(it.resultsEntry!!, it.fromSource)
+                        it.resultsEntry?.let { it1 ->
+                            directToOxfordWordsDialog(
+                                it1,
+                                it.fromSource
+                            )
+                        }
                     }
                     AddEditWordEventChannel.PopBackStack -> findNavController().popBackStack()
                     AddEditWordEventChannel.ShakeCategory -> {
@@ -162,7 +167,7 @@ class AddEditWordFragment :
     }
 
 
-    private fun directToOxfordWordsDialog(entry: ResultsEntry, fromSource: Boolean) {
+    private fun directToOxfordWordsDialog(entry: OxfordResult, fromSource: Boolean) {
         val action =
             AddEditWordFragmentDirections.actionAddEditWordFragmentToDictionaryDialogFragment(
                 entry, fromSource

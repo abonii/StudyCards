@@ -2,10 +2,10 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android">
     <translate
         android:duration="@integer/mediumEnterAnimTime"
-        android:fromXDelta="15%p"
+        android:fromXDelta="20%p"
         android:toXDelta="0%p" />
     <alpha
         android:duration="@integer/mediumEnterAnimTime"
         android:fromAlpha="0.0"
-        android:toAlpha="1.0" />
+        android:toAlpha="1" />
 </set>

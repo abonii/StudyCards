@@ -1,11 +1,11 @@
 package abm.co.studycards.di
 
-import abm.co.studycards.data.PricingRepository
-import abm.co.studycards.data.PricingRepositoryImpl
-import abm.co.studycards.data.repository.DictionaryRepository
+import abm.co.studycards.domain.repository.PricingRepository
+import abm.co.studycards.data.repository.PricingRepositoryImpl
+import abm.co.studycards.domain.repository.DictionaryRepository
 import abm.co.studycards.data.repository.DictionaryRepositoryImp
 import abm.co.studycards.data.repository.FirebaseRepositoryImp
-import abm.co.studycards.data.repository.ServerCloudRepository
+import abm.co.studycards.domain.repository.ServerCloudRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

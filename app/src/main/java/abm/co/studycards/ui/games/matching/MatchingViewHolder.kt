@@ -1,9 +1,9 @@
 package abm.co.studycards.ui.games.matching
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemMatchingCardBinding
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.util.changeBackgroundChangesAndFlip
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
@@ -45,8 +45,10 @@ class MatchingViewHolder(
     fun bindCorrectWord() = binding.run {
         word.setTextColor(whiteColor)
         card.strokeColor = greenColor
-        card.changeBackgroundChangesAndFlip(currentColor = itselfColor,
-            color = greenColor).run {
+        card.changeBackgroundChangesAndFlip(
+            currentColor = itselfColor,
+            color = greenColor
+        ).run {
             doOnEnd {
                 disappearCards(card)
             }
@@ -75,7 +77,7 @@ class MatchingViewHolder(
         val shake: Animation =
             AnimationUtils.loadAnimation(card.context, R.anim.shake)
         card.startAnimation(shake)
-        shake.setAnimationListener(object:Animation.AnimationListener{
+        shake.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(p0: Animation?) {
                 bindUnCorrectWord()
             }

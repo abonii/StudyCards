@@ -1,7 +1,7 @@
 package abm.co.studycards.ui.add_word.dialog.dictionary.adapters
 
-import abm.co.studycards.data.model.oxford.LexicalEntry
 import abm.co.studycards.databinding.ItemTranslatedCategoryBinding
+import abm.co.studycards.domain.model.LexicalCategory
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 class TranslatedCategoryAdapter(
     private val onExampleSelected: (example: String, isPressed: Boolean) -> Unit,
     private val onTranslationSelected: (example: String, isPressed: Boolean) -> Unit
-) : ListAdapter<LexicalEntry, TranslatedCategoryViewHolder>(DIFF_UTIL) {
+) : ListAdapter<LexicalCategory, TranslatedCategoryViewHolder>(DIFF_UTIL) {
 
 
     override fun onCreateViewHolder(
@@ -29,11 +29,17 @@ class TranslatedCategoryAdapter(
     }
 
     companion object {
-        private val DIFF_UTIL = object : DiffUtil.ItemCallback<LexicalEntry>() {
-            override fun areItemsTheSame(oldItem: LexicalEntry, newItem: LexicalEntry): Boolean =
-                oldItem.text == newItem.text
+        private val DIFF_UTIL = object : DiffUtil.ItemCallback<LexicalCategory>() {
+            override fun areItemsTheSame(
+                oldItem: LexicalCategory,
+                newItem: LexicalCategory
+            ): Boolean =
+                oldItem.lexicalName == newItem.lexicalName
 
-            override fun areContentsTheSame(oldItem: LexicalEntry, newItem: LexicalEntry): Boolean =
+            override fun areContentsTheSame(
+                oldItem: LexicalCategory,
+                newItem: LexicalCategory
+            ): Boolean =
                 oldItem == newItem
         }
     }

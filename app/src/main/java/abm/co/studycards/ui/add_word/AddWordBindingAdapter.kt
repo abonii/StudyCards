@@ -1,7 +1,7 @@
 package abm.co.studycards.ui.add_word
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.AvailableLanguages
+import abm.co.studycards.domain.model.AvailableLanguages
 import abm.co.studycards.util.getProgressBarDrawable
 import android.graphics.drawable.Animatable
 import android.widget.EditText

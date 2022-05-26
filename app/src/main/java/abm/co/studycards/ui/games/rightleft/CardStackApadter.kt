@@ -1,9 +1,9 @@
 package abm.co.studycards.ui.games.rightleft
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Word
-import abm.co.studycards.data.model.vocabulary.translationsToString
 import abm.co.studycards.databinding.ItemCardBinding
+import abm.co.studycards.domain.model.Word
+import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.util.GeneralBindingAdapters.setImageWithGlide
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint

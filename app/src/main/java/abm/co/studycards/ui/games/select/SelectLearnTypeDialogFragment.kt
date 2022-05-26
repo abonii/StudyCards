@@ -53,7 +53,7 @@ class SelectLearnTypeDialogFragment :
             binding.repeatSubtitle2.text = getLeftHours(it)
         }
         viewModel.undefinedWordsListLive.observe(viewLifecycleOwner) {
-            val subtitleText = viewModel.getTextForLearnSubtitle(requireContext(), it.size)
+            val subtitleText = getTextForLearnSubtitle(it.size)
             binding.run {
                 learnSubtitle.text = subtitleText
                 oneGameSubtitle.text = subtitleText
@@ -62,7 +62,7 @@ class SelectLearnTypeDialogFragment :
         }
 
         viewModel.unlearnedWordsListLive.observe(viewLifecycleOwner) {
-            val subtitleText = viewModel.getTextForRepeatSubtitle(requireContext(), it.size)
+            val subtitleText = getTextForRepeatSubtitle(it.size)
             binding.oneGameSubtitle2.text = subtitleText
             viewModel.unlearnedWordsList = it
         }
@@ -72,7 +72,7 @@ class SelectLearnTypeDialogFragment :
         viewModel.repeatWordsLive.observe(viewLifecycleOwner) {
             viewModel.repeatWordsList = it
             binding.repeatSubtitle.text =
-                viewModel.getTextForRepeatSubtitle(requireContext(), it.size)
+                getTextForRepeatSubtitle(it.size)
         }
     }
 
@@ -83,9 +83,29 @@ class SelectLearnTypeDialogFragment :
         val hours = ceil(duration / (1000 * 60 * 60.0)).toInt()
         if (hours <= 0) {
             val min = ceil(duration / (1000 * 60.0)).toInt()
-            return viewModel.getTextForRepeatTimeMinute(requireContext(), min)
+            return getTextForRepeatTimeMinute(min)
         }
-        return viewModel.getTextForRepeatTimeHour(requireContext(), hours)
+        return getTextForRepeatTimeHour(hours)
+    }
+
+    fun getTextForLearnSubtitle(size: Int): String {
+        return requireContext().resources.getQuantityString(R.plurals.learn_words, size, size)
+    }
+
+    fun getTextForRepeatSubtitle(size: Int): String {
+        return requireContext().resources.getQuantityString(R.plurals.repeat_words, size, size)
+    }
+
+    fun getTextForRepeatTimeHour(size: Int): String {
+        return requireContext().resources.getQuantityString(R.plurals.repeat_time_hour, size, size)
+    }
+
+    fun getTextForRepeatTimeMinute(size: Int): String {
+        return requireContext().resources.getQuantityString(
+            R.plurals.repeat_time_minute,
+            size,
+            size
+        )
     }
 
     private fun onOneTypeGameClicked() {

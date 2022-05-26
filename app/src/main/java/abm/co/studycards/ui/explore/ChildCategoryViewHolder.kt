@@ -1,7 +1,8 @@
 package abm.co.studycards.ui.explore
 
-import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.databinding.ItemChildCategoryBinding
+import abm.co.studycards.domain.model.Category
+import abm.co.studycards.util.GeneralBindingAdapters.setImageWithGlide
 import androidx.recyclerview.widget.RecyclerView
 
 class ChildCategoryViewHolder(val binding: ItemChildCategoryBinding, onClickItem: (Int) -> Unit) :
@@ -14,6 +15,7 @@ class ChildCategoryViewHolder(val binding: ItemChildCategoryBinding, onClickItem
     }
 
     fun bind(currentItem: Category) {
-        binding.item = currentItem
+        binding.title.text = currentItem.name
+        binding.image.setImageWithGlide(currentItem.imageUrl)
     }
 }

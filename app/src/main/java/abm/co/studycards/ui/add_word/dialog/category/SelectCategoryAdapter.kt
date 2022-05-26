@@ -1,56 +1,73 @@
 package abm.co.studycards.ui.add_word.dialog.category
 
-import abm.co.studycards.data.model.vocabulary.Category
 import abm.co.studycards.databinding.ItemSelectCategoryBinding
-import android.annotation.SuppressLint
+import abm.co.studycards.domain.model.CategorySelectable
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.firebase.ui.database.FirebaseRecyclerOptions
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 
-class SelectCategoryAdapter(
-    private val listener: SelectCategoryAdapterListener, options: FirebaseRecyclerOptions<Category>
-) : FirebaseRecyclerAdapter<Category, SelectCategoryAdapter.ViewHolder>(options) {
+class SelectCategoryAdapter :
+    ListAdapter<CategorySelectable, SelectCategoryViewHolder>(DIFF_UTIL) {
 
-    var checkedId: String? = null
-        @SuppressLint("NotifyDataSetChanged")
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    var selectedItemPos = -1
+    var lastItemSelectedPos = -1
 
-    inner class ViewHolder(private val binding: ItemSelectCategoryBinding)
-        : RecyclerView.ViewHolder(binding.root) {
-        fun bind(currentItem: Category) {
-            binding.run {
-                category.text = currentItem.mainName
-                radio.setOnClickListener {
-                    listener.onRadioClicked(currentItem)
-                }
-                category.setOnClickListener {
-                    listener.onRadioClicked(currentItem)
-                }
-                if (currentItem.id == checkedId)
-                    radio.isChecked = true
-                else {
-                    radioGroup.clearCheck()
-                }
+    override fun onBindViewHolder(
+        holder: SelectCategoryViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        super.onBindViewHolder(holder, position, payloads)
+    }
+
+    private fun changeSelectedPosition(position: Int) {
+        selectedItemPos = position
+        when {
+            lastItemSelectedPos != -1 && lastItemSelectedPos != selectedItemPos -> {
+                val item = getItem(lastItemSelectedPos)
+                item.isSelected = false
+                notifyItemChanged(lastItemSelectedPos, 2)
             }
         }
-
+        val item = getItem(position)
+        item.isSelected = true
+        notifyItemChanged(selectedItemPos, 0)
+        lastItemSelectedPos = position
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectCategoryViewHolder {
         val binding =
             ItemSelectCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
-    }
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Category) {
-        holder.bind(model)
+        return SelectCategoryViewHolder(binding) {
+            changeSelectedPosition(it)
+        }
     }
 
-    interface SelectCategoryAdapterListener {
-        fun onRadioClicked(currentItem: Category)
+    override fun onBindViewHolder(holder: SelectCategoryViewHolder, position: Int) {
+        val item = getItem(position)
+        holder.bind(item.category)
+        if (item.isSelected) {
+            holder.binding.radio.isChecked = true
+        } else {
+            holder.binding.radioGroup.clearCheck()
+        }
     }
+
+    companion object {
+        private val DIFF_UTIL = object : DiffUtil.ItemCallback<CategorySelectable>() {
+            override fun areItemsTheSame(
+                oldItem: CategorySelectable,
+                newItem: CategorySelectable
+            ): Boolean =
+                oldItem.category.id == newItem.category.id
+
+            override fun areContentsTheSame(
+                oldItem: CategorySelectable,
+                newItem: CategorySelectable
+            ): Boolean =
+                oldItem == newItem
+        }
+    }
+
 }

@@ -1,12 +1,13 @@
 package abm.co.studycards.data.pref
 
-import abm.co.studycards.data.pref.Prefs.Companion.ACCESS_TOKEN
-import abm.co.studycards.data.pref.Prefs.Companion.IS_FIRST_TIME
-import abm.co.studycards.data.pref.Prefs.Companion.IS_PREMIUM
-import abm.co.studycards.data.pref.Prefs.Companion.SELECTED_APP_LANGUAGE
-import abm.co.studycards.data.pref.Prefs.Companion.SOURCE_LANGUAGE
-import abm.co.studycards.data.pref.Prefs.Companion.TARGET_LANGUAGE
-import abm.co.studycards.data.pref.Prefs.Companion.USER_ID
+import abm.co.studycards.domain.Prefs
+import abm.co.studycards.domain.Prefs.Companion.ACCESS_TOKEN
+import abm.co.studycards.domain.Prefs.Companion.IS_FIRST_TIME
+import abm.co.studycards.domain.Prefs.Companion.IS_PREMIUM
+import abm.co.studycards.domain.Prefs.Companion.SELECTED_APP_LANGUAGE
+import abm.co.studycards.domain.Prefs.Companion.SOURCE_LANGUAGE
+import abm.co.studycards.domain.Prefs.Companion.TARGET_LANGUAGE
+import abm.co.studycards.domain.Prefs.Companion.USER_ID
 import android.content.SharedPreferences
 import javax.inject.Inject
 

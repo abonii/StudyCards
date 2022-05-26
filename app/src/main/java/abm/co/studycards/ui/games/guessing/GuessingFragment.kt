@@ -2,8 +2,8 @@ package abm.co.studycards.ui.games.guessing
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.ConfirmText
 import abm.co.studycards.databinding.FragmentGuessingBinding
+import abm.co.studycards.domain.model.ConfirmText
 import abm.co.studycards.util.Constants.ONE_TIME_CYCLE_GAME
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.changeBackgroundChangesAndFlip
@@ -63,6 +63,10 @@ class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.f
         val action = if (viewModel.isRepeat) {
             viewModel.updateWords()
             if (viewModel.wordsAll.size > ONE_TIME_CYCLE_GAME) {
+                snackbar(
+                    binding.root,
+                    getTextForContinueLearning(viewModel.wordsAll.size - ONE_TIME_CYCLE_GAME)
+                )
                 GuessingFragmentDirections
                     .actionGuessingFragmentToReviewFragment(
                         isRepeat = true, words = viewModel.getLastWords()
@@ -84,6 +88,10 @@ class GuessingFragment : BaseBindingFragment<FragmentGuessingBinding>(R.layout.f
             }
         }
         navigate(action)
+    }
+
+    fun getTextForContinueLearning(size: Int): String {
+        return requireContext().resources.getQuantityString(R.plurals.keep_learning, size, size)
     }
 
     //change background color of clicked item for same time

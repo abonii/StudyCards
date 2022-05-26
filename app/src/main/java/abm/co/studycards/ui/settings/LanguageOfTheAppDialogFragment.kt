@@ -1,10 +1,9 @@
 package abm.co.studycards.ui.settings
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.AvailableLanguages
-import abm.co.studycards.data.model.Language
+import abm.co.studycards.domain.model.AvailableLanguages
+import abm.co.studycards.domain.model.Language
 import abm.co.studycards.databinding.LanguageOfTheAppDialogBinding
-import abm.co.studycards.util.Constants
 import abm.co.studycards.util.Constants.REQUEST_SYSTEM_LANGUAGE_KEY
 import abm.co.studycards.util.base.BaseDialogFragment
 import android.os.Bundle

@@ -1,12 +1,11 @@
 package abm.co.studycards.di
 
 import abm.co.studycards.R
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.util.Constants.API_REF
+import abm.co.studycards.domain.Prefs
 import abm.co.studycards.util.Constants.CATEGORIES_REF
+import abm.co.studycards.util.Constants.CONFIG_REF
 import abm.co.studycards.util.Constants.EXPLORE_REF
 import abm.co.studycards.util.Constants.SETS_REF
-import abm.co.studycards.util.Constants.USERS_REF
 import abm.co.studycards.util.Constants.USER_ID
 import abm.co.studycards.util.Constants.USER_REF
 import android.app.Application
@@ -32,7 +31,7 @@ object FirebaseModule {
 
     @Singleton
     @Provides
-    fun provideFirebaseFunctionsInstance() = FirebaseFunctions.getInstance()
+    fun provideFirebaseFunctionsInstance():FirebaseFunctions = FirebaseFunctions.getInstance()
 
     @Provides
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
@@ -63,8 +62,8 @@ object FirebaseModule {
     }
 
     @Provides
-    @Named(API_REF)
-    fun provideApiKeys(db: FirebaseDatabase): DatabaseReference = db.reference.child(API_REF)
+    @Named(CONFIG_REF)
+    fun provideApiKeys(db: FirebaseDatabase): DatabaseReference = db.reference.child(CONFIG_REF)
 
     @Provides
     @Named(CATEGORIES_REF)
@@ -73,31 +72,24 @@ object FirebaseModule {
         @Named(USER_ID) userId: String,
         prefs: Prefs
     ): DatabaseReference {
-        return db.reference.child(USERS_REF).child(userId)
+        return db.reference.child(USER_REF).child(userId)
+            .child(CATEGORIES_REF)
             .child("${prefs.getSourceLanguage()}-${prefs.getTargetLanguage()}")
-            .child(CATEGORIES_REF).apply {
+            .apply {
                 keepSynced(true)
             }
 
     }
 
-    @Named(USERS_REF)
+    @Named(USER_REF)
     @Provides
     fun provideRealtimeDatabaseUser(
         db: FirebaseDatabase,
         @Named(USER_ID) userId: String
     ): DatabaseReference {
-        return db.reference.child(USERS_REF).child(userId)
+        return db.reference.child(USER_REF).child(userId)
             .apply { keepSynced(true) }
 
-    }
-
-    @Named(USER_REF)
-    @Provides
-    fun provideRealtimeDatabaseRootUser(
-        db: FirebaseDatabase
-    ): DatabaseReference {
-        return db.reference.child(USERS_REF)
     }
 
     @Named(EXPLORE_REF)

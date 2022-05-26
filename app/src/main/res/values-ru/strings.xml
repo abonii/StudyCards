@@ -90,6 +90,13 @@
     <string name="logout">Выйти из системы</string>
     <string name="no_internet_connection">Нет подключения к Интернету</string>
     <string name="socket_timeout_exception">Исключение тайм-аута сокета</string>
+
+    <plurals name="keep_learning">
+        <item quantity="one"> Продолжайте учиться. Впереди еще %d слово</item>
+        <item quantity="many">Продолжайте учиться. Впереди еще %d слов</item>
+        <item quantity="few"> Продолжайте учиться. Впереди еще %d слова</item>
+    </plurals>
+
     <plurals name="words">
         <item quantity="one"> %d слово</item>
         <item quantity="many"> %d слов</item>
@@ -180,7 +187,7 @@
     <string name="premium_feature3_des">только две колоды бесплатно</string>
     <string name="just_image">Просто Изображение</string>
     <string name="subscribe">Подписываться</string>
-    <string name="empty_in_explore">Администраторы до сих пор не добавили ни одного набора слов.</string>
+    <string name="empty_in_explore">Админы до сих пор не добавили ни одного набора слов.</string>
     <string name="skus_not_found">Покупки не найдены по запросу</string>
     <string name="link_to_account">Пользователь не обязательно должен быть анонимным, вы должны связать его с учетной записью</string>
     <string name="verify_account">Подтвердите свою учетную запись</string>
@@ -244,5 +251,10 @@
     <string name="ukrainian_short">Укр</string>
     <string name="this_function_not_available">Упс! Эта функция недоступна на вашем устройстве.</string>
     <string name="no_example">Для этого слова нет примеров</string>
+    <string name="exists">Эта категория уже существует</string>
+    <string name="will_be_available_soon">Это будет доступно в будущих версиях.</string>
+    <string name="empty_in_vocabulary">Вы еще не выучили ни слова</string>
+    <string name="problem_internet_connection">Проблема с подключением к Интернету</string>
+    <string name="empty_in_category">Вы все еще не добавили ни слова</string>
 
 </resources>

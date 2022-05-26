@@ -1,35 +1,30 @@
 package abm.co.studycards.ui.home
 
 import abm.co.studycards.R
-import abm.co.studycards.data.model.vocabulary.Category
-import abm.co.studycards.data.model.vocabulary.CategoryDto
-import abm.co.studycards.data.pref.Prefs
-import abm.co.studycards.data.repository.ServerCloudRepository
-import abm.co.studycards.util.Constants.TAG
+import abm.co.studycards.domain.Prefs
+import abm.co.studycards.domain.model.Category
+import abm.co.studycards.domain.model.ResultWrapper
+import abm.co.studycards.domain.usecases.DeleteUserCategoryUseCase
+import abm.co.studycards.domain.usecases.GetUserCategoriesUseCase
 import abm.co.studycards.util.base.BaseViewModel
-import abm.co.studycards.util.firebaseError
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseException
-import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val prefs: Prefs,
-    private val firebaseRepository: ServerCloudRepository
+    getUserCategoriesUseCase: GetUserCategoriesUseCase,
+    private val deleteUserCategoryUseCase: DeleteUserCategoryUseCase
 ) : BaseViewModel() {
 
     val dispatcher = Dispatchers.IO
-    private val categoriesDbRef = firebaseRepository.getCategoriesReference()
 
     var defaultCategory: Category? = null
 
@@ -50,41 +45,34 @@ class HomeViewModel @Inject constructor(
     val stateFlow = _stateFlow.asStateFlow()
 
     init {
-        categoriesDbRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                viewModelScope.launch(dispatcher) {
-                    val items = mutableListOf<Category>()
-                    snapshot.children.forEach {
-                        try {
-                            it.getValue(CategoryDto::class.java)?.let { it1 -> items.add(it1.toCategory()) }
-                        } catch (e: DatabaseException) {
-                            Log.i(TAG, "onDataChange: ${e.message}")
-                        }
-                    }
-                    if (items.size > 0) {
-                        defaultCategory = items.first()
-                        _stateFlow.value = CategoryUiState.Success(items.take(500))
-                    } else {
-                        _stateFlow.value =
+        viewModelScope.launch(dispatcher) {
+            getUserCategoriesUseCase().collectLatest {
+                when (it) {
+                    is ResultWrapper.Error -> {
+                        if (it.res == R.string.empty) _stateFlow.value =
                             CategoryUiState.Error(R.string.empty_home_fragment)
+                        else _stateFlow.value = CategoryUiState.Error(it.res)
+                    }
+                    ResultWrapper.Loading -> {
+                        _stateFlow.value = CategoryUiState.Loading
+                    }
+                    is ResultWrapper.Success -> {
+                        defaultCategory = it.value.first()
+                        _stateFlow.value = CategoryUiState.Success(it.value)
+
                     }
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                _stateFlow.value = CategoryUiState.Error(firebaseError(error.code))
-            }
-        })
+        }
     }
 
     fun removeCategory(category: Category) {
         viewModelScope.launch(dispatcher) {
-            firebaseRepository.removeCategory(category)
+            deleteUserCategoryUseCase(category)
         }
     }
 
     fun changePreferenceNativeWithTargetLanguages() {
-        //val target = targetLang
         targetLang = sourceLang.also {
             sourceLang = targetLang
         }

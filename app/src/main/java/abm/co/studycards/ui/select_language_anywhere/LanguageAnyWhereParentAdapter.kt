@@ -16,7 +16,6 @@ class LanguageAnyWhereParentAdapter :
     var lastItemSelectedPos = -1
     private var currentTime: Long = 0
 
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -48,9 +47,13 @@ class LanguageAnyWhereParentAdapter :
         selectedItemPos = position
         when {
             lastItemSelectedPos != -1 && lastItemSelectedPos != selectedItemPos -> {
+                val lang = (getItem(lastItemSelectedPos) as LanguageVHUI.Language).value
+                lang.isSelected = false
                 notifyItemChanged(lastItemSelectedPos, 2)
             }
         }
+        val lang = (getItem(position) as LanguageVHUI.Language).value
+        lang.isSelected = !lang.isSelected
         notifyItemChanged(selectedItemPos, 0)
         lastItemSelectedPos = position
     }
@@ -83,18 +86,6 @@ class LanguageAnyWhereParentAdapter :
         position: Int,
         payloads: MutableList<Any>
     ) {
-        if (payloads.isNotEmpty()) {
-            when (payloads[0]) {
-                0 -> {
-                    val lang = (getItem(position) as LanguageVHUI.Language).value
-                    lang.isSelected = !lang.isSelected
-                }
-                2 -> {
-                    val lang = (getItem(position) as LanguageVHUI.Language).value
-                    lang.isSelected = false
-                }
-            }
-        }
         super.onBindViewHolder(holder, position, payloads)
     }
 
@@ -104,18 +95,14 @@ class LanguageAnyWhereParentAdapter :
                 oldItem: LanguageVHUI,
                 newItem: LanguageVHUI
             ): Boolean =
-                (oldItem is LanguageVHUI.Language &&
-                        newItem is LanguageVHUI.Language &&
-                        oldItem.value.language.code == newItem.value.language.code)
-                        || (oldItem is LanguageVHUI.TitleLanguages &&
-                                newItem is LanguageVHUI.TitleLanguages &&
-                                oldItem.value == newItem.value)
+                (oldItem is LanguageVHUI.Language
+                        && newItem is LanguageVHUI.Language
+                        && oldItem.value.language.code == newItem.value.language.code) ||
+                    (oldItem is LanguageVHUI.TitleLanguages
+                            && newItem is LanguageVHUI.TitleLanguages
+                            && oldItem.value == newItem.value)
 
-
-            override fun areContentsTheSame(
-                oldItem: LanguageVHUI,
-                newItem: LanguageVHUI
-            ): Boolean =
+            override fun areContentsTheSame(oldItem: LanguageVHUI, newItem: LanguageVHUI): Boolean =
                 oldItem == newItem
         }
     }

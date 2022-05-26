@@ -2,8 +2,8 @@ package abm.co.studycards.ui.add_to_yourself
 
 import abm.co.studycards.MainActivity
 import abm.co.studycards.R
-import abm.co.studycards.data.model.WordX
 import abm.co.studycards.databinding.FragmentAddYourlsefBinding
+import abm.co.studycards.domain.model.WordX
 import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
@@ -42,7 +42,7 @@ class AddYourselfFragment :
 
     private fun collectData() {
         launchAndRepeatWithViewLifecycle(Lifecycle.State.STARTED) {
-            viewModel.stateFlow.collect {
+            viewModel.stateFlow.collectLatest {
                 when (it) {
                     is AddYourselfUiState.Error -> errorOccurred(it.msg)
                     AddYourselfUiState.Loading -> onLoading()
@@ -69,10 +69,10 @@ class AddYourselfFragment :
 
     private fun onSuccess(value: List<WordX>) = binding.run {
         wordsAdapter?.submitList(value)
+        recyclerView.alpha = 1f
         progressBar.visibility = View.GONE
         error.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
-        recyclerView.alpha = 1f
     }
 
     private fun onLoading() = binding.run {
