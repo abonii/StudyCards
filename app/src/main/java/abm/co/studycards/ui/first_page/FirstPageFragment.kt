@@ -11,15 +11,13 @@ import abm.co.studycards.util.navigate
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class FirstPageFragment :
@@ -39,22 +37,14 @@ class FirstPageFragment :
                     viewModel.setLoading(false)
                     e.message?.let { toast(it) }
                 }
-            }else{
+            } else {
                 viewModel.setLoading(false)
             }
         }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        collectData()
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun initUI(savedInstanceState: Bundle?) = binding.run {
         viewmodel = viewModel
+        collectData()
     }
 
     fun collectData() {
@@ -75,6 +65,11 @@ class FirstPageFragment :
                     }
                     else -> {}
                 }
+            }
+        }
+        launchAndRepeatWithViewLifecycle {
+            viewModel.toast.collectLatest {
+                toast(it)
             }
         }
     }
