@@ -48,9 +48,9 @@ class AddEditWordViewModel @Inject constructor(
 
     val sourceWordStateFlow = MutableStateFlow(word?.name ?: "")
 
-    val targetWordStateFlow = MutableStateFlow(word.translationsToString())
+    val targetWordStateFlow = MutableStateFlow(word?.translations ?: "")
 
-    val examplesStateFlow = MutableStateFlow(word.examplesToString())
+    val examplesStateFlow = MutableStateFlow(word?.examples?:"")
 
     private val _categoryStateFlow = MutableStateFlow(categoryName)
     val categoryStateFlow = _categoryStateFlow.asStateFlow()
@@ -257,9 +257,9 @@ class AddEditWordViewModel @Inject constructor(
             if (word == null) {
                 val word = Word(
                     name = sourceWordStateFlow.value,
-                    translations = targetWordStateFlow.value.translationsToList(),
+                    translations = targetWordStateFlow.value,
                     imageUrl = imageStateFlow.value ?: "",
-                    examples = examplesStateFlow.value.examplesToList(),
+                    examples = examplesStateFlow.value,
                     learnOrKnown = LearnOrKnown.UNDEFINED.getType(),
                     sourceLanguage = sourceLanguage,
                     targetLanguage = targetLanguage,
@@ -272,8 +272,8 @@ class AddEditWordViewModel @Inject constructor(
             } else {
                 val uWord = word.copy(
                     name = sourceWordStateFlow.value,
-                    translations = targetWordStateFlow.value.translationsToList(),
-                    examples = examplesStateFlow.value.examplesToList(),
+                    translations = targetWordStateFlow.value,
+                    examples = examplesStateFlow.value,
                     categoryID = currentCategoryId ?: "default",
                     learnOrKnown = LearnOrKnown.UNDEFINED.getType(),
                     imageUrl = imageStateFlow.value ?: "",

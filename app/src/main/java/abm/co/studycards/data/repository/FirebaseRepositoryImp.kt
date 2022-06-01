@@ -22,6 +22,7 @@ import abm.co.studycards.util.Constants.CATEGORIES_REF
 import abm.co.studycards.util.Constants.CONFIG_REF
 import abm.co.studycards.util.Constants.EXPLORE_REF
 import abm.co.studycards.util.Constants.NAME_REF
+import abm.co.studycards.util.Constants.TAG
 import abm.co.studycards.util.Constants.TAG_ERROR
 import abm.co.studycards.util.Constants.USER_REF
 import abm.co.studycards.util.Constants.WORDS_REF
@@ -137,7 +138,6 @@ class FirebaseRepositoryImp @Inject constructor(
             return userWordsStateFlow.asStateFlow()
         categoriesDbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-//                Log.i(TAG, "impl fetchUserWords")
                 coroutineScope.launch(Dispatchers.IO) {
                     val items = mutableListOf<Word>()
                     snapshot.children.forEach { category ->
@@ -151,6 +151,7 @@ class FirebaseRepositoryImp @Inject constructor(
                             Log.e(TAG_ERROR, "fetchUserWords: ${e.message}")
                         }
                     }
+                    Log.i(TAG, "impl fetchUserWords: $items")
                     if (items.isEmpty()) {
                         userWordsStateFlow.value =
                             ResultWrapper.Error(res = R.string.empty_in_vocabulary)

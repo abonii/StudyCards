@@ -3,7 +3,6 @@ package abm.co.studycards.ui.games.matching
 import abm.co.studycards.R
 import abm.co.studycards.databinding.ItemMatchingCardBinding
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.util.changeBackgroundChangesAndFlip
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
@@ -38,7 +37,7 @@ class MatchingViewHolder(
 
     fun bind(currentItem: Word) = binding.run {
         word.text = if (!isTranslatedWords) {
-            currentItem.translationsToString()
+            currentItem.translations
         } else currentItem.name
     }
 

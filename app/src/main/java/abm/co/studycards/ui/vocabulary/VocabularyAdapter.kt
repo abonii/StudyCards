@@ -1,9 +1,8 @@
 package abm.co.studycards.ui.vocabulary
 
-import abm.co.studycards.domain.model.LearnOrKnown
 import abm.co.studycards.databinding.ItemVocabularyTabBinding
+import abm.co.studycards.domain.model.LearnOrKnown
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.util.GeneralBindingAdapters.setImageWithGlide
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -74,7 +73,7 @@ class VocabularyAdapter(
             changeButtons()
             expansionsCollection.add(expansionLayout)
             word.text = currentItem.name
-            translation.text = currentItem.translationsToString()
+            translation.text = currentItem.translations
             image.isVisible = currentItem.imageUrl.isNotEmpty()
             if (currentItem.imageUrl.isNotEmpty()) {
                 image.setImageWithGlide(currentItem.imageUrl)

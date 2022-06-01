@@ -3,7 +3,6 @@ package abm.co.studycards.ui.vocabulary
 import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentVocabularyTabBinding
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.domain.model.examplesToString
 import abm.co.studycards.ui.show_example_dialog.ShowExampleDialogFragment
 import abm.co.studycards.util.Constants.VOCABULARY_TAB_POSITION
 import abm.co.studycards.util.base.BaseBindingFragment
@@ -96,7 +95,7 @@ class VocabularyTabFragment :
     }
 
     private fun onLongClickWord(word: Word) {
-        val examples = word.examplesToString()
+        val examples = word.examples
         if (examples.isBlank()) {
             toast(R.string.no_example)
         } else {

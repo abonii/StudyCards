@@ -5,7 +5,6 @@ import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentToRightOrLeftBinding
 import abm.co.studycards.domain.model.ConfirmText
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.navigate
 import android.os.Bundle
@@ -101,7 +100,7 @@ class ToRightOrLeftFragment :
     }
 
     private fun onAudioClicked(word: Word) {
-        val newText = word.translationsToString()
+        val newText = word.translations
         try {
             textToSpeech.speak(
                 newText,

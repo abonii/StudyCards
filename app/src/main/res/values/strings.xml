@@ -129,7 +129,7 @@
     <string name="problem_internet_connection">Problem with internet connection</string>
     <string name="error_occurred">Error occurred</string>
     <string name="socket_timeout_exception">Socket time out exception</string>
-    <string name="some_problems_occurred">Some problems occurred</string>
+    <string name="some_problems_occurred">Some problems occurred, please check the availability of updates</string>
     <string name="password_successfully_changed">Password changed successfully</string>
     <string name="password_unsuccessfully_changed">Password not changed</string>
     <string name="error_wrong_password">Wrong Password</string>
