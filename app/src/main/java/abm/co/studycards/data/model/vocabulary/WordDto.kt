@@ -4,9 +4,9 @@ import abm.co.studycards.domain.model.LearnOrKnown
 
 data class WordDto(
     var name: String = "",
-    var translations: List<String> = emptyList(),
+    var translations: String = "",
     val imageUrl: String = "",
-    var examples: List<String> = emptyList(),
+    var examples: String = "",
     var learnOrKnown: String = LearnOrKnown.UNDEFINED.getType(),
     var sourceLanguage: String = "",
     var targetLanguage: String = "",
@@ -19,12 +19,5 @@ data class WordDto(
         const val LEARN_OR_KNOWN = "learnOrKnown"
         const val REPEAT_COUNT = "repeatCount"
         const val NEXT_REPEAT_TIME = "nextRepeatTime"
-    }
-    fun setTranslation(translations: Map<String, String>) {
-        this.translations = ArrayList(translations.values)
-    }
-
-    fun setExample(examples: Map<String, String>) {
-        this.examples = ArrayList(examples.values)
     }
 }

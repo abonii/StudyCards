@@ -124,7 +124,7 @@
         <item quantity="many">через %d минут</item>
         <item quantity="few">через $d минуты</item>
     </plurals>
-    <string name="some_problems_occurred">Возникли проблемы</string>
+    <string name="some_problems_occurred">Возникли некоторые проблемы, пожалуйста, проверьте наличие обновлений</string>
     <string name="translate_count_spend">Попыток больше не осталось. Купите больше переводов или попробуйте завтра</string>
     <string name="name_translation_not_empty">Поля имени или перевода не могут быть пустыми.</string>
     <string name="choose_category">Пожалуйста, выберите категорию для этого слова.</string>

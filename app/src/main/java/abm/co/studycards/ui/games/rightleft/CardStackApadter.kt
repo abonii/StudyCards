@@ -3,7 +3,6 @@ package abm.co.studycards.ui.games.rightleft
 import abm.co.studycards.R
 import abm.co.studycards.databinding.ItemCardBinding
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.util.GeneralBindingAdapters.setImageWithGlide
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
@@ -64,7 +63,7 @@ class CardStackAdapter constructor(
             wordImage.setImageWithGlide(currentItem.imageUrl)
             wordImageContainer.isVisible = currentItem.imageUrl.isNotBlank()
             translated.text = currentItem.name
-            word.text = currentItem.translationsToString()
+            word.text = currentItem.translations
             bindFrontLayout()
         }
 

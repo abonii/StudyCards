@@ -3,7 +3,6 @@ package abm.co.studycards.ui.games.guessing
 import abm.co.studycards.R
 import abm.co.studycards.databinding.ItemOptionBinding
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.util.getMyColor
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -42,7 +41,7 @@ class OptionsAdapter(private val onClickCard: (CardView, String) -> Unit) :
         }
 
         fun bind(currentItem: Word) {
-            binding.option.text = currentItem.translationsToString()
+            binding.option.text = currentItem.translations
             binding.card.setCardBackgroundColor(binding.card.getMyColor(R.color.background))
         }
     }

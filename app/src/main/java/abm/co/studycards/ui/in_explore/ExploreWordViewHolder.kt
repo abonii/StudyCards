@@ -2,7 +2,6 @@ package abm.co.studycards.ui.in_explore
 
 import abm.co.studycards.databinding.ItemExploreWordBinding
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.domain.model.translationsToString
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +13,7 @@ class ExploreWordViewHolder(
 
     fun bind(currentItem: Word) = binding.run {
         name.text = currentItem.name
-        translation.text = currentItem.translationsToString()
+        translation.text = currentItem.translations
         Glide.with(image)
             .load(currentItem.imageUrl)
             .into(image)

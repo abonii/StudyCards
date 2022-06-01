@@ -4,7 +4,6 @@ import abm.co.studycards.MainActivity
 import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentInCategoryBinding
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.helpers.SwipeToDeleteCallback
 import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
@@ -192,7 +191,7 @@ class InCategoryFragment :
             toast(getString(R.string.you_do_n_have_language_to_speech))
             openDownloadTTSDialog()
         } else {
-            val newText = word.translationsToString()
+            val newText = word.translations
             textToSpeech?.speak(
                 newText,
                 TextToSpeech.QUEUE_FLUSH,

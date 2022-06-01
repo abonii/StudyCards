@@ -27,7 +27,7 @@ class WordViewHolder(
     fun bind(currentItem: Word) = binding.run {
         stick.backgroundTintList = getStickBackgroundTint(currentItem)
         text.text = currentItem.name
-        translation.text = currentItem.translations.joinToString(TRANSLATIONS_SEPARATOR)
+        translation.text = currentItem.translations
     }
 
     private fun getStickBackgroundTint(currentItem: Word): ColorStateList {

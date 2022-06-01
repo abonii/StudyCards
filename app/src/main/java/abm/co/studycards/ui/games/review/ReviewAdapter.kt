@@ -2,7 +2,6 @@ package abm.co.studycards.ui.games.review
 
 import abm.co.studycards.databinding.ItemReviewBinding
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.domain.model.translationsToString
 import abm.co.studycards.util.GeneralBindingAdapters.setImageWithGlide
 import android.annotation.SuppressLint
 import android.graphics.BlurMaskFilter
@@ -45,7 +44,7 @@ class ReviewAdapter : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
                 binding.wordImage.setImageWithGlide(currentItem.imageUrl)
             } else
                 binding.wordImageContainer.visibility = View.GONE
-            binding.translated.text = currentItem.translationsToString()
+            binding.translated.text = currentItem.translations
             val radius: Float = binding.translated.textSize / 3
             val filter = BlurMaskFilter(radius, BlurMaskFilter.Blur.NORMAL)
             binding.translated.paint.maskFilter = filter
