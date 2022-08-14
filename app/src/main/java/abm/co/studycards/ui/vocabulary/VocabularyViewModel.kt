@@ -34,6 +34,7 @@ class VocabularyViewModel @Inject constructor(
 
     fun initWords(pos: Int) {
         viewModelScope.launch(Dispatchers.IO) {
+            //define current type: unknown, known, uncertain
             currentTabType = LearnOrKnown.getType(pos)
             delay(800)
             getUserWordsUseCase(currentTabType).collectLatest {

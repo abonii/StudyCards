@@ -32,7 +32,6 @@ abstract class BaseBindingActivity<B : ViewDataBinding>(@LayoutRes private val l
         initViews(savedInstanceState)
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

@@ -79,7 +79,7 @@ class AddEditWordViewModel @Inject constructor(
             config = getConfigUseCase()
         }
     }
-
+    //translate word
     fun fetchWord(fromSource: Boolean) {
         viewModelScope.launch(dispatcher) {
             if (translateCounts > 0) {
