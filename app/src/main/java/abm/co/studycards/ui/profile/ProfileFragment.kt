@@ -6,7 +6,7 @@ import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentProfileBinding
 import abm.co.studycards.domain.model.AvailableLanguages
 import abm.co.studycards.domain.model.Language
-import abm.co.studycards.helpers.LocaleHelper
+import abm.co.studycards.util.helpers.LocaleHelper
 import abm.co.studycards.ui.login.LoginActivity
 import abm.co.studycards.util.Constants.DEV_ACCOUNT_LINK
 import abm.co.studycards.util.Constants.REQUEST_SYSTEM_LANGUAGE_KEY

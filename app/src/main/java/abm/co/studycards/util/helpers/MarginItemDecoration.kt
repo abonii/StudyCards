@@ -1,4 +1,4 @@
-package abm.co.studycards.helpers
+package abm.co.studycards.util.helpers
 
 import abm.co.studycards.R
 import abm.co.studycards.util.px

@@ -3,8 +3,8 @@ package abm.co.studycards.ui.add_word.dialog.dictionary.adapters
 import abm.co.studycards.R
 import abm.co.studycards.databinding.ItemTranslatedWordBinding
 import abm.co.studycards.domain.model.CategoryDetails
-import abm.co.studycards.helpers.LinkTouchMovementMethod
-import abm.co.studycards.helpers.TouchableSpan
+import abm.co.studycards.util.helpers.LinkTouchMovementMethod
+import abm.co.studycards.util.helpers.TouchableSpan
 import abm.co.studycards.util.Constants.EXAMPLES_SEPARATOR
 import abm.co.studycards.util.getMyColor
 import android.text.SpannableString

@@ -4,7 +4,7 @@ import abm.co.studycards.MainActivity
 import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentInExploreCategoryBinding
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.helpers.MarginItemDecoration
+import abm.co.studycards.util.helpers.MarginItemDecoration
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
 import abm.co.studycards.util.navigate

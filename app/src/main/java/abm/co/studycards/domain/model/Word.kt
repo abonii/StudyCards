@@ -1,7 +1,5 @@
 package abm.co.studycards.domain.model
 
-import abm.co.studycards.util.Constants.EXAMPLES_SEPARATOR
-import abm.co.studycards.util.Constants.TRANSLATIONS_SEPARATOR
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 

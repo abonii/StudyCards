@@ -1,7 +1,7 @@
 package abm.co.studycards.util.base
 
 import abm.co.studycards.domain.Prefs
-import abm.co.studycards.helpers.LocaleHelper
+import abm.co.studycards.util.helpers.LocaleHelper
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle

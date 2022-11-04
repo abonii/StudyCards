@@ -4,7 +4,6 @@ import abm.co.studycards.R
 import abm.co.studycards.domain.model.LearnOrKnown
 import abm.co.studycards.databinding.ItemWordBinding
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.util.Constants.TRANSLATIONS_SEPARATOR
 import abm.co.studycards.util.getMyColor
 import android.content.res.ColorStateList
 import androidx.recyclerview.widget.RecyclerView

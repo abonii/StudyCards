@@ -1,4 +1,4 @@
-package abm.co.studycards.helpers;
+package abm.co.studycards.util.helpers;
 
 import android.content.Context;
 import android.view.View;

@@ -4,8 +4,8 @@ import abm.co.studycards.MainActivity
 import abm.co.studycards.R
 import abm.co.studycards.domain.model.ConfirmText
 import abm.co.studycards.databinding.FragmentReviewBinding
-import abm.co.studycards.helpers.CenterZoomLayoutManager
-import abm.co.studycards.helpers.SnapHelperOneByOne
+import abm.co.studycards.util.helpers.CenterZoomLayoutManager
+import abm.co.studycards.util.helpers.SnapHelperOneByOne
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.navigate
 import android.os.Bundle

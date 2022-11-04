@@ -2,7 +2,6 @@ package abm.co.studycards.ui.add_word.dialog.category
 
 import abm.co.studycards.databinding.ItemSelectCategoryBinding
 import abm.co.studycards.domain.model.Category
-import abm.co.studycards.domain.model.CategorySelectable
 import androidx.recyclerview.widget.RecyclerView
 
 class SelectCategoryViewHolder(

@@ -1,4 +1,4 @@
-package abm.co.studycards.helpers
+package abm.co.studycards.util.helpers
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper

@@ -4,7 +4,7 @@ import abm.co.studycards.MainActivity
 import abm.co.studycards.R
 import abm.co.studycards.databinding.FragmentInCategoryBinding
 import abm.co.studycards.domain.model.Word
-import abm.co.studycards.helpers.SwipeToDeleteCallback
+import abm.co.studycards.util.helpers.SwipeToDeleteCallback
 import abm.co.studycards.setDefaultStatusBar
 import abm.co.studycards.util.base.BaseBindingFragment
 import abm.co.studycards.util.launchAndRepeatWithViewLifecycle
