@@ -1,0 +1,93 @@
+ext {
+
+    versions = [
+
+            minSdk             : 23,
+            compileSdk         : 33,
+            buildTools         : "32.0.0",
+
+            activity           : '1.6.1',
+            core               : '1.5.0',
+            appcompat          : '1.5.1',
+            constraint         : '2.0.4',
+            paging             : '3.1.1',
+
+            gradlePlugin       : '7.2.2',
+            gmsServicesPlugin  : '4.3.8',
+
+            analytics          : '19.0.0',
+            firebaseMessaging  : '23.0.0',
+            firebaseAnalytics  : '20.1.0',
+
+            workManager        : '2.7.1',
+
+            navigation         : '2.4.2',
+            navigationCompose  : '2.4.2',
+            lifecycle          : '2.4.1',
+
+            kotlin             : '1.6.21',
+            coroutines         : '1.5.0',
+            kotlinSerialization: '1.0.1',
+            collectionsImmutable: '0.3.5',
+
+            retrofit           : '2.9.0',
+            okhttp             : '4.9.0',
+
+            hilt               : '2.44',
+            hiltAndroidX       : '1.0.0-alpha03',
+            hiltAndroidCompiler: '1.0.0-beta01',
+            assistedInject     : '0.6.0',
+
+            camerax            : '1.0.1',
+            cameraxView        : '1.0.0-alpha28',
+
+            mlKitFaceDetection : '16.1.2',
+            mlKitBarcodeScanning : '17.0.0',
+
+            dagger2            : '2.44',
+
+            coil               : '2.0.0',
+            coilCompose        : '2.0.0',
+
+            gson               : '2.9.0',
+
+            dataStore          : '1.0.0',
+
+            material           : '1.5.0',
+
+            groupie            : '2.8.1',
+
+            pluto            : '1.1.1',
+            plutoNoOp        : '1.1.1',
+
+            keyboardVisibility : '3.0.0-RC2',
+
+            shimmer            : '0.5.0',
+
+            startup            : '1.0.0',
+            detekt             : '1.18.0-RC1',
+            lint               : '27.0.1',
+
+            compressor         : '1.5.0',
+            viewbinding        : '1.4.0',
+            libphonenumber     : '8.10.16',
+            image_viewer       : '1.0.1',
+
+            exo_player         : '2.15.1',
+
+            leakcanary         : '2.8.1',
+
+            compose_version     : '1.4.0-alpha01',
+            constraintCompose  : '1.0.1',
+            accompanist        : '0.23.1',
+            toolbarCompose    : '2.3.3',
+            pagingCompose    : '1.0.0-alpha14',
+
+            lottieCompose      : '5.2.0',
+            desugar_jdk_libs   : '1.1.5',
+
+            splashscreen       : '1.0.0',
+
+            recyclerView       : '1.2.0-rc1'
+    ]
+}

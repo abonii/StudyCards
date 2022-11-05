@@ -17,7 +17,6 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
@@ -35,10 +34,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
     private var currentNavController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         checkIfLoggedIn()
-        initBackPressed()
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
@@ -68,15 +66,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(R.layout.activity_
             checkLearnLanguagesSelected()
             viewModel.setDailyTranslateTime()
         }
-    }
-
-    private fun initBackPressed() {
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (onBackAndNavigateUp() || !currentNavController?.value!!.navigateUp())
-                    finish()
-            }
-        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

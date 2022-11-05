@@ -1,0 +1,175 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-parcelize'
+    id 'kotlinx-serialization'
+}
+
+android {
+    compileSdk versions.compileSdk
+
+    defaultConfig {
+        minSdk versions.minSdk
+        targetSdk versions.compileSdk
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["dagger.hilt.disableModulesHaveInstallInCheck"] = "true"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        freeCompilerArgs = ['-Xjvm-default=compatibility']
+    }
+    buildFeatures {
+        viewBinding true
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.2.0-beta03'
+    }
+}
+
+dependencies {
+
+    // base
+    api "androidx.core:core-ktx:$versions.core"
+    api "androidx.appcompat:appcompat:$versions.appcompat"
+
+    // kotlinx
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$versions.coroutines"
+    api "org.jetbrains.kotlinx:kotlinx-serialization-json:$versions.kotlinSerialization"
+    api "org.jetbrains.kotlinx:kotlinx-collections-immutable:$versions.collectionsImmutable"
+
+    //KTX module
+    api 'androidx.fragment:fragment-ktx:1.5.4'
+
+    // navigation
+    api "androidx.navigation:navigation-fragment-ktx:$versions.navigation"
+    api "androidx.navigation:navigation-ui-ktx:$versions.navigation"
+    api "androidx.navigation:navigation-runtime-ktx:$versions.navigation"
+
+    // jetpack compose
+    api "androidx.navigation:navigation-compose:$versions.navigationCompose"
+
+    // startup
+    api "androidx.startup:startup-runtime:$versions.startup"
+
+    // recyclerView
+    api "androidx.recyclerview:recyclerview:$versions.recyclerView"
+
+    // lifecycle
+    api "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
+    api "androidx.lifecycle:lifecycle-runtime-ktx:$versions.lifecycle"
+    api "androidx.lifecycle:lifecycle-common-java8:$versions.lifecycle"
+
+    // paging
+    api "androidx.paging:paging-runtime-ktx:$versions.paging"
+
+    // material
+    api "com.google.android.material:material:$versions.material"
+
+    // shimmer
+    api "com.facebook.shimmer:shimmer:$versions.shimmer"
+
+    // coil
+    api "io.coil-kt:coil:$versions.coil"
+    api "io.coil-kt:coil-compose:$versions.coilCompose"
+
+    // retrofit
+    api "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    api "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+    api "com.squareup.retrofit2:converter-scalars:$versions.retrofit"
+
+    // okHttp
+    api "com.squareup.okhttp3:okhttp:$versions.okhttp"
+    api "com.squareup.okhttp3:logging-interceptor:$versions.okhttp"
+    api "com.squareup.okhttp3:okhttp-urlconnection:$versions.okhttp"
+
+    // gson
+    api "com.google.code.gson:gson:$versions.gson"
+
+    // leak canary
+    // debugApi "com.squareup.leakcanary:leakcanary-android:$versions.leakcanary"
+
+    // optional - ProcessLifecycleOwner provides a lifecycle for the whole application process
+    api "androidx.lifecycle:lifecycle-process:$versions.lifecycle"
+
+    // views
+    api "androidx.constraintlayout:constraintlayout:$versions.constraint"
+    api "androidx.viewpager2:viewpager2:1.0.0"
+    api "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
+    // data store
+    api "androidx.datastore:datastore-preferences:$versions.dataStore"
+    api "androidx.datastore:datastore:$versions.dataStore"
+
+    // jetpack compose
+    api "androidx.compose.material:material:$versions.compose_version"
+    api "androidx.constraintlayout:constraintlayout-compose:$versions.constraintCompose"
+    debugApi "androidx.compose.ui:ui-util:$versions.compose_version"
+    debugApi "androidx.compose.ui:ui-tooling:$versions.compose_version"
+    api "androidx.compose.ui:ui-tooling-preview:$versions.compose_version"
+    api "androidx.activity:activity-ktx:1.6.0-rc2"
+    api "androidx.activity:activity-compose:$versions.activity"
+    api "androidx.paging:paging-compose:$versions.pagingCompose"
+    api "androidx.compose.ui:ui:$versions.compose_version"
+    api "androidx.compose.material:material-icons-extended:$versions.compose_version"
+
+    // jetpack compose extension libraries
+    api "com.google.accompanist:accompanist-pager:$versions.accompanist"
+    api "com.google.accompanist:accompanist-flowlayout:$versions.accompanist"
+    api "com.google.accompanist:accompanist-navigation-animation:$versions.accompanist"
+
+    // NOTE: NON TRANSITIVE DEPENDENCIES! MUST DUPLICATE IN ALL MODULES
+    // hilt
+    implementation "com.google.dagger:hilt-android:$versions.hilt"
+    kapt "com.google.dagger:hilt-android-compiler:$versions.hilt"
+    kapt "androidx.hilt:hilt-compiler:$versions.hiltAndroidCompiler"
+
+    implementation "com.google.dagger:dagger:$versions.dagger2"
+    kapt "com.google.dagger:dagger-compiler:$versions.dagger2"
+
+    // splash screen api
+    api "androidx.core:core-splashscreen:$versions.splashscreen"
+
+    // assisted inject
+    compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$versions.assistedInject"
+    kapt "com.squareup.inject:assisted-inject-processor-dagger2:$versions.assistedInject"
+
+    //text Apache
+    api 'org.apache.commons:commons-lang3:3.10'
+
+    //textSize
+    api 'com.intuit.ssp:ssp-android:1.0.6'
+    api 'com.intuit.sdp:sdp-android:1.0.5'
+
+    //coordinator_layout
+    api "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
+
+    // test
+    testApi 'junit:junit:4.13.2'
+    androidTestApi 'androidx.test.ext:junit:1.1.3'
+    androidTestApi 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestApi "androidx.compose.ui:ui-test-junit4:$versions.compose_version"
+    debugApi "androidx.compose.ui:ui-tooling:$versions.compose_version"
+    debugApi "androidx.compose.ui:ui-test-manifest:$versions.compose_version"
+}
