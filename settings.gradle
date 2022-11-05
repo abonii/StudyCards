@@ -1,4 +1,4 @@
 rootProject.name = "StudyCards"
-include ':app'
+include ':core'
 include ':admin'
 include ':shared'
