@@ -1,0 +1,9 @@
+const val studyCardsProjectApplicationId = "abm.co.studycards"
+const val studyCardsAdminProjectApplicationId = "abm.co.studycardsadmin"
+const val projectMinSdkVersion = 21
+const val projectTargetSdkVersion = 33
+const val projectCompileSdkVersion = 33
+const val studyCardsProjectVersionCode = 54
+const val studyCardsAdminProjectVersionCode = 1
+const val studyCardsProjectVersionName = "1.0.9"
+const val studyCardsAdminProjectVersionName = "1.0.0"
