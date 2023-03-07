@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Studycards</string>
+    <string name="app_name">StudyCards</string>
+    <string name="app_name_dev">StudyCards Debug</string>
 </resources>

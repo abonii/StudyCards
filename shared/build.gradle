@@ -41,7 +41,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.2.0-beta03'
+        kotlinCompilerExtensionVersion '1.4.3'
     }
 }
 
@@ -123,21 +123,18 @@ dependencies {
     api "androidx.datastore:datastore:$versions.dataStore"
 
     // jetpack compose
-    api "androidx.compose.material:material:$versions.compose_version"
+    implementation platform("androidx.compose:compose-bom:$versions.composeBOM")
+    api "androidx.compose.material:material"
     api "androidx.constraintlayout:constraintlayout-compose:$versions.constraintCompose"
-    debugApi "androidx.compose.ui:ui-util:$versions.compose_version"
-    debugApi "androidx.compose.ui:ui-tooling:$versions.compose_version"
-    api "androidx.compose.ui:ui-tooling-preview:$versions.compose_version"
-    api "androidx.activity:activity-ktx:1.6.0-rc2"
-    api "androidx.activity:activity-compose:$versions.activity"
+    debugApi "androidx.compose.ui:ui-util"
+    api "androidx.compose.ui:ui-tooling-preview"
     api "androidx.paging:paging-compose:$versions.pagingCompose"
-    api "androidx.compose.ui:ui:$versions.compose_version"
-    api "androidx.compose.material:material-icons-extended:$versions.compose_version"
 
     // jetpack compose extension libraries
     api "com.google.accompanist:accompanist-pager:$versions.accompanist"
     api "com.google.accompanist:accompanist-flowlayout:$versions.accompanist"
     api "com.google.accompanist:accompanist-navigation-animation:$versions.accompanist"
+    api "com.google.accompanist:accompanist-systemuicontroller:$versions.accompanistSystemUiController"
 
     // NOTE: NON TRANSITIVE DEPENDENCIES! MUST DUPLICATE IN ALL MODULES
     // hilt
