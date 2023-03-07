@@ -114,5 +114,5 @@ dependencies {
     OtherDependencies.forStudyCards().forEach(::implementation)
     implementation(BillingDependencies.billing)
     implementation(StartupDependencies.startupRuntime)
-    implementation(project(":shared"))
+    implementation(project(":designsystem"))
 }
