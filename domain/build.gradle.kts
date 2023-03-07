@@ -1,10 +1,11 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
+    id("kotlin-parcelize")
 }
 
 android {
-    namespace = "abm.co.designsystem"
+    namespace = "abm.co.domain"
     compileSdk = projectCompileSdkVersion
 
     defaultConfig {
@@ -12,6 +13,7 @@ android {
         targetSdk = projectTargetSdkVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -30,31 +32,14 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = ComposeDependencies.kotlinCompilerExtensionVersion
-    }
 }
 
 dependencies {
-    AndroidxDependencies.apply {
-        api(coreKtx)
-        api(appcompat)
-        api(lifeCycleRuntimeCompose)
-        api(lifeCycleViewModelKtx)
-    }
-    ComposeDependencies.apply {
-        api(platform(composeBOM))
-        api(composeUi)
-        api(composeUiPreview)
-        api(composeUiTooling)
-        api(composeUiTestManifest)
-        api(composeMaterial)
-        api(constraintCompose)
-        api(composeCoil)
-        api(composeActivity)
-        api(composeViewModel)
+    implementation(KotlinxDependencies.core)
+    implementation(AndroidxDependencies.lifeCycleViewModelKtx)
+    TestDependencies.apply {
+        testImplementation(junit)
+        testImplementation(coroutinesTest)
+        testImplementation(mokitoKotlin)
     }
 }

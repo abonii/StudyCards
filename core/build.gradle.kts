@@ -82,21 +82,6 @@ dependencies {
 //        implementation(assistedInjectAnnotation)
 //        implementation(assistedInjectProcessor)
     }
-    FirebaseDependencies.apply {
-        implementation(platform(firebaseBOM))
-        implementation(auth)
-        implementation(databaseDatabase)
-        implementation(crashlytics)
-        implementation(functions)
-        implementation(firestore)
-        implementation(database)
-        implementation(firebaseAuth)
-        implementation(analytics)
-    }
-    NavigationDependencies.apply {
-        implementation(navigationCompose)
-        implementation(composeHiltNavigation)
-    }
     TestDependencies.apply {
         testImplementation(junit)
         androidTestImplementation(junitExt)

@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 fun NavGraphBuilder.registration(
     navController: NavController
 ) {
-    composable(Destinations.Login.route) {
+    composable(Destinations.Registration.route) {
         RegistrationPage()
     }
 }

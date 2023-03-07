@@ -1,6 +1,5 @@
 package abm.co.studycards.ui
 
-import abm.co.designsystem.use
 import abm.co.navigation.BottomNavItem
 import abm.co.navigation.Destinations
 import abm.co.studycards.navigation.ComposeNewsNavHost

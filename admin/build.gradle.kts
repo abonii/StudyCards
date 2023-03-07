@@ -28,11 +28,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            applicationIdSuffix = ".debug"
-            buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
-            buildConfigField("String", "VERSION_CODE", "\"${defaultConfig.versionCode}\"")
-        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -40,8 +35,6 @@ android {
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro"
             )
-            buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
-            buildConfigField("String", "VERSION_CODE", "\"${defaultConfig.versionCode}\"")
         }
     }
     compileOptions {
@@ -74,17 +67,6 @@ dependencies {
         implementation(hiltNavigationCompose)
 //        implementation(assistedInjectAnnotation)
 //        implementation(assistedInjectProcessor)
-    }
-    FirebaseDependencies.apply {
-        implementation(platform(firebaseBOM))
-        implementation(auth)
-        implementation(databaseDatabase)
-        implementation(crashlytics)
-        implementation(functions)
-        implementation(firestore)
-        implementation(database)
-        implementation(firebaseAuth)
-        implementation(analytics)
     }
     NavigationDependencies.apply {
         implementation(navigationCompose)

@@ -60,7 +60,7 @@ private fun RegistrationScreen(
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
-                    text = "Login",
+                    text = "Registration",
                     color = Color.White
                 )
             }
