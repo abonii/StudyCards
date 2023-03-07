@@ -125,16 +125,22 @@ dependencies {
     // jetpack compose
     implementation platform("androidx.compose:compose-bom:$versions.composeBOM")
     api "androidx.compose.material:material"
-    api "androidx.constraintlayout:constraintlayout-compose:$versions.constraintCompose"
     debugApi "androidx.compose.ui:ui-util"
     api "androidx.compose.ui:ui-tooling-preview"
     api "androidx.paging:paging-compose:$versions.pagingCompose"
+    api "androidx.activity:activity-compose:$versions.composeActivity"
+    api "androidx.constraintlayout:constraintlayout-compose:$versions.constraintCompose"
+    api "androidx.lifecycle:lifecycle-viewmodel-compose:$versions.composeViewModel"
 
     // jetpack compose extension libraries
     api "com.google.accompanist:accompanist-pager:$versions.accompanist"
     api "com.google.accompanist:accompanist-flowlayout:$versions.accompanist"
     api "com.google.accompanist:accompanist-navigation-animation:$versions.accompanist"
-    api "com.google.accompanist:accompanist-systemuicontroller:$versions.accompanistSystemUiController"
+    api "com.google.accompanist:accompanist-systemuicontroller:$versions.accompanist"
+
+    // jetpack navigation
+    api "androidx.navigation:navigation-compose:$versions.composeNavigation"
+    api "androidx.hilt:hilt-navigation-compose:$versions.composeHiltNavigation"
 
     // NOTE: NON TRANSITIVE DEPENDENCIES! MUST DUPLICATE IN ALL MODULES
     // hilt

@@ -78,10 +78,13 @@ ext {
 
             composeBOM         : '2022.10.00',
             constraintCompose  : '1.0.1',
-            accompanist        : '0.23.1',
+            accompanist        : '0.25.0',
             toolbarCompose    : '2.3.3',
-            accompanistSystemUiController : '0.25.0',
             pagingCompose      : '1.0.0-alpha17',
+            composeNavigation  : '2.5.3',
+            composeHiltNavigation  : '1.0.0',
+            composeActivity  : '1.6.1',
+            composeViewModel  : '2.5.1',
 
             lottieCompose      : '5.2.0',
             desugar_jdk_libs   : '1.1.5',

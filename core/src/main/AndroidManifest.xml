@@ -6,6 +6,7 @@
 
     <application
         android:allowBackup="true"
+        android:name=".StudyCardsApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="${appName}"
         android:enableOnBackInvokedCallback="true"
@@ -14,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyCards">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
