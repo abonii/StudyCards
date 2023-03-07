@@ -1,0 +1,108 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlin-parcelize'
+    id 'kotlinx-serialization'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
+
+android {
+
+    compileSdk versions.compileSdk
+
+    defaultConfig {
+        applicationId "abm.co.studycards"
+        minSdk versions.minSdk
+        targetSdk versions.compileSdk
+        versionCode 54
+        versionName "1.09"
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        proguardFiles
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        dataBinding true
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.2.0-beta03'
+    }
+    namespace 'abm.co.studycards'
+}
+
+dependencies {
+
+    implementation 'androidx.annotation:annotation:1.5.0'
+
+    implementation 'com.google.android.gms:play-services-auth:20.3.0'
+
+    //Multidex
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    //preference
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+
+    // NOTE: NON TRANSITIVE DEPENDENCIES! MUST DUPLICATE IN ALL MODULES
+    // hilt
+    implementation "com.google.dagger:hilt-android:$versions.hilt"
+    kapt "com.google.dagger:hilt-android-compiler:$versions.hilt"
+    kapt "androidx.hilt:hilt-compiler:$versions.hiltAndroidCompiler"
+
+    implementation "com.google.dagger:dagger:$versions.dagger2"
+    kapt "com.google.dagger:dagger-compiler:$versions.dagger2"
+
+    //room&paging
+    implementation "androidx.room:room-runtime:2.4.3"
+    implementation "androidx.room:room-ktx:2.4.3"
+    kapt "androidx.room:room-compiler:2.4.3"
+
+    //expandView
+    implementation 'com.github.florent37:expansionpanel:1.2.4'
+
+    //swipeCards
+    implementation 'com.github.yuyakaido:cardstackview:2.3.4'
+
+    // glide
+    implementation 'com.github.bumptech.glide:glide:4.13.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+
+    //swipe recyclerview items
+    implementation 'com.github.amsiq:SwipeRevealLayout:1.4.1-x'
+
+    //Showcase
+//    implementation 'com.github.mreram:showcaseview:1.4.0'
+
+    // Timber
+//    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    //billing
+    implementation("com.android.billingclient:billing-ktx:4.1.0")
+
+    implementation project(path: ':shared')
+
+}

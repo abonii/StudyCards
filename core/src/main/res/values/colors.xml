@@ -1,59 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--same-->
-    <color name="colorPrimary">#00A3F6</color>
-    <color name="colorPrimaryNotEnabled">#504484EC</color>
-    <color name="colorPrimaryPressed">#002F7A</color>
-    <color name="colorPrimaryDark">#4484EC</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="violet">#450649</color>
-    <color name="red">#C81414</color>
-    <!--others-->
-    <color name="background">#FDFDFD</color>
-    <color name="tab_background">#F9FFEE</color>
-    <color name="itemContainer">#10000000</color>
-    <color name="second_color">#DCDCDC</color>
-    <color name="third_color">#F5F5F5</color>
-    <color name="lighter_darker">#9C9A9A</color>
-    <color name="dialog_background">#607D8B</color>
-    <color name="ellipse">#D5D5D5</color>
-    <color name="border">#60E4E4E4</color>
-    <color name="color_itself">#ffffff</color>
-    <color name="optionDefaultColor">#10838795</color>
-    <color name="grey">#C4C4C4</color>
-    <color name="lighter_itself">#10000000</color>
-    <color name="darker_than_usual">#717171</color>
-    <color name="shimmer">#E4E4E4</color>
-    <!--text-->
-    <color name="textColor">#080808</color>
-    <color name="secondTextColor">#666666</color>
-    <color name="thirdTextColor">#838795</color>
-    <color name="fourthTextColor">#9F9F9F</color>
-    <color name="specialTextColor">#31384F</color>
-    <color name="editTextColor">#CDCDCD</color>
-
-    <color name="swiping_n_know">#FF0000</color>
-    <color name="swiping_know">#03DC03</color>
-    <color name="swiping_doubted">#CFB323</color>
-    <color name="green">#34A853</color>
-    <color name="green_light">#A6CDB0</color>
-
-    <color name="blue_light_status">#A8C3EE</color>
-    <color name="ic_colors">#151515</color>
-    <color name="select_languages_card_background">#E6F6FF</color>
-
-    <array name="colors">
-        <item>#00008B</item>
-        <item>#00CED1</item>
-        <item>#25383C</item>
-        <item>#006400</item>
-        <item>#DC143C</item>
-        <item>#3B2F2F</item>
-        <item>#B86500</item>
-        <item>#800000</item>
-        <item>#3EA99F</item>
-        <item>#7D0552</item>
-    </array>
-
 </resources>

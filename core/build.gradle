@@ -1,40 +1,28 @@
 plugins {
     id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
-    id 'kotlin-parcelize'
-    id 'kotlinx-serialization'
-    id 'androidx.navigation.safeargs.kotlin'
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-
-    compileSdk versions.compileSdk
+    namespace 'abm.co.studycards'
+    compileSdk 33
 
     defaultConfig {
         applicationId "abm.co.studycards"
-        minSdk versions.minSdk
-        targetSdk versions.compileSdk
-        versionCode 54
-        versionName "1.09"
-        multiDexEnabled true
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        proguardFiles
-    }
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
 
-    bundle {
-        language {
-            enableSplit = false
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
         }
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -46,63 +34,30 @@ android {
         jvmTarget = '1.8'
     }
     buildFeatures {
-        dataBinding true
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.2.0-beta03'
+        kotlinCompilerExtensionVersion '1.2.0'
     }
-    namespace 'abm.co.studycards'
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
 }
 
 dependencies {
 
-    implementation 'androidx.annotation:annotation:1.5.0'
-
-    implementation 'com.google.android.gms:play-services-auth:20.3.0'
-
-    //Multidex
-    implementation 'androidx.multidex:multidex:2.0.1'
-
-    //preference
-    implementation 'androidx.preference:preference-ktx:1.2.0'
-
-    // NOTE: NON TRANSITIVE DEPENDENCIES! MUST DUPLICATE IN ALL MODULES
-    // hilt
-    implementation "com.google.dagger:hilt-android:$versions.hilt"
-    kapt "com.google.dagger:hilt-android-compiler:$versions.hilt"
-    kapt "androidx.hilt:hilt-compiler:$versions.hiltAndroidCompiler"
-
-    implementation "com.google.dagger:dagger:$versions.dagger2"
-    kapt "com.google.dagger:dagger-compiler:$versions.dagger2"
-
-    //room&paging
-    implementation "androidx.room:room-runtime:2.4.3"
-    implementation "androidx.room:room-ktx:2.4.3"
-    kapt "androidx.room:room-compiler:2.4.3"
-
-    //expandView
-    implementation 'com.github.florent37:expansionpanel:1.2.4'
-
-    //swipeCards
-    implementation 'com.github.yuyakaido:cardstackview:2.3.4'
-
-    // glide
-    implementation 'com.github.bumptech.glide:glide:4.13.2'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
-
-    //swipe recyclerview items
-    implementation 'com.github.amsiq:SwipeRevealLayout:1.4.1-x'
-
-    //Showcase
-//    implementation 'com.github.mreram:showcaseview:1.4.0'
-
-    // Timber
-//    implementation 'com.jakewharton.timber:timber:4.7.1'
-
-    //billing
-    implementation("com.android.billingclient:billing-ktx:4.1.0")
-
-    implementation project(path: ':shared')
-
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation 'androidx.activity:activity-compose:1.3.1'
+    implementation "androidx.compose.ui:ui:$compose_ui_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
+    implementation 'androidx.compose.material:material:1.2.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
 }
