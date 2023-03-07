@@ -45,7 +45,7 @@ dependencies {
     }
     AndroidxDependencies.apply {
         api(lifeCycleRuntimeCompose)
-        implementation(lifeCycleViewModelKtx)
+        api(lifeCycleViewModelKtx)
     }
     ComposeDependencies.apply {
         api(platform(composeBOM))

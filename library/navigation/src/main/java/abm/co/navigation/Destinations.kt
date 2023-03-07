@@ -1,7 +1,9 @@
 package abm.co.navigation
 
 sealed class Destinations(val route: String) {
-    object NewsListScreen : Destinations("news_list_screen")
-    data class NewsDetailScreen(val news: String = "news") : Destinations("news_detail_screen")
-    object FavoriteNewsScreen : Destinations("favorite_news_list_screen")
+    object Home : Destinations("home_page")
+    object Login : Destinations("login_page")
+    object Registration : Destinations("registration_page")
+    object Home2 : Destinations("home_page2")
+    object Home3 : Destinations("home_page3")
 }

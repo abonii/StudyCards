@@ -1,5 +1,4 @@
 rootProject.name = "StudyCards"
-include ':old-core'
 include ':admin'
 include ':library:designsystem'
 include ':core'
