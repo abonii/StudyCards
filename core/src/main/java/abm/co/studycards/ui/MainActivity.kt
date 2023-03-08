@@ -91,7 +91,10 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         modifier = Modifier.padding(innerPaddings),
                         startDestination = if (state.isLoggedIn) Destinations.Home.route
-                        else Destinations.Login.route
+                        else Destinations.Login.route,
+                        onFailure = {
+
+                        }
                     )
                 }
             }

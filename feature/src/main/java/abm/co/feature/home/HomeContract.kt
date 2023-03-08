@@ -4,12 +4,10 @@ import abm.co.designsystem.UnidirectionalViewModel
 import androidx.compose.ui.graphics.Color
 
 interface HomeContract :
-    UnidirectionalViewModel<HomeContract.Event, HomeContract.State> {
+    UnidirectionalViewModel<HomeContract.Event, HomeContract.State, Nothing> {
 
     data class State(
-        val color: Color,
-        val refreshing: Boolean = false,
-        val showFavoriteList: Boolean = false,
+        val showFavoriteList: Boolean = false
     )
 
     sealed class Event {

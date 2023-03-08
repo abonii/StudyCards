@@ -18,19 +18,7 @@ android {
     }
 
     buildTypes {
-        debug {
-            buildConfigField(
-                "String",
-                "GOOGLE_SIGN_IN_SERVER_ID",
-                "${project.properties["GOOGLE_SIGN_IN_SERVER_ID"]}"
-            )
-        }
         release {
-            buildConfigField(
-                "String",
-                "GOOGLE_SIGN_IN_SERVER_ID",
-                "${project.properties["GOOGLE_SIGN_IN_SERVER_ID"]}"
-            )
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -62,8 +50,6 @@ dependencies {
     }
     FirebaseDependencies.apply {
         implementation(platform(firebaseBOM))
-        implementation(auth)
-        implementation(databaseDatabase)
         implementation(crashlytics)
         implementation(functions)
         implementation(firestore)

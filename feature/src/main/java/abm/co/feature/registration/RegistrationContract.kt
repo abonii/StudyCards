@@ -4,7 +4,7 @@ import abm.co.designsystem.UnidirectionalViewModel
 import androidx.compose.ui.graphics.Color
 
 interface RegistrationContract :
-    UnidirectionalViewModel<RegistrationContract.Event, RegistrationContract.State> {
+    UnidirectionalViewModel<RegistrationContract.Event, RegistrationContract.State, Nothing> {
 
     data class State(
         val color: Color,

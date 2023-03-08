@@ -40,6 +40,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature"))
+    api(project(":feature"))
     api(NavigationDependencies.navigationCompose)
 }

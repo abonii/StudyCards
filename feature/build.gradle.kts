@@ -18,8 +18,20 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField(
+                "String",
+                "GOOGLE_SIGN_IN_SERVER_ID",
+                "${project.properties["GOOGLE_SIGN_IN_SERVER_ID"]}"
+            )
+        }
         release {
             isMinifyEnabled = true
+            buildConfigField(
+                "String",
+                "GOOGLE_SIGN_IN_SERVER_ID",
+                "${project.properties["GOOGLE_SIGN_IN_SERVER_ID"]}"
+            )
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -43,10 +55,18 @@ android {
 
 dependencies {
     api(project(":library:designsystem"))
+    api(project(":domain"))
     DIDependencies.apply {
         implementation(hiltAndroid)
         implementation(hiltNavigationCompose)
         kapt(dagerHiltCompiler)
+    }
+    FirebaseDependencies.apply {
+        implementation(platform(firebaseBOM))
+        implementation(auth)
+        implementation(analytics)
+        implementation(firebaseAuth)
+        implementation(database)
     }
 }
 

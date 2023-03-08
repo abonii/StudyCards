@@ -27,7 +27,7 @@ fun HomePage(
     val (state, event) = use(viewModel = viewModel)
 
     HomeScreen(
-        newsListState = state,
+        state = state,
         onRefresh = {
             event.invoke(HomeContract.Event.OnRefresh)
         }
@@ -38,11 +38,11 @@ fun HomePage(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun HomeScreen(
-    newsListState: HomeContract.State,
+    state: HomeContract.State,
     onRefresh: () -> Unit
 ) {
     val refreshState =
-        rememberPullRefreshState(refreshing = newsListState.refreshing, onRefresh = onRefresh)
+        rememberPullRefreshState(refreshing = false, onRefresh = onRefresh)
 
     Box(
         modifier = Modifier
@@ -50,13 +50,13 @@ private fun HomeScreen(
             .pullRefresh(refreshState)
     ) {
         AnimatedVisibility(
-            visible = !newsListState.refreshing,
+            visible = true,
             enter = fadeIn(),
             exit = fadeOut(),
         ) {
             Box(
                 modifier = Modifier
-                    .background(newsListState.color)
+                    .background(Color.Blue)
                     .fillMaxSize()
             ) {
                 Text(
@@ -67,7 +67,7 @@ private fun HomeScreen(
             }
         }
         PullRefreshIndicator(
-            newsListState.refreshing,
+            false,
             refreshState,
             Modifier.align(Alignment.TopCenter)
         )

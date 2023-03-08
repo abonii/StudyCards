@@ -13,5 +13,4 @@ object FirebaseDependencies {
     const val firestore = "com.google.firebase:firebase-firestore-ktx"
     const val functions = "com.google.firebase:firebase-functions-ktx"
     const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
-    const val databaseDatabase = "com.firebaseui:firebase-ui-database:8.0.0"
 }
