@@ -1,5 +1,6 @@
 package abm.co.data.repository
 
+import abm.co.data.di.ApplicationScope
 import abm.co.data.model.DatabaseReferenceType.CATEGORIES_REF
 import abm.co.data.model.DatabaseReferenceType.CONFIG_REF
 import abm.co.data.model.DatabaseReferenceType.EXPLORE_REF
@@ -19,7 +20,7 @@ class FirebaseRepositoryImp @Inject constructor(
     @Named(USER_REF) private var userDbRef: DatabaseReference,
     @Named(CONFIG_REF) private var configKey: DatabaseReference,
     private var _firebaseAuth: FirebaseAuth,
-    private val coroutineScope: CoroutineScope,
+    @ApplicationScope private val coroutineScope: CoroutineScope,
 ) : ServerCloudRepository {
 
 }

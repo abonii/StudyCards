@@ -1,6 +1,6 @@
 package abm.co.data.repository
 
-import abm.co.data.model.purchase.PurchaseVerifyDto
+import abm.co.data.model.purchase.PurchaseVerifyDTO
 import abm.co.data.utils.BaseURLs.AN_APP_SKUS
 import abm.co.data.utils.BaseURLs.PRODUCT_TYPE
 import abm.co.domain.repository.PricingRepository
@@ -87,7 +87,7 @@ class PricingRepositoryImpl @Inject constructor(
         firebaseFunctions.getHttpsCallable(VERIFY_PRODUCT_FUN).call(data).continueWith { task ->
             try {
                 (task.result?.data as HashMap<*, *>).let {
-                    val verifyPurchase = PurchaseVerifyDto(
+                    val verifyPurchase = PurchaseVerifyDTO(
                         status = it["status"] as Int,
                         purchaseState = it["purchaseState"] as Int?
                     )
