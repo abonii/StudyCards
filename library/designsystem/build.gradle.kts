@@ -45,6 +45,11 @@ dependencies {
         api(lifeCycleRuntimeCompose)
         api(lifeCycleViewModelKtx)
     }
+    OtherDependencies.apply {
+        api(ssp)
+        api(sdp)
+        api(apacheLang)
+    }
     ComposeDependencies.apply {
         api(platform(composeBOM))
         api(composeUi)

@@ -6,6 +6,7 @@ import abm.co.navigation.graph.home2
 import abm.co.navigation.graph.home3
 import abm.co.navigation.graph.login
 import abm.co.navigation.graph.registration
+import abm.co.navigation.graph.welcomeLogin
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -23,6 +24,10 @@ fun ComposeNewsNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ) {
+        welcomeLogin(
+            navController = navController,
+            onFailure = onFailure
+        )
         login(
             navController = navController,
             onFailure = onFailure

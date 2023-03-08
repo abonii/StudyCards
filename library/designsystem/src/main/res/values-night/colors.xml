@@ -17,7 +17,6 @@
     <color name="darker_than_usual">#8E8E8E</color>
     <color name="shimmer">#636363</color>
     <!--text-->
-    <color name="textColor">#EAEADD</color>
     <color name="secondTextColor">#999999</color>
     <color name="thirdTextColor">#8A8A7F</color>
     <color name="fourthTextColor">#CFCFCF</color>
@@ -45,5 +44,77 @@
         <item>#3EA99F</item>
         <item>#7D0552</item>
     </array>
+
+    <!-- Text -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_primary_pressed">#FFFFFF</color>
+    <color name="text_secondary">#98989F</color>
+    <color name="text_tertiary">#5A5A5F</color>
+    <color name="text_error">#FF453A</color>
+    <color name="text_success">#32D74B</color>
+    <color name="text_accent">#6E7CFF</color>
+    <color name="text_girl">#C15ACA</color>
+    <color name="text_boy">#6FB1FF</color>
+    <color name="text_white">#121212</color>
+    <color name="text_white_green">#CBFFA3</color>
+
+    <!-- Fill -->
+    <color name="fill_hover">#A3ACFF</color>
+    <color name="fill_primary">#6E7CFF</color>
+    <color name="fill_primary_pressed">#5863CC</color>
+    <color name="fill_primary_disabled">#2C2C2E</color>
+    <color name="fill_divider">#38383A</color>
+    <color name="fill_shimmer">#3A3A3C</color>
+    <color name="fill_shimmer_2">#454548</color>
+    <color name="fill_shadow_primary">#000000</color>
+    <color name="fill_shadow_secondary">#000000</color>
+    <color name="fill_green">#B4FAA2</color>
+    <color name="fill_purple">#2C2C2E</color>
+
+    <!-- Input -->
+    <color name="fill_input">#2C2C2E</color>
+    <color name="fill_input_pressed">#3A3A3C</color>
+    <color name="fill_stroke">#38383A</color>
+    <color name="fill_stroke_pressed">#7377FA</color>
+    <color name="fill_input_success">#222C1B</color>
+    <color name="fill_input_success_pressed">#2C3923</color>
+    <color name="fill_input_error">#2C1B20</color>
+    <color name="fill_input_error_pressed">#39232A</color>
+
+    <!-- Background -->
+    <color name="fill_background_primary">#161618</color>
+    <color name="fill_background_secondary">#2C2C2E</color>
+    <color name="fill_background_tertiary">#161618</color>
+    <color name="fill_background_deepblue">#062343</color>
+
+    <!-- Button -->
+    <color name="button_item_disabled">#5A5A5F</color>
+    <color name="button_item_primary">#FFFFFF</color>
+    <color name="button_item_secondary">#C7CDFD</color>
+    <color name="button_item_tertiary">#4A4A51</color>
+    <color name="button_item_outline">#FFFFFF</color>
+    <color name="button_item_outline_subtitle">#98989F</color>
+    <color name="button_item_text_button">#7377FA</color>
+    <color name="button_item_text_button_pressed">#5863CC</color>
+
+    <!-- Icons -->
+    <color name="icon_accent">#6E7CFF</color>
+    <color name="icon_secondary">#5A5A5F</color>
+    <color name="icon_tertiary">#8D92B4</color>
+    <color name="icon_success">#32D74B</color>
+    <color name="icon_success_pressed">#24B53A</color>
+    <color name="icon_01">#5A5A5F</color>
+    <color name="icon_02">#333336</color>
+    <color name="icon_star">#E2DCA6</color>
+    <color name="icon_star_null">#7D7D7D</color>
+    <color name="icon_pinky">#FF41A8</color>
+    <color name="icon_red">#B73847</color>
+    <color name="icon_orange">#FFC076</color>
+    <color name="icon_purple">#7377FA</color>
+    <color name="icon_aqua">#56CAFF</color>
+
+    <!--    NonAdaptable-->
+    <color name="nonadaptable_white">#FFFFFF</color>
+    <color name="nonadaptable_black">#000000</color>
 
 </resources>
