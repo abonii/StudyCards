@@ -261,7 +261,21 @@
     <string name="premium_feature2">Training without advertising</string>
     <string name="empty_in_category">You still haven\'t added a word</string>
     <string name="zvezda" translatable="false">***</string>
-    <!--    <string name="agree_with_privacy_policy"><![CDATA[By joining, you agree to Study Cards\
-    's <a href="https://www.freeprivacypolicy.com/live/c663b277–554d-41b6-aebd-dfc34b059928">Terms of
-     Service</a> & Privacy Policy]]></string>-->
+
+    <!-- Error messages -->
+    <string name="Alert.allow">Allow</string>
+    <string name="Alert.cancel">Cancel</string>
+    <string name="Error.exceptionCode">Some kind of error occurred. Please, try again. If it happens again, contact support.</string>
+    <string name="Error.InternetConnection.description">Check your connection and try again</string>
+    <string name="Error.InternetConnection.title">Some Internet issues</string>
+    <string name="Error.invalidToken">Your session was interrupted. Please let us know if the error occurs again</string>
+    <string name="Error.standard">Some kind of error occurred. Please, try again. If it happens again, contact support</string>
+    <string name="Error.timeOut">The time limit of the request exceeded</string>
+    <string name="Network.internalError">Error occurred. Please try again. If an error is repeated, contact support.</string>
+    <string name="Network.serverError">Server error</string>
+    <string name="InternalErrorAlert.close">Close</string>
+    <string name="InternalErrorAlert.title">Error</string>
+    <string name="Messages.error">Error!</string>
+    <string name="Messages.success">Successfully!</string>
+    <string name="Messages.OK">OK</string>
 </resources>

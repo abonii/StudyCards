@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="WelcomeLoginPage.LoginAsGuest">Continue as a guest</string>
+    <string name="WelcomeLoginPage.LoginButton">LOGIN</string>
+    <string name="WelcomeLoginPage.SignUpButton">SIGN UP</string>
+    <string name="WelcomeLoginPage.Title">Learn. Play. Repeat</string>
+    <string name="WelcomeLoginPage.Subtitle">Improve your vocabulary with us</string>
+
+    <string name="LoginPage.Title">Welcome</string>
+    <string name="LoginPage.Subitle">Glad to see you!</string>
+    <string name="LoginPage.LoginButton">LOGIN</string>
+    <string name="LoginPage.UsernameTitle">Username</string>
+    <string name="LoginPage.UsernameHint">Enter your username</string>
+    <string name="LoginPage.PasswordTitle">Password</string>
+    <string name="LoginPage.PasswordHint">Enter password</string>
+    <string name="LoginPage.AlternativeLogin">Or log in with</string>
+    <string name="LoginPage.SignUpTitle">Don’t have an account?</string>
+    <string name="LoginPage.SignUpNow">Sign up now</string>
+
+    <string name="SignUpPage.Title">Create Account </string>
+    <string name="SignUpPage.Subtitle">to get to started now</string>
+    <string name="SignUpPage.SignUpButton">SIGN UP</string>
+    <string name="SignUpPage.UsernameTitle">Username</string>
+    <string name="SignUpPage.UsernameHint">Enter your username</string>
+    <string name="SignUpPage.PasswordTitle">Password</string>
+    <string name="SignUpPage.PasswordHint">Enter password</string>
+    <string name="SignUpPage.PasswordConfirmTitle">Confirm password</string>
+    <string name="SignUpPage.PasswordConfirmHint">Confirm password</string>
+    <string name="SignUpPage.AlternativeSignUp">Or sign up with</string>
+    <string name="SignUpPage.LoginTitle">Already have an account?</string>
+    <string name="SignUpPage.LoginNow">Login now</string>
+
+    <string name="SignUpPage.PasswordsNotSame">Passwords are not same</string>
+    <string name="SignUpPage.EmailEmpty">Email cannot be empty</string>
+    <string name="SignUpPage.PasswordEmpty">Password cannot be empty</string>
+    <string name="SignUpPage.PasswordLengthNotCorrect">Password length should be more than 5</string>
+</resources>

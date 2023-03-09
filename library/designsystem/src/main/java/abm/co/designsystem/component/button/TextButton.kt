@@ -1,6 +1,6 @@
 package abm.co.designsystem.component.button
 
-import abm.co.designsystem.R
+import abm.co.designsystem.theme.StudyCardsTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -14,25 +14,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun TextButton(
     title: String,
-    buttonState: ButtonState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    textStyle: TextStyle = StudyCardsTheme.typography.weight500Size14LineHeight20,
+    buttonState: ButtonState = remember { ButtonState.Normal },
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    components: ButtonComponents = ButtonComponents()
+    components: ButtonSize = ButtonSize(),
+    normalContentColor: Color = StudyCardsTheme.colors.textSkyBlue,
+    disabledButtonContentColor: Color = StudyCardsTheme.colors.textSilver
 ) {
     val isPressed by interactionSource.collectIsPressedAsState()
 
     val contentColor = if (buttonState == ButtonState.Disabled) {
-        colorResource(id = R.color.text_tertiary)
+        disabledButtonContentColor
     } else {
-        if (isPressed) colorResource(id = components.normalContentColor).copy(alpha = 0.5f)
-        else colorResource(id = components.normalContentColor)
+        if (isPressed) normalContentColor.copy(alpha = 0.5f)
+        else normalContentColor
     }
     Box(
         modifier = modifier
@@ -59,14 +63,14 @@ fun TextButton(
             ButtonState.Disabled -> {
                 Text(
                     text = title,
-                    style = components.textStyle.copy(color = contentColor),
+                    style = textStyle.copy(color = contentColor),
                     maxLines = 1
                 )
             }
             ButtonState.Normal -> {
                 Text(
                     text = title,
-                    style = components.textStyle.copy(color = contentColor),
+                    style = textStyle.copy(color = contentColor),
                     maxLines = 1
                 )
             }

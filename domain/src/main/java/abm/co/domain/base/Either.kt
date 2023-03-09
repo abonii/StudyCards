@@ -22,60 +22,29 @@ sealed class Either<out L, out R> {
     fun <L> left(a: L) = Left(a)
     fun <R> right(b: R) = Right(b)
 
-    fun either(fnL: (L) -> Any, fnR: (R) -> Unit): Any =
-        when (this) {
-            is Left -> fnL(a)
-            is Right -> fnR(b)
-        }
-
-    fun either(fnL: (L) -> Any, fnR: () -> Unit): Any =
-        when (this) {
-            is Left -> fnL(a)
-            is Right -> fnR()
-        }
-
-    class Empty
+    object Empty : Either<Nothing, Nothing>()
 }
 
-inline fun <T, L, R> Either<L, R>.flatMap(fn: (R) -> Either<L, T>): Either<L, T> =
-    when (this) {
-        is Either.Left -> Either.Left(a)
-        is Either.Right -> fn(b)
-    }
+inline fun <L, R> Either<L, R>.onSuccess(action: (R) -> Unit): Either<L, R> = onRight(action)
 
-inline fun <T, L, R> Either<L, R>.map(fn: (R) -> (T)): Either<L, T> =
-    when (this) {
-        is Either.Left -> Either.Left(a)
-        is Either.Right -> right(fn(b))
-    }
+inline fun <L, R> Either<L, R>.onFailure(action: (L) -> Unit): Either<L, R> = onLeft(action)
 
-inline fun <L, R> Either<L, R>.whenRight(action: (R) -> Unit): Either<L, R> {
-    if (this is Either.Right) action.invoke(b)
-    return this
-}
-
-inline fun <L, R> Either<L, R>.whenLeft(action: (L) -> Unit): Either<L, R> {
-    if (this is Either.Left) action.invoke(a)
-    return this
-}
-
-inline fun <L, R> Either<L, R>.onSuccess(action: (R) -> Unit): Either<L, R> {
+inline fun <L, R> Either<L, R>.onRight(action: (R) -> Unit): Either<L, R> {
     if (this is Either.Right) action(b)
     return this
 }
 
-inline fun <L, R> Either<L, R>.onFailure(action: (L) -> Unit): Either<L, R> {
+inline fun <L, R> Either<L, R>.onLeft(action: (L) -> Unit): Either<L, R> {
     if (this is Either.Left) {
         action(a)
     }
     return this
 }
 
-inline fun <L, R> Either<L, R>.doSomething(someAction: () -> Unit): Either<L, R> {
-    someAction.invoke()
-    return this
-}
+inline fun <T, L, R> Either<L, R>.map(fn: (R) -> (T)): Either<L, T> =
+    when (this) {
+        is Either.Left -> Either.Left(a)
+        is Either.Right -> right(fn(b))
+        Either.Empty -> Either.Empty
+    }
 
-fun <L, R> Either<L, R>.asRight(): R? {
-    return (this as? Either.Right)?.b
-}

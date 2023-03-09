@@ -3,7 +3,9 @@ object ComposeDependencies {
         const val composeBOM = "2023.01.00"
         const val composeActivity = "1.6.1"
         const val composeCoil = "2.2.2"
-        const val accompanist = "0.24.11-rc"
+        const val accompanistSystemUiController = "0.25.0"
+        const val accompanistWeb = "0.24.11-rc"
+        const val accompanist = "0.23.1"
         const val composeViewModel = "2.5.1"
         const val constraintCompose = "1.0.1"
         const val pagingCompose = "1.0.0-alpha18"
@@ -21,8 +23,12 @@ object ComposeDependencies {
     const val constraintCompose =
         "androidx.constraintlayout:constraintlayout-compose:${Version.constraintCompose}"
     const val accompanistWebview =
-        "com.google.accompanist:accompanist-webview:${Version.accompanist}"
+        "com.google.accompanist:accompanist-webview:${Version.accompanistWeb}"
     const val composeViewModel =
         "androidx.lifecycle:lifecycle-viewmodel-compose:${Version.composeViewModel}"
     const val pagingCompose = "androidx.paging:paging-compose${Version.pagingCompose}"
+    const val pager =  "com.google.accompanist:accompanist-pager:${Version.accompanist}"
+    const val flowlayout =  "com.google.accompanist:accompanist-flowlayout:${Version.accompanist}"
+    const val navigation =  "com.google.accompanist:accompanist-navigation-animation:${Version.accompanist}"
+    const val systemuicontroller =  "com.google.accompanist:accompanist-systemuicontroller:${Version.accompanistSystemUiController}"
 }

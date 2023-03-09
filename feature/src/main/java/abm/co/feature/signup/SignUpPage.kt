@@ -1,4 +1,4 @@
-package abm.co.feature.login
+package abm.co.feature.signup
 
 import abm.co.designsystem.collectInLaunchedEffect
 import abm.co.designsystem.component.SetStatusBarColor
@@ -12,6 +12,7 @@ import abm.co.designsystem.component.modifier.baseBackground
 import abm.co.designsystem.component.textfield.TextFieldWithLabel
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
+import abm.co.designsystem.theme.StudyCardsTypography
 import abm.co.designsystem.use
 import abm.co.feature.R
 import android.app.Activity
@@ -38,14 +39,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import abm.co.designsystem.R as dR
 
 @Composable
-fun LoginPage(
-    onNavigateRegistrationPage: () -> Unit,
+fun SignUpPage(
+    onNavigateLoginPage: () -> Unit,
     onNavigateHomePage: () -> Unit,
-    onNavigateToForgotPage: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: SignUpViewModel = hiltViewModel()
 ) {
     val (state, event, channel) = use(viewModel = viewModel)
     val startGoogleLoginForResult = rememberLauncherForActivityResult(
@@ -59,23 +60,20 @@ fun LoginPage(
     }
     channel.collectInLaunchedEffect {
         when (it) {
-            is LoginContract.Channel.LoginViaGoogle -> {
+            is SignUpContract.Channel.LoginViaGoogle -> {
                 startGoogleLoginForResult.launch(it.intent)
             }
-            LoginContract.Channel.NavigateToForgotPassword -> {
-                onNavigateToForgotPage()
-            }
-            LoginContract.Channel.NavigateToHome -> {
+            SignUpContract.Channel.NavigateToHome -> {
                 onNavigateHomePage()
             }
-            LoginContract.Channel.NavigateToSignUp -> {
-                onNavigateRegistrationPage()
+            SignUpContract.Channel.NavigateToLogin -> {
+                onNavigateLoginPage()
             }
-            is LoginContract.Channel.ShowMessage -> showMessage(it.messageContent)
+            is SignUpContract.Channel.ShowMessage -> showMessage(it.messageContent)
         }
     }
     SetStatusBarColor()
-    LoginScreen(
+    SignUpScreen(
         state = state,
         event = event
     )
@@ -83,9 +81,9 @@ fun LoginPage(
 
 
 @Composable
-private fun LoginScreen(
-    state: LoginContract.State,
-    event: (LoginContract.Event) -> Unit,
+private fun SignUpScreen(
+    state: SignUpContract.State,
+    event: (SignUpContract.Event) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -99,17 +97,21 @@ private fun LoginScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.weight(0.189f))
+            Spacer(modifier = Modifier.weight(0.11f))
             IntroContent()
             Spacer(modifier = Modifier.weight(0.067f))
             InputFieldsContent(
                 email = state.email,
                 password = state.password,
+                passwordConfirm = state.passwordConfirm,
                 onEnterEmailValue = {
-                    event(LoginContract.Event.OnEnterEmailValue(it))
+                    event(SignUpContract.Event.OnEnterEmailValue(it))
                 },
                 onEnterPasswordValue = {
-                    event(LoginContract.Event.OnEnterPasswordValue(it))
+                    event(SignUpContract.Event.OnEnterPasswordValue(it))
+                },
+                onEnterPasswordConfirmValue = {
+                    event(SignUpContract.Event.OnEnterPasswordConfirmValue(it))
                 }
             )
             Spacer(modifier = Modifier.weight(0.067f))
@@ -117,23 +119,23 @@ private fun LoginScreen(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth(),
-                title = stringResource(id = R.string.LoginPage_LoginButton),
+                title = stringResource(id = R.string.SignUpPage_SignUpButton),
                 components = ButtonSize(),
                 buttonState = if (state.isLoginButtonLoading) ButtonState.Loading else ButtonState.Normal,
                 onClick = {
-                    event(LoginContract.Event.OnLoginViaEmailClicked)
+                    event(SignUpContract.Event.OnSignUpViaEmailClicked)
                 }
             )
-            Spacer(modifier = Modifier.weight(0.081f))
+            Spacer(modifier = Modifier.weight(0.044f))
             BottomButtonsContent(
                 onClickFacebookButton = {
-                    event(LoginContract.Event.OnLoginViaFacebookClicked)
+                    event(SignUpContract.Event.OnLoginViaFacebookClicked)
                 },
                 onClickGoogleButton = {
-                    event(LoginContract.Event.OnLoginViaGoogleClicked)
+                    event(SignUpContract.Event.OnLoginViaGoogleClicked)
                 },
-                onClickSignUpButton = {
-                    event(LoginContract.Event.OnSignUpClicked)
+                onClickLoginButton = {
+                    event(SignUpContract.Event.OnLoginClicked)
                 }
             )
             Spacer(modifier = Modifier.weight(0.061f))
@@ -145,14 +147,14 @@ private fun LoginScreen(
 private fun ColumnScope.IntroContent() {
     Text(
         modifier = Modifier.padding(horizontal = 25.dp),
-        text = stringResource(id = R.string.LoginPage_Title),
+        text = stringResource(id = R.string.SignUpPage_Title),
         style = StudyCardsTheme.typography.weight600Size23LineHeight24.copy(
             color = StudyCardsTheme.colors.textPrimary
         )
     )
     Spacer(modifier = Modifier.weight(0.014f))
     Text(
-        text = stringResource(id = R.string.LoginPage_Subitle),
+        text = stringResource(id = R.string.SignUpPage_Subtitle),
         style = StudyCardsTheme.typography.weight400Size20LineHeight20.copy(
             color = StudyCardsTheme.colors.textPrimary
         )
@@ -163,12 +165,14 @@ private fun ColumnScope.IntroContent() {
 private fun ColumnScope.InputFieldsContent(
     email: String,
     password: String,
+    passwordConfirm: String,
     onEnterEmailValue: (String) -> Unit,
-    onEnterPasswordValue: (String) -> Unit
+    onEnterPasswordValue: (String) -> Unit,
+    onEnterPasswordConfirmValue: (String) -> Unit
 ) {
     TextFieldWithLabel(
-        label = stringResource(id = R.string.LoginPage_UsernameTitle),
-        hint = stringResource(id = R.string.LoginPage_UsernameHint),
+        label = stringResource(id = R.string.SignUpPage_UsernameTitle),
+        hint = stringResource(id = R.string.SignUpPage_UsernameHint),
         value = email,
         onValueChange = onEnterEmailValue,
         modifier = Modifier
@@ -178,10 +182,21 @@ private fun ColumnScope.InputFieldsContent(
     )
     Spacer(modifier = Modifier.weight(0.024f))
     TextFieldWithLabel(
-        label = stringResource(id = R.string.LoginPage_PasswordTitle),
-        hint = stringResource(id = R.string.LoginPage_PasswordHint),
+        label = stringResource(id = R.string.SignUpPage_PasswordTitle),
+        hint = stringResource(id = R.string.SignUpPage_PasswordHint),
         value = password,
         onValueChange = onEnterPasswordValue,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(68.dp)
+            .padding(horizontal = 16.dp)
+    )
+    Spacer(modifier = Modifier.weight(0.024f))
+    TextFieldWithLabel(
+        label = stringResource(id = R.string.SignUpPage_PasswordConfirmTitle),
+        hint = stringResource(id = R.string.SignUpPage_PasswordConfirmHint),
+        value = passwordConfirm,
+        onValueChange = onEnterPasswordConfirmValue,
         modifier = Modifier
             .fillMaxWidth()
             .height(68.dp)
@@ -193,7 +208,7 @@ private fun ColumnScope.InputFieldsContent(
 private fun ColumnScope.BottomButtonsContent(
     onClickGoogleButton: () -> Unit,
     onClickFacebookButton: () -> Unit,
-    onClickSignUpButton: () -> Unit
+    onClickLoginButton: () -> Unit
 ) {
     Row(
         modifier = Modifier.padding(horizontal = 27.dp),
@@ -206,7 +221,7 @@ private fun ColumnScope.BottomButtonsContent(
             thickness = 1.dp
         )
         Text(
-            text = stringResource(id = R.string.LoginPage_AlternativeLogin),
+            text = stringResource(id = R.string.SignUpPage_AlternativeSignUp),
             style = StudyCardsTheme.typography.weight400Size14LineHeight20,
             color = StudyCardsTheme.colors.textPrimary
         )
@@ -249,7 +264,7 @@ private fun ColumnScope.BottomButtonsContent(
             textStyle = StudyCardsTheme.typography.weight500Size14LineHeight20.copy(
                 color = StudyCardsTheme.colors.buttonPrimary
             ),
-            onClick = onClickSignUpButton
+            onClick = onClickLoginButton
         )
     }
 }

@@ -1,7 +1,7 @@
 package abm.co.feature.home
 
+import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.use
-import abm.co.feature.registration.RegistrationViewModel
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut

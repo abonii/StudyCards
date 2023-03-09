@@ -1,4 +1,4 @@
-package abm.co.navigation.extension_function
+package abm.co.navigation.extensionfunction
 
 import androidx.navigation.NavBackStackEntry
 

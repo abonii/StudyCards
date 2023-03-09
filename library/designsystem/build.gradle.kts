@@ -1,6 +1,8 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
+    id("kotlinx-serialization")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -39,6 +41,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
+    implementation(KotlinxDependencies.json)
     AndroidxDependencies.apply {
         api(coreKtx)
         api(appcompat)
@@ -61,5 +65,7 @@ dependencies {
         api(composeCoil)
         api(composeActivity)
         api(composeViewModel)
+        api(navigation)
+        api(systemuicontroller)
     }
 }

@@ -1,40 +1,71 @@
 package abm.co.studycards.navigation
 
-import abm.co.domain.base.Failure
+import abm.co.designsystem.component.modifier.Modifier
+import abm.co.designsystem.message.common.MessageContent
 import abm.co.navigation.graph.home
-import abm.co.navigation.graph.home2
-import abm.co.navigation.graph.home3
 import abm.co.navigation.graph.login
-import abm.co.navigation.graph.registration
+import abm.co.navigation.graph.signUp
 import abm.co.navigation.graph.welcomeLogin
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
+import com.google.accompanist.navigation.animation.AnimatedNavHost
 
+private const val MAIN_ANIMATION_DURATION = 400
+private const val FADING_OUT_ANIMATION_DURATION = 350
+private const val FADING_IN_ANIMATION_DURATION = 450
+
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ComposeNewsNavHost(
     startDestination: String,
     navController: NavHostController,
-    modifier: Modifier,
-    onFailure: (Failure) -> Unit
+    showMessage: suspend (MessageContent) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    NavHost(
+    AnimatedNavHost(
         navController = navController,
         startDestination = startDestination,
         modifier = modifier,
+        enterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { it / 3 },
+                animationSpec = tween(durationMillis = MAIN_ANIMATION_DURATION)
+            ) + fadeIn(animationSpec = tween(durationMillis = FADING_IN_ANIMATION_DURATION))
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(durationMillis = FADING_OUT_ANIMATION_DURATION))
+        },
+        popEnterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { -it / 3 },
+                animationSpec = tween(durationMillis = MAIN_ANIMATION_DURATION)
+            ) + fadeIn(animationSpec = tween(durationMillis = FADING_IN_ANIMATION_DURATION))
+        },
+        popExitTransition = {
+            fadeOut(animationSpec = tween(durationMillis = FADING_OUT_ANIMATION_DURATION))
+        }
     ) {
         welcomeLogin(
             navController = navController,
-            onFailure = onFailure
+            showMessage = showMessage
         )
         login(
             navController = navController,
-            onFailure = onFailure
+            showMessage = showMessage
         )
-        registration(navController)
-        home(navController)
-        home2(navController)
-        home3(navController)
+        signUp(
+            navController = navController,
+            showMessage = showMessage
+        )
+        home(
+            navController = navController,
+            showMessage = showMessage
+        )
     }
 }

@@ -80,6 +80,7 @@
     <dimen name="default_120dp">@dimen/_120sdp</dimen>
     <dimen name="default_140dp">@dimen/_140sdp</dimen>
     <dimen name="default_150dp">@dimen/_150sdp</dimen>
+    <dimen name="default_154dp">@dimen/_154sdp</dimen>
     <dimen name="default_170dp">@dimen/_170sdp</dimen>
     <dimen name="default_180dp">@dimen/_180sdp</dimen>
     <dimen name="default_200dp">@dimen/_200sdp</dimen>

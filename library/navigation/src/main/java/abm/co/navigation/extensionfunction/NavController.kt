@@ -1,4 +1,4 @@
-package abm.co.navigation.extension_function
+package abm.co.navigation.extensionfunction
 
 import android.os.Bundle
 import androidx.core.net.toUri

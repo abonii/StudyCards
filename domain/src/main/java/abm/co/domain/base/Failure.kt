@@ -9,7 +9,6 @@ import abm.co.domain.base.Failure.FeatureFailure
 sealed class Failure {
     object FailureNetwork : Failure()
     object FailureTimeout : Failure()
-    data class FailureInvalidToken(val expectedMessage: ExpectedMessage?) : Failure()
     data class FailureInternalServer(val expectedMessage: ExpectedMessage) : Failure()
     object Ignorable : Failure()
     data class FailureSnackbar(val expectedMessage: ExpectedMessage) : Failure()

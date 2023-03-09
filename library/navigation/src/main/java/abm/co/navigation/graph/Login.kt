@@ -1,17 +1,21 @@
 package abm.co.navigation.graph
 
-import abm.co.domain.base.Failure
+import abm.co.designsystem.message.common.MessageContent
 import abm.co.feature.login.LoginPage
 import abm.co.navigation.Destinations
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
+import com.google.accompanist.navigation.animation.composable
 
+@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.login(
-    onFailure: (Failure) -> Unit,
+    showMessage: suspend (MessageContent) -> Unit,
     navController: NavController
 ) {
-    composable(Destinations.Login.route) {
+    composable(
+        route = Destinations.Login.route
+    ) {
         LoginPage(
             onNavigateHomePage = {
                 navController.navigate(
@@ -23,13 +27,10 @@ fun NavGraphBuilder.login(
                     route = Destinations.Registration.route
                 )
             },
-            onNavigateToEmailPage = {
-
-            },
             onNavigateToForgotPage = {
 
             },
-            onFailure = onFailure
+            showMessage = showMessage
         )
     }
 }

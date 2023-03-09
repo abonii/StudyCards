@@ -1,5 +1,8 @@
 package abm.co.designsystem.widget
 
+import abm.co.designsystem.component.modifier.Modifier
+import abm.co.designsystem.preview.ThemePreviews
+import abm.co.designsystem.theme.StudyCardsTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -7,11 +10,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import abm.co.designsystem.preview.ThemePreviews
-import ir.kaaveh.designsystem.theme.ComposeNewsTheme
 
 @Composable
 fun ErrorView(errorMessage: String) {
@@ -30,7 +30,7 @@ fun ErrorView(errorMessage: String) {
 @ThemePreviews
 @Composable
 private fun ErrorViewPrev() {
-    ComposeNewsTheme {
+    StudyCardsTheme {
         ErrorView(errorMessage = "An unknown error happened!")
     }
 }
