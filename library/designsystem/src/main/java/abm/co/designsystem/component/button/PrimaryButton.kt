@@ -36,10 +36,10 @@ enum class ButtonState {
 @Composable
 fun PrimaryButton(
     title: String,
-    buttonState: ButtonState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = StudyCardsTheme.typography.weight600Size14LineHeight18,
+    buttonState: ButtonState = ButtonState.Normal,
     components: ButtonSize = ButtonSize(),
     normalButtonBackgroundColor: Color = StudyCardsTheme.colors.buttonPrimary,
     normalContentColor: Color = Color.White,

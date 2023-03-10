@@ -1,7 +1,6 @@
 package abm.co.feature.home
 
 import abm.co.designsystem.component.modifier.Modifier
-import abm.co.designsystem.use
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -11,43 +10,42 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun HomePage(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val (state, event) = use(viewModel = viewModel)
+    LaunchedEffect(Unit){
+        Firebase.analytics.logEvent(
+            "home_page_viewed", null
+        )
+    }
+    val state by viewModel.state.collectAsState()
 
     HomeScreen(
         state = state,
-        onRefresh = {
-            event.invoke(HomeContract.Event.OnRefresh)
-        }
+        event = viewModel::event
     )
 }
 
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun HomeScreen(
-    state: HomeContract.State,
-    onRefresh: () -> Unit
+    state: HomeContractState,
+    event: (HomeContractEvent) -> Unit
 ) {
-    val refreshState =
-        rememberPullRefreshState(refreshing = false, onRefresh = onRefresh)
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .pullRefresh(refreshState)
     ) {
         AnimatedVisibility(
             visible = true,
@@ -66,10 +64,5 @@ private fun HomeScreen(
                 )
             }
         }
-        PullRefreshIndicator(
-            false,
-            refreshState,
-            Modifier.align(Alignment.TopCenter)
-        )
     }
 }

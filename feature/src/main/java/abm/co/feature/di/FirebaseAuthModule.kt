@@ -17,10 +17,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object FirebaseAuthModule {
 
-    @Singleton
-    @Provides
-    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
-
     @Provides
     fun provideGoogleSignInOptions(): GoogleSignInOptions {
         return GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

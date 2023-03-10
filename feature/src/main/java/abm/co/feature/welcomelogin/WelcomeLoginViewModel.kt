@@ -1,8 +1,10 @@
 package abm.co.feature.welcomelogin
 
+import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
 import abm.co.domain.base.Failure
 import abm.co.domain.base.mapToFailure
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -22,25 +24,25 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class WelcomeLoginViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth
-) : ViewModel(), WelcomeLoginContract {
+) : ViewModel() {
 
-    private val mutableState = MutableStateFlow(WelcomeLoginContract.State())
-    override val state: StateFlow<WelcomeLoginContract.State> = mutableState.asStateFlow()
+    private val mutableState = MutableStateFlow(WelcomeLoginContractState())
+    val state: StateFlow<WelcomeLoginContractState> = mutableState.asStateFlow()
 
-    private val _channel = Channel<WelcomeLoginContract.Channel>()
-    override val channel = _channel.receiveAsFlow()
+    private val _channel = Channel<WelcomeLoginContractChannel>()
+    val channel = _channel.receiveAsFlow()
 
-    override fun event(event: WelcomeLoginContract.Event) {
+    fun event(event: WelcomeLoginContractEvent) {
         viewModelScope.launch {
             when (event) {
-                WelcomeLoginContract.Event.OnClickLogin -> {
-                    _channel.send(WelcomeLoginContract.Channel.NavigateToLoginPage)
+                WelcomeLoginContractEvent.OnClickLogin -> {
+                    _channel.send(WelcomeLoginContractChannel.NavigateToLoginPage)
                 }
-                WelcomeLoginContract.Event.OnClickLoginAsGuest -> {
-//                    loginAnonymously()
+                WelcomeLoginContractEvent.OnClickLoginAsGuest -> {
+                    loginAnonymously()
                 }
-                WelcomeLoginContract.Event.OnClickSignUp -> {
-                    _channel.send(WelcomeLoginContract.Channel.NavigateToSignUpPage)
+                WelcomeLoginContractEvent.OnClickSignUp -> {
+                    _channel.send(WelcomeLoginContractChannel.NavigateToSignUpPage)
                 }
             }
         }
@@ -71,15 +73,33 @@ class WelcomeLoginViewModel @Inject constructor(
 
     private fun navigateToHomePage() {
         viewModelScope.launch {
-            _channel.send(WelcomeLoginContract.Channel.NavigateToHomePage)
+            _channel.send(WelcomeLoginContractChannel.NavigateToHomePage)
         }
     }
 
     private fun Failure.sendException() {
         viewModelScope.launch {
             this@sendException.toMessageContent()?.let {
-                _channel.send(WelcomeLoginContract.Channel.ShowMessage(it))
+                _channel.send(WelcomeLoginContractChannel.ShowMessage(it))
             }
         }
     }
+}
+
+@Immutable
+data class WelcomeLoginContractState(val isLoading: Boolean = false)
+
+@Immutable
+sealed interface WelcomeLoginContractEvent {
+    object OnClickLogin : WelcomeLoginContractEvent
+    object OnClickSignUp : WelcomeLoginContractEvent
+    object OnClickLoginAsGuest : WelcomeLoginContractEvent
+}
+
+@Immutable
+sealed interface WelcomeLoginContractChannel {
+    object NavigateToHomePage : WelcomeLoginContractChannel
+    object NavigateToLoginPage : WelcomeLoginContractChannel
+    object NavigateToSignUpPage : WelcomeLoginContractChannel
+    data class ShowMessage(val messageContent: MessageContent): WelcomeLoginContractChannel
 }

@@ -10,7 +10,7 @@ fun Failure.toMessageContent(): MessageContent? =
         is Failure.FailureAlert -> {
             expectedMessage?.let {
                 MessageContent.AlertDialog.MessageContentTitleRes(
-                    titleRes = R.string.Error_standard,
+                    titleRes = R.string.InternalErrorAlert_title,
                     subtitle = it
                 )
             }

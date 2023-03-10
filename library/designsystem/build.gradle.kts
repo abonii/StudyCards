@@ -67,5 +67,6 @@ dependencies {
         api(composeViewModel)
         api(navigation)
         api(systemuicontroller)
+        api(icons)
     }
 }

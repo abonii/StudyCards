@@ -1,5 +1,6 @@
 package abm.co.designsystem.widget
 
+import abm.co.designsystem.theme.StudyCardsTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -21,7 +22,8 @@ fun LoadingView(
             modifier = Modifier
                 .height(34.dp)
                 .width(34.dp)
-                .align(Alignment.Center)
+                .align(Alignment.Center),
+            color = StudyCardsTheme.colors.primary
         )
     }
 }

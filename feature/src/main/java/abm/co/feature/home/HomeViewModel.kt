@@ -11,16 +11,24 @@ import kotlinx.coroutines.flow.emptyFlow
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-) : ViewModel(), HomeContract {
+) : ViewModel() {
 
-    override val channel: Flow<Nothing> get() = emptyFlow()
+    val channel: Flow<Nothing> get() = emptyFlow()
 
-    private val mutableState = MutableStateFlow(HomeContract.State())
-    override val state: StateFlow<HomeContract.State> = mutableState.asStateFlow()
+    private val mutableState = MutableStateFlow(HomeContractState())
+    val state: StateFlow<HomeContractState> = mutableState.asStateFlow()
 
-    override fun event(event: HomeContract.Event) = when (event) {
-        HomeContract.Event.OnRefresh -> {
+    fun event(event: HomeContractEvent) = when (event) {
+        HomeContractEvent.OnRefresh -> {
 
         }
     }
+}
+
+data class HomeContractState(
+    val showFavoriteList: Boolean = false
+)
+
+sealed interface HomeContractEvent {
+    object OnRefresh : HomeContractEvent
 }

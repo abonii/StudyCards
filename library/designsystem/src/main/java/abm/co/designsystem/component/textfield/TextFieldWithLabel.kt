@@ -2,9 +2,7 @@ package abm.co.designsystem.component.textfield
 
 import abm.co.designsystem.R
 import abm.co.designsystem.component.modifier.Modifier
-import abm.co.designsystem.theme.StudyCardsShape
 import abm.co.designsystem.theme.StudyCardsTheme
-import abm.co.designsystem.theme.StudyCardsTypography
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
@@ -28,11 +26,13 @@ fun TextFieldWithLabel(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     Box(modifier = modifier) {
-        val textInput = StudyCardsTheme.colors.textOnyx
+        val textInput = StudyCardsTheme.colors.onyx
         val textColor = if (value.isEmpty()) colorResource(id = R.color.text_hint) else textInput
         val customTextSelectionColors = TextSelectionColors(
             handleColor = textInput,
@@ -72,7 +72,9 @@ fun TextFieldWithLabel(
                     cursorColor = textInput,
                     unfocusedBorderColor = colorResource(id = R.color.fill_stroke),
                     focusedBorderColor = colorResource(id = R.color.fill_primary)
-                )
+                ),
+                trailingIcon = trailingIcon,
+                leadingIcon = leadingIcon
             )
         }
     }

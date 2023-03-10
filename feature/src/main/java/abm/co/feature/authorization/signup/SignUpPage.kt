@@ -1,4 +1,4 @@
-package abm.co.feature.login
+package abm.co.feature.authorization.signup
 
 import abm.co.designsystem.collectInLaunchedEffect
 import abm.co.designsystem.component.SetStatusBarColor
@@ -12,11 +12,9 @@ import abm.co.designsystem.component.modifier.baseBackground
 import abm.co.designsystem.component.textfield.TextFieldWithLabel
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
-import abm.co.designsystem.use
 import abm.co.feature.R
-import android.app.Activity
+import abm.co.feature.authorization.common.TrailingIcon
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,59 +31,65 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 
 @Composable
-fun LoginPage(
-    onNavigateRegistrationPage: () -> Unit,
+fun SignUpPage(
+    onNavigateLoginPage: () -> Unit,
     onNavigateHomePage: () -> Unit,
-    onNavigateToForgotPage: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: SignUpViewModel = hiltViewModel()
 ) {
-    val (state, event, channel) = use(viewModel = viewModel)
-    val startGoogleLoginForResult = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result: ActivityResult ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.let {
-                viewModel.firebaseAuthWithGoogle(it)
-            }
-        }
+    LaunchedEffect(Unit){
+        Firebase.analytics.logEvent(
+            "sign_up_page_viewed", null
+        )
     }
-    channel.collectInLaunchedEffect {
+    val state by viewModel.state.collectAsState()
+    val startGoogleLoginForResult = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = viewModel::firebaseAuthWithGoogle
+    )
+    viewModel.channel.collectInLaunchedEffect {
         when (it) {
-            is LoginContract.Channel.LoginViaGoogle -> {
+            is SignUpContractChannel.LoginViaGoogle -> {
                 startGoogleLoginForResult.launch(it.intent)
             }
-            LoginContract.Channel.NavigateToForgotPassword -> {
-                onNavigateToForgotPage()
-            }
-            LoginContract.Channel.NavigateToHome -> {
+            SignUpContractChannel.NavigateToHome -> {
                 onNavigateHomePage()
             }
-            LoginContract.Channel.NavigateToSignUp -> {
-                onNavigateRegistrationPage()
+            SignUpContractChannel.NavigateToLogin -> {
+                onNavigateLoginPage()
             }
-            is LoginContract.Channel.ShowMessage -> showMessage(it.messageContent)
+            is SignUpContractChannel.ShowMessage -> showMessage(it.messageContent)
         }
     }
     SetStatusBarColor()
-    LoginScreen(
+    SignUpScreen(
         state = state,
-        event = event
+        event = viewModel::event
     )
 }
 
 
 @Composable
-private fun LoginScreen(
-    state: LoginContract.State,
-    event: (LoginContract.Event) -> Unit,
+private fun SignUpScreen(
+    state: SignUpContractState,
+    event: (SignUpContractEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -99,17 +103,21 @@ private fun LoginScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.weight(0.189f))
+            Spacer(modifier = Modifier.weight(0.11f))
             IntroContent()
             Spacer(modifier = Modifier.weight(0.067f))
             InputFieldsContent(
                 email = state.email,
                 password = state.password,
+                passwordConfirm = state.passwordConfirm,
                 onEnterEmailValue = {
-                    event(LoginContract.Event.OnEnterEmailValue(it))
+                    event(SignUpContractEvent.OnEnterEmailValue(it))
                 },
                 onEnterPasswordValue = {
-                    event(LoginContract.Event.OnEnterPasswordValue(it))
+                    event(SignUpContractEvent.OnEnterPasswordValue(it))
+                },
+                onEnterPasswordConfirmValue = {
+                    event(SignUpContractEvent.OnEnterPasswordConfirmValue(it))
                 }
             )
             Spacer(modifier = Modifier.weight(0.067f))
@@ -117,23 +125,23 @@ private fun LoginScreen(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth(),
-                title = stringResource(id = R.string.LoginPage_LoginButton),
+                title = stringResource(id = R.string.SignUpPage_SignUpButton),
                 components = ButtonSize(),
-                buttonState = if (state.isLoginButtonLoading) ButtonState.Loading else ButtonState.Normal,
+                buttonState = if (state.isSignUpButtonLoading) ButtonState.Loading else ButtonState.Normal,
                 onClick = {
-                    event(LoginContract.Event.OnLoginViaEmailClicked)
+                    event(SignUpContractEvent.OnSignUpViaEmailClicked)
                 }
             )
-            Spacer(modifier = Modifier.weight(0.081f))
+            Spacer(modifier = Modifier.weight(0.044f))
             BottomButtonsContent(
                 onClickFacebookButton = {
-                    event(LoginContract.Event.OnLoginViaFacebookClicked)
+                    event(SignUpContractEvent.OnLoginViaFacebookClicked)
                 },
                 onClickGoogleButton = {
-                    event(LoginContract.Event.OnLoginViaGoogleClicked)
+                    event(SignUpContractEvent.OnLoginViaGoogleClicked)
                 },
-                onClickSignUpButton = {
-                    event(LoginContract.Event.OnSignUpClicked)
+                onClickLoginButton = {
+                    event(SignUpContractEvent.OnLoginClicked)
                 }
             )
             Spacer(modifier = Modifier.weight(0.061f))
@@ -145,14 +153,14 @@ private fun LoginScreen(
 private fun ColumnScope.IntroContent() {
     Text(
         modifier = Modifier.padding(horizontal = 25.dp),
-        text = stringResource(id = R.string.LoginPage_Title),
+        text = stringResource(id = R.string.SignUpPage_Title),
         style = StudyCardsTheme.typography.weight600Size23LineHeight24.copy(
             color = StudyCardsTheme.colors.textPrimary
         )
     )
     Spacer(modifier = Modifier.weight(0.014f))
     Text(
-        text = stringResource(id = R.string.LoginPage_Subitle),
+        text = stringResource(id = R.string.SignUpPage_Subtitle),
         style = StudyCardsTheme.typography.weight400Size20LineHeight20.copy(
             color = StudyCardsTheme.colors.textPrimary
         )
@@ -163,12 +171,14 @@ private fun ColumnScope.IntroContent() {
 private fun ColumnScope.InputFieldsContent(
     email: String,
     password: String,
+    passwordConfirm: String,
     onEnterEmailValue: (String) -> Unit,
-    onEnterPasswordValue: (String) -> Unit
+    onEnterPasswordValue: (String) -> Unit,
+    onEnterPasswordConfirmValue: (String) -> Unit
 ) {
     TextFieldWithLabel(
-        label = stringResource(id = R.string.LoginPage_UsernameTitle),
-        hint = stringResource(id = R.string.LoginPage_UsernameHint),
+        label = stringResource(id = R.string.SignUpPage_EmailTitle),
+        hint = stringResource(id = R.string.SignUpPage_EmailHint),
         value = email,
         onValueChange = onEnterEmailValue,
         modifier = Modifier
@@ -177,11 +187,49 @@ private fun ColumnScope.InputFieldsContent(
             .padding(horizontal = 16.dp)
     )
     Spacer(modifier = Modifier.weight(0.024f))
+    var showPassword by remember { mutableStateOf(value = false) }
     TextFieldWithLabel(
-        label = stringResource(id = R.string.LoginPage_PasswordTitle),
-        hint = stringResource(id = R.string.LoginPage_PasswordHint),
+        label = stringResource(id = R.string.SignUpPage_PasswordTitle),
+        hint = stringResource(id = R.string.SignUpPage_PasswordHint),
         value = password,
         onValueChange = onEnterPasswordValue,
+        visualTransformation = if (showPassword) {
+            VisualTransformation.None
+        } else {
+            PasswordVisualTransformation()
+        },
+        trailingIcon = {
+            TrailingIcon(
+                showPassword = showPassword,
+                onClick = {
+                    showPassword = it
+                }
+            )
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(68.dp)
+            .padding(horizontal = 16.dp)
+    )
+    Spacer(modifier = Modifier.weight(0.024f))
+    TextFieldWithLabel(
+        label = stringResource(id = R.string.SignUpPage_PasswordConfirmTitle),
+        hint = stringResource(id = R.string.SignUpPage_PasswordConfirmHint),
+        value = passwordConfirm,
+        onValueChange = onEnterPasswordConfirmValue,
+        visualTransformation = if (showPassword) {
+            VisualTransformation.None
+        } else {
+            PasswordVisualTransformation()
+        },
+        trailingIcon = {
+            TrailingIcon(
+                showPassword = showPassword,
+                onClick = {
+                    showPassword = it
+                }
+            )
+        },
         modifier = Modifier
             .fillMaxWidth()
             .height(68.dp)
@@ -193,7 +241,7 @@ private fun ColumnScope.InputFieldsContent(
 private fun ColumnScope.BottomButtonsContent(
     onClickGoogleButton: () -> Unit,
     onClickFacebookButton: () -> Unit,
-    onClickSignUpButton: () -> Unit
+    onClickLoginButton: () -> Unit
 ) {
     Row(
         modifier = Modifier.padding(horizontal = 27.dp),
@@ -206,7 +254,7 @@ private fun ColumnScope.BottomButtonsContent(
             thickness = 1.dp
         )
         Text(
-            text = stringResource(id = R.string.LoginPage_AlternativeLogin),
+            text = stringResource(id = R.string.SignUpPage_AlternativeSignUp),
             style = StudyCardsTheme.typography.weight400Size14LineHeight20,
             color = StudyCardsTheme.colors.textPrimary
         )
@@ -249,7 +297,7 @@ private fun ColumnScope.BottomButtonsContent(
             textStyle = StudyCardsTheme.typography.weight500Size14LineHeight20.copy(
                 color = StudyCardsTheme.colors.buttonPrimary
             ),
-            onClick = onClickSignUpButton
+            onClick = onClickLoginButton
         )
     }
 }

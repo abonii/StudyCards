@@ -1,7 +1,8 @@
 package abm.co.navigation.graph
 
 import abm.co.designsystem.message.common.MessageContent
-import abm.co.feature.authorization.signup.SignUpPage
+import abm.co.feature.authorization.login.LoginPage
+import abm.co.feature.userattributes.ChooseUserAttributesPage
 import abm.co.navigation.Destinations
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavController
@@ -9,23 +10,20 @@ import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
-fun NavGraphBuilder.signUp(
-    navController: NavController,
+fun NavGraphBuilder.chooseUserAttributes(
     showMessage: suspend (MessageContent) -> Unit,
+    navController: NavController
 ) {
     composable(
-        route = Destinations.Registration.route
+        route = Destinations.ChooseUserAttributes.route
     ) {
-        SignUpPage(
-            showMessage = showMessage,
+        ChooseUserAttributesPage(
             onNavigateHomePage = {
-                navController.navigate(Destinations.Home.route)
+                navController.navigate(
+                    route = Destinations.Home.route
+                )
             },
-            onNavigateLoginPage = {
-                navController.navigate(Destinations.Login.route) {
-                    popUpTo(Destinations.WelcomeLogin.route)
-                }
-            }
+            showMessage = showMessage
         )
     }
 }

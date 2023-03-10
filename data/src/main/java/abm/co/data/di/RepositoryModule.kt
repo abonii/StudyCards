@@ -5,7 +5,7 @@ import abm.co.data.repository.PricingRepositoryImpl
 import abm.co.domain.repository.DictionaryRepository
 import abm.co.data.repository.DictionaryRepositoryImp
 import abm.co.data.repository.FirebaseRepositoryImp
-import abm.co.domain.repository.AuthorizationRepository
+import abm.co.domain.repository.ServerRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -16,7 +16,7 @@ import dagger.hilt.android.components.ViewModelComponent
 abstract class RepositoryModule {
 
     @Binds
-    abstract fun bindServerCloudRepository(repository: FirebaseRepositoryImp): AuthorizationRepository
+    abstract fun bindServerCloudRepository(repository: FirebaseRepositoryImp): ServerRepository
 
     @Binds
     abstract fun bindDictionaryRepository(repository: DictionaryRepositoryImp): DictionaryRepository

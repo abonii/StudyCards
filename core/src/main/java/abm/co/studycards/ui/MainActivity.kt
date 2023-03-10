@@ -17,6 +17,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHostState
@@ -36,6 +37,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ir.kaaveh.composenews.ui.component.BottomNavigationBar
+import kotlinx.serialization.ExperimentalSerializationApi
 import okhttp3.internal.immutableListOf
 
 @AndroidEntryPoint
@@ -49,7 +51,7 @@ class MainActivity : ComponentActivity() {
         )
     )
 
-    @OptIn(ExperimentalAnimationApi::class)
+    @OptIn(ExperimentalAnimationApi::class, ExperimentalSerializationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -73,7 +75,8 @@ class MainActivity : ComponentActivity() {
                         ) {
                             BottomNavigationBar(
                                 items = items,
-                                currentScreenRoute = currentScreenRoute
+                                currentScreenRoute = currentScreenRoute,
+                                modifier = Modifier.navigationBarsPadding()
                             ) {
                                 navController.navigate(it.route) {
                                     popUpTo(navController.graph.findStartDestination().id) {

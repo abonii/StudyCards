@@ -1,7 +1,7 @@
 package abm.co.navigation.graph
 
 import abm.co.designsystem.message.common.MessageContent
-import abm.co.feature.login.LoginPage
+import abm.co.feature.authorization.login.LoginPage
 import abm.co.navigation.Destinations
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavController
@@ -19,13 +19,15 @@ fun NavGraphBuilder.login(
         LoginPage(
             onNavigateHomePage = {
                 navController.navigate(
-                    route = Destinations.Home.route
+                    route = Destinations.ChooseUserAttributes .route
                 )
             },
-            onNavigateRegistrationPage = {
+            onNavigateSignUpPage = {
                 navController.navigate(
                     route = Destinations.Registration.route
-                )
+                ) {
+                    popUpTo(Destinations.WelcomeLogin.route)
+                }
             },
             onNavigateToForgotPage = {
 

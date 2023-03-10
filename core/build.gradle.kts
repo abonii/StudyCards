@@ -101,4 +101,5 @@ dependencies {
     implementation(StartupDependencies.startupRuntime)
     implementation(project(":library:navigation"))
     implementation(project(":library:designsystem"))
+    implementation(project(":data"))
 }

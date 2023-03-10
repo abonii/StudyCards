@@ -27,8 +27,8 @@ fun TextButton(
     buttonState: ButtonState = remember { ButtonState.Normal },
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     components: ButtonSize = ButtonSize(),
-    normalContentColor: Color = StudyCardsTheme.colors.textSkyBlue,
-    disabledButtonContentColor: Color = StudyCardsTheme.colors.textSilver
+    normalContentColor: Color = StudyCardsTheme.colors.skyBlue,
+    disabledButtonContentColor: Color = StudyCardsTheme.colors.silver
 ) {
     val isPressed by interactionSource.collectIsPressedAsState()
 

@@ -2,6 +2,7 @@ package abm.co.studycards.navigation
 
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.message.common.MessageContent
+import abm.co.navigation.graph.chooseUserAttributes
 import abm.co.navigation.graph.home
 import abm.co.navigation.graph.login
 import abm.co.navigation.graph.signUp
@@ -64,6 +65,10 @@ fun ComposeNewsNavHost(
             showMessage = showMessage
         )
         home(
+            navController = navController,
+            showMessage = showMessage
+        )
+        chooseUserAttributes(
             navController = navController,
             showMessage = showMessage
         )

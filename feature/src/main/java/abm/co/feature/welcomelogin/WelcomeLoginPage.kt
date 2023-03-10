@@ -22,6 +22,9 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +33,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun WelcomeLoginPage(
@@ -39,31 +44,36 @@ fun WelcomeLoginPage(
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: WelcomeLoginViewModel = hiltViewModel()
 ) {
-    val (state, event, channel) = use(viewModel = viewModel)
-    channel.collectInLaunchedEffect {
+    LaunchedEffect(Unit){
+        Firebase.analytics.logEvent(
+            "welcome_login_page_viewed", null
+        )
+    }
+    val state by viewModel.state.collectAsState()
+    viewModel.channel.collectInLaunchedEffect {
         when (it) {
-            WelcomeLoginContract.Channel.NavigateToHomePage -> onNavigateHomePage()
-            WelcomeLoginContract.Channel.NavigateToLoginPage -> onNavigateToLoginPage()
-            WelcomeLoginContract.Channel.NavigateToSignUpPage -> onNavigateRegistrationPage()
-            is WelcomeLoginContract.Channel.ShowMessage -> showMessage(it.messageContent)
+            WelcomeLoginContractChannel.NavigateToHomePage -> onNavigateHomePage()
+            WelcomeLoginContractChannel.NavigateToLoginPage -> onNavigateToLoginPage()
+            WelcomeLoginContractChannel.NavigateToSignUpPage -> onNavigateRegistrationPage()
+            is WelcomeLoginContractChannel.ShowMessage -> showMessage(it.messageContent)
         }
     }
     SetStatusBarColor()
     WelcomeLoginScreen(
         state = state,
-        event = event
+        event = viewModel::event
     )
 }
 
 
 @Composable
 private fun WelcomeLoginScreen(
-    state: WelcomeLoginContract.State,
-    event: (WelcomeLoginContract.Event) -> Unit,
+    state: WelcomeLoginContractState,
+    event: (WelcomeLoginContractEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .navigationBarsPadding()
             .baseBackground()
             .fillMaxSize(),
@@ -98,9 +108,8 @@ private fun WelcomeLoginScreen(
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth(),
             title = stringResource(id = R.string.WelcomeLoginPage_SignUpButton),
-            buttonState = if (state.isLoading) ButtonState.Loading else ButtonState.Normal,
             onClick = {
-                event(WelcomeLoginContract.Event.OnClickSignUp)
+                event(WelcomeLoginContractEvent.OnClickSignUp)
             }
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -112,9 +121,8 @@ private fun WelcomeLoginScreen(
             components = ButtonSize(),
             normalButtonBackgroundColor = StudyCardsTheme.colors.buttonSecondary,
             normalContentColor = Color.White,
-            buttonState = if (state.isLoading) ButtonState.Loading else ButtonState.Normal,
             onClick = {
-                event(WelcomeLoginContract.Event.OnClickLogin)
+                event(WelcomeLoginContractEvent.OnClickLogin)
             }
         )
         Spacer(modifier = Modifier.weight(0.157f))
@@ -123,7 +131,7 @@ private fun WelcomeLoginScreen(
             components = ButtonSize(),
             buttonState = if (state.isLoading) ButtonState.Loading else ButtonState.Normal,
             onClick = {
-                event(WelcomeLoginContract.Event.OnClickLoginAsGuest)
+                event(WelcomeLoginContractEvent.OnClickLoginAsGuest)
             }
         )
         Spacer(modifier = Modifier.weight(0.06f))

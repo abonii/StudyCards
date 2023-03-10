@@ -9,8 +9,8 @@
     <string name="LoginPage.Title">Welcome</string>
     <string name="LoginPage.Subitle">Glad to see you!</string>
     <string name="LoginPage.LoginButton">LOGIN</string>
-    <string name="LoginPage.UsernameTitle">Username</string>
-    <string name="LoginPage.UsernameHint">Enter your username</string>
+    <string name="LoginPage.EmailTitle">Email</string>
+    <string name="LoginPage.EmailHint">Enter your email</string>
     <string name="LoginPage.PasswordTitle">Password</string>
     <string name="LoginPage.PasswordHint">Enter password</string>
     <string name="LoginPage.AlternativeLogin">Or log in with</string>
@@ -20,8 +20,8 @@
     <string name="SignUpPage.Title">Create Account </string>
     <string name="SignUpPage.Subtitle">to get to started now</string>
     <string name="SignUpPage.SignUpButton">SIGN UP</string>
-    <string name="SignUpPage.UsernameTitle">Username</string>
-    <string name="SignUpPage.UsernameHint">Enter your username</string>
+    <string name="SignUpPage.EmailTitle">Email</string>
+    <string name="SignUpPage.EmailHint">Enter your email</string>
     <string name="SignUpPage.PasswordTitle">Password</string>
     <string name="SignUpPage.PasswordHint">Enter password</string>
     <string name="SignUpPage.PasswordConfirmTitle">Confirm password</string>
@@ -29,9 +29,49 @@
     <string name="SignUpPage.AlternativeSignUp">Or sign up with</string>
     <string name="SignUpPage.LoginTitle">Already have an account?</string>
     <string name="SignUpPage.LoginNow">Login now</string>
+    <string name="SignUpPage.WeCouldntSentVerification.title">Whoops</string>
+    <string name="SignUpPage.WeCouldntSentVerification.subtitle">We cannot send verification to this email</string>
+    <string name="SignUpPage.WeSentVerification.title">Hooray</string>
+    <string name="SignUpPage.WeSentVerification.subtitle">We have sent a confirmation to your email address, please check your email address</string>
 
     <string name="SignUpPage.PasswordsNotSame">Passwords are not same</string>
     <string name="SignUpPage.EmailEmpty">Email cannot be empty</string>
     <string name="SignUpPage.PasswordEmpty">Password cannot be empty</string>
     <string name="SignUpPage.PasswordLengthNotCorrect">Password length should be more than 5</string>
+
+    <!--Languages-->
+    <string name="Arabic">Arabic</string>
+    <string name="Bengali">Bengali</string>
+    <string name="Hindi">Hindi</string>
+    <string name="Indonesian">Indonesian</string>
+    <string name="Japanese">Japanese</string>
+    <string name="Portuguese">Portuguese</string>
+    <string name="Spanish">Spanish</string>
+    <string name="Ukrainian">Ukrainian</string>
+    <string name="Chinese">Chinese</string>
+    <string name="English">English</string>
+    <string name="French">French</string>
+    <string name="German">German</string>
+    <string name="Italian">Italian</string>
+    <string name="Kazakh">Kazakh</string>
+    <string name="Korean">Korean</string>
+    <string name="Turkish">Turkish</string>
+    <string name="Russian">Russian</string>
+    <string name="ArabicShort">Arb</string>
+    <string name="BengaliShort">Ben</string>
+    <string name="HindiShort">Hin</string>
+    <string name="JapaneseShort">Jap</string>
+    <string name="IndonesianShort">Ind</string>
+    <string name="PortugueseShort">Por</string>
+    <string name="SpanishShort">Spa</string>
+    <string name="UkrainianShort">Ukr</string>
+    <string name="ChineseShort">Chi</string>
+    <string name="EnglishShort">Eng</string>
+    <string name="FrenchShort">Fre</string>
+    <string name="GermanShort">Ger</string>
+    <string name="ItalianShort">Ita</string>
+    <string name="KazakhShort">Kaz</string>
+    <string name="KoreanShort">Kor</string>
+    <string name="TurkishShort">Tur</string>
+    <string name="RussianShort">Rus</string>
 </resources>

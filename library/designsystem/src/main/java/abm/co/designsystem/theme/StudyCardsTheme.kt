@@ -46,6 +46,7 @@ private fun StudyCardsThemeImpl(
         LocalColors provides rememberedColors,
         LocalContentAlpha provides ContentAlpha.high,
         LocalSpaces provides spaces,
+        LocalShapes provides shapes,
         LocalIndication provides rippleIndication,
         LocalRippleTheme provides StudyCardsRippleTheme,
         LocalTypography provides typography
