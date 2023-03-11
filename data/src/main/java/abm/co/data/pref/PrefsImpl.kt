@@ -66,7 +66,7 @@ class PrefsImpl @Inject constructor(
             return null
         }
         return try {
-            val type: Type = object : TypeToken<List<LanguageDTO>?>() {}.type
+            val type: Type = object : TypeToken<LanguageDTO?>() {}.type
             val language = gson.fromJson<LanguageDTO>(json, type)
             language?.toDomain()
         } catch (e: Throwable) {
@@ -86,7 +86,7 @@ class PrefsImpl @Inject constructor(
             return null
         }
         return try {
-            val type: Type = object : TypeToken<List<LanguageDTO>?>() {}.type
+            val type: Type = object : TypeToken<LanguageDTO?>() {}.type
             val language = gson.fromJson<LanguageDTO>(json, type)
             language?.toDomain()
         } catch (e: Throwable) {
@@ -106,7 +106,7 @@ class PrefsImpl @Inject constructor(
             return null
         }
         return try {
-            val type: Type = object : TypeToken<List<LanguageDTO>?>() {}.type
+            val type: Type = object : TypeToken<LanguageDTO?>() {}.type
             val language = gson.fromJson<LanguageDTO>(json, type)
             language?.toDomain()
         } catch (e: Throwable) {

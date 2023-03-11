@@ -6,6 +6,7 @@ import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.designsystem.widget.LinearProgress
+import abm.co.feature.R
 import abm.co.feature.userattributes.lanugage.LanguageItems
 import abm.co.feature.userattributes.lanugage.LanguageUI
 import abm.co.feature.userattributes.usergoal.UserGoalItems
@@ -33,6 +34,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.collections.immutable.ImmutableList
@@ -141,16 +143,16 @@ private fun TopTitle(
         Text(
             text = when (currentPage) {
                 UserAttributesPage.NativeLanguage -> {
-                    "Родной язык"
+                    stringResource(id = R.string.ChooseUserAttributesPage_NativeLanguage_title)
                 }
                 UserAttributesPage.LearningLanguage -> {
-                    "Я хочу учить"
+                    stringResource(id = R.string.ChooseUserAttributesPage_LearningLanguage_title)
                 }
                 UserAttributesPage.UserGoal -> {
-                    "Какие у вас задачи?"
+                    stringResource(id = R.string.ChooseUserAttributesPage_UserGoal_title)
                 }
                 UserAttributesPage.UserInterests -> {
-                    "Что вас интересует?"
+                    stringResource(id = R.string.ChooseUserAttributesPage_UserInterests_title)
                 }
             },
             style = StudyCardsTheme.typography.weight600Size23LineHeight24,
@@ -160,16 +162,16 @@ private fun TopTitle(
         Text(
             text = when (currentPage) {
                 UserAttributesPage.NativeLanguage -> {
-                    "Выберите родной язык из списка"
+                    stringResource(id = R.string.ChooseUserAttributesPage_NativeLanguage_subtitle)
                 }
                 UserAttributesPage.LearningLanguage -> {
-                    "Выберите один язык для изучения"
+                    stringResource(id = R.string.ChooseUserAttributesPage_LearningLanguage_subtitle)
                 }
                 UserAttributesPage.UserGoal -> {
-                    "Выберите все подходящие варианты"
+                    stringResource(id = R.string.ChooseUserAttributesPage_UserGoal_subtitle)
                 }
                 UserAttributesPage.UserInterests -> {
-                    "Выберите все подходящие варианты"
+                    stringResource(id = R.string.ChooseUserAttributesPage_UserInterests_subtitle)
                 }
             },
             style = StudyCardsTheme.typography.weight400Size16LineHeight20,

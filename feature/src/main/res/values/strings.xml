@@ -33,11 +33,20 @@
     <string name="SignUpPage.WeCouldntSentVerification.subtitle">We cannot send verification to this email</string>
     <string name="SignUpPage.WeSentVerification.title">Hooray</string>
     <string name="SignUpPage.WeSentVerification.subtitle">We have sent a confirmation to your email address, please check your email address</string>
-
     <string name="SignUpPage.PasswordsNotSame">Passwords are not same</string>
     <string name="SignUpPage.EmailEmpty">Email cannot be empty</string>
     <string name="SignUpPage.PasswordEmpty">Password cannot be empty</string>
     <string name="SignUpPage.PasswordLengthNotCorrect">Password length should be more than 5</string>
+
+    <string name="ChooseUserAttributesPage.NativeLanguage.title">Native language</string>
+    <string name="ChooseUserAttributesPage.LearningLanguage.title">I want to learn</string>
+    <string name="ChooseUserAttributesPage.UserGoal.title">What are your goals?</string>
+    <string name="ChooseUserAttributesPage.UserInterests.title">What are you interested in?</string>
+    <string name="ChooseUserAttributesPage.NativeLanguage.subtitle">Select your native language from the list</string>
+    <string name="ChooseUserAttributesPage.LearningLanguage.subtitle">Choose one language to study</string>
+    <string name="ChooseUserAttributesPage.UserGoal.subtitle">Select all the appropriate options</string>
+    <string name="ChooseUserAttributesPage.UserInterests.subtitle">Select all the appropriate options</string>
+    <string name="ChooseUserAttributesPage.UserInterests.continue">Continue</string>
 
     <!--Languages-->
     <string name="Arabic">Arabic</string>

@@ -20,7 +20,7 @@ fun UserInterestUI.toDomain() = UserInterest(
     title = title
 )
 
-val defaultUserInterests = listOf(
+val defaultUserInterests = listOf( // todo what to do
     UserInterestUI(id = 0, title = "Шоппинг"),
     UserInterestUI(id = 1, title = "Кино"),
     UserInterestUI(id = 2, title = "Мода"),

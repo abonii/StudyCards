@@ -4,6 +4,7 @@ import abm.co.designsystem.component.button.PrimaryButton
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.list.GridItems
 import abm.co.designsystem.theme.StudyCardsTheme
+import abm.co.feature.R
 import abm.co.feature.userattributes.common.AnimatableContent
 import android.widget.Space
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 
@@ -60,7 +62,7 @@ fun UserInterestItems(
                 modifier = Modifier
                     .padding(start = 20.dp, end = 20.dp, bottom = 35.dp, top = 8.dp)
                     .fillMaxWidth(),
-                title = "Продолжить",
+                title = stringResource(id = R.string.ChooseUserAttributesPage_UserInterests_continue),
                 normalContentColor = StudyCardsTheme.colors.primary,
                 normalButtonBackgroundColor = Color.White,
                 onClick = onClickContinueButton

@@ -19,7 +19,7 @@ fun UserGoal.toUI() = UserGoalUI(
     title = title
 )
 
-val defaultUserGoals = listOf(
+val defaultUserGoals = listOf( // todo what to do
     UserGoalUI(id = 0, "Изучить основы "),
     UserGoalUI(id = 1, "Посмотреть фильм на языке\n" +
         "(Английский(британский))"),

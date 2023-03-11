@@ -33,6 +33,7 @@ class MainViewModel @Inject constructor(
     private fun getStartDestination(): String {
         val hasUser = firebaseAuth.currentUser != null
         return if (hasUser) {
+            println("${prefs.getNativeLanguage()} -- ${prefs.getLearningLanguage()}")
             if (prefs.getNativeLanguage() == null || prefs.getLearningLanguage() == null) {
                 Destinations.ChooseUserAttributes.route
             } else Destinations.Home.route

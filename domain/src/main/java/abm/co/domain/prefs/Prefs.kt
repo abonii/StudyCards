@@ -7,12 +7,12 @@ interface Prefs {
     companion object {
         const val ACCESS_TOKEN = "STUDY_CARD_ACCESS_TOKEN"
         const val SHARED_PREFERENCES = "STUDY_CARD_SHARED_PREF"
-        const val USER_ID = "STUDY_CARD_USER_ID"
-        const val APP_LANGUAGE = "STUDY_CARD_LOCALE_APP_LANGUAGE"
-        const val NATIVE_LANGUAGE: String = "ABO_FLASH_CARD_NATIVE_LANGUAGE"
-        const val LEARNING_LANGUAGE: String = "ABO_FLASH_CARD_LEARNING_LANGUAGE"
-        const val IS_PREMIUM: String = "ABO_FLASH_CARD_IS_PREMIUM"
-        const val IS_FIRST_TIME: String = "ABO_FLASH_CARD_IS_FIRST_TIME"
+        const val USER_ID = "USER_ID"
+        const val APP_LANGUAGE = "APP_LANGUAGE"
+        const val NATIVE_LANGUAGE: String = "NATIVE_LANGUAGE"
+        const val LEARNING_LANGUAGE: String = "LEARNING_LANGUAGE"
+        const val IS_PREMIUM: String = "IS_PREMIUM"
+        const val IS_FIRST_TIME: String = "IS_FIRST_TIME"
     }
 
     fun getAccessToken(): String
