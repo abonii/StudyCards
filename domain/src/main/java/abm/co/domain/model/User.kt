@@ -5,7 +5,6 @@ data class User(
     val email: String?,
     val translateCounts: Long?,
     val translateCountsUpdateTime: Long?,
-    val selectedLanguages: List<String>?,
-    val reasonOfLearning: String?,
-    val userInterests: List<UserInterest>?
+    val goals: List<UserGoal>?,
+    val interests: List<UserInterest>?
 )
