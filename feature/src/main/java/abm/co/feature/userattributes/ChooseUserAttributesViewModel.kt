@@ -3,14 +3,26 @@ package abm.co.feature.userattributes
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
 import abm.co.domain.base.Failure
-import abm.co.feature.userattributes.lanugage.Language
-import abm.co.feature.userattributes.usergoal.UserGoal
+import abm.co.domain.prefs.Prefs
+import abm.co.domain.repository.ServerRepository
+import abm.co.feature.userattributes.lanugage.LanguageUI
+import abm.co.feature.userattributes.lanugage.defaultLanguages
+import abm.co.feature.userattributes.lanugage.toDomain
+import abm.co.feature.userattributes.usergoal.UserGoalUI
+import abm.co.feature.userattributes.usergoal.defaultUserGoals
+import abm.co.feature.userattributes.usergoal.toDomain
+import abm.co.feature.userattributes.userinterest.UserInterestUI
+import abm.co.feature.userattributes.userinterest.defaultUserInterests
+import abm.co.feature.userattributes.userinterest.toDomain
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +32,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ChooseUserAttributesViewModel @Inject constructor(
-
+    private val prefs: Prefs,
+    private val serverRepository: ServerRepository
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(ChooseUserAttributesContractState())
@@ -30,53 +43,105 @@ class ChooseUserAttributesViewModel @Inject constructor(
     val channel = _channel.receiveAsFlow()
 
     fun event(event: ChooseUserAttributesContractEvent) {
-        viewModelScope.launch {
-            when (event) {
-                ChooseUserAttributesContractEvent.OnClickContinue -> {
-                    navigateToHomePage()
-                }
-                is ChooseUserAttributesContractEvent.OnClickLearningLanguage -> {
-                    onClickLearningLanguage(event.language)
-                }
-                is ChooseUserAttributesContractEvent.OnClickNativeLanguage -> {
-                    onClickNativeLanguage(event.language)
-                }
-                is ChooseUserAttributesContractEvent.OnClickReasonOfLearning -> {
-                    onClickReasonOfLearning(event.userGoal, )
-                }
-                is ChooseUserAttributesContractEvent.OnToggleUserInterests -> {
-                    onToggleUserInterests()
-                }
+        when (event) {
+            is ChooseUserAttributesContractEvent.OnNavigateToUserGoal -> {
+                onNavigateToUserGoal(event.learningLanguage, event.isToRight)
+            }
+            is ChooseUserAttributesContractEvent.OnNavigateToLearningLanguage -> {
+                onNavigateToLearningLanguage(event.nativeLanguage, event.isToRight)
+            }
+            is ChooseUserAttributesContractEvent.OnNavigateToUserInterests -> {
+                onNavigateToUserInterests(event.userGoal)
+            }
+            is ChooseUserAttributesContractEvent.OnSelectUserInterest -> {
+                onToggleUserInterests(event.userInterestUI)
+            }
+            ChooseUserAttributesContractEvent.OnNavigateToNativeLanguage -> {
+                onNavigateToNativeLanguage()
+            }
+            ChooseUserAttributesContractEvent.OnClickContinue -> {
+                onClickContinue()
             }
         }
     }
 
-    private fun onToggleUserInterests() {
+    private fun onNavigateToNativeLanguage() {
         mutableState.update {
-            it.copy(progress = 1f)
+            it.copy(
+                currentPage = UserAttributesPage.NativeLanguage,
+                progress = 0.2f,
+                isToRight = false
+            )
         }
-        // TODO store
     }
 
-    private fun onClickReasonOfLearning(userGoal: UserGoal) {
+    private fun onNavigateToLearningLanguage(nativeLanguage: LanguageUI?, toRight: Boolean) {
+        nativeLanguage?.let { saveNativeLanguage(it) }
         mutableState.update {
-            it.copy(progress = 0.75f, currentPage = UserAttributesPage.UserInterests)
+            it.copy(
+                currentPage = UserAttributesPage.LearningLanguage,
+                progress = 0.4f,
+                isToRight = toRight
+            )
         }
-        // TODO store reason
     }
 
-    private fun onClickNativeLanguage(language: Language) {
+    private fun onNavigateToUserGoal(learningLanguage: LanguageUI?, toRight: Boolean) {
+        learningLanguage?.let { saveLearningLanguage(it) }
         mutableState.update {
-            it.copy(progress = 0.25f, currentPage = UserAttributesPage.LearningLanguage)
+            it.copy(
+                currentPage = UserAttributesPage.UserGoal,
+                progress = 0.6f,
+                isToRight = toRight
+            )
         }
-        // TODO store language
     }
 
-    private fun onClickLearningLanguage(language: Language) {
+    private fun onNavigateToUserInterests(userGoal: UserGoalUI?) {
+        userGoal?.let { saveUserGoal(it) }
         mutableState.update {
-            it.copy(progress = 0.5f, currentPage = UserAttributesPage.UserGoal)
+            it.copy(
+                currentPage = UserAttributesPage.UserInterests,
+                progress = 0.8f,
+                isToRight = true
+            )
         }
-        // TODO store language
+    }
+
+    private fun onClickContinue() {
+        viewModelScope.launch {
+            mutableState.update { contractState -> contractState.copy(progress = 1f) }
+            serverRepository.setUserInterests(
+                state.value.userInterests.filter { it.isSelected }.map { it.toDomain() })
+            delay(500)
+            navigateToHomePage()
+        }
+    }
+
+    private fun onToggleUserInterests(userInterest: UserInterestUI) {
+        mutableState.update { contractState ->
+            contractState.copy(
+                userInterests = contractState.userInterests.map {
+                    if (userInterest.id == it.id) {
+                        it.copy(isSelected = !userInterest.isSelected)
+                    } else it
+                }.toImmutableList()
+            )
+        }
+    }
+
+    private fun saveUserGoal(userGoal: UserGoalUI) {
+        viewModelScope.launch {
+            serverRepository.setUserGoal(userGoal.toDomain())
+        }
+    }
+
+    private fun saveNativeLanguage(language: LanguageUI) {
+        prefs.setNativeLanguage(language.toDomain())
+    }
+
+    private fun saveLearningLanguage(language: LanguageUI) {
+        prefs.setLearningLanguage(language.toDomain())
     }
 
     private fun navigateToHomePage() {
@@ -96,22 +161,35 @@ class ChooseUserAttributesViewModel @Inject constructor(
 
 @Immutable
 data class ChooseUserAttributesContractState(
-    val progress: Float = 0f, // 0..1
-    val currentPage: UserAttributesPage = UserAttributesPage.NativeLanguage
+    val progress: Float = 0.2f, // 0..1
+    val currentPage: UserAttributesPage = UserAttributesPage.NativeLanguage,
+    val languages: ImmutableList<LanguageUI> = defaultLanguages.toImmutableList(),
+    val userGoals: ImmutableList<UserGoalUI> = defaultUserGoals.toImmutableList(),
+    val userInterests: ImmutableList<UserInterestUI> = defaultUserInterests.toImmutableList(),
+    val isToRight: Boolean = true
 )
 
 @Immutable
 sealed interface ChooseUserAttributesContractEvent {
     object OnClickContinue : ChooseUserAttributesContractEvent
-    data class OnClickNativeLanguage(val language: Language) : ChooseUserAttributesContractEvent
-    data class OnClickLearningLanguage(val language: Language) : ChooseUserAttributesContractEvent
-    data class OnClickReasonOfLearning(
-        val userGoal: UserGoal
-    ) : ChooseUserAttributesContractEvent
+    object OnNavigateToNativeLanguage : ChooseUserAttributesContractEvent
+    data class OnSelectUserInterest(val userInterestUI: UserInterestUI) :
+        ChooseUserAttributesContractEvent
 
-    data class OnToggleUserInterests(
-        val userGoal: UserGoal
-    ) : ChooseUserAttributesContractEvent
+    data class OnNavigateToLearningLanguage(
+        val nativeLanguage: LanguageUI?,
+        val isToRight: Boolean
+    ) :
+        ChooseUserAttributesContractEvent
+
+    data class OnNavigateToUserGoal(
+        val learningLanguage: LanguageUI?,
+        val isToRight: Boolean
+    ) :
+        ChooseUserAttributesContractEvent
+
+    data class OnNavigateToUserInterests(val userGoal: UserGoalUI?) :
+        ChooseUserAttributesContractEvent
 }
 
 @Immutable

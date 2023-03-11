@@ -18,11 +18,13 @@ fun NavGraphBuilder.welcomeLogin(
     ) {
         WelcomeLoginPage(
             showMessage = showMessage,
-            onNavigateRegistrationPage = {
-                navController.navigate(Destinations.Registration.route)
+            onNavigateSignUpPage = {
+                navController.navigate(Destinations.SignUp.route)
             },
             onNavigateHomePage = {
-                navController.navigate(Destinations.Home.route)
+                navController.navigate(Destinations.Home.route) {
+                    popUpTo(Destinations.Home.route)
+                }
             },
             onNavigateToLoginPage = {
                 navController.navigate(Destinations.Login.route)

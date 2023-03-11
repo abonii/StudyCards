@@ -1,7 +1,7 @@
 package abm.co.feature.authorization.signup
 
 import abm.co.designsystem.collectInLaunchedEffect
-import abm.co.designsystem.component.SetStatusBarColor
+import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.button.ButtonSize
 import abm.co.designsystem.component.button.ButtonState
 import abm.co.designsystem.component.button.IconShadowedButton

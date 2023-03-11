@@ -19,9 +19,11 @@ fun NavGraphBuilder.chooseUserAttributes(
     ) {
         ChooseUserAttributesPage(
             onNavigateHomePage = {
-                navController.navigate(
-                    route = Destinations.Home.route
-                )
+                navController.navigate(Destinations.Home.route) {
+                    popUpTo(Destinations.ChooseUserAttributes.route) {
+                        inclusive = true
+                    }
+                }
             },
             showMessage = showMessage
         )

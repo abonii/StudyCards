@@ -18,13 +18,15 @@ fun NavGraphBuilder.login(
     ) {
         LoginPage(
             onNavigateHomePage = {
-                navController.navigate(
-                    route = Destinations.ChooseUserAttributes .route
-                )
+                navController.navigate(Destinations.ChooseUserAttributes.route) {
+                    popUpTo(Destinations.ChooseUserAttributes.route) {
+                        inclusive = true
+                    }
+                }
             },
             onNavigateSignUpPage = {
                 navController.navigate(
-                    route = Destinations.Registration.route
+                    route = Destinations.SignUp.route
                 ) {
                     popUpTo(Destinations.WelcomeLogin.route)
                 }

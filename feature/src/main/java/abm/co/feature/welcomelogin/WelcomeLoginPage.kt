@@ -1,7 +1,7 @@
 package abm.co.feature.welcomelogin
 
 import abm.co.designsystem.collectInLaunchedEffect
-import abm.co.designsystem.component.SetStatusBarColor
+import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.button.ButtonSize
 import abm.co.designsystem.component.button.ButtonState
 import abm.co.designsystem.component.button.PrimaryButton
@@ -10,7 +10,6 @@ import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.baseBackground
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
-import abm.co.designsystem.use
 import abm.co.feature.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -38,7 +37,7 @@ import com.google.firebase.ktx.Firebase
 
 @Composable
 fun WelcomeLoginPage(
-    onNavigateRegistrationPage: () -> Unit,
+    onNavigateSignUpPage: () -> Unit,
     onNavigateHomePage: () -> Unit,
     onNavigateToLoginPage: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
@@ -54,7 +53,7 @@ fun WelcomeLoginPage(
         when (it) {
             WelcomeLoginContractChannel.NavigateToHomePage -> onNavigateHomePage()
             WelcomeLoginContractChannel.NavigateToLoginPage -> onNavigateToLoginPage()
-            WelcomeLoginContractChannel.NavigateToSignUpPage -> onNavigateRegistrationPage()
+            WelcomeLoginContractChannel.NavigateToSignUpPage -> onNavigateSignUpPage()
             is WelcomeLoginContractChannel.ShowMessage -> showMessage(it.messageContent)
         }
     }

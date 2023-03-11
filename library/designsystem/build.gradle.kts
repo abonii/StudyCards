@@ -66,6 +66,7 @@ dependencies {
         api(composeActivity)
         api(composeViewModel)
         api(navigation)
+        api(pager)
         api(systemuicontroller)
         api(icons)
     }

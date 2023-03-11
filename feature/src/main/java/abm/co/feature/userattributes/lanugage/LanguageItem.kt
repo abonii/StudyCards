@@ -1,10 +1,10 @@
 package abm.co.feature.userattributes.lanugage
 
 import abm.co.designsystem.component.modifier.Modifier
-import abm.co.designsystem.component.modifier.clickableWithRipple
 import abm.co.designsystem.theme.StudyCardsTheme
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun LanguageItem(
-    language: Language,
-    onClick: (Language) -> Unit,
+    language: LanguageUI,
+    onClick: (LanguageUI) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -34,7 +34,7 @@ fun LanguageItem(
             .clip(RoundedCornerShape(8.dp))
             .background(Color(0xFF_387CEE))
             .fillMaxWidth()
-            .clickableWithRipple { onClick(language) }
+            .clickable { onClick(language) }
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 13.dp),

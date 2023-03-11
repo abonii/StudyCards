@@ -97,8 +97,7 @@ class MainActivity : ComponentActivity() {
                     ComposeNewsNavHost(
                         navController = navController,
                         modifier = Modifier.padding(innerPaddings),
-                        startDestination = if (state.isLoggedIn) Destinations.Home.route
-                        else Destinations.WelcomeLogin.route,
+                        startDestination = state.startDestination,
                         showMessage = {
                             when (it) {
                                 is MessageContent.AlertDialog -> {

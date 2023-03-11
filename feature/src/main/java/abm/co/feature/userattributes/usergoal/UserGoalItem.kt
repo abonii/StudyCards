@@ -1,9 +1,9 @@
 package abm.co.feature.userattributes.usergoal
 
 import abm.co.designsystem.component.modifier.Modifier
-import abm.co.designsystem.component.modifier.clickableWithRipple
 import abm.co.designsystem.theme.StudyCardsTheme
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun UserGoalItem(
-    userGoal: UserGoal,
-    onClick: (UserGoal) -> Unit,
+    userGoal: UserGoalUI,
+    onClick: (UserGoalUI) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -28,12 +28,12 @@ fun UserGoalItem(
             .clip(RoundedCornerShape(8.dp))
             .background(Color(0xFF_387CEE))
             .fillMaxWidth()
-            .clickableWithRipple { onClick(userGoal) },
+            .clickable { onClick(userGoal) },
         contentAlignment = Alignment.Center
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 13.dp),
-            text = userGoal.name,
+            text = userGoal.title,
             style = StudyCardsTheme.typography.weight400Size16LineHeight20,
             color = Color.White,
             maxLines = 1,

@@ -1,45 +1,43 @@
 package abm.co.feature.userattributes
 
 import abm.co.designsystem.collectInLaunchedEffect
-import abm.co.designsystem.component.SetStatusBarColor
 import abm.co.designsystem.component.modifier.Modifier
-import abm.co.designsystem.list.gridItemsIndexed
+import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.designsystem.widget.LinearProgress
-import abm.co.feature.userattributes.lanugage.LanguageItem
-import abm.co.feature.userattributes.lanugage.availableLanguages
-import abm.co.feature.userattributes.usergoal.UserGoalItem
-import abm.co.feature.userattributes.usergoal.userGoals
-import abm.co.feature.userattributes.userinterest.UserInterestItem
-import abm.co.feature.userattributes.userinterest.userInterests
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import abm.co.feature.userattributes.lanugage.LanguageItems
+import abm.co.feature.userattributes.lanugage.LanguageUI
+import abm.co.feature.userattributes.usergoal.UserGoalItems
+import abm.co.feature.userattributes.usergoal.UserGoalUI
+import abm.co.feature.userattributes.userinterest.UserInterestItems
+import abm.co.feature.userattributes.userinterest.UserInterestUI
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.collections.immutable.ImmutableList
 
+@Immutable
 enum class UserAttributesPage {
     NativeLanguage,
     LearningLanguage,
@@ -60,7 +58,7 @@ fun ChooseUserAttributesPage(
             is ChooseUserAttributesContractChannel.ShowMessage -> showMessage(it.messageContent)
         }
     }
-    SetStatusBarColor()
+    SetStatusBarColor(iconsColorsDark = false)
     ChooseUserAttributesScreen(
         state = state,
         event = viewModel::event
@@ -74,101 +72,170 @@ private fun ChooseUserAttributesScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
-            .background(StudyCardsTheme.colors.primary)
+        modifier = modifier
+            .background(Color(0xFF_2970E5))
             .padding(top = 20.dp)
-            .statusBarsPadding()
+            .systemBarsPadding()
+            .fillMaxSize()
+            .animateContentSize(),
+        verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         LinearProgress(
             progressFloat = state.progress,
-            modifier = Modifier.fillMaxWidth(),
-            onReach100Percent = {/*TODO remove or do*/ }
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
+            onReach100Percent = { /*Just ignore*/ }
         )
-        Spacer(modifier = Modifier.height(20.dp))
-        LazyColumn(
-            modifier = Modifier,
-            contentPadding = PaddingValues(vertical = 20.dp, horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+        Column(
+            modifier = Modifier.padding(top = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            item {
-                AnimatedVisibility(
-                    modifier = Modifier,
-                    visible = true,
-                    enter = fadeIn(animationSpec = tween(durationMillis = 500)),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 500))
-                ) {
-                    Column {
-                        Text(
-                            text = "Родной язык", // todo
-                            style = StudyCardsTheme.typography.weight600Size23LineHeight24,
-                            color = Color.White
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "Выберите родной язык из списка", // todo
-                            style = StudyCardsTheme.typography.weight400Size16LineHeight20,
-                            color = Color.White
-                        )
-                    }
-                }
+            TopTitle(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                currentPage = state.currentPage
+            )
+            ChangeableContent(
+                modifier = Modifier,
+                currentPage = state.currentPage,
+                userGoals = state.userGoals,
+                languages = state.languages,
+                userInterests = state.userInterests,
+                isToRight = state.isToRight,
+                event = event
+            )
+        }
+    }
+    BackHandler(state.currentPage != UserAttributesPage.NativeLanguage) {
+        when (state.currentPage) {
+            UserAttributesPage.LearningLanguage -> {
+                event(ChooseUserAttributesContractEvent.OnNavigateToNativeLanguage)
             }
-
-            when (state.currentPage) {
-                UserAttributesPage.NativeLanguage -> {
-                    items(availableLanguages) { language ->
-                        LanguageItem(
-                            language = language,
-                            onClick = {
-                                event(ChooseUserAttributesContractEvent.OnClickNativeLanguage(it))
-                            }
-                        )
-                    }
-                }
-                UserAttributesPage.LearningLanguage -> {
-                    items(availableLanguages) { language ->
-                        LanguageItem(
-                            language = language,
-                            onClick = {
-                                event(ChooseUserAttributesContractEvent.OnClickLearningLanguage(it))
-                            }
-                        )
-                    }
-                }
-                UserAttributesPage.UserGoal -> {
-                    items(userGoals) { userGoal ->
-                        UserGoalItem(userGoal = userGoal, onClick = {
-                            event(ChooseUserAttributesContractEvent.OnToggleUserInterests(it))
-                        })
-                    }
-                }
-                UserAttributesPage.UserInterests -> {
-                    val gridBoxModifier = itemModifier@{ columnIndex: Int ->
-                        var modifier: Modifier = androidx.compose.ui.Modifier
-                        val maxColumnsIndex = (userInterests.count() - 1) / 3
-                        if (columnIndex != maxColumnsIndex) {
-//                            modifier = modifier.padding(bottom = 12.dp)
-                        }
-                        return@itemModifier modifier
-                    }
-                    gridItemsIndexed(
-                        data = userInterests,
-                        spanCount = 3,
-                        horizontalArrangement = Arrangement.spacedBy(14.dp),
-                        itemModifier = gridBoxModifier,
-                        key = { _, category ->
-                            category.id
-                        }
-                    ) { index, item ->
-                        UserInterestItem(
-                            userInterest = item,
-                            onClick = {/*TODO one click*/ },
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .aspectRatio(1f)
-                        )
-                    }
-                }
+            UserAttributesPage.UserGoal -> {
+                event(
+                    ChooseUserAttributesContractEvent.OnNavigateToLearningLanguage(
+                        nativeLanguage = null,
+                        isToRight = false
+                    )
+                )
             }
+            UserAttributesPage.UserInterests -> {
+                event(
+                    ChooseUserAttributesContractEvent.OnNavigateToUserGoal(
+                        learningLanguage = null,
+                        isToRight = false
+                    )
+                )
+            }
+            else -> Unit
         }
     }
 }
+
+@Composable
+private fun TopTitle(
+    currentPage: UserAttributesPage,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = when (currentPage) {
+                UserAttributesPage.NativeLanguage -> {
+                    "Родной язык"
+                }
+                UserAttributesPage.LearningLanguage -> {
+                    "Я хочу учить"
+                }
+                UserAttributesPage.UserGoal -> {
+                    "Какие у вас задачи?"
+                }
+                UserAttributesPage.UserInterests -> {
+                    "Что вас интересует?"
+                }
+            },
+            style = StudyCardsTheme.typography.weight600Size23LineHeight24,
+            color = Color.White
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = when (currentPage) {
+                UserAttributesPage.NativeLanguage -> {
+                    "Выберите родной язык из списка"
+                }
+                UserAttributesPage.LearningLanguage -> {
+                    "Выберите один язык для изучения"
+                }
+                UserAttributesPage.UserGoal -> {
+                    "Выберите все подходящие варианты"
+                }
+                UserAttributesPage.UserInterests -> {
+                    "Выберите все подходящие варианты"
+                }
+            },
+            style = StudyCardsTheme.typography.weight400Size16LineHeight20,
+            color = Color.White
+        )
+    }
+}
+
+@Composable
+private fun ChangeableContent(
+    currentPage: UserAttributesPage,
+    userGoals: ImmutableList<UserGoalUI>,
+    languages: ImmutableList<LanguageUI>,
+    userInterests: ImmutableList<UserInterestUI>,
+    event: (ChooseUserAttributesContractEvent) -> Unit,
+    isToRight: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier) {
+        LanguageItems(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 20.dp),
+            visible = currentPage == UserAttributesPage.NativeLanguage,
+            languages = languages,
+            isToRight = isToRight,
+            onClickItem = {
+                event(ChooseUserAttributesContractEvent.OnNavigateToLearningLanguage(it, true))
+            }
+        )
+        LanguageItems(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 20.dp),
+            visible = currentPage == UserAttributesPage.LearningLanguage,
+            languages = languages,
+            isToRight = isToRight,
+            onClickItem = {
+                event(ChooseUserAttributesContractEvent.OnNavigateToUserGoal(it, true))
+            }
+        )
+        UserGoalItems(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 20.dp),
+            visible = currentPage == UserAttributesPage.UserGoal,
+            userGoals = userGoals,
+            isToRight = isToRight,
+            onClickItem = {
+                event(ChooseUserAttributesContractEvent.OnNavigateToUserInterests(it))
+            }
+        )
+        UserInterestItems(
+            visible = currentPage == UserAttributesPage.UserInterests,
+            userInterests = userInterests,
+            isToRight = isToRight,
+            onClickItem = {
+                event(ChooseUserAttributesContractEvent.OnSelectUserInterest(it))
+            },
+            onClickContinueButton = {
+                event(ChooseUserAttributesContractEvent.OnClickContinue)
+            }
+        )
+    }
+}
+

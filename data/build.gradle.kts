@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -37,6 +38,8 @@ android {
 dependencies {
     implementation(project(":domain"))
     implementation(BillingDependencies.billing)
+    debugApi(PlutoDependencies.pluto)
+    releaseApi(PlutoDependencies.plutoNoOp)
     DIDependencies.apply {
         implementation(hiltAndroid)
         kapt(dagerHiltCompiler)
@@ -49,13 +52,13 @@ dependencies {
         releaseImplementation(chuckerNoOp)
     }
     FirebaseDependencies.apply {
-        implementation(platform(firebaseBOM))
-        implementation(crashlytics)
-        implementation(functions)
-        implementation(firestore)
-        implementation(database)
-        implementation(firebaseAuth)
-        implementation(analytics)
+        api(platform(firebaseBOM))
+        api(crashlytics)
+        api(functions)
+        api(firestore)
+        api(database)
+        api(analytics)
+        api(firebaseAuth)
     }
     TestDependencies.apply {
         testImplementation(junit)

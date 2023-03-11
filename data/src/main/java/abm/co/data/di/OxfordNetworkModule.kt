@@ -7,16 +7,17 @@ import abm.co.data.remote.OxfordApiService
 import abm.co.data.utils.BaseURLs.BASE_URL_OXFORD
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.mocklets.pluto.PlutoInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -35,19 +36,27 @@ class OxfordNetworkModule {
     @Singleton
     @Provides
     @OxfordNetwork(TypeEnum.OKHTTP)
-    fun provideOkHttpClient(): OkHttpClient =
+    fun provideOkHttpClient(
+        plutoInterceptor: PlutoInterceptor
+    ): OkHttpClient =
         if (BuildConfig.DEBUG) { // debug ON
             val logger = HttpLoggingInterceptor()
             logger.level = HttpLoggingInterceptor.Level.BASIC
             OkHttpClient.Builder()
-                .addInterceptor(logger)
                 .readTimeout(20, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .addInterceptor(logger)
+                .addInterceptor(plutoInterceptor)
+
                 .build()
         } else // debug OFF
             OkHttpClient.Builder()
                 .readTimeout(20, TimeUnit.SECONDS)
                 .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
                 .build()
 
     @Singleton

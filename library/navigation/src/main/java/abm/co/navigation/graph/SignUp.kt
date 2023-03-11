@@ -14,12 +14,16 @@ fun NavGraphBuilder.signUp(
     showMessage: suspend (MessageContent) -> Unit,
 ) {
     composable(
-        route = Destinations.Registration.route
+        route = Destinations.SignUp.route
     ) {
         SignUpPage(
             showMessage = showMessage,
             onNavigateHomePage = {
-                navController.navigate(Destinations.Home.route)
+                navController.navigate(Destinations.Home.route) {
+                    popUpTo(Destinations.ChooseUserAttributes.route) {
+                        inclusive = true
+                    }
+                }
             },
             onNavigateLoginPage = {
                 navController.navigate(Destinations.Login.route) {

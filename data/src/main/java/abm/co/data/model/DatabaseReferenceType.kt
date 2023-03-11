@@ -8,5 +8,5 @@ object DatabaseReferenceType {
     const val USER_REF = "users"
     const val EXPLORE_REF = "explore"
     const val SETS_REF = "sets"
-    const val NAME_REF = "name"
+    const val CURRENT_VERSION = "version2"
 }

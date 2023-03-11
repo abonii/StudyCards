@@ -1,18 +1,26 @@
 package abm.co.data.pref
 
+import abm.co.data.model.user.LanguageDTO
+import abm.co.data.model.user.toDTO
+import abm.co.data.model.user.toDomain
+import abm.co.domain.model.Language
 import abm.co.domain.prefs.Prefs
 import abm.co.domain.prefs.Prefs.Companion.ACCESS_TOKEN
 import abm.co.domain.prefs.Prefs.Companion.IS_FIRST_TIME
 import abm.co.domain.prefs.Prefs.Companion.IS_PREMIUM
-import abm.co.domain.prefs.Prefs.Companion.SELECTED_APP_LANGUAGE
-import abm.co.domain.prefs.Prefs.Companion.SOURCE_LANGUAGE
-import abm.co.domain.prefs.Prefs.Companion.TARGET_LANGUAGE
+import abm.co.domain.prefs.Prefs.Companion.APP_LANGUAGE
+import abm.co.domain.prefs.Prefs.Companion.NATIVE_LANGUAGE
+import abm.co.domain.prefs.Prefs.Companion.LEARNING_LANGUAGE
 import abm.co.domain.prefs.Prefs.Companion.USER_ID
 import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 import javax.inject.Inject
 
 class PrefsImpl @Inject constructor(
-    private val preferences: SharedPreferences
+    private val preferences: SharedPreferences,
+    private val gson: Gson
 ) : Prefs {
 
     override fun getAccessToken(): String {
@@ -51,37 +59,64 @@ class PrefsImpl @Inject constructor(
         }
     }
 
-    override fun getAppLanguage(): String {
-        return preferences.getString(SELECTED_APP_LANGUAGE, "") ?: ""
-    }
-
-    override fun setAppLanguage(value: String) {
-        with(preferences.edit()) {
-            putString(SELECTED_APP_LANGUAGE, value)
-            commit()
+    override fun getAppLanguage(): Language? {
+        val json = try {
+            preferences.getString(APP_LANGUAGE, null)
+        } catch (e: Throwable) {
+            return null
+        }
+        return try {
+            val type: Type = object : TypeToken<List<LanguageDTO>?>() {}.type
+            val language = gson.fromJson<LanguageDTO>(json, type)
+            language?.toDomain()
+        } catch (e: Throwable) {
+            null
         }
     }
 
-    override fun getSourceLanguage(): String {
-        return preferences.getString(SOURCE_LANGUAGE, "") ?: ""
+    override fun setAppLanguage(value: Language) {
+        val json = gson.toJson(value.toDTO())
+        preferences.edit().putString(APP_LANGUAGE, json).apply()
     }
 
-    override fun setSourceLanguage(value: String) {
-        with(preferences.edit()) {
-            putString(SOURCE_LANGUAGE, value)
-            commit()
+    override fun getNativeLanguage(): Language? {
+        val json = try {
+            preferences.getString(NATIVE_LANGUAGE, null)
+        } catch (e: Throwable) {
+            return null
+        }
+        return try {
+            val type: Type = object : TypeToken<List<LanguageDTO>?>() {}.type
+            val language = gson.fromJson<LanguageDTO>(json, type)
+            language?.toDomain()
+        } catch (e: Throwable) {
+            null
         }
     }
 
-    override fun getTargetLanguage(): String {
-        return preferences.getString(TARGET_LANGUAGE, "") ?: ""
+    override fun setNativeLanguage(value: Language) {
+        val json = gson.toJson(value.toDTO())
+        preferences.edit().putString(NATIVE_LANGUAGE, json).apply()
     }
 
-    override fun setTargetLanguage(value: String) {
-        with(preferences.edit()) {
-            putString(TARGET_LANGUAGE, value)
-            commit()
+    override fun getLearningLanguage(): Language? {
+        val json = try {
+            preferences.getString(LEARNING_LANGUAGE, null)
+        } catch (e: Throwable) {
+            return null
         }
+        return try {
+            val type: Type = object : TypeToken<List<LanguageDTO>?>() {}.type
+            val language = gson.fromJson<LanguageDTO>(json, type)
+            language?.toDomain()
+        } catch (e: Throwable) {
+            null
+        }
+    }
+
+    override fun setLearningLanguage(value: Language) {
+        val json = gson.toJson(value.toDTO())
+        preferences.edit().putString(LEARNING_LANGUAGE, json).apply()
     }
 
     override fun getIsPremium(): Boolean {

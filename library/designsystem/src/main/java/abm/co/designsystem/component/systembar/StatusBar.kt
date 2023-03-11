@@ -1,4 +1,4 @@
-package abm.co.designsystem.component
+package abm.co.designsystem.component.systembar
 
 import android.app.Activity
 import android.content.Context

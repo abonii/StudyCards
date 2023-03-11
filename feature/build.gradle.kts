@@ -69,6 +69,7 @@ dependencies {
         implementation(firebaseAuth)
         implementation(database)
     }
+    KotlinxDependencies.forStudyCards().forEach(::implementation)
 }
 
 kapt {
