@@ -4,7 +4,7 @@ import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
 import abm.co.domain.base.Failure
 import abm.co.domain.prefs.Prefs
-import abm.co.domain.repository.ServerRepository
+import abm.co.domain.repository.AuthorizationRepository
 import abm.co.feature.userattributes.lanugage.LanguageUI
 import abm.co.feature.userattributes.lanugage.defaultLanguages
 import abm.co.feature.userattributes.lanugage.toDomain
@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class ChooseUserAttributesViewModel @Inject constructor(
     private val prefs: Prefs,
-    private val serverRepository: ServerRepository
+    private val repository: AuthorizationRepository
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(ChooseUserAttributesContractState())
@@ -59,7 +59,7 @@ class ChooseUserAttributesViewModel @Inject constructor(
             ChooseUserAttributesContractEvent.OnNavigateToNativeLanguage -> {
                 onNavigateToNativeLanguage()
             }
-            ChooseUserAttributesContractEvent.OnClickContinue -> {
+            ChooseUserAttributesContractEvent.OnFinish -> {
                 onClickContinue()
             }
         }
@@ -111,7 +111,7 @@ class ChooseUserAttributesViewModel @Inject constructor(
     private fun onClickContinue() {
         viewModelScope.launch {
             mutableState.update { contractState -> contractState.copy(progress = 1f) }
-            serverRepository.setUserInterests(
+            repository.setUserInterests(
                 state.value.userInterests.filter { it.isSelected }.map { it.toDomain() })
             delay(500)
             navigateToHomePage()
@@ -132,7 +132,7 @@ class ChooseUserAttributesViewModel @Inject constructor(
 
     private fun saveUserGoal(userGoal: UserGoalUI) {
         viewModelScope.launch {
-            serverRepository.setUserGoal(userGoal.toDomain())
+            repository.setUserGoal(userGoal.toDomain())
         }
     }
 
@@ -171,7 +171,7 @@ data class ChooseUserAttributesContractState(
 
 @Immutable
 sealed interface ChooseUserAttributesContractEvent {
-    object OnClickContinue : ChooseUserAttributesContractEvent
+    object OnFinish : ChooseUserAttributesContractEvent
     object OnNavigateToNativeLanguage : ChooseUserAttributesContractEvent
     data class OnSelectUserInterest(val userInterestUI: UserInterestUI) :
         ChooseUserAttributesContractEvent

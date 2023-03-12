@@ -5,5 +5,6 @@ sealed class Destinations(val route: String) {
     object Login : Destinations("login_page")
     object SignUp : Destinations("sign_up_page")
     object WelcomeLogin : Destinations("welcome_login")
-    object ChooseUserAttributes : Destinations("choose_user_attributes_login")
+    data class ChooseUserAttributes(val showAdditionQuiz: String = "show_addition_quiz") :
+        Destinations("choose_user_attributes_login")
 }

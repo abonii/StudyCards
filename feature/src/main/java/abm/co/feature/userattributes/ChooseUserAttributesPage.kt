@@ -49,6 +49,7 @@ enum class UserAttributesPage {
 
 @Composable
 fun ChooseUserAttributesPage(
+    showAdditionQuiz: Boolean,
     onNavigateHomePage: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: ChooseUserAttributesViewModel = hiltViewModel()
@@ -63,7 +64,8 @@ fun ChooseUserAttributesPage(
     SetStatusBarColor(iconsColorsDark = false)
     ChooseUserAttributesScreen(
         state = state,
-        event = viewModel::event
+        event = viewModel::event,
+        showAdditionQuiz = showAdditionQuiz
     )
 }
 
@@ -71,7 +73,8 @@ fun ChooseUserAttributesPage(
 private fun ChooseUserAttributesScreen(
     state: ChooseUserAttributesContractState,
     event: (ChooseUserAttributesContractEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showAdditionQuiz: Boolean
 ) {
     Column(
         modifier = modifier
@@ -104,7 +107,8 @@ private fun ChooseUserAttributesScreen(
                 languages = state.languages,
                 userInterests = state.userInterests,
                 isToRight = state.isToRight,
-                event = event
+                event = event,
+                showAdditionQuiz = showAdditionQuiz
             )
         }
     }
@@ -188,7 +192,8 @@ private fun ChangeableContent(
     userInterests: ImmutableList<UserInterestUI>,
     event: (ChooseUserAttributesContractEvent) -> Unit,
     isToRight: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showAdditionQuiz: Boolean
 ) {
     Box(modifier = modifier) {
         LanguageItems(
@@ -212,32 +217,38 @@ private fun ChangeableContent(
             languages = languages,
             isToRight = isToRight,
             onClickItem = {
-                event(ChooseUserAttributesContractEvent.OnNavigateToUserGoal(it, true))
+                if(showAdditionQuiz){
+                    event(ChooseUserAttributesContractEvent.OnNavigateToUserGoal(it, true))
+                } else {
+                    event(ChooseUserAttributesContractEvent.OnFinish)
+                }
             }
         )
-        UserGoalItems(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 20.dp),
-            visible = currentPage == UserAttributesPage.UserGoal,
-            userGoals = userGoals,
-            isToRight = isToRight,
-            onClickItem = {
-                event(ChooseUserAttributesContractEvent.OnNavigateToUserInterests(it))
-            }
-        )
-        UserInterestItems(
-            visible = currentPage == UserAttributesPage.UserInterests,
-            userInterests = userInterests,
-            isToRight = isToRight,
-            onClickItem = {
-                event(ChooseUserAttributesContractEvent.OnSelectUserInterest(it))
-            },
-            onClickContinueButton = {
-                event(ChooseUserAttributesContractEvent.OnClickContinue)
-            }
-        )
+        if(showAdditionQuiz){
+            UserGoalItems(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 20.dp),
+                visible = currentPage == UserAttributesPage.UserGoal,
+                userGoals = userGoals,
+                isToRight = isToRight,
+                onClickItem = {
+                    event(ChooseUserAttributesContractEvent.OnNavigateToUserInterests(it))
+                }
+            )
+            UserInterestItems(
+                visible = currentPage == UserAttributesPage.UserInterests,
+                userInterests = userInterests,
+                isToRight = isToRight,
+                onClickItem = {
+                    event(ChooseUserAttributesContractEvent.OnSelectUserInterest(it))
+                },
+                onClickContinueButton = {
+                    event(ChooseUserAttributesContractEvent.OnFinish)
+                }
+            )
+        }
     }
 }
 

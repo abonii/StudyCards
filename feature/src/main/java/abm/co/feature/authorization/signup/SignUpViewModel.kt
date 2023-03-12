@@ -6,7 +6,7 @@ import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.domain.base.ExpectedMessage
 import abm.co.domain.base.Failure
 import abm.co.domain.base.mapToFailure
-import abm.co.domain.repository.ServerRepository
+import abm.co.domain.repository.AuthorizationRepository
 import abm.co.feature.R
 import android.app.Activity
 import android.content.Intent
@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 class SignUpViewModel @Inject constructor(
     private val googleSignInClient: GoogleSignInClient,
     private val firebaseAuth: FirebaseAuth,
-    private val serverRepository: ServerRepository
+    private val repository: AuthorizationRepository
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(SignUpContractState())
@@ -86,14 +86,14 @@ class SignUpViewModel @Inject constructor(
 
     private fun navigateToHomePage() {
         viewModelScope.launch {
-            _channel.send(SignUpContractChannel.NavigateToHome)
+            _channel.send(SignUpContractChannel.NavigateChooseUserAttributes)
         }
     }
 
     private fun loginViaGoogle() {
         viewModelScope.launch(Dispatchers.IO) {
             val intent = Intent(googleSignInClient.signInIntent)
-            mutableState.update { it.copy(isGoogleButtonLoading = true) }
+            mutableState.update { it.copy(isScreenLoading = true) }
             _channel.send(SignUpContractChannel.LoginViaGoogle(intent))
         }
     }
@@ -111,6 +111,9 @@ class SignUpViewModel @Inject constructor(
                                 checkUserExistence()
                                 if (!task.isSuccessful) {
                                     task.exception?.mapToFailure()?.sendException()
+                                } else {
+                                    val user = firebaseAuth.currentUser
+                                    saveUserInfo(email = user?.email, name = user?.displayName)
                                 }
                             }
                     }
@@ -133,12 +136,12 @@ class SignUpViewModel @Inject constructor(
                         Failure.FailureSnackbar(ExpectedMessage.Res(R.string.SignUpPage_PasswordEmpty))
                             .sendException()
                     }
-                    passwordConfirm != password -> {
-                        Failure.FailureSnackbar(ExpectedMessage.Res(R.string.SignUpPage_PasswordsNotSame))
+                    password.length < 6 -> {
+                        Failure.FailureSnackbar(ExpectedMessage.Res(R.string.SignUpPage_PasswordLengthNotCorrect))
                             .sendException()
                     }
-                    password.length < 5 -> {
-                        Failure.FailureSnackbar(ExpectedMessage.Res(R.string.SignUpPage_PasswordLengthNotCorrect))
+                    passwordConfirm != password -> {
+                        Failure.FailureSnackbar(ExpectedMessage.Res(R.string.SignUpPage_PasswordsNotSame))
                             .sendException()
                     }
                     else -> {
@@ -147,6 +150,7 @@ class SignUpViewModel @Inject constructor(
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     sendVerificationEmail()
+                                    saveUserInfo(email = email.trim(), password = password)
                                 } else {
                                     mutableState.update { it.copy(isSignUpButtonLoading = false) }
                                     task.exception?.mapToFailure()?.sendException()
@@ -185,17 +189,26 @@ class SignUpViewModel @Inject constructor(
             mutableState.update {
                 it.copy(
                     isSignUpButtonLoading = false,
-                    isGoogleButtonLoading = false,
-                    isFacebookButtonLoading = false
+                    isScreenLoading = false
                 )
             }
             if (currentUser != null) {
                 navigateToHomePage()
-                serverRepository.setUserInfoAfterSignUp(
-                    email = currentUser.email,
-                    password = null
-                )
             }
+        }
+    }
+
+    private fun saveUserInfo(
+        name: String? = null,
+        email: String? = null,
+        password: String? = null
+    ) {
+        viewModelScope.launch {
+            repository.setUserInfo(
+                name = name,
+                email = email,
+                password = password
+            )
         }
     }
 
@@ -211,8 +224,7 @@ class SignUpViewModel @Inject constructor(
 @Immutable
 data class SignUpContractState(
     val isSignUpButtonLoading: Boolean = false,
-    val isGoogleButtonLoading: Boolean = false,
-    val isFacebookButtonLoading: Boolean = false,
+    val isScreenLoading: Boolean = false,
     val email: String = "",
     val password: String = "",
     val passwordConfirm: String = ""
@@ -233,6 +245,6 @@ sealed interface SignUpContractEvent {
 sealed interface SignUpContractChannel {
     data class LoginViaGoogle(val intent: Intent) : SignUpContractChannel
     object NavigateToLogin : SignUpContractChannel
-    object NavigateToHome : SignUpContractChannel
+    object NavigateChooseUserAttributes : SignUpContractChannel
     data class ShowMessage(val messageContent: MessageContent) : SignUpContractChannel
 }

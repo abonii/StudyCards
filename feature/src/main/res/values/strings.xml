@@ -36,7 +36,7 @@
     <string name="SignUpPage.PasswordsNotSame">Passwords are not same</string>
     <string name="SignUpPage.EmailEmpty">Email cannot be empty</string>
     <string name="SignUpPage.PasswordEmpty">Password cannot be empty</string>
-    <string name="SignUpPage.PasswordLengthNotCorrect">Password length should be more than 5</string>
+    <string name="SignUpPage.PasswordLengthNotCorrect">Password length should be more than 6</string>
 
     <string name="ChooseUserAttributesPage.NativeLanguage.title">Native language</string>
     <string name="ChooseUserAttributesPage.LearningLanguage.title">I want to learn</string>

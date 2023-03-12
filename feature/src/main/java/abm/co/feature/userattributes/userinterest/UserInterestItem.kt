@@ -1,8 +1,8 @@
 package abm.co.feature.userattributes.userinterest
 
 import abm.co.designsystem.component.modifier.Modifier
+import abm.co.designsystem.component.modifier.clickableWithRipple
 import abm.co.designsystem.theme.StudyCardsTheme
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,7 +34,7 @@ fun UserInterestItem(
                     }
                 )
             }
-            .clickable { onClick(userInterest) },
+            .clickableWithRipple { onClick(userInterest) },
         contentAlignment = Alignment.Center
     ) {
         Text(

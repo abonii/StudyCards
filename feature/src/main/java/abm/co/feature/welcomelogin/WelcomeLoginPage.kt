@@ -38,7 +38,7 @@ import com.google.firebase.ktx.Firebase
 @Composable
 fun WelcomeLoginPage(
     onNavigateSignUpPage: () -> Unit,
-    onNavigateHomePage: () -> Unit,
+    onNavigateChooseUserAttributes: () -> Unit,
     onNavigateToLoginPage: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: WelcomeLoginViewModel = hiltViewModel()
@@ -51,7 +51,7 @@ fun WelcomeLoginPage(
     val state by viewModel.state.collectAsState()
     viewModel.channel.collectInLaunchedEffect {
         when (it) {
-            WelcomeLoginContractChannel.NavigateToHomePage -> onNavigateHomePage()
+            WelcomeLoginContractChannel.NavigateChooseUserAttributes -> onNavigateChooseUserAttributes()
             WelcomeLoginContractChannel.NavigateToLoginPage -> onNavigateToLoginPage()
             WelcomeLoginContractChannel.NavigateToSignUpPage -> onNavigateSignUpPage()
             is WelcomeLoginContractChannel.ShowMessage -> showMessage(it.messageContent)

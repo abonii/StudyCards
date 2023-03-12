@@ -1,7 +1,6 @@
 package abm.co.feature.authorization.signup
 
 import abm.co.designsystem.collectInLaunchedEffect
-import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.button.ButtonSize
 import abm.co.designsystem.component.button.ButtonState
 import abm.co.designsystem.component.button.IconShadowedButton
@@ -9,9 +8,11 @@ import abm.co.designsystem.component.button.PrimaryButton
 import abm.co.designsystem.component.button.TextButton
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.baseBackground
+import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.textfield.TextFieldWithLabel
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
+import abm.co.designsystem.widget.LoadingDialog
 import abm.co.feature.R
 import abm.co.feature.authorization.common.TrailingIcon
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -50,11 +51,11 @@ import com.google.firebase.ktx.Firebase
 @Composable
 fun SignUpPage(
     onNavigateLoginPage: () -> Unit,
-    onNavigateHomePage: () -> Unit,
+    onNavigateChooseUserAttributes: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         Firebase.analytics.logEvent(
             "sign_up_page_viewed", null
         )
@@ -69,8 +70,8 @@ fun SignUpPage(
             is SignUpContractChannel.LoginViaGoogle -> {
                 startGoogleLoginForResult.launch(it.intent)
             }
-            SignUpContractChannel.NavigateToHome -> {
-                onNavigateHomePage()
+            SignUpContractChannel.NavigateChooseUserAttributes -> {
+                onNavigateChooseUserAttributes()
             }
             SignUpContractChannel.NavigateToLogin -> {
                 onNavigateLoginPage()
@@ -146,6 +147,12 @@ private fun SignUpScreen(
             )
             Spacer(modifier = Modifier.weight(0.061f))
         }
+        LoadingDialog(
+            isVisible = state.isScreenLoading,
+            onDismiss = {
+                /*Just Ignore*/
+            }
+        )
     }
 }
 

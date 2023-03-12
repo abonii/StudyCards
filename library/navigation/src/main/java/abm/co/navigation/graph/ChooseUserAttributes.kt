@@ -1,7 +1,6 @@
 package abm.co.navigation.graph
 
 import abm.co.designsystem.message.common.MessageContent
-import abm.co.feature.authorization.login.LoginPage
 import abm.co.feature.userattributes.ChooseUserAttributesPage
 import abm.co.navigation.Destinations
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -15,12 +14,16 @@ fun NavGraphBuilder.chooseUserAttributes(
     navController: NavController
 ) {
     composable(
-        route = Destinations.ChooseUserAttributes.route
-    ) {
+        route = Destinations.ChooseUserAttributes().route
+    ) { entry ->
+        val showAdditionQuiz = entry.arguments?.getBoolean(
+            Destinations.ChooseUserAttributes().showAdditionQuiz
+        ) ?: true
         ChooseUserAttributesPage(
+            showAdditionQuiz = showAdditionQuiz,
             onNavigateHomePage = {
                 navController.navigate(Destinations.Home.route) {
-                    popUpTo(Destinations.ChooseUserAttributes.route) {
+                    popUpTo(Destinations.ChooseUserAttributes().route) {
                         inclusive = true
                     }
                 }

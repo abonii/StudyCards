@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DictionaryRepositoryImp @Inject constructor(
+class DictionaryRepositoryImpl @Inject constructor(
     @OxfordNetwork(TypeEnum.APISERVICE) private val oxfordApiService: OxfordApiService,
     @YandexNetwork(TypeEnum.APISERVICE) private val yandexApiService: YandexApiService,
 ) : DictionaryRepository {

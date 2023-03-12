@@ -73,7 +73,7 @@ class WelcomeLoginViewModel @Inject constructor(
 
     private fun navigateToHomePage() {
         viewModelScope.launch {
-            _channel.send(WelcomeLoginContractChannel.NavigateToHomePage)
+            _channel.send(WelcomeLoginContractChannel.NavigateChooseUserAttributes)
         }
     }
 
@@ -98,7 +98,7 @@ sealed interface WelcomeLoginContractEvent {
 
 @Immutable
 sealed interface WelcomeLoginContractChannel {
-    object NavigateToHomePage : WelcomeLoginContractChannel
+    object NavigateChooseUserAttributes : WelcomeLoginContractChannel
     object NavigateToLoginPage : WelcomeLoginContractChannel
     object NavigateToSignUpPage : WelcomeLoginContractChannel
     data class ShowMessage(val messageContent: MessageContent): WelcomeLoginContractChannel

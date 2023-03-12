@@ -7,6 +7,7 @@ import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.domain.base.ExpectedMessage
 import abm.co.domain.base.Failure
 import abm.co.domain.base.mapToFailure
+import abm.co.domain.repository.AuthorizationRepository
 import android.app.Activity
 import android.content.Intent
 import android.text.TextUtils
@@ -34,7 +35,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val googleSignInClient: GoogleSignInClient,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val authorizationRepository: AuthorizationRepository
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(LoginContractState())
@@ -113,24 +115,13 @@ class LoginViewModel @Inject constructor(
                                 checkUserExistence()
                                 if (!task.isSuccessful) {
                                     task.exception?.mapToFailure()?.sendException()
+                                } else {
+                                    saveUserInfo(email = email.trim(), password = password)
                                 }
                             }
                     }
                 }
             }
-        }
-    }
-
-    private fun checkUserExistence(currentUser: FirebaseUser? = firebaseAuth.currentUser) {
-        println("checkUserExistence")
-        mutableState.update {
-            it.copy(
-                isLoginButtonLoading = false,
-                isScreenLoading = false
-            )
-        }
-        if (currentUser != null) {
-            navigateToHomePage()
         }
     }
 
@@ -147,6 +138,9 @@ class LoginViewModel @Inject constructor(
                                 checkUserExistence()
                                 if (!task.isSuccessful) {
                                     task.exception?.mapToFailure()?.sendException()
+                                } else {
+                                    val user = firebaseAuth.currentUser
+                                    saveUserInfo(email = user?.email, name = user?.displayName)
                                 }
                             }
                     }
@@ -154,6 +148,32 @@ class LoginViewModel @Inject constructor(
             } else checkUserExistence(null)
         } catch (e: ApiException) {
             e.mapToFailure().sendException()
+        }
+    }
+
+    private fun saveUserInfo(
+        name: String? = null,
+        email: String? = null,
+        password: String? = null
+    ) {
+        viewModelScope.launch {
+            authorizationRepository.setUserInfo(
+                name = name,
+                email = email,
+                password = password
+            )
+        }
+    }
+
+    private fun checkUserExistence(currentUser: FirebaseUser? = firebaseAuth.currentUser) {
+        mutableState.update {
+            it.copy(
+                isLoginButtonLoading = false,
+                isScreenLoading = false
+            )
+        }
+        if (currentUser != null) {
+            navigateToHomePage()
         }
     }
 

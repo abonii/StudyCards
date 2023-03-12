@@ -35,7 +35,7 @@ class MainViewModel @Inject constructor(
         return if (hasUser) {
             println("${prefs.getNativeLanguage()} -- ${prefs.getLearningLanguage()}")
             if (prefs.getNativeLanguage() == null || prefs.getLearningLanguage() == null) {
-                Destinations.ChooseUserAttributes.route
+                Destinations.ChooseUserAttributes().route
             } else Destinations.Home.route
         } else {
             Destinations.WelcomeLogin.route

@@ -4,11 +4,8 @@ import abm.co.data.di.ApplicationScope
 import abm.co.data.model.DatabaseReferenceType.CONFIG_REF
 import abm.co.data.model.DatabaseReferenceType.USER_REF
 import abm.co.data.model.user.UserDTO
-import abm.co.data.model.user.toDTO
 import abm.co.data.model.user.toDomain
 import abm.co.domain.model.User
-import abm.co.domain.model.UserGoal
-import abm.co.domain.model.UserInterest
 import abm.co.domain.repository.ServerRepository
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -17,35 +14,23 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 import com.mocklets.pluto.PlutoLog
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 
-@Singleton
-class FirebaseRepositoryImp @Inject constructor(
+@ActivityRetainedScoped
+class FirebaseRepositoryImpl @Inject constructor(
     @Named(USER_REF) private var userDatabase: DatabaseReference,
     @Named(CONFIG_REF) private var config: DatabaseReference,
     @ApplicationScope private val coroutineScope: CoroutineScope
 ) : ServerRepository {
 
-    override suspend fun setUserInfoAfterSignUp(
-        email: String?, password: String?
-    ) {
-        userDatabase.setValue(mapOf(UserDTO.email to email, UserDTO.password to password))
-    }
-
-    override suspend fun setUserGoal(userGoal: UserGoal) {
-        userDatabase.setValue(UserDTO.goals, userGoal.toDTO())
-    }
-
-    override suspend fun setUserInterests(
-        userInterests: List<UserInterest>
-    ) {
-        userDatabase.setValue(UserDTO.interests, userInterests.map { it.toDTO() })
+    init {
+        println("inited firebaseRepository")
     }
 
     private val userStateFlow = MutableStateFlow<User?>(null)
