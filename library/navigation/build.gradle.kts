@@ -41,5 +41,7 @@ android {
 
 dependencies {
     implementation(project(":feature"))
+    implementation(project(":library:designsystem"))
     api(NavigationDependencies.navigationCompose)
+    api(KotlinxDependencies.immutable)
 }

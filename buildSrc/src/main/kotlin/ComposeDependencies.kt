@@ -15,6 +15,7 @@ object ComposeDependencies {
     const val kotlinCompilerExtensionVersion = "1.4.3"
     const val composeBOM = "androidx.compose:compose-bom:${Version.composeBOM}"
     const val composeUi = "androidx.compose.ui:ui"
+    const val composeUiUtil = "androidx.compose.ui:ui-util"
     const val composeUiPreview = "androidx.compose.ui:ui-tooling-preview"
     const val composeUiTooling = "androidx.compose.ui:ui-tooling"
     const val composeUiTestManifest = "androidx.compose.ui:ui-test-manifest"

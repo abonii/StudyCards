@@ -7,6 +7,7 @@ import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.domain.base.ExpectedMessage
 import abm.co.domain.base.Failure
 import abm.co.domain.base.mapToFailure
+import abm.co.domain.prefs.Prefs
 import abm.co.domain.repository.AuthorizationRepository
 import android.app.Activity
 import android.content.Intent
@@ -36,7 +37,8 @@ import kotlinx.coroutines.launch
 class LoginViewModel @Inject constructor(
     private val googleSignInClient: GoogleSignInClient,
     private val firebaseAuth: FirebaseAuth,
-    private val authorizationRepository: AuthorizationRepository
+    private val authorizationRepository: AuthorizationRepository,
+    private val prefs: Prefs
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(LoginContractState())
@@ -82,8 +84,14 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun navigateToHomePage() = viewModelScope.launch {
-        _channel.send(LoginContractChannel.NavigateToHome)
+    private fun navigateToHomeOrUserAttributionPage() {
+        viewModelScope.launch {
+            if (prefs.getNativeLanguage() != null && prefs.getLearningLanguage() != null) {
+                _channel.send(LoginContractChannel.NavigateToHome)
+            } else {
+                _channel.send(LoginContractChannel.NavigateToChooseUserAttributes)
+            }
+        }
     }
 
     fun navigateToForgotPassword() = viewModelScope.launch(Dispatchers.IO) {
@@ -173,7 +181,7 @@ class LoginViewModel @Inject constructor(
             )
         }
         if (currentUser != null) {
-            navigateToHomePage()
+            navigateToHomeOrUserAttributionPage()
         }
     }
 
@@ -224,6 +232,7 @@ sealed interface LoginContractChannel {
     data class LoginViaGoogle(val intent: Intent) : LoginContractChannel
     object NavigateToSignUp : LoginContractChannel
     object NavigateToHome : LoginContractChannel
+    object NavigateToChooseUserAttributes : LoginContractChannel
     object NavigateToForgotPassword : LoginContractChannel
     data class ShowMessage(val messageContent: MessageContent) : LoginContractChannel
 }

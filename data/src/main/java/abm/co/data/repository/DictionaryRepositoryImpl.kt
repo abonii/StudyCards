@@ -17,6 +17,7 @@ class DictionaryRepositoryImpl @Inject constructor(
     @OxfordNetwork(TypeEnum.APISERVICE) private val oxfordApiService: OxfordApiService,
     @YandexNetwork(TypeEnum.APISERVICE) private val yandexApiService: YandexApiService,
 ) : DictionaryRepository {
+
     override suspend fun getOxfordWord(
         word: String, sourceLang: String, targetLang: String,
         oxfordApiId: String, oxfordApiKey: String

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_user_disabled">User disabled</string>
+    <string name="erro_invalid_credential">"Wrong email or password "</string>
+    <string name="error_email_already_in_use">Email already in use</string>
+    <string name="error_too_many_requests">Too many requests</string>
+    <string name="error_account_exists_with_diff_credential">Account exists with different credential</string>
+    <string name="error_account_already_linked">Account already linked</string>
+    <string name="error_network_failed">Network request failed</string>
+    <string name="error_weak_password">Weak password</string>
+    <string name="error_disconnected_from_server">The operation had to be aborted due to a network disconnect</string>
+    <string name="error_dont_have_permission">This client does not have permission to perform this         operation</string>
+    <string name="error_service_unavailable">The service is unavailable</string>
+    <string name="error_user_code">User code called from the Firebase Database runloop threw an exception</string>
+    <string name="error_network">The operation could not be performed due to a network error.</string>
+    <string name="error_write_canceled">The write was canceled locally</string>
+    <string name="error_unknown">An unknown error occurred</string>
+    <string name="error_token_expired">The supplied auth token has expired</string>
+    <string name="error_too_many_retries">The transaction had too many retries</string>
+    <string name="error_token_invalid">The supplied auth token was invalid</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="problem_internet_connection">Problem with internet connection</string>
+    <string name="error_occurred">Error occurred</string>
+    <string name="socket_timeout_exception">Socket time out exception</string>
+    <string name="some_problems_occurred">Some problems occurred, please check the availability of updates</string>
+    <string name="error_wrong_password">Wrong Password</string>
+    <string name="error_invalid_email">Invalid email</string>
+    <string name="error_user_not_found">User not found</string>
+    <string name="something_went_wrong">Something went wrong. Please try again later</string>
+</resources>

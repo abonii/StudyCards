@@ -67,13 +67,13 @@ class WelcomeLoginViewModel @Inject constructor(
     private fun checkUserExistence(currentUser: FirebaseUser? = firebaseAuth.currentUser) {
         mutableState.update { it.copy(isLoading = false) }
         if (currentUser != null) {
-            navigateToHomePage()
+            navigateToChooseUserAttributes()
         }
     }
 
-    private fun navigateToHomePage() {
+    private fun navigateToChooseUserAttributes() {
         viewModelScope.launch {
-            _channel.send(WelcomeLoginContractChannel.NavigateChooseUserAttributes)
+            _channel.send(WelcomeLoginContractChannel.NavigateToChooseUserAttributes)
         }
     }
 
@@ -98,7 +98,7 @@ sealed interface WelcomeLoginContractEvent {
 
 @Immutable
 sealed interface WelcomeLoginContractChannel {
-    object NavigateChooseUserAttributes : WelcomeLoginContractChannel
+    object NavigateToChooseUserAttributes : WelcomeLoginContractChannel
     object NavigateToLoginPage : WelcomeLoginContractChannel
     object NavigateToSignUpPage : WelcomeLoginContractChannel
     data class ShowMessage(val messageContent: MessageContent): WelcomeLoginContractChannel

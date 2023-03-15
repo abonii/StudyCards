@@ -5,22 +5,18 @@ import abm.co.data.model.DatabaseReferenceType.CONFIG_REF
 import abm.co.data.model.DatabaseReferenceType.USER_REF
 import abm.co.data.model.user.UserDTO
 import abm.co.data.model.user.toDomain
+import abm.co.data.utils.asFlow
+import abm.co.domain.base.Either
+import abm.co.domain.base.Failure
 import abm.co.domain.model.User
 import abm.co.domain.repository.ServerRepository
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseException
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import com.mocklets.pluto.PlutoLog
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 import javax.inject.Named
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filterNotNull
 
 @ActivityRetainedScoped
 class FirebaseRepositoryImpl @Inject constructor(
@@ -29,29 +25,10 @@ class FirebaseRepositoryImpl @Inject constructor(
     @ApplicationScope private val coroutineScope: CoroutineScope
 ) : ServerRepository {
 
-    init {
-        println("inited firebaseRepository")
-    }
-
-    private val userStateFlow = MutableStateFlow<User?>(null)
-    override suspend fun getUser(): Flow<User> {
-        if (userStateFlow.value != null) return userStateFlow.filterNotNull()
-        userDatabase.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                try {
-                    snapshot.getValue<UserDTO>()?.toDomain()?.let {
-                        userStateFlow.value = it
-                    }
-                } catch (e: DatabaseException) {
-                    PlutoLog.e("$className.getUser.catch", "${e.message}")
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                PlutoLog.e("$className.getUser.cancel", error.message)
-            }
+    override suspend fun getUser(): Flow<Either<Failure, User?>> {
+        return userDatabase.asFlow(scope = coroutineScope, converter = { snapshot ->
+            snapshot.getValue<UserDTO>()?.toDomain()
         })
-        return userStateFlow.filterNotNull()
     }
 
     companion object {

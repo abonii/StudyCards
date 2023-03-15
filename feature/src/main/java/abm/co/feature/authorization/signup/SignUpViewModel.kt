@@ -84,9 +84,9 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun navigateToHomePage() {
+    private fun navigateToUserAttributes() {
         viewModelScope.launch {
-            _channel.send(SignUpContractChannel.NavigateChooseUserAttributes)
+            _channel.send(SignUpContractChannel.NavigateToChooseUserAttributes)
         }
     }
 
@@ -193,7 +193,7 @@ class SignUpViewModel @Inject constructor(
                 )
             }
             if (currentUser != null) {
-                navigateToHomePage()
+                navigateToUserAttributes()
             }
         }
     }
@@ -245,6 +245,6 @@ sealed interface SignUpContractEvent {
 sealed interface SignUpContractChannel {
     data class LoginViaGoogle(val intent: Intent) : SignUpContractChannel
     object NavigateToLogin : SignUpContractChannel
-    object NavigateChooseUserAttributes : SignUpContractChannel
+    object NavigateToChooseUserAttributes : SignUpContractChannel
     data class ShowMessage(val messageContent: MessageContent) : SignUpContractChannel
 }

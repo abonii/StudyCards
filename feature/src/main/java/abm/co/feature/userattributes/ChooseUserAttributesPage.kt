@@ -1,11 +1,11 @@
 package abm.co.feature.userattributes
 
-import abm.co.designsystem.collectInLaunchedEffect
+import abm.co.designsystem.flow.collectInLaunchedEffect
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
-import abm.co.designsystem.widget.LinearProgress
+import abm.co.designsystem.component.widget.LinearProgress
 import abm.co.feature.R
 import abm.co.feature.userattributes.lanugage.LanguageItems
 import abm.co.feature.userattributes.lanugage.LanguageUI
@@ -30,13 +30,17 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import kotlinx.collections.immutable.ImmutableList
 
 @Immutable
@@ -49,12 +53,17 @@ enum class UserAttributesPage {
 
 @Composable
 fun ChooseUserAttributesPage(
-    showAdditionQuiz: Boolean,
     onNavigateHomePage: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: ChooseUserAttributesViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    LaunchedEffect(Unit) {
+        Firebase.analytics.logEvent(
+            "user_attributes_page_viewed",
+            null
+        )
+    }
     viewModel.channel.collectInLaunchedEffect {
         when (it) {
             ChooseUserAttributesContractChannel.NavigateToHomePage -> onNavigateHomePage()
@@ -64,8 +73,7 @@ fun ChooseUserAttributesPage(
     SetStatusBarColor(iconsColorsDark = false)
     ChooseUserAttributesScreen(
         state = state,
-        event = viewModel::event,
-        showAdditionQuiz = showAdditionQuiz
+        event = viewModel::event
     )
 }
 
@@ -73,8 +81,7 @@ fun ChooseUserAttributesPage(
 private fun ChooseUserAttributesScreen(
     state: ChooseUserAttributesContractState,
     event: (ChooseUserAttributesContractEvent) -> Unit,
-    modifier: Modifier = Modifier,
-    showAdditionQuiz: Boolean
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
@@ -107,8 +114,8 @@ private fun ChooseUserAttributesScreen(
                 languages = state.languages,
                 userInterests = state.userInterests,
                 isToRight = state.isToRight,
-                event = event,
-                showAdditionQuiz = showAdditionQuiz
+                showAdditionQuiz = state.showAdditionQuiz,
+                event = event
             )
         }
     }
@@ -192,8 +199,8 @@ private fun ChangeableContent(
     userInterests: ImmutableList<UserInterestUI>,
     event: (ChooseUserAttributesContractEvent) -> Unit,
     isToRight: Boolean,
-    modifier: Modifier = Modifier,
-    showAdditionQuiz: Boolean
+    showAdditionQuiz: Boolean,
+    modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
         LanguageItems(
@@ -205,6 +212,10 @@ private fun ChangeableContent(
             languages = languages,
             isToRight = isToRight,
             onClickItem = {
+                Firebase.analytics.logEvent(
+                    "native_language_selected",
+                    bundleOf("code" to it.code)
+                )
                 event(ChooseUserAttributesContractEvent.OnNavigateToLearningLanguage(it, true))
             }
         )
@@ -217,14 +228,18 @@ private fun ChangeableContent(
             languages = languages,
             isToRight = isToRight,
             onClickItem = {
-                if(showAdditionQuiz){
+                Firebase.analytics.logEvent(
+                    "learning_language_selected",
+                    bundleOf("code" to it.code)
+                )
+                if (showAdditionQuiz) {
                     event(ChooseUserAttributesContractEvent.OnNavigateToUserGoal(it, true))
                 } else {
                     event(ChooseUserAttributesContractEvent.OnFinish)
                 }
             }
         )
-        if(showAdditionQuiz){
+        if (showAdditionQuiz) {
             UserGoalItems(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
@@ -234,6 +249,10 @@ private fun ChangeableContent(
                 userGoals = userGoals,
                 isToRight = isToRight,
                 onClickItem = {
+                    Firebase.analytics.logEvent(
+                        "user_goal_selected",
+                        bundleOf("id" to it.id)
+                    )
                     event(ChooseUserAttributesContractEvent.OnNavigateToUserInterests(it))
                 }
             )
@@ -242,6 +261,10 @@ private fun ChangeableContent(
                 userInterests = userInterests,
                 isToRight = isToRight,
                 onClickItem = {
+                    Firebase.analytics.logEvent(
+                        "user_interest_selected",
+                        bundleOf("id" to it.id, "is_selected" to !it.isSelected)
+                    )
                     event(ChooseUserAttributesContractEvent.OnSelectUserInterest(it))
                 },
                 onClickContinueButton = {

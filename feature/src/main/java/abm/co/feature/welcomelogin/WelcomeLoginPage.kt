@@ -1,6 +1,6 @@
 package abm.co.feature.welcomelogin
 
-import abm.co.designsystem.collectInLaunchedEffect
+import abm.co.designsystem.flow.collectInLaunchedEffect
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.button.ButtonSize
 import abm.co.designsystem.component.button.ButtonState
@@ -51,7 +51,7 @@ fun WelcomeLoginPage(
     val state by viewModel.state.collectAsState()
     viewModel.channel.collectInLaunchedEffect {
         when (it) {
-            WelcomeLoginContractChannel.NavigateChooseUserAttributes -> onNavigateChooseUserAttributes()
+            WelcomeLoginContractChannel.NavigateToChooseUserAttributes -> onNavigateChooseUserAttributes()
             WelcomeLoginContractChannel.NavigateToLoginPage -> onNavigateToLoginPage()
             WelcomeLoginContractChannel.NavigateToSignUpPage -> onNavigateSignUpPage()
             is WelcomeLoginContractChannel.ShowMessage -> showMessage(it.messageContent)

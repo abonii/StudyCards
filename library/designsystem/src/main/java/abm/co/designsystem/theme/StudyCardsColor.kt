@@ -16,6 +16,8 @@ internal val LightColors = StudyCardsColor(
     silver = Color(0xFF_E0E0E0),
     stroke = Color(0xFF_E6E6E6),
     selfish = Color(0xFF_60628B),
+    grayishBlue = Color(0xFF_AFB5C1),
+    middleGray = Color(0xFF_B7B7B7),
     backgroundPrimary = Color(0xFF_FFFFFF),
     backgroundSecondary = Color(0xFF_F6F7FF),
     buttonPrimary = Color(0xFF_2970E5),
@@ -37,6 +39,8 @@ internal val DarkColors = StudyCardsColor(
     silver = Color(0xFF_9E9E9E),
     stroke = Color(0xFF_A8A8A8),
     selfish = Color(0xFF_000000),
+    grayishBlue = Color(0xFF_AFB5C1),
+    middleGray = Color(0xFF_555555),
     backgroundPrimary = Color(0xFF_1D1D1D),
     backgroundSecondary = Color(0xFF_2C2C2E),
     buttonPrimary = Color(0xFF_1C3D70),
@@ -59,6 +63,8 @@ class StudyCardsColor(
     silver: Color,
     stroke: Color,
     selfish: Color,
+    grayishBlue: Color,
+    middleGray: Color,
     backgroundPrimary: Color,
     backgroundSecondary: Color,
     buttonPrimary: Color,
@@ -92,6 +98,12 @@ class StudyCardsColor(
         private set
 
     var selfish by mutableStateOf(selfish)
+        private set
+
+    var grayishBlue by mutableStateOf(grayishBlue)
+        private set
+
+    var middleGray by mutableStateOf(middleGray)
         private set
 
     var backgroundPrimary by mutableStateOf(backgroundPrimary)
@@ -133,6 +145,8 @@ class StudyCardsColor(
         textSilver: Color = this.silver,
         stroke: Color = this.stroke,
         selfish: Color = this.selfish,
+        grayishBlue: Color = this.grayishBlue,
+        middleGray: Color = this.middleGray,
         backgroundPrimary: Color = this.backgroundPrimary,
         backgroundSecondary: Color = this.backgroundSecondary,
         buttonPrimary: Color = this.buttonPrimary,
@@ -152,6 +166,8 @@ class StudyCardsColor(
         silver = textSilver,
         stroke = stroke,
         selfish = selfish,
+        middleGray = middleGray,
+        grayishBlue = grayishBlue,
         backgroundPrimary = backgroundPrimary,
         backgroundSecondary = backgroundSecondary,
         buttonPrimary = buttonPrimary,
@@ -173,6 +189,8 @@ class StudyCardsColor(
         silver = other.silver
         stroke = other.stroke
         selfish = other.selfish
+        grayishBlue = other.grayishBlue
+        middleGray = other.middleGray
         backgroundPrimary = other.backgroundPrimary
         backgroundSecondary = other.backgroundSecondary
         buttonPrimary = other.buttonPrimary

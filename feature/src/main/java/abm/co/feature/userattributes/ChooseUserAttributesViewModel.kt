@@ -15,6 +15,7 @@ import abm.co.feature.userattributes.userinterest.UserInterestUI
 import abm.co.feature.userattributes.userinterest.defaultUserInterests
 import abm.co.feature.userattributes.userinterest.toDomain
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,10 +34,15 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class ChooseUserAttributesViewModel @Inject constructor(
     private val prefs: Prefs,
-    private val repository: AuthorizationRepository
+    private val repository: AuthorizationRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val mutableState = MutableStateFlow(ChooseUserAttributesContractState())
+    private val showAdditionQuiz = savedStateHandle["show_addition_quiz"] ?: false
+
+    private val mutableState = MutableStateFlow(
+        ChooseUserAttributesContractState(showAdditionQuiz = showAdditionQuiz)
+    )
     val state: StateFlow<ChooseUserAttributesContractState> = mutableState.asStateFlow()
 
     private val _channel = Channel<ChooseUserAttributesContractChannel>()
@@ -80,7 +86,7 @@ class ChooseUserAttributesViewModel @Inject constructor(
         mutableState.update {
             it.copy(
                 currentPage = UserAttributesPage.LearningLanguage,
-                progress = 0.4f,
+                progress = if(showAdditionQuiz) 0.4f else 0.6f,
                 isToRight = toRight
             )
         }
@@ -162,6 +168,7 @@ class ChooseUserAttributesViewModel @Inject constructor(
 @Immutable
 data class ChooseUserAttributesContractState(
     val progress: Float = 0.2f, // 0..1
+    val showAdditionQuiz: Boolean,
     val currentPage: UserAttributesPage = UserAttributesPage.NativeLanguage,
     val languages: ImmutableList<LanguageUI> = defaultLanguages.toImmutableList(),
     val userGoals: ImmutableList<UserGoalUI> = defaultUserGoals.toImmutableList(),

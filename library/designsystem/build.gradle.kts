@@ -56,6 +56,7 @@ dependencies {
     }
     ComposeDependencies.apply {
         api(platform(composeBOM))
+        api(composeUiUtil)
         api(composeUi)
         api(composeUiPreview)
         api(composeUiTooling)

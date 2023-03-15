@@ -23,7 +23,7 @@ fun AnimatableContent(
     val exitAnimationToLeft = slideOutHorizontally { it } + fadeOut()
 
     AnimatedVisibility(
-        modifier = Modifier,
+        modifier = modifier,
         visible = visible,
         enter = if (isToRight) enterAnimationToRight else enterAnimationToLeft,
         exit = if (isToRight) exitAnimationToRight else exitAnimationToLeft

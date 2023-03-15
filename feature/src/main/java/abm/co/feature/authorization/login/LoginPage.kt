@@ -1,6 +1,6 @@
 package abm.co.feature.authorization.login
 
-import abm.co.designsystem.collectInLaunchedEffect
+import abm.co.designsystem.flow.collectInLaunchedEffect
 import abm.co.designsystem.component.button.ButtonSize
 import abm.co.designsystem.component.button.ButtonState
 import abm.co.designsystem.component.button.IconShadowedButton
@@ -12,10 +12,9 @@ import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.textfield.TextFieldWithLabel
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
-import abm.co.designsystem.widget.LoadingDialog
+import abm.co.designsystem.component.widget.LoadingDialog
 import abm.co.feature.R
 import abm.co.feature.authorization.common.TrailingIcon
-import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -40,7 +39,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -78,6 +76,9 @@ fun LoginPage(
             }
             LoginContractChannel.NavigateToHome -> {
                 onNavigateHomePage()
+            }
+            LoginContractChannel.NavigateToChooseUserAttributes -> {
+                onNavigateChooseUserAttributes()
             }
             LoginContractChannel.NavigateToSignUp -> {
                 onNavigateSignUpPage()

@@ -1,13 +1,11 @@
 package abm.co.designsystem.component.button
 
-import abm.co.designsystem.R
 import abm.co.designsystem.theme.StudyCardsTheme
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -15,37 +13,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun IconShadowedButton(
     @DrawableRes iconRes: Int,
     modifier: Modifier = Modifier,
-    iconSize: Dp = 24.dp,
+    backgroundColor: Color = StudyCardsTheme.colors.backgroundPrimary,
+    shadowColor: Color = StudyCardsTheme.colors.selfish.copy(alpha = 0.3f),
+    iconSize: DpSize = DpSize(24.dp, 37.dp),
     shape: Shape = RoundedCornerShape(8.dp),
-    onClick: () -> Unit
+    onClick: (() -> Unit)? = null
 ) {
     Box(
         modifier = modifier
             .shadow(
                 elevation = 20.dp,
                 shape = shape,
-                spotColor = StudyCardsTheme.colors.selfish.copy(alpha = 0.3f),
-                ambientColor = StudyCardsTheme.colors.selfish.copy(alpha = 0.3f)
+                spotColor = shadowColor,
+                ambientColor = shadowColor
             )
             .clip(shape)
-            .background(StudyCardsTheme.colors.backgroundPrimary)
-            .clickable(onClick = onClick),
+            .background(backgroundColor)
+            .clickable(onClick = { onClick?.invoke() }),
         contentAlignment = Alignment.Center
     ) {
         Image(
-            modifier = Modifier
-                .padding(vertical = 13.dp)
-                .size(iconSize),
+            modifier = Modifier.size(iconSize),
             painter = painterResource(id = iconRes),
             contentDescription = null
         )

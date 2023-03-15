@@ -2,16 +2,13 @@ package abm.co.feature.userattributes.userinterest
 
 import abm.co.designsystem.component.button.PrimaryButton
 import abm.co.designsystem.component.modifier.Modifier
-import abm.co.designsystem.list.GridItems
+import abm.co.designsystem.extensions.GridItems
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.userattributes.common.AnimatableContent
-import android.widget.Space
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll

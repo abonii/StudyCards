@@ -15,7 +15,7 @@ class StudyCardsApplication : Application() {
         initPluto()
     }
 
-    fun initPluto() {
+    private fun initPluto() {
         Pluto.initialize(this)
         Pluto.setANRListener(object : ANRListener {
             override fun onAppNotResponding(exception: ANRException) {

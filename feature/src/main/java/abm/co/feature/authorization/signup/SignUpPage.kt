@@ -1,6 +1,6 @@
 package abm.co.feature.authorization.signup
 
-import abm.co.designsystem.collectInLaunchedEffect
+import abm.co.designsystem.flow.collectInLaunchedEffect
 import abm.co.designsystem.component.button.ButtonSize
 import abm.co.designsystem.component.button.ButtonState
 import abm.co.designsystem.component.button.IconShadowedButton
@@ -12,7 +12,7 @@ import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.textfield.TextFieldWithLabel
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
-import abm.co.designsystem.widget.LoadingDialog
+import abm.co.designsystem.component.widget.LoadingDialog
 import abm.co.feature.R
 import abm.co.feature.authorization.common.TrailingIcon
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -70,7 +70,7 @@ fun SignUpPage(
             is SignUpContractChannel.LoginViaGoogle -> {
                 startGoogleLoginForResult.launch(it.intent)
             }
-            SignUpContractChannel.NavigateChooseUserAttributes -> {
+            SignUpContractChannel.NavigateToChooseUserAttributes -> {
                 onNavigateChooseUserAttributes()
             }
             SignUpContractChannel.NavigateToLogin -> {
