@@ -12,7 +12,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import kotlinx.collections.immutable.ImmutableList
 
-
 @Composable
 fun BottomNavigationBar(
     items: ImmutableList<BottomNavigationItem>,

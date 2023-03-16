@@ -4,6 +4,7 @@ import abm.co.data.model.DatabaseReferenceType.CURRENT_VERSION
 import abm.co.data.model.DatabaseReferenceType.USER_REF
 import abm.co.data.model.user.UserDTO
 import abm.co.data.model.user.toDTO
+import abm.co.domain.model.User
 import abm.co.domain.model.UserGoal
 import abm.co.domain.model.UserInterest
 import abm.co.domain.repository.AuthorizationRepository
@@ -30,19 +31,16 @@ class AuthorizationRepositoryImpl @Inject constructor(
 
     override suspend fun setUserInfo(name: String?, email: String?, password: String?) {
         withContext(Dispatchers.IO) {
-            getUserDatabase().updateChildren(
-                mapOf(
-                    UserDTO.name to name,
-                    UserDTO.email to email,
-                    UserDTO.password to password
-                )
-            )
+            val userDatabase = getUserDatabase()
+            name?.let { userDatabase.child(User.name).setValue(it) }
+            email?.let { userDatabase.child(User.email).setValue(it) }
+            password?.let { userDatabase.child(User.password).setValue(it) }
         }
     }
 
     override suspend fun setUserGoal(userGoal: UserGoal) {
         withContext(Dispatchers.IO) {
-            getUserDatabase().child(UserDTO.goals).setValue(userGoal)
+            getUserDatabase().child(User.goal).setValue(userGoal)
         }
     }
 
@@ -50,7 +48,7 @@ class AuthorizationRepositoryImpl @Inject constructor(
         userInterests: List<UserInterest>
     ) {
         withContext(Dispatchers.IO) {
-            getUserDatabase().child(UserDTO.interests).setValue(userInterests.map { it.toDTO() })
+            getUserDatabase().child(User.interests).setValue(userInterests.map { it.toDTO() })
         }
     }
 }

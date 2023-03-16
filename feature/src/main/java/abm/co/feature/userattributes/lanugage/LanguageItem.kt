@@ -43,11 +43,11 @@ fun LanguageItem(
         ) {
             Image(
                 modifier = Modifier.size(30.dp),
-                painter = painterResource(id = language.imageFromDrawable),
+                painter = painterResource(id = language.flagFromDrawable),
                 contentDescription = null
             )
             Text(
-                text = stringResource(id = language.languageResCode),
+                text = stringResource(id = language.languageNameResCode),
                 style = StudyCardsTheme.typography.weight400Size16LineHeight20,
                 color = Color.White,
                 maxLines = 1,

@@ -10,7 +10,7 @@ import com.google.firebase.database.ValueEventListener
 import com.mocklets.pluto.PlutoLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.shareIn
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal inline fun <reified T : Any> DatabaseReference.asFlow(
     scope: CoroutineScope,
     crossinline converter: (DataSnapshot) -> T?
@@ -47,7 +46,7 @@ internal inline fun <reified T : Any> DatabaseReference.asFlow(
         })
 
         // When the Flow is cancelled, remove the listener
-        channel.invokeOnClose {
+        awaitClose {
             removeEventListener(listener)
         }
     }

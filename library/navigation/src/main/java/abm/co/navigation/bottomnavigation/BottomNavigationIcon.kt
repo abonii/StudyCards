@@ -33,12 +33,13 @@ import androidx.compose.ui.unit.dp
 fun BottomNavigationIcon(
     item: BottomNavigationItem,
     selected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val pressed = remember { mutableStateOf(false) }
     val scale by animateFloatAsState(if (pressed.value) 1.05f else 1f)
     Column(
-        modifier = Modifier
+        modifier = modifier
             .graphicsLayer {
                 scaleX = scale
                 scaleY = scale

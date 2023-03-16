@@ -5,6 +5,16 @@ data class User(
     val email: String?,
     val translateCounts: Long?,
     val translateCountsUpdateTime: Long?,
-    val goals: List<UserGoal>?,
+    val goal: UserGoal?,
     val interests: List<UserInterest>?
-)
+) {
+    companion object {
+        const val name = "name"
+        const val email = "email"
+        const val translateCounts = "translateCounts"
+        const val translateCountsUpdateTime = "translateCountsUpdateTime"
+        const val goal = "goal"
+        const val interests = "interests"
+        const val password = "password"
+    }
+}

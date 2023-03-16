@@ -1,5 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--Languages-->
+    <string name="Arabic">Arabic</string>
+    <string name="Bengali">Bengali</string>
+    <string name="Hindi">Hindi</string>
+    <string name="Indonesian">Indonesian</string>
+    <string name="Japanese">Japanese</string>
+    <string name="Portuguese">Portuguese</string>
+    <string name="Spanish">Spanish</string>
+    <string name="Ukrainian">Ukrainian</string>
+    <string name="Chinese">Chinese</string>
+    <string name="English">English</string>
+    <string name="French">French</string>
+    <string name="German">German</string>
+    <string name="Italian">Italian</string>
+    <string name="Kazakh">Kazakh</string>
+    <string name="Korean">Korean</string>
+    <string name="Turkish">Turkish</string>
+    <string name="Russian">Russian</string>
+    <string name="ArabicShort">Arb</string>
+    <string name="BengaliShort">Ben</string>
+    <string name="HindiShort">Hin</string>
+    <string name="JapaneseShort">Jap</string>
+    <string name="IndonesianShort">Ind</string>
+    <string name="PortugueseShort">Por</string>
+    <string name="SpanishShort">Spa</string>
+    <string name="UkrainianShort">Ukr</string>
+    <string name="ChineseShort">Chi</string>
+    <string name="EnglishShort">Eng</string>
+    <string name="FrenchShort">Fre</string>
+    <string name="GermanShort">Ger</string>
+    <string name="ItalianShort">Ita</string>
+    <string name="KazakhShort">Kaz</string>
+    <string name="KoreanShort">Kor</string>
+    <string name="TurkishShort">Tur</string>
+    <string name="RussianShort">Rus</string>
+
     <string name="WelcomeLoginPage.LoginAsGuest">Continue as a guest</string>
     <string name="WelcomeLoginPage.LoginButton">LOGIN</string>
     <string name="WelcomeLoginPage.SignUpButton">SIGN UP</string>
@@ -48,39 +85,10 @@
     <string name="ChooseUserAttributesPage.UserInterests.subtitle">Select all the appropriate options</string>
     <string name="ChooseUserAttributesPage.UserInterests.continue">Continue</string>
 
-    <!--Languages-->
-    <string name="Arabic">Arabic</string>
-    <string name="Bengali">Bengali</string>
-    <string name="Hindi">Hindi</string>
-    <string name="Indonesian">Indonesian</string>
-    <string name="Japanese">Japanese</string>
-    <string name="Portuguese">Portuguese</string>
-    <string name="Spanish">Spanish</string>
-    <string name="Ukrainian">Ukrainian</string>
-    <string name="Chinese">Chinese</string>
-    <string name="English">English</string>
-    <string name="French">French</string>
-    <string name="German">German</string>
-    <string name="Italian">Italian</string>
-    <string name="Kazakh">Kazakh</string>
-    <string name="Korean">Korean</string>
-    <string name="Turkish">Turkish</string>
-    <string name="Russian">Russian</string>
-    <string name="ArabicShort">Arb</string>
-    <string name="BengaliShort">Ben</string>
-    <string name="HindiShort">Hin</string>
-    <string name="JapaneseShort">Jap</string>
-    <string name="IndonesianShort">Ind</string>
-    <string name="PortugueseShort">Por</string>
-    <string name="SpanishShort">Spa</string>
-    <string name="UkrainianShort">Ukr</string>
-    <string name="ChineseShort">Chi</string>
-    <string name="EnglishShort">Eng</string>
-    <string name="FrenchShort">Fre</string>
-    <string name="GermanShort">Ger</string>
-    <string name="ItalianShort">Ita</string>
-    <string name="KazakhShort">Kaz</string>
-    <string name="KoreanShort">Kor</string>
-    <string name="TurkishShort">Tur</string>
-    <string name="RussianShort">Rus</string>
+    <string name="HomePage.Toolbar.title">Home</string>
+    <string name="HomePage.Toolbar.lanugage">Language</string>
+    <string name="HomePage.Toolbar.guest">Guest</string>
+    <string name="HomePage.Toolbar.welcome">Welcome</string>
+    <string name="HomePage.Toolbar.learningLanguage">Start learn</string>
+    <string name="HomePage.Empty.title">Оh, we don\'t have the words to study yet.\nLet\'s add new words to the add button</string>
 </resources>

@@ -15,9 +15,7 @@ import androidx.compose.ui.unit.dp
 fun LoadingView(
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier,
-    ) {
+    Box(modifier = modifier) {
         CircularProgressIndicator(
             modifier = Modifier
                 .height(34.dp)

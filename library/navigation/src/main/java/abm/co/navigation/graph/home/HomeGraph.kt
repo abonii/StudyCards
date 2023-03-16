@@ -4,6 +4,7 @@ import abm.co.designsystem.message.common.MessageContent
 import abm.co.navigation.navhost.home.home
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
@@ -11,6 +12,8 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 @Composable
 fun HomeGraph(
     route: String,
+    openDrawer: () -> Unit,
+    mainController: NavController,
     showMessage: suspend (MessageContent) -> Unit,
     startDestination: String = HomeDestinations.Home.route
 ) {
@@ -22,7 +25,9 @@ fun HomeGraph(
     ) {
         home(
             navController = navController,
-            showMessage = showMessage
+            mainController = mainController,
+            showMessage = showMessage,
+            openDrawer = openDrawer
         )
     }
 }

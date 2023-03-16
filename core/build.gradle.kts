@@ -33,20 +33,34 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = "STUDY_CARDS_ALIAS"
+            storePassword = "STUDY_CARDS_PASSWORD"
+            keyPassword = "STUDY_CARDS_PASSWORD"
+            storeFile = file("C:/Desktop/key.jsk")
+        }
+    }
+
     buildTypes {
         debug {
+            isDebuggable = true
+            isMinifyEnabled = false
             applicationIdSuffix = ".debug"
             manifestPlaceholders["appName"] = "@string/app_name_dev"
             buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
             buildConfigField("String", "VERSION_CODE", "\"${defaultConfig.versionCode}\"")
         }
         release {
+            isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            manifestPlaceholders["appName"] = "@string/app_name"
             buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
             buildConfigField("String", "VERSION_CODE", "\"${defaultConfig.versionCode}\"")
         }

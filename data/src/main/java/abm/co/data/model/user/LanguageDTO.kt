@@ -8,18 +8,18 @@ import androidx.annotation.StringRes
 @Keep
 data class LanguageDTO(
     val code: String,
-    @StringRes val languageResCode: Int,
-    @DrawableRes val imageFromDrawable: Int
+    @StringRes val languageNameResCode: Int,
+    @DrawableRes val iconFromDrawable: Int
 )
 
 fun LanguageDTO.toDomain() = Language(
     code = code,
-    languageResCode = languageResCode,
-    imageFromDrawable = imageFromDrawable
+    languageNameResCode = languageNameResCode,
+    iconFromDrawable = iconFromDrawable
 )
 
 fun Language.toDTO() = LanguageDTO(
     code = code,
-    languageResCode = languageResCode,
-    imageFromDrawable = imageFromDrawable
+    languageNameResCode = languageNameResCode,
+    iconFromDrawable = iconFromDrawable
 )

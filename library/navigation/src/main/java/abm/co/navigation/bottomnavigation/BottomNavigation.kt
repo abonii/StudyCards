@@ -37,7 +37,7 @@ fun BottomNavigation(
         modifier = modifier
     ) {
         Row(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(BOTTOM_NAVIGATION_HEIGHT)
                 .padding(horizontal = 11.dp)

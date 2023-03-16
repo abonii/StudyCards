@@ -1,14 +1,19 @@
 package abm.co.feature.home.component
 
 import abm.co.designsystem.component.modifier.Modifier
+import abm.co.designsystem.component.modifier.disabledRippleClickable
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
-import androidx.annotation.DrawableRes
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +22,9 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -26,7 +34,6 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 
@@ -39,61 +46,15 @@ private val CollapsedIconWidth = 4.dp
 private val ExpandedIconHeight = 45.dp
 private val CollapsedIconHeight = 30.dp
 
-@Preview
-@Composable
-fun CollapsingToolbarCollapsedPreview() {
-    StudyCardsTheme {
-        HomeCollapsingToolbar(
-            backgroundImageResId = abm.co.designsystem.R.drawable.image_finished,
-            progress = 0f,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp),
-            minToolbarHeight = 0,
-            maxToolbarHeight = 0
-        )
-    }
-}
-
-@Preview
-@Composable
-fun CollapsingToolbarHalfwayPreview() {
-    StudyCardsTheme {
-        HomeCollapsingToolbar(
-            backgroundImageResId = abm.co.designsystem.R.drawable.image_finished,
-            progress = 0.5f,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp),
-            minToolbarHeight = 0,
-            maxToolbarHeight = 0
-        )
-    }
-}
-
-@Preview
-@Composable
-fun CollapsingToolbarExpandedPreview() {
-    StudyCardsTheme {
-        HomeCollapsingToolbar(
-            backgroundImageResId = abm.co.designsystem.R.drawable.image_finished,
-            progress = 1f,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp),
-            minToolbarHeight = 0,
-            maxToolbarHeight = 0
-        )
-    }
-}
-
 @Composable
 fun HomeCollapsingToolbar(
-    @DrawableRes backgroundImageResId: Int,
+    welcomeText: String,
+    learningLanguageText: String,
+    toolbarTitle: String,
     progress: Float,
-    modifier: Modifier = Modifier,
-    minToolbarHeight: Int,
-    maxToolbarHeight: Int
+    onClickDrawerIcon: () -> Unit,
+    onClickLearningLanguageIcon: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val backgroundColor = StudyCardsTheme.colors.backgroundPrimary
     val dividerColor = StudyCardsTheme.colors.stroke
@@ -115,7 +76,7 @@ fun HomeCollapsingToolbar(
                 .padding(horizontal = 20.dp)
                 .fillMaxSize(),
         ) {
-            CollapsingToolbarLayout(progress = progress, minToolbarHeight = minToolbarHeight) {
+            CollapsingToolbarLayout(progress = progress) {
                 val iconHeight = with(LocalDensity.current) {
                     lerp(CollapsedIconHeight.toPx(), ExpandedIconHeight.toPx(), progress).toDp()
                 }
@@ -131,7 +92,8 @@ fun HomeCollapsingToolbar(
                     modifier = Modifier
                         .padding(end = drawerEndPadding)
                         .height(24.dp)
-                        .wrapContentWidth(),
+                        .wrapContentWidth()
+                        .disabledRippleClickable(onClick = onClickDrawerIcon),
                     tint = StudyCardsTheme.colors.opposition
                 )
                 Text(
@@ -140,21 +102,34 @@ fun HomeCollapsingToolbar(
                             alpha = if (progress < 0.8f) (progress - 0.4f).coerceAtLeast(0f) else 1f
                         }
                         .wrapContentWidth(),
-                    text = "Welcomе, Dimash",
+                    text = welcomeText,
                     style = StudyCardsTheme.typography.weight400Size16LineHeight20,
                     color = StudyCardsTheme.colors.textPrimary,
                     textAlign = TextAlign.Center
                 )
-                Text(
-                    modifier = Modifier
-                        .graphicsLayer {
-                            alpha = if (progress < 0.8f) (progress - 0.2f).coerceAtLeast(0f) else 1f
-                        }.wrapContentWidth(),
-                    text = "Start learn English",
-                    style = StudyCardsTheme.typography.weight600Size23LineHeight24,
-                    color = StudyCardsTheme.colors.textPrimary,
-                    textAlign = TextAlign.Center
-                )
+                val animate by remember(progress) { derivedStateOf { progress < 0.4f } }
+                val learningLanguageTransition =
+                    updateTransition(targetState = animate, label = "learningLanguageTransition")
+                val learningLanguageAlpha by learningLanguageTransition.animateFloat(
+                    label = "learningLanguageAlpha",
+                    targetValueByState = {
+                        if (it) 1f - progress else progress
+                    })
+                Crossfade(
+                    targetState = animate,
+                    modifier = Modifier.graphicsLayer {
+                        alpha = learningLanguageAlpha
+                    },
+                    animationSpec = tween(easing = CubicBezierEasing(0.12f, 0f, 0.12f, 1f))
+                ) {
+                    Text(
+                        modifier = Modifier.wrapContentWidth(),
+                        text = if (it) toolbarTitle else learningLanguageText,
+                        style = StudyCardsTheme.typography.weight600Size23LineHeight24,
+                        color = StudyCardsTheme.colors.textPrimary,
+                        textAlign = TextAlign.Center
+                    )
+                }
                 val circleBorderColor = StudyCardsTheme.colors.primary
                 Image(
                     painter = painterResource(id = R.drawable.flag_china),
@@ -162,6 +137,7 @@ fun HomeCollapsingToolbar(
                     modifier = Modifier
                         .padding(start = drawerEndPadding)
                         .size(iconHeight)
+                        .disabledRippleClickable(onClick = onClickLearningLanguageIcon)
                         .drawBehind {
                             val iconWidthPx = iconWidth.toPx()
                             drawCircle(
@@ -180,7 +156,6 @@ fun HomeCollapsingToolbar(
 @Composable
 private fun CollapsingToolbarLayout(
     progress: Float,
-    minToolbarHeight: Int,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
@@ -210,7 +185,7 @@ private fun CollapsingToolbarLayout(
                 ),
                 y = lerp(
                     start = icon.height / 2 - welcome.height / 2,
-                    stop = minToolbarHeight / 2 - drawer.height + icon.height + 6.dp.roundToPx(),
+                    stop = constraints.maxHeight - learningLanguage.height - welcome.height - 10.dp.roundToPx(),
                     fraction = progress
                 )
             )

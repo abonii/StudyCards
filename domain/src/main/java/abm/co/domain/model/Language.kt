@@ -5,6 +5,6 @@ import androidx.annotation.StringRes
 
 data class Language(
     val code: String,
-    @StringRes val languageResCode: Int,
-    @DrawableRes val imageFromDrawable: Int
+    @StringRes val languageNameResCode: Int,
+    @DrawableRes val iconFromDrawable: Int
 )
