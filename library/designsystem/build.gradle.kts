@@ -45,6 +45,7 @@ dependencies {
     implementation(KotlinxDependencies.json)
     AndroidxDependencies.apply {
         api(coreKtx)
+        api(activity)
         api(appcompat)
         api(lifeCycleRuntimeCompose)
         api(lifeCycleViewModelKtx)

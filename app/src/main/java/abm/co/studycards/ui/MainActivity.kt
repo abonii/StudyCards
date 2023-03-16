@@ -10,6 +10,7 @@ import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.navigation.graph.root.RootNavHost
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -40,6 +41,11 @@ class MainActivity : ComponentActivity() {
                 viewModel.state.value.isSplashScreenVisible
             }
         }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finish()
+            }
+        })
         setContent {
             StudyCardsTheme {
                 val snackbarHostState = remember { SnackbarHostState() }

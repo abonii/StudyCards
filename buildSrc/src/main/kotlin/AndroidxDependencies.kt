@@ -12,6 +12,7 @@ object AndroidxDependencies {
     }
 
     const val coreKtx = "androidx.core:core-ktx:${Versions.coreKtx}"
+    const val activity = "androidx.activity:activity-ktx:1.7.0-rc01"
     const val appcompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
     const val splashScreen = "androidx.core:core-splashscreen:${Versions.splashscreen}"
     const val dataStore = "androidx.datastore:datastore:${Versions.dataStore}"
