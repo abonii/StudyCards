@@ -223,7 +223,6 @@ private fun rememberToolbarState(
     }
 }
 
-@Stable
 @Composable
 private fun ListenToScrollAndUpdateToolbarState(
     scrollState: ScrollState,
@@ -235,7 +234,7 @@ private fun ListenToScrollAndUpdateToolbarState(
 }
 
 @Composable
-fun LoadingScreen(
+private fun LoadingScreen(
     modifier: Modifier = Modifier
 ) {
     Column(

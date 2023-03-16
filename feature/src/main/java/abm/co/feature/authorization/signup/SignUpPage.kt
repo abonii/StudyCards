@@ -1,6 +1,5 @@
 package abm.co.feature.authorization.signup
 
-import abm.co.designsystem.flow.collectInLaunchedEffect
 import abm.co.designsystem.component.button.ButtonSize
 import abm.co.designsystem.component.button.ButtonState
 import abm.co.designsystem.component.button.IconShadowedButton
@@ -10,9 +9,10 @@ import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.baseBackground
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.textfield.TextFieldWithLabel
+import abm.co.designsystem.component.widget.LoadingDialog
+import abm.co.designsystem.flow.collectInLaunchedEffect
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
-import abm.co.designsystem.component.widget.LoadingDialog
 import abm.co.feature.R
 import abm.co.feature.authorization.common.TrailingIcon
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -277,12 +277,16 @@ private fun ColumnScope.BottomButtonsContent(
         horizontalArrangement = Arrangement.spacedBy(17.dp)
     ) {
         IconShadowedButton(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .height(50.dp)
+                .weight(1f),
             iconRes = R.drawable.ic_google,
             onClick = onClickGoogleButton
         )
         IconShadowedButton(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .height(50.dp)
+                .weight(1f),
             iconRes = R.drawable.ic_facebook,
             onClick = onClickFacebookButton
         )

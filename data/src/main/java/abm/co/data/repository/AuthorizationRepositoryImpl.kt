@@ -40,7 +40,7 @@ class AuthorizationRepositoryImpl @Inject constructor(
 
     override suspend fun setUserGoal(userGoal: UserGoal) {
         withContext(Dispatchers.IO) {
-            getUserDatabase().child(User.goal).setValue(userGoal)
+            getUserDatabase().child(User.goal).setValue(userGoal.toDTO())
         }
     }
 
