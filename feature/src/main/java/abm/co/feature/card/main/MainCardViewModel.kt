@@ -1,4 +1,4 @@
-package abm.co.feature.card
+package abm.co.feature.card.main
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

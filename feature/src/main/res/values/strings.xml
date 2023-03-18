@@ -91,4 +91,10 @@
     <string name="HomePage.Toolbar.welcome">Welcome</string>
     <string name="HomePage.Toolbar.learningLanguage">Start learn</string>
     <string name="HomePage.Empty.title">Оh, we don\'t have the words to study yet.\nLet\'s add new words to the add button</string>
+
+    <plurals name="words">
+        <item quantity="one"> %d word</item>
+        <item quantity="zero"> %d word</item>
+        <item quantity="other"> %d words</item>
+    </plurals>
 </resources>

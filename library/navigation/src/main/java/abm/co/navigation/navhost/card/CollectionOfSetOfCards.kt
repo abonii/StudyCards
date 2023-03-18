@@ -1,7 +1,7 @@
 package abm.co.navigation.navhost.card
 
 import abm.co.designsystem.message.common.MessageContent
-import abm.co.feature.card.MainCardPage
+import abm.co.feature.card.main.MainCardPage
 import abm.co.navigation.graph.card.CardDestinations
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween

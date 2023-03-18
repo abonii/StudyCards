@@ -32,7 +32,6 @@ fun StudyCardsTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compos
 
 @Composable
 private fun StudyCardsThemeImpl(
-    spaces: StudyCardsSpace = StudyCardsTheme.spaces,
     shapes: StudyCardsShape = StudyCardsTheme.shapes,
     typography: StudyCardsTypography = StudyCardsTheme.typography,
     colors: StudyCardsColor = StudyCardsTheme.colors,
@@ -45,7 +44,6 @@ private fun StudyCardsThemeImpl(
     CompositionLocalProvider(
         LocalColors provides rememberedColors,
         LocalContentAlpha provides ContentAlpha.high,
-        LocalSpaces provides spaces,
         LocalShapes provides shapes,
         LocalIndication provides rippleIndication,
         LocalRippleTheme provides StudyCardsRippleTheme,
@@ -65,11 +63,6 @@ object StudyCardsTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalTypography.current
-
-    val spaces: StudyCardsSpace
-        @Composable
-        @ReadOnlyComposable
-        get() = LocalSpaces.current
 
     val shapes: StudyCardsShape
         @Composable

@@ -9,6 +9,8 @@ import abm.co.designsystem.flow.collectInLaunchedEffect
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
+import abm.co.feature.card.component.SetOfCardsItem
+import abm.co.feature.card.model.SetOfCardsUI
 import abm.co.feature.home.component.HomeCollapsingToolbar
 import abm.co.feature.toolbar.ToolbarState
 import abm.co.feature.toolbar.scrollflags.ExitUntilCollapsedState
@@ -36,7 +38,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -146,8 +147,16 @@ private fun SuccessScreen(
             .padding(top = MaxToolbarHeight)
             .statusBarsPadding()
     ) {
-        Spacer(
-            modifier = Modifier.height(1500.dp)
+        SetOfCardsItem(
+            SetOfCardsUI(
+                "sad", 12,
+                true, null,
+                null, null, "sdfsd"
+            ),
+            onClick = {},
+            onClickFavorite = {
+                println("hvb")
+            }
         )
     }
 }

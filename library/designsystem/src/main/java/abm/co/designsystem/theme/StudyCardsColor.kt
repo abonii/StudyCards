@@ -11,18 +11,19 @@ internal val LightColors = StudyCardsColor(
     primary = Color(0xFF_00A3F6),
     textPrimary = Color(0xFF_1B1B1B),
     textSecondary = Color(0xFF_9B9B9B),
+    backgroundPrimary = Color(0xFF_FFFFFF),
+    backgroundSecondary = Color(0xFF_F6F7FF),
+    buttonPrimary = Color(0xFF_2970E5),
+    buttonDisabled = Color(0xFF_FFFFFF),
     onyx = Color(0xFF_4F4F4F),
     skyBlue = Color(0xFF_87CEEB),
     silver = Color(0xFF_E0E0E0),
     stroke = Color(0xFF_E6E6E6),
     selfish = Color(0xFF_60628B),
     grayishBlue = Color(0xFF_AFB5C1),
+    blueMiddle = Color(0xFF_AFCDFB),
     middleGray = Color(0xFF_B7B7B7),
-    backgroundPrimary = Color(0xFF_FFFFFF),
-    backgroundSecondary = Color(0xFF_F6F7FF),
-    buttonPrimary = Color(0xFF_2970E5),
-    buttonSecondary = Color(0xFF_AFCDFB),
-    buttonDisabled = Color(0xFF_FFFFFF),
+    milky = Color(0xFF_F8F8F8),
     opposition = Color(0xFF_000000),
     pressed = Color(0x33_F8F8FF),
     success = Color(0xFF_27AE60),
@@ -34,6 +35,10 @@ internal val DarkColors = StudyCardsColor(
     primary = Color(0xFF_002F7A),
     textPrimary = Color(0xFF_FFFFFF),
     textSecondary = Color(0xFF_98989F),
+    backgroundPrimary = Color(0xFF_1D1D1D),
+    backgroundSecondary = Color(0xFF_2C2C2E),
+    buttonPrimary = Color(0xFF_1C3D70),
+    buttonDisabled = Color(0xFF_5A5A5F),
     onyx = Color(0xFF_BBBBBB),
     skyBlue = Color(0xFF_4E7A96),
     silver = Color(0xFF_9E9E9E),
@@ -41,11 +46,8 @@ internal val DarkColors = StudyCardsColor(
     selfish = Color(0xFF_000000),
     grayishBlue = Color(0xFF_AFB5C1),
     middleGray = Color(0xFF_555555),
-    backgroundPrimary = Color(0xFF_1D1D1D),
-    backgroundSecondary = Color(0xFF_2C2C2E),
-    buttonPrimary = Color(0xFF_1C3D70),
-    buttonSecondary = Color(0xFF_6E8CA6),
-    buttonDisabled = Color(0xFF_5A5A5F),
+    milky = Color(0xFF_070707),
+    blueMiddle = Color(0xFF_6E8CA6),
     opposition = Color(0xFF_FFFFFF),
     pressed = Color(0xFF_3A3A3C),
     success = Color(0xFF_32D74B),
@@ -65,10 +67,11 @@ class StudyCardsColor(
     selfish: Color,
     grayishBlue: Color,
     middleGray: Color,
+    milky: Color,
     backgroundPrimary: Color,
     backgroundSecondary: Color,
     buttonPrimary: Color,
-    buttonSecondary: Color,
+    blueMiddle: Color,
     buttonDisabled: Color,
     opposition: Color,
     pressed: Color,
@@ -106,6 +109,9 @@ class StudyCardsColor(
     var middleGray by mutableStateOf(middleGray)
         private set
 
+    var milky by mutableStateOf(milky)
+        private set
+
     var backgroundPrimary by mutableStateOf(backgroundPrimary)
         private set
 
@@ -115,7 +121,7 @@ class StudyCardsColor(
     var buttonPrimary by mutableStateOf(buttonPrimary)
         private set
 
-    var buttonSecondary by mutableStateOf(buttonSecondary)
+    var blueMiddle by mutableStateOf(blueMiddle)
         private set
 
     var buttonDisabled by mutableStateOf(buttonDisabled)
@@ -147,10 +153,11 @@ class StudyCardsColor(
         selfish: Color = this.selfish,
         grayishBlue: Color = this.grayishBlue,
         middleGray: Color = this.middleGray,
+        milky: Color = this.milky,
         backgroundPrimary: Color = this.backgroundPrimary,
         backgroundSecondary: Color = this.backgroundSecondary,
         buttonPrimary: Color = this.buttonPrimary,
-        buttonSecondary: Color = this.buttonSecondary,
+        blueMiddle: Color = this.blueMiddle,
         buttonDisabled: Color = this.buttonDisabled,
         opposition: Color = this.opposition,
         pressed: Color = this.pressed,
@@ -167,11 +174,12 @@ class StudyCardsColor(
         stroke = stroke,
         selfish = selfish,
         middleGray = middleGray,
+        milky = milky,
         grayishBlue = grayishBlue,
         backgroundPrimary = backgroundPrimary,
         backgroundSecondary = backgroundSecondary,
         buttonPrimary = buttonPrimary,
-        buttonSecondary = buttonSecondary,
+        blueMiddle = blueMiddle,
         buttonDisabled = buttonDisabled,
         opposition = opposition,
         pressed = pressed,
@@ -191,11 +199,12 @@ class StudyCardsColor(
         selfish = other.selfish
         grayishBlue = other.grayishBlue
         middleGray = other.middleGray
+        milky = other.milky
         backgroundPrimary = other.backgroundPrimary
         backgroundSecondary = other.backgroundSecondary
         buttonPrimary = other.buttonPrimary
         buttonDisabled = other.buttonDisabled
-        buttonSecondary = other.buttonSecondary
+        blueMiddle = other.blueMiddle
         opposition = other.opposition
         pressed = other.pressed
         success = other.success

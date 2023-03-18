@@ -1,4 +1,4 @@
-package abm.co.feature.card
+package abm.co.feature.card.main
 
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.systembar.SetStatusBarColor

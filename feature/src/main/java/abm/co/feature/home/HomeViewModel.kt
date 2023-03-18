@@ -47,7 +47,7 @@ class HomeViewModel @Inject constructor(
                 }.onSuccess { user ->
                     if (user != null) {
                         mutableState.value = HomeContractState.Success(
-                            userName = user.name,
+                            userName = user.name ?: user.email,
                             learningLanguage = prefs.getLearningLanguage()?.toUI()
                         )
                     } else {

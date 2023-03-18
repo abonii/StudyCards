@@ -118,7 +118,7 @@ private fun WelcomeLoginScreen(
                 .fillMaxWidth(),
             title = stringResource(id = R.string.WelcomeLoginPage_LoginButton),
             components = ButtonSize(),
-            normalButtonBackgroundColor = StudyCardsTheme.colors.buttonSecondary,
+            normalButtonBackgroundColor = StudyCardsTheme.colors.blueMiddle,
             normalContentColor = Color.White,
             onClick = {
                 event(WelcomeLoginContractEvent.OnClickLogin)
