@@ -19,10 +19,10 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.shareIn
 
-internal inline fun <reified T : Any> DatabaseReference.asFlow(
+internal inline fun <reified T : Any?> DatabaseReference.asFlow(
     scope: CoroutineScope,
-    crossinline converter: (DataSnapshot) -> T?
-): Flow<Either<Failure, T?>> {
+    crossinline converter: (DataSnapshot) -> T
+): Flow<Either<Failure, T>> {
     val flow = callbackFlow {
         val listener = addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

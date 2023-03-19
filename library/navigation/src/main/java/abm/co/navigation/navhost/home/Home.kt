@@ -2,8 +2,8 @@ package abm.co.navigation.navhost.home
 
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.feature.home.HomePage
-import abm.co.navigation.graph.home.HomeDestinations
-import abm.co.navigation.graph.root.Graph
+import abm.co.navigation.navhost.home.graph.HomeDestinations
+import abm.co.navigation.navhost.root.Graph
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -24,7 +24,10 @@ fun NavGraphBuilder.home(
             onNavigateToLanguageSelectPage = {
                 mainController.navigate(Graph.PROFILE)
             },
-            openDrawer = openDrawer
+            openDrawer = openDrawer,
+            navigateToAllSetOfCards = {},
+            navigateToSetOfCards = {},
+            navigateToSetOfCardsGame = {}
         )
     }
 }

@@ -1,5 +1,6 @@
 package abm.co.feature.home
 
+import abm.co.designsystem.component.button.TextButton
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.animateDp
 import abm.co.designsystem.component.modifier.baseBackground
@@ -21,9 +22,11 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,10 +41,12 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -61,31 +66,39 @@ private val MaxToolbarHeight = 174.dp
 fun HomePage(
     openDrawer: () -> Unit,
     onNavigateToLanguageSelectPage: () -> Unit,
+    navigateToAllSetOfCards: () -> Unit,
+    navigateToSetOfCardsGame: () -> Unit,
+    navigateToSetOfCards: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
         AnalyticsManager.sendEvent("home_page_viewed")
     }
-    val state by viewModel.state.collectAsState()
     viewModel.channel.collectInLaunchedEffect {
         when (it) {
             HomeContractChannel.NavigateToLanguageSelectPage -> onNavigateToLanguageSelectPage()
             HomeContractChannel.OpenDrawer -> openDrawer()
+            HomeContractChannel.NavigateToAllSetOfCards -> navigateToAllSetOfCards()
             is HomeContractChannel.ShowMessage -> showMessage(it.messageContent)
+            is HomeContractChannel.NavigateToSetOfCardsGame -> navigateToSetOfCardsGame()
+            is HomeContractChannel.NavigateToSetOfCards -> navigateToSetOfCards()
         }
     }
-
+    val screenState by viewModel.screenState.collectAsState()
+    val toolbarState by viewModel.toolbarState.collectAsState()
     SetStatusBarColor()
     HomeScreen(
-        state = state,
+        screenState = screenState,
+        toolbarState = toolbarState,
         event = viewModel::event
     )
 }
 
 @Composable
 private fun HomeScreen(
-    state: HomeContractState,
+    screenState: HomeContract.ScreenState,
+    toolbarState: HomeContract.ToolbarState,
     event: (HomeContractEvent) -> Unit
 ) {
     Box(
@@ -93,26 +106,38 @@ private fun HomeScreen(
             .baseBackground()
             .fillMaxSize()
     ) {
-        val toolbarState = rememberToolbarState()
+        val toolbarScrollable = rememberToolbarState()
         val scrollState = rememberScrollState()
         ListenToScrollAndUpdateToolbarState(
             scrollState = scrollState,
-            toolbarState = toolbarState
+            toolbarState = toolbarScrollable
         )
-        Crossfade(targetState = state) {
-            when (it) {
-                HomeContractState.Loading -> {
+        Crossfade(targetState = screenState) { state ->
+            when (state) {
+                HomeContract.ScreenState.Loading -> {
                     LoadingScreen(modifier = Modifier.fillMaxSize())
                 }
-                is HomeContractState.Success -> {
+                is HomeContract.ScreenState.Success -> {
                     SuccessScreen(
-                        state = it,
                         modifier = Modifier
                             .verticalScroll(scrollState)
                             .fillMaxSize(),
+                        screenState = state,
+                        onClickPlaySetOfCards = {
+                            event(HomeContractEvent.OnClickPlaySetOfCards(it))
+                        },
+                        onClickSetOfCards = {
+                            event(HomeContractEvent.OnClickSetOfCards(it))
+                        },
+                        onClickShowAllSetOfCards = {
+                            event(HomeContractEvent.OnClickShowAllSetOfCards)
+                        },
+                        onClickBookmark = {
+                            event(HomeContractEvent.OnClickBookmarkSetOfCards(it))
+                        }
                     )
                 }
-                is HomeContractState.Empty -> {
+                is HomeContract.ScreenState.Empty -> {
                     EmptyScreen(modifier = Modifier.fillMaxSize())
                 }
             }
@@ -121,25 +146,29 @@ private fun HomeScreen(
             toolbarTitle = stringResource(id = R.string.HomePage_Toolbar_title),
             learningLanguageText = stringResource(R.string.HomePage_Toolbar_learningLanguage) + " " +
                 stringResource(
-                    state.learningLanguage?.languageNameResCode
+                    toolbarState.learningLanguage?.languageNameResCode
                         ?: R.string.HomePage_Toolbar_learningLanguage
                 ),
             welcomeText = stringResource(id = R.string.HomePage_Toolbar_welcome) + ", " +
-                (state.userName ?: stringResource(id = R.string.HomePage_Toolbar_guest)),
-            progress = toolbarState.progress,
+                (toolbarState.userName ?: stringResource(id = R.string.HomePage_Toolbar_guest)),
+            progress = toolbarScrollable.progress,
             onClickDrawerIcon = { event(HomeContractEvent.OnClickDrawer) },
             onClickLearningLanguageIcon = { event(HomeContractEvent.OnClickToolbarLanguage) },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(with(LocalDensity.current) { toolbarState.height.toDp() })
-                .graphicsLayer { translationY = toolbarState.offset }
+                .height(with(LocalDensity.current) { toolbarScrollable.height.toDp() })
+                .graphicsLayer { translationY = toolbarScrollable.offset }
         )
     }
 }
 
 @Composable
 private fun SuccessScreen(
-    state: HomeContractState.Success,
+    screenState: HomeContract.ScreenState.Success,
+    onClickShowAllSetOfCards: () -> Unit,
+    onClickSetOfCards: (SetOfCardsUI) -> Unit,
+    onClickBookmark: (SetOfCardsUI) -> Unit,
+    onClickPlaySetOfCards: (SetOfCardsUI) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -147,17 +176,57 @@ private fun SuccessScreen(
             .padding(top = MaxToolbarHeight)
             .statusBarsPadding()
     ) {
-        SetOfCardsItem(
-            SetOfCardsUI(
-                "sad", 12,
-                true, null,
-                null, null, "sdfsd"
-            ),
-            onClick = {},
-            onClickFavorite = {
-                println("hvb")
-            }
+        ItemTitle(
+            title = stringResource(id = R.string.HomePage_SetOfCards_title),
+            onClickShowAll = onClickShowAllSetOfCards
         )
+        Spacer(modifier = Modifier.height(10.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(11.dp)
+        ) {
+            screenState.setsOfCards.forEach { setOfCards ->
+                SetOfCardsItem(
+                    setOfCards = setOfCards,
+                    onClick = { onClickSetOfCards(setOfCards) },
+                    onClickBookmark = { onClickBookmark(setOfCards) },
+                    onClickPlay = { onClickPlaySetOfCards(setOfCards) },
+                )
+            }
+        }
+    }
+}
+
+@Stable
+@Composable
+private fun ItemTitle(
+    title: String,
+    modifier: Modifier = Modifier,
+    onClickShowAll: (() -> Unit)? = null
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 16.dp),
+            text = title,
+            style = StudyCardsTheme.typography.weight600Size14LineHeight20,
+            color = StudyCardsTheme.colors.textPrimary
+        )
+        onClickShowAll?.let {
+            TextButton(
+                modifier = Modifier.padding(end = 16.dp),
+                title = stringResource(id = R.string.HomePage_SetOfCards_showAll),
+                textStyle = StudyCardsTheme.typography.weight600Size14LineHeight20,
+                normalContentColor = StudyCardsTheme.colors.buttonPrimary,
+                onClick = it
+            )
+        }
     }
 }
 

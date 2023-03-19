@@ -21,8 +21,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,12 +37,13 @@ import androidx.compose.ui.unit.dp
 fun SetOfCardsItem(
     setOfCards: SetOfCardsUI,
     onClick: () -> Unit,
-    onClickFavorite: () -> Unit,
+    onClickBookmark: () -> Unit,
+    onClickPlay: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val pressed = rememberSaveable { mutableStateOf(false) }
-    val scale = animateFloatAsState(if (pressed.value) 0.95f else 1f)
     Box {
+        val pressed = rememberSaveable { mutableStateOf(false) }
+        val scale = animateFloatAsState(if (pressed.value) 0.95f else 1f)
         Spacer(
             modifier = Modifier
                 .scalableClick(
@@ -53,17 +57,11 @@ fun SetOfCardsItem(
                 .scale(scale.value)
                 .clip(RoundedCornerShape(10.dp))
                 .background(StudyCardsTheme.colors.milky)
-                .padding(end = 12.dp, top = 12.dp, bottom = 12.dp)
+                .padding(top = 12.dp, bottom = 12.dp)
         ) {
-            Icon(
-                modifier = Modifier
-                    .disabledRippleClickable(onClick = onClickFavorite)
-                    .padding(start = 12.dp, bottom = 20.dp, end = 20.dp)
-                    .size(20.dp),
-                painter = painterResource(id = R.drawable.ic_bookmark),
-                contentDescription = null,
-                tint = if (setOfCards.isFavorite) StudyCardsTheme.colors.error
-                else StudyCardsTheme.colors.blueMiddle
+            BookmarkIcon(
+                isBookmarked = setOfCards.isBookmarked,
+                onClick = onClickBookmark
             )
             Column(
                 modifier = Modifier.weight(1f),
@@ -83,11 +81,38 @@ fun SetOfCardsItem(
             Spacer(modifier = Modifier.width(25.dp))
             Icon(
                 modifier = Modifier
-                    .size(24.dp)
-                    .align(Alignment.CenterVertically),
+                    .disabledRippleClickable(onClick = onClickPlay)
+                    .align(Alignment.CenterVertically)
+                    .padding(end = 12.dp, top = 10.dp, bottom = 10.dp)
+                    .size(24.dp),
                 painter = painterResource(id = R.drawable.ic_play),
+                tint = StudyCardsTheme.colors.buttonPrimary,
                 contentDescription = null
             )
         }
     }
+}
+
+@Composable
+fun BookmarkIcon(
+    isBookmarked: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var isFavoriteIndependent by remember(isBookmarked) {
+        mutableStateOf(isBookmarked)
+    }
+    Icon(
+        modifier = modifier
+            .disabledRippleClickable {
+                isFavoriteIndependent = !isFavoriteIndependent
+                onClick()
+            }
+            .padding(start = 12.dp, bottom = 20.dp, end = 20.dp)
+            .size(20.dp),
+        painter = painterResource(id = R.drawable.ic_bookmark),
+        contentDescription = null,
+        tint = if (isFavoriteIndependent) StudyCardsTheme.colors.error
+        else StudyCardsTheme.colors.blueMiddle
+    )
 }

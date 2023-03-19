@@ -2,8 +2,7 @@ package abm.co.navigation.navhost.userattributes
 
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.feature.userattributes.ChooseUserAttributesPage
-import abm.co.navigation.graph.root.Graph
-import abm.co.navigation.graph.userattributes.ChooseUserAttributesDestination
+import abm.co.navigation.navhost.root.Graph
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

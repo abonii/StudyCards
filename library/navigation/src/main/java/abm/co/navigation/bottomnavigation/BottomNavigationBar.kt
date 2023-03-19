@@ -2,12 +2,15 @@ package abm.co.navigation.bottomnavigation
 
 import abm.co.designsystem.component.composition.NoRippleTheme
 import abm.co.designsystem.theme.StudyCardsTheme
-import abm.co.navigation.graph.root.Graph
+import abm.co.navigation.navhost.card.graph.LocalNewCardOrSetStartDestination
+import abm.co.navigation.navhost.root.Graph
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import kotlinx.collections.immutable.ImmutableList
@@ -20,6 +23,10 @@ fun BottomNavigationBar(
     modifier: Modifier = Modifier
 ) {
     CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+        val startDestinationNewCardOrSet = LocalNewCardOrSetStartDestination.current
+        LaunchedEffect(startDestinationNewCardOrSet) {
+            println("startDestinationNewCardOrSet: $startDestinationNewCardOrSet")
+        }
         BottomNavigation(
             modifier = modifier,
             elevation = 5.dp,
@@ -31,7 +38,8 @@ fun BottomNavigationBar(
                     item = item,
                     onClick = {
                         if (item.route == Graph.NEW_CARD_OR_SET_GRAPH) {
-                            navController.navigate(item.route)
+                            startDestinationNewCardOrSet.deepLink?.toUri()
+                                ?.let { navController.navigate(it) }
                         } else {
                             navController.navigate(item.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {

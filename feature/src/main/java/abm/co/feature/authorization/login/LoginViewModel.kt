@@ -7,8 +7,8 @@ import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.domain.base.ExpectedMessage
 import abm.co.domain.base.Failure
 import abm.co.domain.base.mapToFailure
-import abm.co.domain.prefs.Prefs
 import abm.co.domain.repository.AuthorizationRepository
+import abm.co.domain.repository.LanguagesRepository
 import android.app.Activity
 import android.content.Intent
 import android.text.TextUtils
@@ -29,6 +29,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -38,7 +39,7 @@ class LoginViewModel @Inject constructor(
     private val googleSignInClient: GoogleSignInClient,
     private val firebaseAuth: FirebaseAuth,
     private val authorizationRepository: AuthorizationRepository,
-    private val prefs: Prefs
+    private val languagesRepository: LanguagesRepository
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(LoginContractState())
@@ -86,7 +87,9 @@ class LoginViewModel @Inject constructor(
 
     private fun navigateToHomeOrUserAttributionPage() {
         viewModelScope.launch {
-            if (prefs.getNativeLanguage() != null && prefs.getLearningLanguage() != null) {
+            if (languagesRepository.getNativeLanguage().firstOrNull() != null &&
+                languagesRepository.getLearningLanguage().firstOrNull() != null
+            ) {
                 _channel.send(LoginContractChannel.NavigateToHome)
             } else {
                 _channel.send(LoginContractChannel.NavigateToChooseUserAttributes)

@@ -4,7 +4,10 @@ import abm.co.domain.model.Language
 import androidx.annotation.DrawableRes
 import androidx.annotation.Keep
 import androidx.annotation.StringRes
+import kotlinx.serialization.Serializable
 
+
+@Serializable
 @Keep
 data class LanguageDTO(
     val code: String,

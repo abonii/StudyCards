@@ -2,7 +2,7 @@ package abm.co.navigation.navhost.game
 
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.feature.game.GamePage
-import abm.co.navigation.graph.game.GameDestinations
+import abm.co.navigation.navhost.game.graph.GameDestinations
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn

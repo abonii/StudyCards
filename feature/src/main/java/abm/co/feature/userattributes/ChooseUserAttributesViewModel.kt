@@ -3,8 +3,8 @@ package abm.co.feature.userattributes
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
 import abm.co.domain.base.Failure
-import abm.co.domain.prefs.Prefs
 import abm.co.domain.repository.AuthorizationRepository
+import abm.co.domain.repository.LanguagesRepository
 import abm.co.feature.userattributes.lanugage.LanguageUI
 import abm.co.feature.userattributes.lanugage.defaultLanguages
 import abm.co.feature.userattributes.lanugage.toDomain
@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ChooseUserAttributesViewModel @Inject constructor(
-    private val prefs: Prefs,
+    private val languagesRepository: LanguagesRepository,
     private val repository: AuthorizationRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -86,7 +86,7 @@ class ChooseUserAttributesViewModel @Inject constructor(
         mutableState.update {
             it.copy(
                 currentPage = UserAttributesPage.LearningLanguage,
-                progress = if(showAdditionQuiz) 0.4f else 0.6f,
+                progress = if (showAdditionQuiz) 0.4f else 0.6f,
                 isToRight = toRight
             )
         }
@@ -143,11 +143,15 @@ class ChooseUserAttributesViewModel @Inject constructor(
     }
 
     private fun saveNativeLanguage(language: LanguageUI) {
-        prefs.setNativeLanguage(language.toDomain())
+        viewModelScope.launch {
+            languagesRepository.setNativeLanguage(language.toDomain())
+        }
     }
 
     private fun saveLearningLanguage(language: LanguageUI) {
-        prefs.setLearningLanguage(language.toDomain())
+        viewModelScope.launch {
+            languagesRepository.setLearningLanguage(language.toDomain())
+        }
     }
 
     private fun navigateToHomePage() {

@@ -2,8 +2,8 @@ package abm.co.navigation.navhost.auth
 
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.feature.authorization.login.LoginPage
-import abm.co.navigation.graph.root.Graph
-import abm.co.navigation.graph.auth.AuthDestinations
+import abm.co.navigation.navhost.auth.graph.AuthDestinations
+import abm.co.navigation.navhost.root.Graph
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

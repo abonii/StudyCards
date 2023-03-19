@@ -79,46 +79,6 @@ class PrefsImpl @Inject constructor(
         preferences.edit().putString(APP_LANGUAGE, json).apply()
     }
 
-    override fun getNativeLanguage(): Language? {
-        val json = try {
-            preferences.getString(NATIVE_LANGUAGE, null)
-        } catch (e: Throwable) {
-            return null
-        }
-        return try {
-            val type: Type = object : TypeToken<LanguageDTO?>() {}.type
-            val language = gson.fromJson<LanguageDTO>(json, type)
-            language?.toDomain()
-        } catch (e: Throwable) {
-            null
-        }
-    }
-
-    override fun setNativeLanguage(value: Language) {
-        val json = gson.toJson(value.toDTO())
-        preferences.edit().putString(NATIVE_LANGUAGE, json).apply()
-    }
-
-    override fun getLearningLanguage(): Language? {
-        val json = try {
-            preferences.getString(LEARNING_LANGUAGE, null)
-        } catch (e: Throwable) {
-            return null
-        }
-        return try {
-            val type: Type = object : TypeToken<LanguageDTO?>() {}.type
-            val language = gson.fromJson<LanguageDTO>(json, type)
-            language?.toDomain()
-        } catch (e: Throwable) {
-            null
-        }
-    }
-
-    override fun setLearningLanguage(value: Language) {
-        val json = gson.toJson(value.toDTO())
-        preferences.edit().putString(LEARNING_LANGUAGE, json).apply()
-    }
-
     override fun getIsPremium(): Boolean {
         return preferences.getBoolean(IS_PREMIUM, false)
     }

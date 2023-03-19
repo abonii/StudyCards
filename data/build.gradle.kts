@@ -4,6 +4,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
     id("kotlin-parcelize")
+    id("kotlinx-serialization")
 }
 
 android {
@@ -38,6 +39,7 @@ android {
 dependencies {
     implementation(project(":domain"))
     implementation(BillingDependencies.billing)
+    implementation(KotlinxDependencies.json)
     debugApi(PlutoDependencies.pluto)
     releaseApi(PlutoDependencies.plutoNoOp)
     DIDependencies.apply {
@@ -59,6 +61,10 @@ dependencies {
         api(database)
         api(analytics)
         api(firebaseAuth)
+    }
+    AndroidxDependencies.apply {
+        implementation(dataStore)
+        implementation(dataStorePreference)
     }
     TestDependencies.apply {
         testImplementation(junit)

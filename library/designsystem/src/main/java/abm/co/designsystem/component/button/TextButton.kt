@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposableInferredTarget
+import androidx.compose.runtime.InternalComposeApi
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -18,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
+@NonRestartableComposable
 @Composable
 fun TextButton(
     title: String,

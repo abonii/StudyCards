@@ -6,7 +6,9 @@ import abm.co.data.repository.PricingRepositoryImpl
 import abm.co.domain.repository.DictionaryRepository
 import abm.co.data.repository.DictionaryRepositoryImpl
 import abm.co.data.repository.FirebaseRepositoryImpl
+import abm.co.data.repository.LanguagesRepositoryImpl
 import abm.co.domain.repository.AuthorizationRepository
+import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
 import dagger.Binds
 import dagger.Module
@@ -28,4 +30,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindBillingRepository(repository: PricingRepositoryImpl): PricingRepository
+
+    @Binds
+    abstract fun bindLanguagesRepository(repository: LanguagesRepositoryImpl): LanguagesRepository
 }

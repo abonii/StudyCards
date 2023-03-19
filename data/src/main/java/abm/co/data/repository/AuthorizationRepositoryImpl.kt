@@ -1,8 +1,7 @@
 package abm.co.data.repository
 
-import abm.co.data.model.DatabaseReferenceType.CURRENT_VERSION
-import abm.co.data.model.DatabaseReferenceType.USER_REF
-import abm.co.data.model.user.UserDTO
+import abm.co.data.model.DatabaseRef.ROOT_REF
+import abm.co.data.model.DatabaseRef.USER_REF
 import abm.co.data.model.user.toDTO
 import abm.co.domain.model.User
 import abm.co.domain.model.UserGoal
@@ -18,7 +17,7 @@ import kotlinx.coroutines.withContext
 
 @ActivityRetainedScoped
 class AuthorizationRepositoryImpl @Inject constructor(
-    @Named(CURRENT_VERSION) private var rootDatabase: DatabaseReference,
+    @Named(ROOT_REF) private var rootDatabase: DatabaseReference,
     private val firebaseAuth: FirebaseAuth
 ) : AuthorizationRepository {
 

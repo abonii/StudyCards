@@ -26,13 +26,6 @@ interface Prefs {
     fun getAppLanguage(): Language?
     fun setAppLanguage(value: Language)
 
-
-    fun getNativeLanguage(): Language?
-    fun setNativeLanguage(value: Language)
-
-    fun getLearningLanguage(): Language?
-    fun setLearningLanguage(value: Language)
-
     fun getIsPremium(): Boolean
     fun setIsPremium(value: Boolean)
 

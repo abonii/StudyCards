@@ -2,10 +2,10 @@ package abm.co.navigation.navhost.auth
 
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.feature.welcomelogin.WelcomeLoginPage
-import abm.co.navigation.graph.root.Graph
+import abm.co.navigation.navhost.root.Graph
 import abm.co.navigation.extension.navigate
-import abm.co.navigation.graph.auth.AuthDestinations
-import abm.co.navigation.graph.userattributes.ChooseUserAttributesDestination
+import abm.co.navigation.navhost.auth.graph.AuthDestinations
+import abm.co.navigation.navhost.userattributes.ChooseUserAttributesDestination
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController

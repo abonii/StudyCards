@@ -26,6 +26,22 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter
+                android:autoVerify="true"
+                tools:targetApi="m">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:scheme="stydycards" android:host="mobile" />
+
+                <data android:host="studycards.app" />
+                <data android:host="studycards.org" />
+                <data android:host="join.studycards.app" />
+            </intent-filter>
         </activity>
     </application>
 </manifest>

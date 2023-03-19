@@ -2,7 +2,7 @@ package abm.co.navigation.navhost.profile
 
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.feature.profile.ProfilePage
-import abm.co.navigation.graph.profile.ProfileDestinations
+import abm.co.navigation.navhost.profile.graph.ProfileDestinations
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
