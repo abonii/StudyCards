@@ -6,7 +6,7 @@ import abm.co.designsystem.component.modifier.scalableClick
 import abm.co.designsystem.component.text.pluralString
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
-import abm.co.feature.card.model.SetOfCardsUI
+import abm.co.feature.card.model.CategoryUI
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,8 +34,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SetOfCardsItem(
-    setOfCards: SetOfCardsUI,
+fun CategoryItem(
+    category: CategoryUI,
     onClick: () -> Unit,
     onClickBookmark: () -> Unit,
     onClickPlay: () -> Unit,
@@ -60,7 +60,7 @@ fun SetOfCardsItem(
                 .padding(top = 12.dp, bottom = 12.dp)
         ) {
             BookmarkIcon(
-                isBookmarked = setOfCards.isBookmarked,
+                isBookmarked = category.isBookmarked,
                 onClick = onClickBookmark
             )
             Column(
@@ -68,12 +68,12 @@ fun SetOfCardsItem(
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
-                    text = setOfCards.name,
+                    text = category.name,
                     color = StudyCardsTheme.colors.textPrimary,
                     style = StudyCardsTheme.typography.weight500Size16LineHeight20
                 )
                 Text(
-                    text = pluralString(id = R.plurals.words, count = setOfCards.cardsCount),
+                    text = pluralString(id = R.plurals.words, count = category.cardsCount),
                     color = StudyCardsTheme.colors.textSecondary,
                     style = StudyCardsTheme.typography.weight400Size16LineHeight20
                 )

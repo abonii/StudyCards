@@ -3,7 +3,7 @@ package abm.co.studycards.ui
 import abm.co.domain.base.onSuccess
 import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
-import abm.co.navigation.navhost.card.graph.NewCardOrSetDestinations
+import abm.co.navigation.navhost.card.graph.NewCardOrCategoryDestinations
 import abm.co.navigation.navhost.root.Graph
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,13 +37,13 @@ class MainViewModel @Inject constructor(
 
     private fun listenIsUserHasCategories() {
         viewModelScope.launch {
-            serverRepository.getSetsOfCards().collectLatest { either ->
-                either.onSuccess { setOfCards ->
+            serverRepository.getCategories().collectLatest { either ->
+                either.onSuccess { category ->
                     mutableState.update {
                         it.copy(
-                            startDestinationOfNewCardOrSet = if (setOfCards.isNotEmpty()) {
-                                NewCardOrSetDestinations.Card
-                            } else NewCardOrSetDestinations.SetOfCards
+                            startDestinationOfNewCardOrCategory = if (category.isNotEmpty()) {
+                                NewCardOrCategoryDestinations.Card
+                            } else NewCardOrCategoryDestinations.Category
                         )
                     }
                 }
@@ -83,7 +83,7 @@ class MainViewModel @Inject constructor(
 data class MainContractState(
     val startDestination: String? = null,
     val isSplashScreenVisible: Boolean = true,
-    val startDestinationOfNewCardOrSet: NewCardOrSetDestinations = NewCardOrSetDestinations.Card
+    val startDestinationOfNewCardOrCategory: NewCardOrCategoryDestinations = NewCardOrCategoryDestinations.Card
 )
 
 sealed class MainContractEvent {

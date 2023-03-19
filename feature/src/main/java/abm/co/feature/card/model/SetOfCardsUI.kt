@@ -1,13 +1,13 @@
 package abm.co.feature.card.model
 
-import abm.co.domain.model.SetOfCards
+import abm.co.domain.model.Category
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import kotlinx.parcelize.Parcelize
 
 @Immutable
 @Parcelize
-data class SetOfCardsUI(
+data class CategoryUI(
     val name: String,
     val cardsCount: Int,
     val isBookmarked: Boolean,
@@ -17,7 +17,7 @@ data class SetOfCardsUI(
     val id: String
 ) : Parcelable
 
-fun SetOfCards.toUI() = SetOfCardsUI(
+fun Category.toUI() = CategoryUI(
     name = name,
     cardsCount = cardsCount,
     isBookmarked = isBookmarked,

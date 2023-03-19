@@ -2,9 +2,9 @@ package abm.co.data.repository
 
 import abm.co.data.di.ApplicationScope
 import abm.co.data.model.DatabaseRef.CONFIG_REF
-import abm.co.data.model.DatabaseRef.SET_OF_CARDS_REF
+import abm.co.data.model.DatabaseRef.CATEGORY_REF
 import abm.co.data.model.DatabaseRef.USER_PROPERTIES_REF
-import abm.co.data.model.card.SetOfCardsDTO
+import abm.co.data.model.card.CategoryDTO
 import abm.co.data.model.card.toDomain
 import abm.co.data.model.user.UserDTO
 import abm.co.data.model.user.toDomain
@@ -13,7 +13,7 @@ import abm.co.domain.base.Either
 import abm.co.domain.base.Failure
 import abm.co.domain.model.Card
 import abm.co.domain.model.CardItem
-import abm.co.domain.model.SetOfCards
+import abm.co.domain.model.Category
 import abm.co.domain.model.User
 import abm.co.domain.repository.ServerRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.Flow
 @Singleton
 class FirebaseRepositoryImpl @Inject constructor(
     @Named(USER_PROPERTIES_REF) private val userProperties: DatabaseReference,
-    @Named(SET_OF_CARDS_REF) private val setOfCardsRef: DatabaseReference,
+    @Named(CATEGORY_REF) private val categoryRef: DatabaseReference,
     @Named(CONFIG_REF) private var configRef: DatabaseReference,
     @ApplicationScope private val coroutineScope: CoroutineScope,
     private val gson: Gson,
@@ -47,24 +47,24 @@ class FirebaseRepositoryImpl @Inject constructor(
         })
     }
 
-    override suspend fun getSetsOfCards(): Flow<Either<Failure, List<SetOfCards>>> {
-        return setOfCardsRef.asFlow(
+    override suspend fun getCategories(): Flow<Either<Failure, List<Category>>> {
+        return categoryRef.asFlow(
             scope = coroutineScope,
             converter = { snapshot ->
-                val items = ArrayList<SetOfCardsDTO>()
-                snapshot.children.map { setOfCards ->
+                val items = ArrayList<CategoryDTO>()
+                snapshot.children.map { category ->
                     try {
-                        setOfCards.getValue(SetOfCardsDTO::class.java)
+                        category.getValue(CategoryDTO::class.java)
                             ?.let { items.add(it) }
                     } catch (e: DatabaseException) {
-                        PlutoLog.e("getSetsOfCards", e.message, e.cause)
+                        PlutoLog.e("getCategories", e.message, e.cause)
                     }
                 }
                 items.map { it.toDomain() }
             })
     }
 
-    override suspend fun getSetOfCards(id: String): Flow<Either<Failure, CardItem>> {
+    override suspend fun getCategory(id: String): Flow<Either<Failure, CardItem>> {
         TODO("Not yet implemented")
     }
 

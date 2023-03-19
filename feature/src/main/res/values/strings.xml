@@ -91,8 +91,12 @@
     <string name="HomePage.Toolbar.welcome">Welcome</string>
     <string name="HomePage.Toolbar.learningLanguage">Start learn</string>
     <string name="HomePage.Empty.title">Оh, we don\'t have the words to study yet.\nLet\'s add new words to the add button</string>
-    <string name="HomePage.SetOfCards.title">Latest set of cards</string>
-    <string name="HomePage.SetOfCards.showAll">Show all</string>
+    <string name="HomePage.Category.title">Latest set of cards</string>
+    <string name="HomePage.Category.showAll">Show all</string>
+
+    <string name="Category.Toolbar.title">Categories</string>
+    <string name="Category.Input.title">Category name</string>
+    <string name="Category.Input.hint">Enter a category name</string>
 
     <plurals name="words">
         <item quantity="one"> %d word</item>

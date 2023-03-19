@@ -1,6 +1,6 @@
 package abm.co.domain.model
 
-data class SetOfCards(
+data class Category(
     val name: String,
     val cardsCount: Int,
     val isBookmarked: Boolean,

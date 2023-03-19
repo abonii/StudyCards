@@ -7,7 +7,7 @@ import abm.co.designsystem.message.common.toMessageContent
 import abm.co.designsystem.message.snackbar.MessageSnackbar
 import abm.co.designsystem.message.snackbar.showSnackbarWithContent
 import abm.co.designsystem.theme.StudyCardsTheme
-import abm.co.navigation.navhost.card.graph.LocalNewCardOrSetStartDestination
+import abm.co.navigation.navhost.card.graph.LocalNewCardOrCategoryStartDestination
 import abm.co.navigation.navhost.root.RootNavHost
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                 val state by viewModel.state.collectAsState()
                 state.startDestination?.let {
                     CompositionLocalProvider(
-                        LocalNewCardOrSetStartDestination provides state.startDestinationOfNewCardOrSet
+                        LocalNewCardOrCategoryStartDestination provides state.startDestinationOfNewCardOrCategory
                     ) {
                         RootNavHost(
                             startDestination = it,

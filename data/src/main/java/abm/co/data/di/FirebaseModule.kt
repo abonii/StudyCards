@@ -2,11 +2,10 @@ package abm.co.data.di
 
 import abm.co.data.model.DatabaseRef.CONFIG_REF
 import abm.co.data.model.DatabaseRef.ROOT_REF
-import abm.co.data.model.DatabaseRef.SET_OF_CARDS_REF
+import abm.co.data.model.DatabaseRef.CATEGORY_REF
 import abm.co.data.model.DatabaseRef.USER_ID
 import abm.co.data.model.DatabaseRef.USER_PROPERTIES_REF
 import abm.co.data.model.DatabaseRef.USER_REF
-import abm.co.domain.prefs.Prefs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -47,14 +46,14 @@ object FirebaseModule {
         DatabaseReference = root.child(CONFIG_REF)
 
     @Provides
-    @Named(SET_OF_CARDS_REF)
+    @Named(CATEGORY_REF)
     fun provideRealtimeDatabaseCategories(
         @Named(ROOT_REF) root: DatabaseReference,
         @Named(USER_ID) userId: String,
 //        prefs: Prefs
     ): DatabaseReference {
         return root.child(USER_REF).child(userId)
-            .child(SET_OF_CARDS_REF)
+            .child(CATEGORY_REF)
 //            .child(prefs.getNativeLanguage()?.code ?: "en")
 //            .child(prefs.getLearningLanguage()?.code ?: "en")
             .apply {

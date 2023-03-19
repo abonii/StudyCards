@@ -10,8 +10,8 @@ import abm.co.designsystem.flow.collectInLaunchedEffect
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
-import abm.co.feature.card.component.SetOfCardsItem
-import abm.co.feature.card.model.SetOfCardsUI
+import abm.co.feature.card.component.CategoryItem
+import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.home.component.HomeCollapsingToolbar
 import abm.co.feature.toolbar.ToolbarState
 import abm.co.feature.toolbar.scrollflags.ExitUntilCollapsedState
@@ -66,9 +66,9 @@ private val MaxToolbarHeight = 174.dp
 fun HomePage(
     openDrawer: () -> Unit,
     onNavigateToLanguageSelectPage: () -> Unit,
-    navigateToAllSetOfCards: () -> Unit,
-    navigateToSetOfCardsGame: () -> Unit,
-    navigateToSetOfCards: () -> Unit,
+    navigateToAllCategory: () -> Unit,
+    navigateToCategoryGame: () -> Unit,
+    navigateToCategory: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -79,10 +79,10 @@ fun HomePage(
         when (it) {
             HomeContractChannel.NavigateToLanguageSelectPage -> onNavigateToLanguageSelectPage()
             HomeContractChannel.OpenDrawer -> openDrawer()
-            HomeContractChannel.NavigateToAllSetOfCards -> navigateToAllSetOfCards()
+            HomeContractChannel.NavigateToAllCategory -> navigateToAllCategory()
             is HomeContractChannel.ShowMessage -> showMessage(it.messageContent)
-            is HomeContractChannel.NavigateToSetOfCardsGame -> navigateToSetOfCardsGame()
-            is HomeContractChannel.NavigateToSetOfCards -> navigateToSetOfCards()
+            is HomeContractChannel.NavigateToCategoryGame -> navigateToCategoryGame()
+            is HomeContractChannel.NavigateToCategory -> navigateToCategory()
         }
     }
     val screenState by viewModel.screenState.collectAsState()
@@ -123,17 +123,17 @@ private fun HomeScreen(
                             .verticalScroll(scrollState)
                             .fillMaxSize(),
                         screenState = state,
-                        onClickPlaySetOfCards = {
-                            event(HomeContractEvent.OnClickPlaySetOfCards(it))
+                        onClickPlayCategory = {
+                            event(HomeContractEvent.OnClickPlayCategory(it))
                         },
-                        onClickSetOfCards = {
-                            event(HomeContractEvent.OnClickSetOfCards(it))
+                        onClickCategory = {
+                            event(HomeContractEvent.OnClickCategory(it))
                         },
-                        onClickShowAllSetOfCards = {
-                            event(HomeContractEvent.OnClickShowAllSetOfCards)
+                        onClickShowAllCategory = {
+                            event(HomeContractEvent.OnClickShowAllCategory)
                         },
                         onClickBookmark = {
-                            event(HomeContractEvent.OnClickBookmarkSetOfCards(it))
+                            event(HomeContractEvent.OnClickBookmarkCategory(it))
                         }
                     )
                 }
@@ -165,10 +165,10 @@ private fun HomeScreen(
 @Composable
 private fun SuccessScreen(
     screenState: HomeContract.ScreenState.Success,
-    onClickShowAllSetOfCards: () -> Unit,
-    onClickSetOfCards: (SetOfCardsUI) -> Unit,
-    onClickBookmark: (SetOfCardsUI) -> Unit,
-    onClickPlaySetOfCards: (SetOfCardsUI) -> Unit,
+    onClickShowAllCategory: () -> Unit,
+    onClickCategory: (CategoryUI) -> Unit,
+    onClickBookmark: (CategoryUI) -> Unit,
+    onClickPlayCategory: (CategoryUI) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -177,8 +177,8 @@ private fun SuccessScreen(
             .statusBarsPadding()
     ) {
         ItemTitle(
-            title = stringResource(id = R.string.HomePage_SetOfCards_title),
-            onClickShowAll = onClickShowAllSetOfCards
+            title = stringResource(id = R.string.HomePage_Category_title),
+            onClickShowAll = onClickShowAllCategory
         )
         Spacer(modifier = Modifier.height(10.dp))
         Column(
@@ -187,12 +187,12 @@ private fun SuccessScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(11.dp)
         ) {
-            screenState.setsOfCards.forEach { setOfCards ->
-                SetOfCardsItem(
-                    setOfCards = setOfCards,
-                    onClick = { onClickSetOfCards(setOfCards) },
-                    onClickBookmark = { onClickBookmark(setOfCards) },
-                    onClickPlay = { onClickPlaySetOfCards(setOfCards) },
+            screenState.setsOfCards.forEach { category ->
+                CategoryItem(
+                    category = category,
+                    onClick = { onClickCategory(category) },
+                    onClickBookmark = { onClickBookmark(category) },
+                    onClickPlay = { onClickPlayCategory(category) },
                 )
             }
         }
@@ -221,7 +221,7 @@ private fun ItemTitle(
         onClickShowAll?.let {
             TextButton(
                 modifier = Modifier.padding(end = 16.dp),
-                title = stringResource(id = R.string.HomePage_SetOfCards_showAll),
+                title = stringResource(id = R.string.HomePage_Category_showAll),
                 textStyle = StudyCardsTheme.typography.weight600Size14LineHeight20,
                 normalContentColor = StudyCardsTheme.colors.buttonPrimary,
                 onClick = it

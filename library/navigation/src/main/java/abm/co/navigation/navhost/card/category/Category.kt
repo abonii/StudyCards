@@ -1,4 +1,4 @@
-package abm.co.navigation.navhost.card.setofcards
+package abm.co.navigation.navhost.card.category
 
 import abm.co.designsystem.message.common.MessageContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -10,12 +10,12 @@ import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
-fun NavGraphBuilder.setOfCards(
+fun NavGraphBuilder.category(
     navController: NavController,
     showMessage: suspend (MessageContent) -> Unit
 ) {
     composable(
-        route = "Destinations.SetOfCards.route",
+        route = "Destinations.Category.route",
         enterTransition = {
             fadeIn(animationSpec = tween(durationMillis = 500))
         },

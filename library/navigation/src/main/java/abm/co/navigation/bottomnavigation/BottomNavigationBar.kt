@@ -2,7 +2,7 @@ package abm.co.navigation.bottomnavigation
 
 import abm.co.designsystem.component.composition.NoRippleTheme
 import abm.co.designsystem.theme.StudyCardsTheme
-import abm.co.navigation.navhost.card.graph.LocalNewCardOrSetStartDestination
+import abm.co.navigation.navhost.card.graph.LocalNewCardOrCategoryStartDestination
 import abm.co.navigation.navhost.root.Graph
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
@@ -23,7 +23,7 @@ fun BottomNavigationBar(
     modifier: Modifier = Modifier
 ) {
     CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
-        val startDestinationNewCardOrSet = LocalNewCardOrSetStartDestination.current
+        val startDestinationNewCardOrSet = LocalNewCardOrCategoryStartDestination.current
         LaunchedEffect(startDestinationNewCardOrSet) {
             println("startDestinationNewCardOrSet: $startDestinationNewCardOrSet")
         }

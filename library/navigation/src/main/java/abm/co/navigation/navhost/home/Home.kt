@@ -25,9 +25,9 @@ fun NavGraphBuilder.home(
                 mainController.navigate(Graph.PROFILE)
             },
             openDrawer = openDrawer,
-            navigateToAllSetOfCards = {},
-            navigateToSetOfCards = {},
-            navigateToSetOfCardsGame = {}
+            navigateToAllCategory = {},
+            navigateToCategory = {},
+            navigateToCategoryGame = {}
         )
     }
 }

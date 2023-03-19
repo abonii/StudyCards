@@ -7,7 +7,7 @@ import abm.co.domain.base.onFailure
 import abm.co.domain.base.onSuccess
 import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
-import abm.co.feature.card.model.SetOfCardsUI
+import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.card.model.toUI
 import abm.co.feature.userattributes.lanugage.LanguageUI
 import abm.co.feature.userattributes.lanugage.toUI
@@ -45,7 +45,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         fetchUser()
-        fetchSetsOfCards()
+        fetchCategories()
     }
 
     private fun fetchUser() {
@@ -66,9 +66,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun fetchSetsOfCards() {
+    private fun fetchCategories() {
         viewModelScope.launch {
-            repository.getSetsOfCards().collectLatest { setsOfCardsEither ->
+            repository.getCategories().collectLatest { setsOfCardsEither ->
                 setsOfCardsEither.onFailure {
                     it.sendException()
                 }.onSuccess { setsOfCards ->
@@ -88,22 +88,22 @@ class HomeViewModel @Inject constructor(
         when (event) {
             HomeContractEvent.OnClickDrawer -> openDrawer()
             HomeContractEvent.OnClickToolbarLanguage -> onClickToolbarLanguage()
-            HomeContractEvent.OnClickShowAllSetOfCards -> {
+            HomeContractEvent.OnClickShowAllCategory -> {
                 viewModelScope.launch {
-                    _channel.send(HomeContractChannel.NavigateToAllSetOfCards)
+                    _channel.send(HomeContractChannel.NavigateToAllCategory)
                 }
             }
-            is HomeContractEvent.OnClickPlaySetOfCards -> {
+            is HomeContractEvent.OnClickPlayCategory -> {
                 viewModelScope.launch {
-                    _channel.send(HomeContractChannel.NavigateToSetOfCardsGame(event.value))
+                    _channel.send(HomeContractChannel.NavigateToCategoryGame(event.value))
                 }
             }
-            is HomeContractEvent.OnClickSetOfCards -> {
+            is HomeContractEvent.OnClickCategory -> {
                 viewModelScope.launch {
-                    _channel.send(HomeContractChannel.NavigateToSetOfCards(event.value))
+                    _channel.send(HomeContractChannel.NavigateToCategory(event.value))
                 }
             }
-            is HomeContractEvent.OnClickBookmarkSetOfCards -> {
+            is HomeContractEvent.OnClickBookmarkCategory -> {
                 mutableScreenState.update { state ->
                     (state as? HomeContract.ScreenState.Success)?.let {
                         state.copy(
@@ -155,7 +155,7 @@ sealed interface HomeContract {
 
         @Immutable
         data class Success(
-            val setsOfCards: List<SetOfCardsUI>
+            val setsOfCards: List<CategoryUI>
         ) : ScreenState
     }
 }
@@ -163,17 +163,17 @@ sealed interface HomeContract {
 sealed interface HomeContractEvent {
     object OnClickDrawer : HomeContractEvent
     object OnClickToolbarLanguage : HomeContractEvent
-    object OnClickShowAllSetOfCards : HomeContractEvent
-    data class OnClickPlaySetOfCards(val value: SetOfCardsUI) : HomeContractEvent
-    data class OnClickBookmarkSetOfCards(val value: SetOfCardsUI) : HomeContractEvent
-    data class OnClickSetOfCards(val value: SetOfCardsUI) : HomeContractEvent
+    object OnClickShowAllCategory : HomeContractEvent
+    data class OnClickPlayCategory(val value: CategoryUI) : HomeContractEvent
+    data class OnClickBookmarkCategory(val value: CategoryUI) : HomeContractEvent
+    data class OnClickCategory(val value: CategoryUI) : HomeContractEvent
 }
 
 sealed interface HomeContractChannel {
     object OpenDrawer : HomeContractChannel
     object NavigateToLanguageSelectPage : HomeContractChannel
-    object NavigateToAllSetOfCards : HomeContractChannel
-    data class NavigateToSetOfCardsGame(val value: SetOfCardsUI) : HomeContractChannel
-    data class NavigateToSetOfCards(val value: SetOfCardsUI) : HomeContractChannel
+    object NavigateToAllCategory : HomeContractChannel
+    data class NavigateToCategoryGame(val value: CategoryUI) : HomeContractChannel
+    data class NavigateToCategory(val value: CategoryUI) : HomeContractChannel
     data class ShowMessage(val messageContent: MessageContent) : HomeContractChannel
 }

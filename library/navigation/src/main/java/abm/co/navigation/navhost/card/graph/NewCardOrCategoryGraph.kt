@@ -2,7 +2,7 @@ package abm.co.navigation.navhost.card.graph
 
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.navigation.navhost.card.edit.editCard
-import abm.co.navigation.navhost.card.edit.editSetOfCards
+import abm.co.navigation.navhost.card.edit.editCategory
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -12,7 +12,7 @@ fun NavGraphBuilder.newCardOrSetGraph(
     navController: NavController,
     route: String,
     showMessage: suspend (MessageContent) -> Unit,
-    startDestination: String = NewCardOrSetDestinations.Card.route
+    startDestination: String = NewCardOrCategoryDestinations.Card.route
 ) {
     navigation(
         route = route,
@@ -22,25 +22,25 @@ fun NavGraphBuilder.newCardOrSetGraph(
             navController = navController,
             showMessage = showMessage
         )
-        editSetOfCards(
+        editCategory(
             navController = navController,
             showMessage = showMessage
         )
     }
 }
 
-sealed class NewCardOrSetDestinations(val route: String, val deepLink: String? = null) {
-    object Card : NewCardOrSetDestinations(
+sealed class NewCardOrCategoryDestinations(val route: String, val deepLink: String? = null) {
+    object Card : NewCardOrCategoryDestinations(
         route = "edit_card",
         deepLink = "studycards://mobile/new_card"
     )
 
-    object SetOfCards : NewCardOrSetDestinations(
+    object Category : NewCardOrCategoryDestinations(
         route = "edit_set_of_cards",
         deepLink = "studycards://mobile/new_set_of_cards"
     )
 }
 
-val LocalNewCardOrSetStartDestination = staticCompositionLocalOf<NewCardOrSetDestinations> {
-    NewCardOrSetDestinations.Card
+val LocalNewCardOrCategoryStartDestination = staticCompositionLocalOf<NewCardOrCategoryDestinations> {
+    NewCardOrCategoryDestinations.Card
 }

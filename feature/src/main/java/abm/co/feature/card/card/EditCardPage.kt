@@ -26,7 +26,7 @@ fun EditCardPage(
     val state by viewModel.state.collectAsState()
 
     SetStatusBarColor()
-    SetOfCardsScreen(
+    CategoryScreen(
         state = state,
         event = viewModel::event
     )
@@ -34,7 +34,7 @@ fun EditCardPage(
 
 
 @Composable
-private fun SetOfCardsScreen(
+private fun CategoryScreen(
     state: EditCardContractState,
     event: (EditCardContractEvent) -> Unit
 ) {

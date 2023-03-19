@@ -2,7 +2,7 @@ package abm.co.navigation.navhost.card.edit
 
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.feature.card.card.EditCardPage
-import abm.co.navigation.navhost.card.graph.NewCardOrSetDestinations
+import abm.co.navigation.navhost.card.graph.NewCardOrCategoryDestinations
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -13,8 +13,8 @@ fun NavGraphBuilder.editCard(
     showMessage: suspend (MessageContent) -> Unit
 ) {
     composable(
-        route = NewCardOrSetDestinations.Card.route,
-        deepLinks = NewCardOrSetDestinations.Card.deepLink?.let {
+        route = NewCardOrCategoryDestinations.Card.route,
+        deepLinks = NewCardOrCategoryDestinations.Card.deepLink?.let {
             listOf(navDeepLink { uriPattern = it })
         } ?: emptyList()
     ) {

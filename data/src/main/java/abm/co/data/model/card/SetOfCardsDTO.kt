@@ -1,10 +1,10 @@
 package abm.co.data.model.card
 
-import abm.co.domain.model.SetOfCards
+import abm.co.domain.model.Category
 import androidx.annotation.Keep
 
 @Keep
-data class SetOfCardsDTO(
+data class CategoryDTO(
     val name: String,
     val cardsCount: Int,
     val isBookmarked: Boolean,
@@ -14,7 +14,7 @@ data class SetOfCardsDTO(
     val id: String
 )
 
-fun SetOfCardsDTO.toDomain() = SetOfCards(
+fun CategoryDTO.toDomain() = Category(
     name = name,
     cardsCount = cardsCount,
     isBookmarked = isBookmarked,
