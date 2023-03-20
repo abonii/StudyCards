@@ -5,11 +5,14 @@ import abm.co.designsystem.message.common.toMessageContent
 import abm.co.domain.base.Failure
 import abm.co.domain.base.onFailure
 import abm.co.domain.base.onSuccess
+import abm.co.domain.model.Language
 import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
 import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.card.model.toUI
 import abm.co.feature.userattributes.lanugage.LanguageUI
+import abm.co.feature.userattributes.lanugage.defaultLanguages
+import abm.co.feature.userattributes.lanugage.toDomain
 import abm.co.feature.userattributes.lanugage.toUI
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -17,7 +20,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.random.Random
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -50,7 +55,7 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchUser() {
         viewModelScope.launch {
-            repository.getUser().collectLatest { userEither ->
+            repository.getUser.collectLatest { userEither ->
                 userEither.onFailure {
                     it.sendException()
                 }.onSuccess { user ->
@@ -68,7 +73,7 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchCategories() {
         viewModelScope.launch {
-            repository.getCategories().collectLatest { setsOfCardsEither ->
+            repository.getCategories.collectLatest { setsOfCardsEither ->
                 setsOfCardsEither.onFailure {
                     it.sendException()
                 }.onSuccess { setsOfCards ->

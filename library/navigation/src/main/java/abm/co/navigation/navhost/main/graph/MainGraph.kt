@@ -3,7 +3,7 @@ package abm.co.navigation.navhost.main.graph
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.navigation.navhost.card.graph.MainCardGraph
-import abm.co.navigation.navhost.card.graph.newCardOrSetGraph
+import abm.co.navigation.navhost.card.graph.NewCardOrSetGraph
 import abm.co.navigation.navhost.game.graph.GameGraph
 import abm.co.navigation.navhost.home.graph.HomeGraph
 import abm.co.navigation.navhost.profile.graph.ProfileGraph
@@ -42,11 +42,14 @@ fun MainGraph(
                 showMessage = showMessage
             )
         }
-        newCardOrSetGraph(
-            route = Graph.NEW_CARD_OR_SET_GRAPH,
-            navController = navController,
-            showMessage = showMessage
-        )
+        composable(
+            Graph.NEW_CARD_OR_CATEGORY_GRAPH
+        ) {
+            NewCardOrSetGraph(
+                route = Graph.NEW_CARD_OR_CATEGORY_GRAPH,
+                showMessage = showMessage
+            )
+        }
         composable(Graph.GAME) {
             GameGraph(
                 route = Graph.GAME,

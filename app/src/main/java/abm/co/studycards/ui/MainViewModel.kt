@@ -1,6 +1,7 @@
 package abm.co.studycards.ui
 
 import abm.co.domain.base.onSuccess
+import abm.co.domain.model.Language
 import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
 import abm.co.navigation.navhost.card.graph.NewCardOrCategoryDestinations
@@ -37,7 +38,7 @@ class MainViewModel @Inject constructor(
 
     private fun listenIsUserHasCategories() {
         viewModelScope.launch {
-            serverRepository.getCategories().collectLatest { either ->
+            serverRepository.getCategories.collectLatest { either ->
                 either.onSuccess { category ->
                     mutableState.update {
                         it.copy(

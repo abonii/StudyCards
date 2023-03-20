@@ -79,5 +79,5 @@ object Graph {
     const val PROFILE = "profile_graph"
     const val COLLECTION_OF_SET = "collection_of_set_graph"
     const val USER_ATTRIBUTES = "user_attributes_graph"
-    const val NEW_CARD_OR_SET_GRAPH = "new_card_or_set_graph"
+    const val NEW_CARD_OR_CATEGORY_GRAPH = "new_card_or_set_graph"
 }

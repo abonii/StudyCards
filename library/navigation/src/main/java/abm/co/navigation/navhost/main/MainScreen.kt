@@ -10,10 +10,7 @@ import abm.co.navigation.bottomnavigation.BottomNavigationItem
 import abm.co.navigation.navhost.main.graph.MainGraph
 import abm.co.navigation.navhost.root.Graph
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,7 +37,7 @@ fun MainScreen(
     val backStackEntry = navController.currentBackStackEntryAsState()
     val currentScreenRoute = backStackEntry.value?.destination?.route
     val bottomNavVisible = remember(items, currentScreenRoute) {
-        items.any { currentScreenRoute == it.route && currentScreenRoute != Graph.NEW_CARD_OR_SET_GRAPH }
+        items.any { currentScreenRoute == it.route && currentScreenRoute != Graph.NEW_CARD_OR_CATEGORY_GRAPH }
     }
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
@@ -58,11 +55,10 @@ fun MainScreen(
         bottomBar = {
             AnimatedVisibility(
                 visible = bottomNavVisible,
-                enter = fadeIn() + expandVertically(),
-                exit = shrinkVertically() + fadeOut(),
+                enter = expandVertically(),
+                exit = shrinkVertically()
             ) {
                 BottomNavigationBar(
-                    modifier = Modifier.animateContentSize(),
                     items = items,
                     currentScreenRoute = currentScreenRoute,
                     navController = navController
@@ -101,7 +97,7 @@ private val items = persistentListOf(
     ),
     BottomNavigationItem(
         nameRes = null,
-        route = Graph.NEW_CARD_OR_SET_GRAPH,
+        route = Graph.NEW_CARD_OR_CATEGORY_GRAPH,
         iconRes = R.drawable.ic_new_card
     ),
     BottomNavigationItem(

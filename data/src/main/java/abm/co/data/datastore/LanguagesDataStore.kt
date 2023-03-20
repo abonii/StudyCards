@@ -30,7 +30,7 @@ class LanguagesDataStore @Inject constructor(
 
     fun getNativeLanguage(): Flow<LanguageDTO?> = applicationContext.nativeLanguagesDataStore.data
 
-    fun getLearningLanguage(): Flow<LanguageDTO?> = applicationContext.nativeLanguagesDataStore.data
+    fun getLearningLanguage(): Flow<LanguageDTO?> = applicationContext.learningLanguagesDataStore.data
 
     suspend fun setNativeLanguage(value: LanguageDTO?) {
         applicationContext.nativeLanguagesDataStore.updateData {

@@ -12,10 +12,11 @@ import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-@ActivityRetainedScoped
+@Singleton
 class AuthorizationRepositoryImpl @Inject constructor(
     @Named(ROOT_REF) private var rootDatabase: DatabaseReference,
     private val firebaseAuth: FirebaseAuth

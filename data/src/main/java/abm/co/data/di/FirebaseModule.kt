@@ -1,8 +1,9 @@
 package abm.co.data.di
 
+import abm.co.data.datastore.LanguagesDataStore
+import abm.co.data.model.DatabaseRef.CATEGORY_REF
 import abm.co.data.model.DatabaseRef.CONFIG_REF
 import abm.co.data.model.DatabaseRef.ROOT_REF
-import abm.co.data.model.DatabaseRef.CATEGORY_REF
 import abm.co.data.model.DatabaseRef.USER_ID
 import abm.co.data.model.DatabaseRef.USER_PROPERTIES_REF
 import abm.co.data.model.DatabaseRef.USER_REF
@@ -16,6 +17,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -45,21 +48,27 @@ object FirebaseModule {
     fun provideApiKeys(@Named(ROOT_REF) root: DatabaseReference):
         DatabaseReference = root.child(CONFIG_REF)
 
-    @Provides
-    @Named(CATEGORY_REF)
-    fun provideRealtimeDatabaseCategories(
-        @Named(ROOT_REF) root: DatabaseReference,
-        @Named(USER_ID) userId: String,
-//        prefs: Prefs
-    ): DatabaseReference {
-        return root.child(USER_REF).child(userId)
-            .child(CATEGORY_REF)
-//            .child(prefs.getNativeLanguage()?.code ?: "en")
-//            .child(prefs.getLearningLanguage()?.code ?: "en")
-            .apply {
-                keepSynced(true)
-            }
-    }
+//    @Provides
+//    @Named(CATEGORY_REF)
+//    fun provideRealtimeDatabaseCategories(
+//        @Named(ROOT_REF) root: DatabaseReference,
+//        @Named(USER_ID) userId: String,
+//        languagesDataStore: LanguagesDataStore
+//    ): DatabaseReference {
+//        FirebaseDatabase.getInstance().reference
+//        return combine(
+//            languagesDataStore.getLearningLanguage(),
+//            languagesDataStore.getNativeLanguage()
+//        ) { learning, native ->
+//            val a =root.child(USER_REF).child(userId)
+//                .child(CATEGORY_REF)
+//                .child(native?.code ?: "en")
+//                .child(learning?.code ?: "en")
+//                .apply { keepSynced(true) }
+//            println("a.key: ${a.key}")
+//            return@combine a
+//        }
+//    }
 
     @Named(USER_PROPERTIES_REF)
     @Provides

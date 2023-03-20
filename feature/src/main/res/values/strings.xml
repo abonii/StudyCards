@@ -97,6 +97,7 @@
     <string name="Category.Toolbar.title">Categories</string>
     <string name="Category.Input.title">Category name</string>
     <string name="Category.Input.hint">Enter a category name</string>
+    <string name="Category.Button.title">Continue</string>
 
     <plurals name="words">
         <item quantity="one"> %d word</item>
