@@ -5,31 +5,28 @@ import abm.co.designsystem.message.common.toMessageContent
 import abm.co.domain.base.Failure
 import abm.co.domain.base.onFailure
 import abm.co.domain.base.onSuccess
-import abm.co.domain.model.Language
 import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
 import abm.co.feature.card.model.CategoryUI
+import abm.co.feature.card.model.toDomain
 import abm.co.feature.card.model.toUI
 import abm.co.feature.userattributes.lanugage.LanguageUI
-import abm.co.feature.userattributes.lanugage.defaultLanguages
-import abm.co.feature.userattributes.lanugage.toDomain
 import abm.co.feature.userattributes.lanugage.toUI
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlin.random.Random
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -48,45 +45,42 @@ class HomeViewModel @Inject constructor(
     private val mutableToolbarState = MutableStateFlow(HomeContract.ToolbarState())
     val toolbarState: StateFlow<HomeContract.ToolbarState> = mutableToolbarState.asStateFlow()
 
+    private val categoryList = mutableStateListOf<CategoryUI>()
+
     init {
         fetchUser()
         fetchCategories()
     }
 
     private fun fetchUser() {
-        viewModelScope.launch {
-            repository.getUser.collectLatest { userEither ->
-                userEither.onFailure {
-                    it.sendException()
-                }.onSuccess { user ->
-                    if (user != null) {
-                        mutableToolbarState.value = HomeContract.ToolbarState(
-                            userName = user.name ?: user.email,
-                            learningLanguage = languagesRepository.getLearningLanguage()
-                                .firstOrNull()?.toUI()
-                        )
-                    }
-                }
+        repository.getUser.combine(languagesRepository.getLearningLanguage()) { userEither, learningLang ->
+            userEither.onFailure {
+                it.sendException()
+            }.onSuccess { user ->
+                mutableToolbarState.value = HomeContract.ToolbarState(
+                    userName = user?.name ?: user?.email,
+                    learningLanguage = learningLang?.toUI()
+                )
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
     private fun fetchCategories() {
-        viewModelScope.launch {
-            repository.getCategories.collectLatest { setsOfCardsEither ->
-                setsOfCardsEither.onFailure {
-                    it.sendException()
-                }.onSuccess { setsOfCards ->
-                    if (setsOfCards.isEmpty()) {
-                        mutableScreenState.value = HomeContract.ScreenState.Empty
-                    } else {
-                        mutableScreenState.value = HomeContract.ScreenState.Success(
-                            setsOfCards = setsOfCards.map { it.toUI() }
-                        )
-                    }
+        repository.getCategories.map { setsOfCardsEither ->
+            setsOfCardsEither.onFailure {
+                it.sendException()
+            }.onSuccess { setsOfCards ->
+                categoryList.clear()
+                categoryList.addAll(setsOfCards.map { it.toUI() })
+                if (setsOfCards.isEmpty()) {
+                    mutableScreenState.value = HomeContract.ScreenState.Empty
+                } else {
+                    mutableScreenState.value = HomeContract.ScreenState.Success(
+                        setsOfCards = categoryList
+                    )
                 }
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
     fun event(event: HomeContractEvent) {
@@ -109,18 +103,14 @@ class HomeViewModel @Inject constructor(
                 }
             }
             is HomeContractEvent.OnClickBookmarkCategory -> {
-                mutableScreenState.update { state ->
-                    (state as? HomeContract.ScreenState.Success)?.let {
-                        state.copy(
-                            setsOfCards = state.setsOfCards.map {
-                                if (it.id == event.value.id) it.copy(
-                                    isBookmarked = !event.value.isBookmarked
-                                ) else it
-                            }
-                        )
-                    } ?: state
-                }
+                updateCategory(event.value.copy(bookmarked = !event.value.bookmarked))
             }
+        }
+    }
+
+    private fun updateCategory(category: CategoryUI) {
+        viewModelScope.launch {
+            repository.updateCategory(category.toDomain())
         }
     }
 

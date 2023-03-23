@@ -4,15 +4,16 @@ import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.disabledRippleClickable
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -50,6 +51,7 @@ private val CollapsedIconHeight = 30.dp
 fun HomeCollapsingToolbar(
     welcomeText: String,
     learningLanguageText: String,
+    @DrawableRes learningLanguageRes: Int?,
     toolbarTitle: String,
     progress: Float,
     onClickDrawerIcon: () -> Unit,
@@ -131,22 +133,28 @@ fun HomeCollapsingToolbar(
                     )
                 }
                 val circleBorderColor = StudyCardsTheme.colors.primary
-                Image(
-                    painter = painterResource(id = R.drawable.flag_china),
-                    contentDescription = null,
+                learningLanguageRes?.let {
+                    Image(
+                        painter = painterResource(id = learningLanguageRes),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(start = drawerEndPadding)
+                            .size(iconHeight)
+                            .disabledRippleClickable(onClick = onClickLearningLanguageIcon)
+                            .drawBehind {
+                                val iconWidthPx = iconWidth.toPx()
+                                drawCircle(
+                                    color = circleBorderColor,
+                                    center = Offset(size.width / 2f, size.height / 2f),
+                                    radius = size.width / 2f - iconWidthPx + iconWidthPx,
+                                    style = Stroke(width = iconWidthPx)
+                                )
+                            }
+                    )
+                } ?: Spacer(
                     modifier = Modifier
                         .padding(start = drawerEndPadding)
                         .size(iconHeight)
-                        .disabledRippleClickable(onClick = onClickLearningLanguageIcon)
-                        .drawBehind {
-                            val iconWidthPx = iconWidth.toPx()
-                            drawCircle(
-                                color = circleBorderColor,
-                                center = Offset(size.width / 2f, size.height / 2f),
-                                radius = size.width / 2f - iconWidthPx + iconWidthPx,
-                                style = Stroke(width = iconWidthPx)
-                            )
-                        }
                 )
             }
         }

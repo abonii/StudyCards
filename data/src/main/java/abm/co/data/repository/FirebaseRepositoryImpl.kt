@@ -41,7 +41,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.launch
 
 @Singleton
 class FirebaseRepositoryImpl @Inject constructor(
@@ -50,7 +49,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     @ApplicationScope private val coroutineScope: CoroutineScope,
     @Named(ROOT_REF) private val root: DatabaseReference,
     @Named(USER_ID) private val userId: String,
-    private val languagesDataStore: LanguagesDataStore,
+    languagesDataStore: LanguagesDataStore,
     private val gson: Gson
 ) : ServerRepository {
 
@@ -63,6 +62,9 @@ class FirebaseRepositoryImpl @Inject constructor(
             .child(CATEGORY_REF)
             .child(native?.code ?: "en")
             .child(learning?.code ?: "en")
+            .apply {
+                keepSynced(true)
+            }
     }.distinctUntilChanged()
 
     override val getUser = userPropertiesReference.asFlow(
@@ -75,8 +77,8 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     )
 
-    var previousListener: Pair<DatabaseReference, ValueEventListener>? = null
     override val getCategories: Flow<Either<Failure, List<Category>>> = callbackFlow {
+        var previousListener: Pair<DatabaseReference, ValueEventListener>? = null
         categoryWithLanguagesRef.collectLatest { reference ->
             val listener = reference.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -89,7 +91,9 @@ class FirebaseRepositoryImpl @Inject constructor(
                                 PlutoLog.e("getCategories", e.message, e.cause)
                             }
                         }
-                        trySend(Either.Right(items.map { it.toDomain() })).isSuccess
+                        trySend(
+                            Either.Right(items.sortedBy { it.bookmarked }.map { it.toDomain() })
+                        ).isSuccess
                     } catch (e: Exception) {
                         trySend(Either.Left(e.firebaseError().mapToFailure())).isSuccess
                     }
@@ -124,11 +128,17 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun createCard(card: Card): Either<Failure, Unit> {
-        TODO("Not yet implemented")
+    override suspend fun updateCategory(category: Category): Either<Failure, Unit> {
+        return safeCall {
+            categoryWithLanguagesRef.firstOrNull()?.updateChildren(
+                mapOf(
+                    category.id to category.toDTO()
+                )
+            )
+        }
     }
 
-    override suspend fun updateCategory(category: Category): Either<Failure, Unit> {
+    override suspend fun createCard(card: Card): Either<Failure, Unit> {
         TODO("Not yet implemented")
     }
 

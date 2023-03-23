@@ -86,7 +86,7 @@
     <string name="ChooseUserAttributesPage.UserInterests.continue">Continue</string>
 
     <string name="HomePage.Toolbar.title">Home</string>
-    <string name="HomePage.Toolbar.lanugage">Language</string>
+    <string name="HomePage.Toolbar.language">Language</string>
     <string name="HomePage.Toolbar.guest">Guest</string>
     <string name="HomePage.Toolbar.welcome">Welcome</string>
     <string name="HomePage.Toolbar.learningLanguage">Start learn</string>
@@ -98,6 +98,10 @@
     <string name="Category.Input.title">Category name</string>
     <string name="Category.Input.hint">Enter a category name</string>
     <string name="Category.Button.title">Continue</string>
+
+    <string name="Game.Swipe.unknown">Unknown</string>
+    <string name="Game.Swipe.know">Known</string>
+    <string name="Game.Swipe.uncertain">Uncertain</string>
 
     <plurals name="words">
         <item quantity="one"> %d word</item>

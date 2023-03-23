@@ -7,6 +7,7 @@ import abm.co.domain.base.mapToFailure
 import abm.co.navigation.R
 import abm.co.navigation.bottomnavigation.BottomNavigationBar
 import abm.co.navigation.bottomnavigation.BottomNavigationItem
+import abm.co.navigation.navhost.card.graph.NewCardOrCategoryDestinations
 import abm.co.navigation.navhost.main.graph.MainGraph
 import abm.co.navigation.navhost.root.Graph
 import androidx.compose.animation.AnimatedVisibility
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -31,6 +33,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     startDestination: String,
+    navigateToNewCardOrCategory: State<NewCardOrCategoryDestinations>,
     showMessage: suspend (MessageContent) -> Unit
 ) {
     val navController: NavHostController = rememberNavController()
@@ -44,7 +47,7 @@ fun MainScreen(
     Scaffold(
         scaffoldState = scaffoldState,
         backgroundColor = StudyCardsTheme.colors.backgroundPrimary,
-        drawerGesturesEnabled = true,
+        drawerGesturesEnabled = false,
         drawerShape = RoundedCornerShape(
             topStart = 0.dp,
             bottomStart = 0.dp,
@@ -61,7 +64,8 @@ fun MainScreen(
                 BottomNavigationBar(
                     items = items,
                     currentScreenRoute = currentScreenRoute,
-                    navController = navController
+                    navController = navController,
+                    navigateToNewCardOrCategory = navigateToNewCardOrCategory
                 )
             }
         }

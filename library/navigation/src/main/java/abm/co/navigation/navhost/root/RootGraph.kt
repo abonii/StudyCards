@@ -3,6 +3,7 @@ package abm.co.navigation.navhost.root
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.navigation.navhost.auth.graph.authNavGraph
+import abm.co.navigation.navhost.card.graph.NewCardOrCategoryDestinations
 import abm.co.navigation.navhost.main.MainScreen
 import abm.co.navigation.navhost.userattributes.userAttributesNavGraph
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -11,6 +12,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -26,6 +28,7 @@ private const val FADING_IN_ANIMATION_DURATION = 450
 fun RootNavHost(
     startDestination: String,
     showMessage: suspend (MessageContent) -> Unit,
+    navigateToNewCardOrCategory: State<NewCardOrCategoryDestinations>,
     modifier: Modifier = Modifier,
     navController: NavHostController =  rememberAnimatedNavController()
 ) {
@@ -64,7 +67,8 @@ fun RootNavHost(
         composable(route = Graph.MAIN) {
             MainScreen(
                 startDestination = Graph.HOME,
-                showMessage = showMessage
+                showMessage = showMessage,
+                navigateToNewCardOrCategory = navigateToNewCardOrCategory
             )
         }
     }

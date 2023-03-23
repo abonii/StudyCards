@@ -49,7 +49,7 @@ class EditCategoryViewModel @Inject constructor(
                 Category(
                     name = state.value.categoryName,
                     cardsCount = 0,
-                    isBookmarked = false,
+                    bookmarked = false,
                     creatorName = null,
                     creatorID = null,
                     imageURL = null,

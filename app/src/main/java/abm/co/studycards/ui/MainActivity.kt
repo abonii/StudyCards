@@ -7,7 +7,6 @@ import abm.co.designsystem.message.common.toMessageContent
 import abm.co.designsystem.message.snackbar.MessageSnackbar
 import abm.co.designsystem.message.snackbar.showSnackbarWithContent
 import abm.co.designsystem.theme.StudyCardsTheme
-import abm.co.navigation.navhost.card.graph.LocalNewCardOrCategoryStartDestination
 import abm.co.navigation.navhost.root.RootNavHost
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,7 +14,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.SnackbarHostState
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,25 +50,24 @@ class MainActivity : ComponentActivity() {
                 var showAlertDialog by remember { mutableStateOf<MessageAlertContent?>(null) }
                 val state by viewModel.state.collectAsState()
                 state.startDestination?.let {
-                    CompositionLocalProvider(
-                        LocalNewCardOrCategoryStartDestination provides state.startDestinationOfNewCardOrCategory
-                    ) {
-                        RootNavHost(
-                            startDestination = it,
-                            showMessage = { messageContent ->
-                                when (messageContent) {
-                                    is MessageContent.AlertDialog -> {
-                                        showAlertDialog = messageContent.toMessageContent(this)
-                                    }
-                                    is MessageContent.Snackbar -> {
-                                        snackbarHostState.showSnackbarWithContent(
-                                            messageContent.toMessageContent(this)
-                                        )
-                                    }
+                    val startDestinationOfNewCardOrCategory =
+                        viewModel.startDestinationOfNewCardOrCategory.collectAsState()
+                    RootNavHost(
+                        startDestination = it,
+                        navigateToNewCardOrCategory = startDestinationOfNewCardOrCategory,
+                        showMessage = { messageContent ->
+                            when (messageContent) {
+                                is MessageContent.AlertDialog -> {
+                                    showAlertDialog = messageContent.toMessageContent(this)
+                                }
+                                is MessageContent.Snackbar -> {
+                                    snackbarHostState.showSnackbarWithContent(
+                                        messageContent.toMessageContent(this)
+                                    )
                                 }
                             }
-                        )
-                    }
+                        }
+                    )
                 }
                 MessageAlertDialog(
                     showAlertDialog = showAlertDialog,

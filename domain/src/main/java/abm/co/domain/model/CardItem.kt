@@ -2,7 +2,7 @@ package abm.co.domain.model
 
 data class CardItem(
     val name: String,
-    val learnOrKnown: LearnOrKnown,
+    val kind: CardKind,
     val categoryID: String,
     val learnedPercent: Float, // 0..1
     val nextRepeatTime: Long,

@@ -115,7 +115,7 @@ private fun Toolbar(
                     .disabledRippleClickable(onBack)
                     .padding(10.dp)
                     .size(24.dp),
-                painter = painterResource(id = R.drawable.ic_arrow_left),
+                painter = painterResource(id = R.drawable.ic_left),
                 contentDescription = null
             )
             Text(

@@ -5,7 +5,7 @@ data class Card(
     val translations: String,
     val imageUrl: String,
     val examples: String,
-    val learnOrKnown: LearnOrKnown,
+    val kind: CardKind,
     val categoryID: String,
     val repeatCount: Int,
     val nextRepeatTime: Long,

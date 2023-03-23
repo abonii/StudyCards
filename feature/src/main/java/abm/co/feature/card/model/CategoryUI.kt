@@ -10,19 +10,29 @@ import kotlinx.parcelize.Parcelize
 data class CategoryUI(
     val name: String,
     val cardsCount: Int,
-    val isBookmarked: Boolean,
+    val bookmarked: Boolean,
     val creatorName: String?,
     val creatorID: String?,
-    val imageUrl: String?,
+    val imageURL: String?,
     val id: String
 ) : Parcelable
 
 fun Category.toUI() = CategoryUI(
     name = name,
     cardsCount = cardsCount,
-    isBookmarked = isBookmarked,
+    bookmarked = bookmarked,
     creatorName = creatorName,
     creatorID = creatorID,
-    imageUrl = imageURL,
+    imageURL = imageURL,
+    id = id
+)
+
+fun CategoryUI.toDomain() = Category(
+    name = name,
+    cardsCount = cardsCount,
+    bookmarked = bookmarked,
+    creatorName = creatorName,
+    creatorID = creatorID,
+    imageURL = imageURL,
     id = id
 )

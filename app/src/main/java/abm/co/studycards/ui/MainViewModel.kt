@@ -1,7 +1,6 @@
 package abm.co.studycards.ui
 
 import abm.co.domain.base.onSuccess
-import abm.co.domain.model.Language
 import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
 import abm.co.navigation.navhost.card.graph.NewCardOrCategoryDestinations
@@ -30,6 +29,9 @@ class MainViewModel @Inject constructor(
     private val mutableState = MutableStateFlow(MainContractState())
     val state: StateFlow<MainContractState> = mutableState.asStateFlow()
 
+    private val _startDestinationOfNewCardOrCategory = MutableStateFlow<NewCardOrCategoryDestinations>(NewCardOrCategoryDestinations.Card)
+    val startDestinationOfNewCardOrCategory = _startDestinationOfNewCardOrCategory.asStateFlow()
+
     init {
         fetchStartDestination()
         listenIsUserHasCategories()
@@ -40,13 +42,9 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             serverRepository.getCategories.collectLatest { either ->
                 either.onSuccess { category ->
-                    mutableState.update {
-                        it.copy(
-                            startDestinationOfNewCardOrCategory = if (category.isNotEmpty()) {
-                                NewCardOrCategoryDestinations.Card
-                            } else NewCardOrCategoryDestinations.Category
-                        )
-                    }
+                    _startDestinationOfNewCardOrCategory.value = if (category.isNotEmpty()) {
+                        NewCardOrCategoryDestinations.Card
+                    } else NewCardOrCategoryDestinations.Category
                 }
             }
         }
@@ -83,8 +81,7 @@ class MainViewModel @Inject constructor(
 
 data class MainContractState(
     val startDestination: String? = null,
-    val isSplashScreenVisible: Boolean = true,
-    val startDestinationOfNewCardOrCategory: NewCardOrCategoryDestinations = NewCardOrCategoryDestinations.Card
+    val isSplashScreenVisible: Boolean = true
 )
 
 sealed class MainContractEvent {

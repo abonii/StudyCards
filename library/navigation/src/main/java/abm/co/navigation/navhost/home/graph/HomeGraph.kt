@@ -1,6 +1,8 @@
 package abm.co.navigation.navhost.home.graph
 
 import abm.co.designsystem.message.common.MessageContent
+import abm.co.navigation.navhost.game.graph.GameDestinations
+import abm.co.navigation.navhost.game.swipe.swipeGame
 import abm.co.navigation.navhost.home.home
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
@@ -15,7 +17,7 @@ fun HomeGraph(
     openDrawer: () -> Unit,
     mainController: NavController,
     showMessage: suspend (MessageContent) -> Unit,
-    startDestination: String = HomeDestinations.Home.route
+    startDestination: String = GameDestinations.SwipeGame.route
 ) {
     val navController = rememberAnimatedNavController()
     AnimatedNavHost(
@@ -28,6 +30,10 @@ fun HomeGraph(
             mainController = mainController,
             showMessage = showMessage,
             openDrawer = openDrawer
+        )
+        swipeGame(
+            navController = navController,
+            showMessage = showMessage
         )
     }
 }

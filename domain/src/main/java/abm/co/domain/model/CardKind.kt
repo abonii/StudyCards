@@ -1,6 +1,6 @@
 package abm.co.domain.model
 
-enum class LearnOrKnown {
+enum class CardKind {
     UNDEFINED,
     UNKNOWN,
     UNCERTAIN,

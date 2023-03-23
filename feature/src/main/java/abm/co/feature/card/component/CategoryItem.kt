@@ -21,11 +21,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,7 +57,7 @@ fun CategoryItem(
                 .padding(top = 12.dp, bottom = 12.dp)
         ) {
             BookmarkIcon(
-                isBookmarked = category.isBookmarked,
+                isBookmarked = category.bookmarked,
                 onClick = onClickBookmark
             )
             Column(
@@ -94,25 +91,19 @@ fun CategoryItem(
 }
 
 @Composable
-fun BookmarkIcon(
+private fun BookmarkIcon(
     isBookmarked: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var isFavoriteIndependent by remember(isBookmarked) {
-        mutableStateOf(isBookmarked)
-    }
     Icon(
         modifier = modifier
-            .disabledRippleClickable {
-                isFavoriteIndependent = !isFavoriteIndependent
-                onClick()
-            }
+            .disabledRippleClickable(onClick)
             .padding(start = 12.dp, bottom = 20.dp, end = 20.dp)
             .size(20.dp),
         painter = painterResource(id = R.drawable.ic_bookmark),
         contentDescription = null,
-        tint = if (isFavoriteIndependent) StudyCardsTheme.colors.error
+        tint = if (isBookmarked) StudyCardsTheme.colors.error
         else StudyCardsTheme.colors.blueMiddle
     )
 }

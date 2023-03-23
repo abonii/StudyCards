@@ -1,4 +1,4 @@
-package abm.co.feature.game
+package abm.co.feature.game.main
 
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.systembar.SetStatusBarColor
@@ -13,8 +13,8 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 
 @Composable
-fun GamePage(
-    viewModel: GameViewModel = hiltViewModel(),
+fun MainGamePage(
+    viewModel: MainGameViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
         Firebase.analytics.logEvent(
@@ -33,8 +33,8 @@ fun GamePage(
 
 @Composable
 private fun GameScreen(
-    state: GameContractState,
-    event: (GameContractEvent) -> Unit
+    state: MainGameContractState,
+    event: (MainGameContractEvent) -> Unit
 ) {
     Box(
         modifier = Modifier

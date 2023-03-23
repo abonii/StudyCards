@@ -3,7 +3,7 @@ package abm.co.domain.model
 data class Category(
     val name: String,
     val cardsCount: Int,
-    val isBookmarked: Boolean,
+    val bookmarked: Boolean,
     val creatorName: String?,
     val creatorID: String?,
     val imageURL: String?,

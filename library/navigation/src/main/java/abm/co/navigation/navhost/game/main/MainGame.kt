@@ -1,7 +1,7 @@
-package abm.co.navigation.navhost.game
+package abm.co.navigation.navhost.game.main
 
 import abm.co.designsystem.message.common.MessageContent
-import abm.co.feature.game.GamePage
+import abm.co.feature.game.main.MainGamePage
 import abm.co.navigation.navhost.game.graph.GameDestinations
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -12,12 +12,12 @@ import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
-fun NavGraphBuilder.game(
+fun NavGraphBuilder.mainGame(
     navController: NavController,
     showMessage: suspend (MessageContent) -> Unit
 ) {
     composable(
-        route = GameDestinations.Game.route,
+        route = GameDestinations.MainGame.route,
         enterTransition = {
             fadeIn(animationSpec = tween(durationMillis = 500))
         },
@@ -25,6 +25,6 @@ fun NavGraphBuilder.game(
             fadeOut(animationSpec = tween(durationMillis = 500))
         }
     ) {
-        GamePage()
+        MainGamePage()
     }
 }

@@ -3,31 +3,20 @@ package abm.co.navigation.navhost.card.graph
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.navigation.navhost.card.edit.editCard
 import abm.co.navigation.navhost.card.edit.editCategory
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.navigation
 
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun NewCardOrSetGraph(
+fun NavGraphBuilder.newCardOrSetGraph(
     route: String,
+    navController: NavController,
     showMessage: suspend (MessageContent) -> Unit,
     startDestination: String = NewCardOrCategoryDestinations.Card.route
 ) {
-    val navController = rememberAnimatedNavController()
-    val startDestinationNewCardOrCategory = LocalNewCardOrCategoryStartDestination.current
-    AnimatedNavHost(
+    navigation(
         route = route,
-        navController = navController,
-        startDestination = startDestinationNewCardOrCategory.route,
-        enterTransition = { fadeIn(initialAlpha = 1f) },
-        exitTransition = { fadeOut(targetAlpha = 1f) },
-        popEnterTransition = { fadeIn(initialAlpha = 1f) },
-        popExitTransition = { fadeOut(targetAlpha = 1f) }
+        startDestination = startDestination,
     ) {
         editCard(
             navController = navController,
@@ -40,7 +29,7 @@ fun NewCardOrSetGraph(
     }
 }
 
-sealed class NewCardOrCategoryDestinations(val route: String, val deepLink: String? = null) {
+sealed class NewCardOrCategoryDestinations(val route: String, val deepLink: String) {
     object Card : NewCardOrCategoryDestinations(
         route = "edit_card",
         deepLink = "studycards://mobile/new_card"
@@ -50,12 +39,6 @@ sealed class NewCardOrCategoryDestinations(val route: String, val deepLink: Stri
         route = "edit_category",
         deepLink = "studycards://mobile/new_category"
     )
-
-    companion object {
-        fun getAllDeepLinks(): List<String> {
-            return listOfNotNull(Card.deepLink, Category.deepLink)
-        }
-    }
 }
 
 val LocalNewCardOrCategoryStartDestination =

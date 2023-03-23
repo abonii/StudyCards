@@ -44,6 +44,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -147,8 +148,9 @@ private fun HomeScreen(
             learningLanguageText = stringResource(R.string.HomePage_Toolbar_learningLanguage) + " " +
                 stringResource(
                     toolbarState.learningLanguage?.languageNameResCode
-                        ?: R.string.HomePage_Toolbar_learningLanguage
+                        ?: R.string.HomePage_Toolbar_language
                 ),
+            learningLanguageRes = toolbarState.learningLanguage?.flagFromDrawable,
             welcomeText = stringResource(id = R.string.HomePage_Toolbar_welcome) + ", " +
                 (toolbarState.userName ?: stringResource(id = R.string.HomePage_Toolbar_guest)),
             progress = toolbarScrollable.progress,
@@ -188,12 +190,14 @@ private fun SuccessScreen(
             verticalArrangement = Arrangement.spacedBy(11.dp)
         ) {
             screenState.setsOfCards.forEach { category ->
-                CategoryItem(
-                    category = category,
-                    onClick = { onClickCategory(category) },
-                    onClickBookmark = { onClickBookmark(category) },
-                    onClickPlay = { onClickPlayCategory(category) },
-                )
+                key(category.id) {
+                    CategoryItem(
+                        category = category,
+                        onClick = { onClickCategory(category) },
+                        onClickBookmark = { onClickBookmark(category) },
+                        onClickPlay = { onClickPlayCategory(category) },
+                    )
+                }
             }
         }
     }

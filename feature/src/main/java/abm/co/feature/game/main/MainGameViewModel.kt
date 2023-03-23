@@ -1,4 +1,4 @@
-package abm.co.feature.game
+package abm.co.feature.game.main
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,23 +10,23 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 
 @HiltViewModel
-class GameViewModel @Inject constructor(
+class MainGameViewModel @Inject constructor(
 ) : ViewModel() {
 
     val channel: Flow<Nothing> get() = emptyFlow()
 
-    private val mutableState = MutableStateFlow(GameContractState())
-    val state: StateFlow<GameContractState> = mutableState.asStateFlow()
+    private val mutableState = MutableStateFlow(MainGameContractState())
+    val state: StateFlow<MainGameContractState> = mutableState.asStateFlow()
 
-    fun event(event: GameContractEvent) = when (event) {
+    fun event(event: MainGameContractEvent) = when (event) {
 
         else -> {}
     }
 }
 
-data class GameContractState(
+data class MainGameContractState(
     val showFavoriteList: Boolean = false
 )
 
-sealed interface GameContractEvent {
+sealed interface MainGameContractEvent {
 }
