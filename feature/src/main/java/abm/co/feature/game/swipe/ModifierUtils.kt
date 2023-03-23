@@ -3,15 +3,9 @@ package abm.co.feature.game.swipe
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.LinearGradientShader
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.Shader
-import androidx.compose.ui.graphics.ShaderBrush
-import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Dp
@@ -63,24 +57,6 @@ fun Modifier.drawSwipeSideBehind(
             )
         )
     }
-    if (cardStackController.offsetY.value > 0) {
-        drawPath(
-            path = pathForBottom(cardStackController.offsetY.value),
-            brush = object : ShaderBrush() {
-                override fun createShader(size: Size): Shader {
-                    return LinearGradientShader(
-                        colors = listOf(
-                            Color(0xFF_CFB323).copy(alpha = 0.5f),
-                            Color(0xFF_CFB323).copy(alpha = 0.3f),
-                            Color(0xFF_CFB323).copy(alpha = 0.1f),
-                        ),
-                        from = Offset.Zero,
-                        to = Offset(size.width, size.height)
-                    )
-                }
-            }
-        )
-    }
 }
 
 private fun DrawScope.pathForRight(
@@ -109,18 +85,6 @@ private fun DrawScope.pathForLeft(
     path.lineTo(x = 15.dp.toPx() + offsetX, y = 10.dp.toPx())
     path.lineTo(x = offsetX, y = size.height)
     path.lineTo(0f, y = size.height)
-    path.close()
-    return path
-}
-
-private fun DrawScope.pathForBottom(
-    offsetY: Float
-): Path {
-    val path = Path()
-    path.moveTo(x = 5.dp.toPx(), y = size.height - 5.dp.toPx())
-    path.lineTo(x = 5.dp.toPx(), y = size.height - 5.dp.toPx() + offsetY)
-    path.lineTo(x = size.width - 5.dp.toPx(), y = size.height - 5.dp.toPx() + offsetY)
-    path.lineTo(x = size.width - 5.dp.toPx(), y = size.height - 5.dp.toPx())
     path.close()
     return path
 }

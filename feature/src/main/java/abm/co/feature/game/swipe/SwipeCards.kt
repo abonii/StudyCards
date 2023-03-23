@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlin.math.abs
 
 /**
  * A stack of cards that can be dragged.
@@ -91,15 +92,36 @@ fun SwipeCards(
                         .graphicsLayer(
                             rotationZ = cardStackController.rotation.value,
                         )
-                        .drawSwipeSideBehind(cardStackController)
                         .shadow(
-                            elevation = 5.dp,
                             shape = RoundedCornerShape(12.dp),
-                            ambientColor = Color.Transparent,
-                            spotColor = StudyCardsTheme.colors.opposition.copy(alpha = 0.5f)
+                            elevation = (maxOf(
+                                abs(cardStackController.offsetX.value),
+                                abs(cardStackController.offsetY.value)
+                            ) / 20).coerceIn(1f, 30f).dp,
+                            ambientColor = getShadowColor(cardStackController),
+                            spotColor = getShadowColor(cardStackController)
                         )
                 ) { content(items[0]) }
             }
         }
+    }
+}
+
+@Composable
+private fun getShadowColor(cardStackController: CardStackController): Color {
+    val horizontal = abs(cardStackController.offsetX.value / cardStackController.cardWidth)
+    val vertical = abs(cardStackController.offsetY.value / cardStackController.cardHeight)
+    val isVertical = vertical > horizontal
+    return when {
+        !isVertical && cardStackController.offsetX.value > 0 -> {
+            Color(0xFF_46A642)
+        }
+        !isVertical && cardStackController.offsetX.value < 0 -> {
+            Color(0xFF_FF453A)
+        }
+        isVertical && cardStackController.offsetY.value > 0 -> {
+            Color(0xFF_CFB323)
+        }
+        else -> StudyCardsTheme.colors.opposition.copy(alpha = 0.5f)
     }
 }
