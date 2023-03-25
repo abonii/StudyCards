@@ -1,16 +1,19 @@
 package abm.co.feature.game.swipe
 
+import abm.co.designsystem.component.measure.MeasureUnconstrainedViewHeight
 import abm.co.designsystem.component.modifier.Modifier
-import abm.co.designsystem.component.modifier.disabledRippleClickable
+import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.widget.LoadingView
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.card.model.CardUI
+import abm.co.feature.game.swipe.card.BackCardItem
+import abm.co.feature.game.swipe.card.FrontCardItem
+import abm.co.feature.game.swipe.card.CardsHolder
+import abm.co.feature.game.swipe.drag.rememberCardStackController
 import abm.co.feature.utils.StudyCardsConstants.TOOLBAR_HEIGHT
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +25,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -32,8 +34,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -109,37 +109,45 @@ private fun SuccessScreen(
                 onClickRight = {},
                 onClickLeft = {}
             )
-        }, content = {
+        }, content = { height, _ ->
             BoxWithConstraints {
-                val cardHeight = maxHeight - it
+                val cardHeight = maxHeight - height
                 val cardStackController = rememberCardStackController(cardHeight, maxWidth)
                 cardStackController.onSwipe = {
                     event(SwipeGameContractEvent.OnSwipeOrClick(it))
                 }
                 KnownAndUnknownButtons(
                     onClickRight = {
-                        event(SwipeGameContractEvent.OnSwipeOrClick(SwipeSide.END))
+                        cardStackController.swipeRight()
                     },
                     onClickLeft = {
-                        event(SwipeGameContractEvent.OnSwipeOrClick(SwipeSide.START))
+                        cardStackController.swipeLeft()
                     }
                 )
-                SwipeCards(
+                CardsHolder(
                     modifier = Modifier
                         .matchParentSize()
-                        .padding(top = it),
+                        .padding(top = height),
                     items = cards,
                     cardHeight = cardHeight,
-                    cardStackController = cardStackController,
+                    draggableCardController = cardStackController,
                     onSwipe = {
                         event(SwipeGameContractEvent.OnSwipeOrClick(it))
                     },
-                    content = { card ->
-                        CardItem(
+                    frontContent = { card, isFront ->
+                        FrontCardItem(
                             cardUI = card,
-                            onTouch = {},
+                            isFront = isFront,
                             onClickUncertain = {
-                                event(SwipeGameContractEvent.OnSwipeOrClick(SwipeSide.BOTTOM))
+                                cardStackController.swipeBottom()
+                            }
+                        )
+                    },
+                    backContent = { card ->
+                        BackCardItem(
+                            cardUI = card,
+                            onClickUncertain = {
+                                cardStackController.swipeBottom()
                             }
                         )
                     }
@@ -149,32 +157,6 @@ private fun SuccessScreen(
     )
 }
 
-@Composable
-private fun CardItem(
-    cardUI: CardUI,
-    onTouch: () -> Unit,
-    onClickUncertain: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(StudyCardsTheme.colors.backgroundPrimary)
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = cardUI.cardID,
-                style = StudyCardsTheme.typography.weight400Size14LineHeight18,
-                color = StudyCardsTheme.colors.textSecondary
-            )
-        }
-        Uncertain(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            onClick = onClickUncertain
-        )
-    }
-}
 
 @Composable
 private fun KnownAndUnknownButtons(
@@ -193,7 +175,7 @@ private fun KnownAndUnknownButtons(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
-            modifier = Modifier.disabledRippleClickable(onClickLeft),
+            modifier = Modifier.clickableWithoutRipple(onClickLeft),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -210,7 +192,7 @@ private fun KnownAndUnknownButtons(
         }
         Spacer(modifier = Modifier.weight(1f))
         Row(
-            modifier = Modifier.disabledRippleClickable(onClickRight),
+            modifier = Modifier.clickableWithoutRipple(onClickRight),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -229,32 +211,6 @@ private fun KnownAndUnknownButtons(
 }
 
 @Composable
-private fun Uncertain(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .padding(bottom = 28.dp)
-            .disabledRippleClickable(onClick),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = stringResource(id = R.string.Game_Swipe_uncertain),
-            style = StudyCardsTheme.typography.weight400Size14LineHeight18,
-            color = StudyCardsTheme.colors.textSecondary
-        )
-        Spacer(modifier = Modifier.width(6.dp))
-        Icon(
-            modifier = Modifier.size(24.dp),
-            painter = painterResource(id = R.drawable.ic_arrow_down),
-            tint = StudyCardsTheme.colors.textSecondary,
-            contentDescription = null
-        )
-    }
-}
-
-@Composable
 private fun Toolbar(
     title: String,
     onBack: () -> Unit,
@@ -269,7 +225,7 @@ private fun Toolbar(
     ) {
         Icon(
             modifier = Modifier
-                .disabledRippleClickable(onBack)
+                .clickableWithoutRipple(onBack)
                 .padding(10.dp)
                 .size(24.dp),
             painter = painterResource(id = R.drawable.ic_left),

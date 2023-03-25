@@ -17,7 +17,7 @@ fun HomeGraph(
     openDrawer: () -> Unit,
     mainController: NavController,
     showMessage: suspend (MessageContent) -> Unit,
-    startDestination: String = GameDestinations.SwipeGame.route
+    startDestination: String = HomeDestinations.Home.route
 ) {
     val navController = rememberAnimatedNavController()
     AnimatedNavHost(

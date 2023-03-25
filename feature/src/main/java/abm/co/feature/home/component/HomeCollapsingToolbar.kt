@@ -1,7 +1,7 @@
 package abm.co.feature.home.component
 
 import abm.co.designsystem.component.modifier.Modifier
-import abm.co.designsystem.component.modifier.disabledRippleClickable
+import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import androidx.annotation.DrawableRes
@@ -95,7 +95,7 @@ fun HomeCollapsingToolbar(
                         .padding(end = drawerEndPadding)
                         .height(24.dp)
                         .wrapContentWidth()
-                        .disabledRippleClickable(onClick = onClickDrawerIcon),
+                        .clickableWithoutRipple(onClick = onClickDrawerIcon),
                     tint = StudyCardsTheme.colors.opposition
                 )
                 Text(
@@ -140,7 +140,7 @@ fun HomeCollapsingToolbar(
                         modifier = Modifier
                             .padding(start = drawerEndPadding)
                             .size(iconHeight)
-                            .disabledRippleClickable(onClick = onClickLearningLanguageIcon)
+                            .clickableWithoutRipple(onClick = onClickLearningLanguageIcon)
                             .drawBehind {
                                 val iconWidthPx = iconWidth.toPx()
                                 drawCircle(

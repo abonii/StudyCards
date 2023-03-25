@@ -1,7 +1,7 @@
 package abm.co.feature.card.component
 
 import abm.co.designsystem.component.modifier.Modifier
-import abm.co.designsystem.component.modifier.disabledRippleClickable
+import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.modifier.scalableClick
 import abm.co.designsystem.component.text.pluralString
 import abm.co.designsystem.theme.StudyCardsTheme
@@ -78,7 +78,7 @@ fun CategoryItem(
             Spacer(modifier = Modifier.width(25.dp))
             Icon(
                 modifier = Modifier
-                    .disabledRippleClickable(onClick = onClickPlay)
+                    .clickableWithoutRipple(onClick = onClickPlay)
                     .align(Alignment.CenterVertically)
                     .padding(end = 12.dp, top = 10.dp, bottom = 10.dp)
                     .size(24.dp),
@@ -98,7 +98,7 @@ private fun BookmarkIcon(
 ) {
     Icon(
         modifier = modifier
-            .disabledRippleClickable(onClick)
+            .clickableWithoutRipple(onClick)
             .padding(start = 12.dp, bottom = 20.dp, end = 20.dp)
             .size(20.dp),
         painter = painterResource(id = R.drawable.ic_bookmark),

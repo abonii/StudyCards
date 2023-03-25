@@ -1,47 +1,16 @@
-package abm.co.feature.game.swipe
+package abm.co.feature.game.swipe.drag
 
-import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.SwipeableDefaults
 import androidx.compose.material.ThresholdConfig
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
 import kotlin.math.abs
 import kotlin.math.sign
 import kotlinx.coroutines.launch
-
-/**
- * Create and [remember] a [CardStackController] with the default animation clock.
- *
- * @param animationSpec The default animation that will be used to animate to a new state.
- */
-@Composable
-fun rememberCardStackController(
-    cardHeight: Dp,
-    cardWidth: Dp,
-    animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec,
-): CardStackController {
-
-    val scope = rememberCoroutineScope()
-
-    val screenWidthPx = with(LocalDensity.current) { cardWidth.toPx() }
-    val screenHeightPx = with(LocalDensity.current) { cardHeight.toPx() }
-
-    return remember {
-        CardStackController(
-            scope = scope,
-            cardWidth = screenWidthPx,
-            cardHeight = screenHeightPx,
-            animationSpec = animationSpec
-        )
-    }
-}
-
 
 /**
  * Enable drag gestures between a set of predefined anchors defined in [controller].
@@ -52,7 +21,7 @@ fun rememberCardStackController(
  */
 @OptIn(ExperimentalMaterialApi::class)
 fun Modifier.draggableStack(
-    controller: CardStackController,
+    controller: DraggableCardController,
     thresholdConfig: (Float, Float) -> ThresholdConfig,
 ): Modifier = composed {
 

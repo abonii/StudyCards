@@ -6,7 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 
-fun Modifier.disabledRippleClickable(
+fun Modifier.clickableWithoutRipple(
     onClick: () -> Unit
 ): Modifier = composed {
     clickable(

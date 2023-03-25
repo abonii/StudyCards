@@ -1,7 +1,6 @@
 package abm.co.navigation.navhost.game.swipe
 
 import abm.co.designsystem.message.common.MessageContent
-import abm.co.feature.game.main.MainGamePage
 import abm.co.feature.game.swipe.SwipeGamePage
 import abm.co.navigation.navhost.game.graph.GameDestinations
 import androidx.compose.animation.ExperimentalAnimationApi

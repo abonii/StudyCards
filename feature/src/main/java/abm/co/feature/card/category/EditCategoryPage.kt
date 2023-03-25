@@ -2,7 +2,7 @@ package abm.co.feature.card.category
 
 import abm.co.designsystem.component.button.PrimaryButton
 import abm.co.designsystem.component.modifier.Modifier
-import abm.co.designsystem.component.modifier.disabledRippleClickable
+import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.textfield.TextFieldWithLabel
 import abm.co.designsystem.flow.collectInLaunchedEffect
@@ -112,7 +112,7 @@ private fun Toolbar(
         ) {
             Icon(
                 modifier = Modifier
-                    .disabledRippleClickable(onBack)
+                    .clickableWithoutRipple(onBack)
                     .padding(10.dp)
                     .size(24.dp),
                 painter = painterResource(id = R.drawable.ic_left),

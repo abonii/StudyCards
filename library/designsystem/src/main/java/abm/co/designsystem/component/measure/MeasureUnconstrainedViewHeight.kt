@@ -1,4 +1,4 @@
-package abm.co.feature.game.swipe
+package abm.co.designsystem.component.measure
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,20 +10,22 @@ import androidx.compose.ui.unit.Dp
 fun MeasureUnconstrainedViewHeight(
     viewToMeasure: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable (maxHeight: Dp) -> Unit
+    content: @Composable (maxHeight: Dp, maxWidth: Dp) -> Unit
 ) {
     SubcomposeLayout(modifier = modifier) { constraints ->
-        val maxHeight = subcompose(
+        val view = subcompose(
             slotId = "viewToMeasure",
             content = viewToMeasure
         )[0].measure(
             constraints = Constraints(maxWidth = constraints.maxWidth)
-        ).height.toDp()
+        )
+        val maxHeight = view.height.toDp()
+        val maxWidth = view.width.toDp()
 
         val contentPlaceable = subcompose(
             slotId = "content",
             content = {
-                content(maxHeight)
+                content(maxHeight, maxWidth)
             }
         )[0].measure(
             constraints = constraints

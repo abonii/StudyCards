@@ -1,7 +1,7 @@
 package abm.co.designsystem.component.widget
 
 import abm.co.designsystem.component.modifier.Modifier
-import abm.co.designsystem.component.modifier.disabledRippleClickable
+import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.theme.StudyCardsTheme
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -16,7 +16,7 @@ fun LoadingDialog(
     if (isVisible) {
         LoadingView(
             modifier = Modifier
-                .disabledRippleClickable { /*Ignore*/ }
+                .clickableWithoutRipple { /*Ignore*/ }
                 .background(StudyCardsTheme.colors.onyx.copy(0.1f))
                 .fillMaxSize()
         )

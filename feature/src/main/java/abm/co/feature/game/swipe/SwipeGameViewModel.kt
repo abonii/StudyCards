@@ -4,6 +4,7 @@ import abm.co.designsystem.message.common.MessageContent
 import abm.co.feature.card.model.CardKindUI
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
+import abm.co.feature.game.swipe.drag.DraggableSide
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
@@ -80,18 +81,18 @@ class SwipeGameViewModel @Inject constructor(
         }
     }
 
-    private fun onClickOrSwipeSide(swipeSide: SwipeSide) {
-        when (swipeSide) {
-            SwipeSide.BOTTOM -> {
+    private fun onClickOrSwipeSide(draggableSide: DraggableSide) {
+        when (draggableSide) {
+            DraggableSide.BOTTOM -> {
                 cardList.removeFirstOrNull()
             }
-            SwipeSide.END -> {
+            DraggableSide.END -> {
                 cardList.removeFirstOrNull()
             }
-            SwipeSide.START -> {
+            DraggableSide.START -> {
                 cardList.removeFirstOrNull()
             }
-            SwipeSide.TOP -> Unit
+            DraggableSide.TOP -> Unit
         }
     }
 }
@@ -116,7 +117,7 @@ sealed interface SwipeGameContractEvent {
     object OnBack : SwipeGameContractEvent
 
     @Immutable
-    data class OnSwipeOrClick(val kind: SwipeSide) : SwipeGameContractEvent
+    data class OnSwipeOrClick(val kind: DraggableSide) : SwipeGameContractEvent
 }
 
 @Stable

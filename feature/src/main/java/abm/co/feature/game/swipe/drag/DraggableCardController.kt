@@ -1,14 +1,55 @@
-package abm.co.feature.game.swipe
+package abm.co.feature.game.swipe.drag
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.material.SwipeableDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+
+/**
+ * sides that can be swiped
+ */
+sealed interface DraggableSide {
+    object START : DraggableSide
+    object TOP : DraggableSide
+    object END : DraggableSide
+    object BOTTOM : DraggableSide
+}
+
+/**
+ * Create and [remember] a [DraggableCardController] with the default animation clock.
+ *
+ * @param animationSpec The default animation that will be used to animate to a new state.
+ */
+@Composable
+fun rememberCardStackController(
+    cardHeight: Dp,
+    cardWidth: Dp,
+    animationSpec: AnimationSpec<Float> = SwipeableDefaults.AnimationSpec,
+): DraggableCardController {
+
+    val scope = rememberCoroutineScope()
+
+    val screenWidthPx = with(LocalDensity.current) { cardWidth.toPx() }
+    val screenHeightPx = with(LocalDensity.current) { cardHeight.toPx() }
+
+    return remember {
+        DraggableCardController(
+            scope = scope,
+            cardWidth = screenWidthPx,
+            cardHeight = screenHeightPx,
+            animationSpec = animationSpec
+        )
+    }
+}
 
 /**
  * Controller of the [draggableStack] modifier.
@@ -18,7 +59,7 @@ import kotlinx.coroutines.launch
  *
  */
 @Immutable
-open class CardStackController(
+open class DraggableCardController(
     val scope: CoroutineScope,
     val cardWidth: Float,
     val cardHeight: Float,
@@ -59,14 +100,14 @@ open class CardStackController(
      */
     val scale = Animatable(0.9f)
 
-    var onSwipe: (swipeSide: SwipeSide) -> Unit = {}
+    var onSwipe: (draggableSide: DraggableSide) -> Unit = {}
 
     fun swipeLeft() {
         scope.apply {
             launch {
                 offsetX.animateTo(-cardWidth * 1.2f, tween(200))
 
-                onSwipe(SwipeSide.START)
+                onSwipe(DraggableSide.START)
 
                 // After the animation of swiping return back to Center to make it look like a cycle
                 launch {
@@ -95,7 +136,7 @@ open class CardStackController(
             launch {
                 offsetX.animateTo(cardWidth * 1.2f, tween(200))
 
-                onSwipe(SwipeSide.END)
+                onSwipe(DraggableSide.END)
 
                 // After the animation return back to Center to make it look like a cycle
                 launch {
@@ -124,7 +165,7 @@ open class CardStackController(
             launch {
                 offsetY.animateTo(-cardHeight * 1.2f, tween(200))
 
-                onSwipe(SwipeSide.TOP)
+                onSwipe(DraggableSide.TOP)
 
                 // After the animation return back to Center to make it look like a cycle
                 launch {
@@ -153,7 +194,7 @@ open class CardStackController(
             launch {
                 offsetY.animateTo(cardHeight * 1.2f, tween(200))
 
-                onSwipe(SwipeSide.BOTTOM)
+                onSwipe(DraggableSide.BOTTOM)
 
                 // After the animation return back to Center to make it look like a cycle
                 launch {

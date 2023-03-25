@@ -1,4 +1,4 @@
-package abm.co.feature.game.swipe
+package abm.co.feature.game.swipe.rotation
 
 
 import androidx.compose.animation.core.*
