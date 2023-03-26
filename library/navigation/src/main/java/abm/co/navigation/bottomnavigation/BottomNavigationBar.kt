@@ -2,7 +2,6 @@ package abm.co.navigation.bottomnavigation
 
 import abm.co.designsystem.component.composition.NoRippleTheme
 import abm.co.designsystem.theme.StudyCardsTheme
-import abm.co.navigation.navhost.card.graph.LocalNewCardOrCategoryStartDestination
 import abm.co.navigation.navhost.card.graph.NewCardOrCategoryDestinations
 import abm.co.navigation.navhost.root.Graph
 import androidx.compose.material.ripple.LocalRippleTheme
@@ -22,6 +21,7 @@ fun BottomNavigationBar(
     navigateToNewCardOrCategory: State<NewCardOrCategoryDestinations>,
     currentScreenRoute: String?,
     navController: NavController,
+    hostNavController: NavController,
     modifier: Modifier = Modifier
 ) {
     CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
@@ -36,7 +36,7 @@ fun BottomNavigationBar(
                     item = item,
                     onClick = {
                         if (item.route == Graph.NEW_CARD_OR_CATEGORY_GRAPH) {
-                            navController.navigate(
+                            hostNavController.navigate(
                                 navigateToNewCardOrCategory.value.deepLink.toUri()
                             )
                         } else {

@@ -1,6 +1,8 @@
 package abm.co.navigation.navhost.card.category
 
 import abm.co.designsystem.message.common.MessageContent
+import abm.co.navigation.navhost.card.graph.CardDestinations
+import abm.co.navigation.navhost.card.graph.NewCardOrCategoryDestinations
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -15,13 +17,7 @@ fun NavGraphBuilder.category(
     showMessage: suspend (MessageContent) -> Unit
 ) {
     composable(
-        route = "Destinations.Category.route",
-        enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 500))
-        },
-        exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 500))
-        }
+        route = CardDestinations.Category.route
     ) {
         // TODO no word page
     }

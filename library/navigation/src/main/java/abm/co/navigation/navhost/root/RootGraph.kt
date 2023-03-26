@@ -4,6 +4,8 @@ import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.navigation.navhost.auth.graph.authNavGraph
 import abm.co.navigation.navhost.card.graph.NewCardOrCategoryDestinations
+import abm.co.navigation.navhost.card.graph.newCardOrSetGraph
+import abm.co.navigation.navhost.game.graph.gameGraph
 import abm.co.navigation.navhost.main.MainScreen
 import abm.co.navigation.navhost.userattributes.userAttributesNavGraph
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -13,6 +15,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -36,6 +39,7 @@ fun RootNavHost(
         navController = navController,
         startDestination = startDestination,
         route = Graph.ROOT,
+        contentAlignment = Alignment.Center,
         modifier = modifier,
         enterTransition = {
             slideInHorizontally(
@@ -68,9 +72,20 @@ fun RootNavHost(
             MainScreen(
                 startDestination = Graph.HOME,
                 showMessage = showMessage,
+                hostNavController = navController,
                 navigateToNewCardOrCategory = navigateToNewCardOrCategory
             )
         }
+        newCardOrSetGraph(
+            route = Graph.NEW_CARD_OR_CATEGORY_GRAPH,
+            showMessage = showMessage,
+            navController = navController
+        )
+        gameGraph(
+            route = Graph.GAME,
+            showMessage = showMessage,
+            navController = navController
+        )
     }
 }
 

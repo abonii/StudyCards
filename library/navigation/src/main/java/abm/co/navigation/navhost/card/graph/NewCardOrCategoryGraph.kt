@@ -1,9 +1,8 @@
 package abm.co.navigation.navhost.card.graph
 
 import abm.co.designsystem.message.common.MessageContent
-import abm.co.navigation.navhost.card.edit.editCard
-import abm.co.navigation.navhost.card.edit.editCategory
-import androidx.compose.runtime.staticCompositionLocalOf
+import abm.co.navigation.navhost.card.card.editCard
+import abm.co.navigation.navhost.card.category.editCategory
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
@@ -40,8 +39,3 @@ sealed class NewCardOrCategoryDestinations(val route: String, val deepLink: Stri
         deepLink = "studycards://mobile/new_category"
     )
 }
-
-val LocalNewCardOrCategoryStartDestination =
-    staticCompositionLocalOf<NewCardOrCategoryDestinations> {
-        NewCardOrCategoryDestinations.Card
-    }

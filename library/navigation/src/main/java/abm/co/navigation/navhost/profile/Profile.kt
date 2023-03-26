@@ -3,27 +3,17 @@ package abm.co.navigation.navhost.profile
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.feature.profile.ProfilePage
 import abm.co.navigation.navhost.profile.graph.ProfileDestinations
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import com.google.accompanist.navigation.animation.composable
+import androidx.navigation.compose.composable
 
-@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.profile(
     navController: NavController,
-    showMessage: suspend (MessageContent) -> Unit
+    showMessage: suspend (MessageContent) -> Unit,
+    route: String = ProfileDestinations.Profile.route
 ) {
     composable(
-        route = ProfileDestinations.Profile.route,
-        enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 500))
-        },
-        exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 500))
-        }
+        route = route
     ) {
         ProfilePage()
     }

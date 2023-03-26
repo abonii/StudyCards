@@ -10,9 +10,7 @@ import abm.co.navigation.bottomnavigation.BottomNavigationItem
 import abm.co.navigation.navhost.card.graph.NewCardOrCategoryDestinations
 import abm.co.navigation.navhost.main.graph.MainGraph
 import abm.co.navigation.navhost.root.Graph
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
@@ -34,9 +32,10 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     startDestination: String,
     navigateToNewCardOrCategory: State<NewCardOrCategoryDestinations>,
-    showMessage: suspend (MessageContent) -> Unit
+    showMessage: suspend (MessageContent) -> Unit,
+    hostNavController: NavHostController
 ) {
-    val navController: NavHostController = rememberNavController()
+    val navController = rememberNavController()
     val backStackEntry = navController.currentBackStackEntryAsState()
     val currentScreenRoute = backStackEntry.value?.destination?.route
     val bottomNavVisible = remember(items, currentScreenRoute) {
@@ -54,17 +53,13 @@ fun MainScreen(
             topEnd = 16.dp,
             bottomEnd = 16.dp
         ),
-        drawerContent = { },
         bottomBar = {
-            AnimatedVisibility(
-                visible = bottomNavVisible,
-                enter = expandVertically(),
-                exit = shrinkVertically()
-            ) {
+            if(bottomNavVisible) {
                 BottomNavigationBar(
                     items = items,
                     currentScreenRoute = currentScreenRoute,
                     navController = navController,
+                    hostNavController = hostNavController,
                     navigateToNewCardOrCategory = navigateToNewCardOrCategory
                 )
             }
@@ -72,6 +67,7 @@ fun MainScreen(
     ) { innerPaddings ->
         MainGraph(
             navController = navController,
+            hostNavController = hostNavController,
             modifier = Modifier.padding(innerPaddings),
             startDestination = startDestination,
             showMessage = showMessage,

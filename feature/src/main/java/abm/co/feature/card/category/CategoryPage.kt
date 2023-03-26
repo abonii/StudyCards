@@ -36,23 +36,23 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 
 @Composable
-fun EditCategoryPage(
+fun CategoryPage(
     onBack: () -> Unit,
     navigateToNewCard: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
-    viewModel: EditCategoryViewModel = hiltViewModel(),
+    viewModel: CategoryViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
         Firebase.analytics.logEvent(
-            "edit_category_page_viewed", null
+            "category_page_viewed", null
         )
     }
     val state by viewModel.state.collectAsState()
 
     viewModel.channel.collectInLaunchedEffect {
         when (it) {
-            EditCategoryContractChannel.NavigateBack -> onBack()
-            EditCategoryContractChannel.NavigateToNewCard -> navigateToNewCard()
+            CategoryContractChannel.NavigateBack -> onBack()
+            CategoryContractChannel.NavigateToNewCard -> navigateToNewCard()
         }
     }
 
@@ -65,8 +65,8 @@ fun EditCategoryPage(
 
 @Composable
 private fun CategoryScreen(
-    state: EditCategoryContractState,
-    event: (EditCategoryContractEvent) -> Unit
+    state: CategoryContractState,
+    event: (CategoryContractEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -76,10 +76,10 @@ private fun CategoryScreen(
         Toolbar(
             categoryName = state.categoryName,
             onEnterCategoryName = {
-                event(EditCategoryContractEvent.OnEnterCategoryName(it))
+                event(CategoryContractEvent.OnEnterCategoryName(it))
             },
             onBack = {
-                event(EditCategoryContractEvent.OnBackClicked)
+                event(CategoryContractEvent.OnBackClicked)
             }
         )
         ScrollableContent(modifier = Modifier.weight(1f))
@@ -90,7 +90,7 @@ private fun CategoryScreen(
                 .fillMaxWidth(),
             title = stringResource(id = R.string.Category_Button_title),
             onClick = {
-                event(EditCategoryContractEvent.OnContinueButtonClicked)
+                event(CategoryContractEvent.OnContinueButtonClicked)
             }
         )
     }

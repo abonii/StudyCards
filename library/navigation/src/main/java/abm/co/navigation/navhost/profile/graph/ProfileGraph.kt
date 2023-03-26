@@ -14,17 +14,17 @@ fun ProfileGraph(
     showMessage: suspend (MessageContent) -> Unit,
     startDestination: String = ProfileDestinations.Profile.route
 ) {
-    val navController = rememberAnimatedNavController()
-    AnimatedNavHost(
-        route = route,
-        navController = navController,
-        startDestination = startDestination
-    ) {
-        profile(
-            navController = navController,
-            showMessage = showMessage
-        )
-    }
+//    val navController = rememberAnimatedNavController()
+//    AnimatedNavHost(
+//        route = route,
+//        navController = navController,
+//        startDestination = startDestination
+//    ) {
+//        profile(
+//            navController = navController,
+//            showMessage = showMessage
+//        )
+//    }
 }
 
 sealed class ProfileDestinations(val route: String) {

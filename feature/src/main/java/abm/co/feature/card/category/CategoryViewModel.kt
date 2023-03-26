@@ -15,29 +15,29 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class EditCategoryViewModel @Inject constructor(
+class CategoryViewModel @Inject constructor(
     private val serverRepository: ServerRepository
 ) : ViewModel() {
 
-    private val _channel = Channel<EditCategoryContractChannel>()
+    private val _channel = Channel<CategoryContractChannel>()
     val channel = _channel.receiveAsFlow()
 
-    private val mutableState = MutableStateFlow(EditCategoryContractState())
-    val state: StateFlow<EditCategoryContractState> = mutableState.asStateFlow()
+    private val mutableState = MutableStateFlow(CategoryContractState())
+    val state: StateFlow<CategoryContractState> = mutableState.asStateFlow()
 
-    fun event(event: EditCategoryContractEvent) {
+    fun event(event: CategoryContractEvent) {
         when (event) {
-            is EditCategoryContractEvent.OnEnterCategoryName -> {
+            is CategoryContractEvent.OnEnterCategoryName -> {
                 mutableState.update {
                     it.copy(categoryName = event.value)
                 }
             }
-            EditCategoryContractEvent.OnContinueButtonClicked -> {
+            CategoryContractEvent.OnContinueButtonClicked -> {
                onContinueButtonClicked()
             }
-            EditCategoryContractEvent.OnBackClicked -> {
+            CategoryContractEvent.OnBackClicked -> {
                 viewModelScope.launch {
-                    _channel.send(EditCategoryContractChannel.NavigateBack)
+                    _channel.send(CategoryContractChannel.NavigateBack)
                 }
             }
         }
@@ -56,22 +56,22 @@ class EditCategoryViewModel @Inject constructor(
                     id = ""
                 )
             )
-            _channel.send(EditCategoryContractChannel.NavigateToNewCard)
+            _channel.send(CategoryContractChannel.NavigateToNewCard)
         }
     }
 }
 
-data class EditCategoryContractState(
+data class CategoryContractState(
     val categoryName: String = ""
 )
 
-sealed interface EditCategoryContractEvent {
-    data class OnEnterCategoryName(val value: String) : EditCategoryContractEvent
-    object OnContinueButtonClicked : EditCategoryContractEvent
-    object OnBackClicked : EditCategoryContractEvent
+sealed interface CategoryContractEvent {
+    data class OnEnterCategoryName(val value: String) : CategoryContractEvent
+    object OnContinueButtonClicked : CategoryContractEvent
+    object OnBackClicked : CategoryContractEvent
 }
 
-sealed interface EditCategoryContractChannel {
-    object NavigateBack : EditCategoryContractChannel
-    object NavigateToNewCard : EditCategoryContractChannel
+sealed interface CategoryContractChannel {
+    object NavigateBack : CategoryContractChannel
+    object NavigateToNewCard : CategoryContractChannel
 }

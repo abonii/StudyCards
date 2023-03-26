@@ -1,13 +1,11 @@
 package abm.co.navigation.navhost.main.graph
 
-import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.message.common.MessageContent
-import abm.co.navigation.navhost.card.graph.LocalNewCardOrCategoryStartDestination
-import abm.co.navigation.navhost.card.graph.MainCardGraph
-import abm.co.navigation.navhost.card.graph.newCardOrSetGraph
-import abm.co.navigation.navhost.game.graph.GameGraph
-import abm.co.navigation.navhost.home.graph.HomeGraph
+import abm.co.navigation.navhost.card.main.mainCard
+import abm.co.navigation.navhost.game.main.mainGame
+import abm.co.navigation.navhost.home.home
 import abm.co.navigation.navhost.profile.graph.ProfileGraph
+import abm.co.navigation.navhost.profile.profile
 import abm.co.navigation.navhost.root.Graph
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,6 +17,7 @@ import androidx.navigation.compose.composable
 fun MainGraph(
     startDestination: String,
     navController: NavHostController,
+    hostNavController: NavHostController,
     showMessage: suspend (MessageContent) -> Unit,
     openDrawer: () -> Unit,
     modifier: Modifier = Modifier
@@ -29,36 +28,30 @@ fun MainGraph(
         startDestination = startDestination,
         modifier = modifier
     ) {
-        composable(Graph.HOME) {
-            HomeGraph(
-                route = Graph.HOME,
-                showMessage = showMessage,
-                openDrawer = openDrawer,
-                mainController = navController
-            )
-        }
-        composable(Graph.COLLECTION_OF_SET) {
-            MainCardGraph(
-                route = Graph.COLLECTION_OF_SET,
-                showMessage = showMessage
-            )
-        }
-        newCardOrSetGraph(
-            route = Graph.NEW_CARD_OR_CATEGORY_GRAPH,
+        home(
+            route = Graph.HOME,
+            navController = navController,
             showMessage = showMessage,
-            navController = navController
+            openDrawer = openDrawer,
+            hostNavController = hostNavController
         )
-        composable(Graph.GAME) {
-            GameGraph(
-                route = Graph.GAME,
-                showMessage = showMessage
-            )
+        mainCard(
+            route = Graph.COLLECTION_OF_SET,
+            navController = navController,
+            showMessage = showMessage
+        )
+        composable(Graph.NEW_CARD_OR_CATEGORY_GRAPH) {
+            /* Empty */
         }
-        composable(Graph.PROFILE) {
-            ProfileGraph(
-                route = Graph.PROFILE,
-                showMessage = showMessage
-            )
-        }
+        mainGame(
+            route = Graph.GAME,
+            navController = navController,
+            showMessage = showMessage
+        )
+        profile(
+            route = Graph.PROFILE,
+            navController = navController,
+            showMessage = showMessage
+        )
     }
 }

@@ -5,6 +5,8 @@ import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.widget.LoadingView
+import abm.co.designsystem.flow.collectInLaunchedEffect
+import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.card.model.CardUI
@@ -14,6 +16,7 @@ import abm.co.feature.game.swipe.card.CardsHolder
 import abm.co.feature.game.swipe.drag.rememberCardStackController
 import abm.co.feature.utils.StudyCardsConstants.TOOLBAR_HEIGHT
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,6 +48,8 @@ import com.google.firebase.ktx.Firebase
 
 @Composable
 fun SwipeGamePage(
+    onBack: () -> Unit,
+    showMessage: suspend (MessageContent) -> Unit,
     viewModel: SwipeGameViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
@@ -53,7 +58,12 @@ fun SwipeGamePage(
         )
     }
     val state by viewModel.state.collectAsState()
-
+    viewModel.channel.collectInLaunchedEffect {
+        when(it){
+            SwipeGameContractChannel.OnBack -> onBack()
+            is SwipeGameContractChannel.ShowMessage -> showMessage(it.messageContent)
+        }
+    }
     SetStatusBarColor()
     GameScreen(
         screenState = state,
@@ -69,6 +79,7 @@ private fun GameScreen(
 ) {
     Column(
         modifier = modifier
+            .background(StudyCardsTheme.colors.backgroundPrimary)
             .fillMaxSize()
             .statusBarsPadding()
     ) {

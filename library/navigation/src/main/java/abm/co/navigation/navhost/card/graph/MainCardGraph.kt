@@ -14,19 +14,20 @@ fun MainCardGraph(
     showMessage: suspend (MessageContent) -> Unit,
     startDestination: String = CardDestinations.MainCard.route
 ) {
-    val navController = rememberAnimatedNavController()
-    AnimatedNavHost(
-        route = route,
-        navController = navController,
-        startDestination = startDestination
-    ) {
-        mainCard(
-            navController = navController,
-            showMessage = showMessage
-        )
-    }
+//    val navController = rememberAnimatedNavController()
+//    AnimatedNavHost(
+//        route = route,
+//        navController = navController,
+//        startDestination = startDestination
+//    ) {
+//        mainCard(
+//            navController = navController,
+//            showMessage = showMessage
+//        )
+//    }
 }
 
 sealed class CardDestinations(val route: String) {
-    object MainCard : CardDestinations("collection_of_set")
+    object MainCard : CardDestinations("card_page")
+    object Category : CardDestinations("category_page")
 }
