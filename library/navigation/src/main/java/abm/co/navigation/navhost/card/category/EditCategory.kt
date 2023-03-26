@@ -23,7 +23,7 @@ fun NavGraphBuilder.editCategory(
         EditCategoryPage(
             onBack = navController::navigateUp,
             navigateToNewCard = {
-                navController.navigate(NewCardOrCategoryDestinations.Card.route)
+                navController.navigate(NewCardOrCategoryDestinations.Card().route)
             },
             showMessage = showMessage
         )

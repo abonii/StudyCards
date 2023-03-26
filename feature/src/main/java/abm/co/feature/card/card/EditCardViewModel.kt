@@ -1,5 +1,7 @@
 package abm.co.feature.card.card
 
+import abm.co.feature.card.model.CardItemUI
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -11,7 +13,14 @@ import kotlinx.coroutines.flow.emptyFlow
 
 @HiltViewModel
 class EditCardViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val cardItem: CardItemUI? = savedStateHandle["card_item"]
+
+    init {
+        println("cardItem: $cardItem")
+    }
 
     val channel: Flow<Nothing> get() = emptyFlow()
 

@@ -9,5 +9,5 @@ data class Card(
     val categoryID: String,
     val repeatCount: Int,
     val nextRepeatTime: Long,
-    val cardID: String
+    val id: String
 )

@@ -2,7 +2,11 @@ package abm.co.navigation.extension
 
 import android.os.Bundle
 import androidx.core.net.toUri
-import androidx.navigation.*
+import androidx.navigation.NavController
+import androidx.navigation.NavDeepLinkRequest
+import androidx.navigation.NavDestination
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigator
 
 fun NavController.navigate(
     route: String,

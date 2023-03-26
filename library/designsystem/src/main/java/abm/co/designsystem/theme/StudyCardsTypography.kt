@@ -102,6 +102,12 @@ data class StudyCardsTypography(
         fontSize = 12.sp,
         fontWeight = FontWeight.W400,
         lineHeight = 16.sp
+    ).withDefaultFontFamily(defaultFontFamily),
+
+    val weight400Size12LineHeight20: TextStyle = TextStyle(
+        fontSize = 12.sp,
+        fontWeight = FontWeight.W400,
+        lineHeight = 20.sp
     ).withDefaultFontFamily(defaultFontFamily)
 )
 

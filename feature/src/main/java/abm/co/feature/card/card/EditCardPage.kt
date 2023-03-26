@@ -2,6 +2,7 @@ package abm.co.feature.card.card
 
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.systembar.SetStatusBarColor
+import abm.co.designsystem.message.common.MessageContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,8 @@ import com.google.firebase.ktx.Firebase
 
 @Composable
 fun EditCardPage(
+    onBack: () -> Unit,
+    showMessage: suspend (MessageContent) -> Unit,
     viewModel: EditCardViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {

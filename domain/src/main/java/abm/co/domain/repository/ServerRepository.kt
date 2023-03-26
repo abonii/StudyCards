@@ -20,4 +20,6 @@ interface ServerRepository {
     suspend fun getCard(id: String): Flow<Either<Failure, Card>>
     suspend fun createCard(card: Card): Either<Failure, Unit>
     suspend fun updateCard(card: Card): Either<Failure, Unit>
+
+    suspend fun getCardItems(categoryID: String): Flow<Either<Failure, List<CardItem>>>
 }

@@ -14,7 +14,7 @@ import abm.co.feature.card.component.CategoryItem
 import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.home.component.HomeCollapsingToolbar
 import abm.co.feature.toolbar.ToolbarState
-import abm.co.feature.toolbar.scrollflags.ExitUntilCollapsedState
+import abm.co.feature.toolbar.rememberToolbarState
 import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.RepeatMode
@@ -45,8 +45,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -56,7 +54,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
@@ -69,7 +66,7 @@ fun HomePage(
     onNavigateToLanguageSelectPage: () -> Unit,
     navigateToAllCategory: () -> Unit,
     navigateToCategoryGame: () -> Unit,
-    navigateToCategory: () -> Unit,
+    navigateToCategory: (CategoryUI) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -83,7 +80,7 @@ fun HomePage(
             HomeContractChannel.NavigateToAllCategory -> navigateToAllCategory()
             is HomeContractChannel.ShowMessage -> showMessage(it.messageContent)
             is HomeContractChannel.NavigateToCategoryGame -> navigateToCategoryGame()
-            is HomeContractChannel.NavigateToCategory -> navigateToCategory()
+            is HomeContractChannel.NavigateToCategory -> navigateToCategory(it.category)
         }
     }
     val screenState by viewModel.screenState.collectAsState()
@@ -107,7 +104,10 @@ private fun HomeScreen(
             .baseBackground()
             .fillMaxSize()
     ) {
-        val toolbarScrollable = rememberToolbarState()
+        val toolbarScrollable = rememberToolbarState(
+            minHeight = MinToolbarHeight,
+            maxHeight = MaxToolbarHeight
+        )
         val scrollState = rememberScrollState()
         ListenToScrollAndUpdateToolbarState(
             scrollState = scrollState,
@@ -117,6 +117,9 @@ private fun HomeScreen(
             when (state) {
                 HomeContract.ScreenState.Loading -> {
                     LoadingScreen(modifier = Modifier.fillMaxSize())
+                }
+                is HomeContract.ScreenState.Empty -> {
+                    EmptyScreen(modifier = Modifier.fillMaxSize())
                 }
                 is HomeContract.ScreenState.Success -> {
                     SuccessScreen(
@@ -137,9 +140,6 @@ private fun HomeScreen(
                             event(HomeContractEvent.OnClickBookmarkCategory(it))
                         }
                     )
-                }
-                is HomeContract.ScreenState.Empty -> {
-                    EmptyScreen(modifier = Modifier.fillMaxSize())
                 }
             }
         }
@@ -283,25 +283,6 @@ private fun AnimatableArrow(
             tint = StudyCardsTheme.colors.middleGray,
             contentDescription = null
         )
-    }
-}
-
-@Composable
-private fun rememberToolbarState(
-    minHeight: Dp = MinToolbarHeight,
-    maxHeight: Dp = MaxToolbarHeight
-): ToolbarState {
-    val minToolbarHeight = with(LocalDensity.current) {
-        minHeight.roundToPx()
-    }
-    val maxToolbarHeight = with(LocalDensity.current) {
-        maxHeight.roundToPx()
-    }
-    val toolbarHeightRange: IntRange = remember(maxToolbarHeight, minToolbarHeight) {
-        minToolbarHeight..maxToolbarHeight
-    }
-    return rememberSaveable(saver = ExitUntilCollapsedState.Saver) {
-        ExitUntilCollapsedState(toolbarHeightRange)
     }
 }
 

@@ -169,6 +169,6 @@ sealed interface HomeContractChannel {
     object NavigateToLanguageSelectPage : HomeContractChannel
     object NavigateToAllCategory : HomeContractChannel
     data class NavigateToCategoryGame(val value: CategoryUI) : HomeContractChannel
-    data class NavigateToCategory(val value: CategoryUI) : HomeContractChannel
+    data class NavigateToCategory(val category: CategoryUI) : HomeContractChannel
     data class ShowMessage(val messageContent: MessageContent) : HomeContractChannel
 }

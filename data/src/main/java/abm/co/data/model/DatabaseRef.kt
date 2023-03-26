@@ -12,4 +12,5 @@ object DatabaseRef {
     const val USER_PROPERTIES_REF = "user_properties"
     const val EXPLORE_REF = "explore"
     const val CATEGORY_REF = "category"
+    const val CARD_REF = "card"
 }

@@ -23,7 +23,7 @@ fun CardUI.toDomain() = Card(
     categoryID = categoryID,
     repeatCount = repeatCount,
     nextRepeatTime = nextRepeatTime,
-    cardID = cardID
+    id = cardID
 )
 
 fun Card.toUI() = CardUI(
@@ -35,5 +35,5 @@ fun Card.toUI() = CardUI(
     categoryID = categoryID,
     repeatCount = repeatCount,
     nextRepeatTime = nextRepeatTime,
-    cardID = cardID
+    cardID = id
 )

@@ -3,6 +3,8 @@ package abm.co.navigation.navhost.game.swipe
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.feature.game.swipe.SwipeGamePage
 import abm.co.navigation.navhost.game.graph.GameDestinations
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -14,7 +16,11 @@ fun NavGraphBuilder.swipeGame(
     showMessage: suspend (MessageContent) -> Unit
 ) {
     composable(
-        route = GameDestinations.SwipeGame.route
+        route = GameDestinations.SwipeGame.route,
+        enterTransition = { EnterTransition.None },
+        popEnterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        popExitTransition = { ExitTransition.None }
     ) {
         SwipeGamePage(
             onBack = navController::navigateUp,

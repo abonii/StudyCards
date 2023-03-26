@@ -15,9 +15,12 @@ fun NavGraphBuilder.editCard(
     showMessage: suspend (MessageContent) -> Unit
 ) {
     composable(
-        route = NewCardOrCategoryDestinations.Card.route,
-        deepLinks = listOf(navDeepLink { uriPattern = NewCardOrCategoryDestinations.Card.deepLink })
+        route = NewCardOrCategoryDestinations.Card().route,
+        deepLinks = listOf(navDeepLink { uriPattern = NewCardOrCategoryDestinations.Card().deepLink })
     ) {
-        EditCardPage()
+        EditCardPage(
+            onBack = navController::navigateUp,
+            showMessage = showMessage
+        )
     }
 }

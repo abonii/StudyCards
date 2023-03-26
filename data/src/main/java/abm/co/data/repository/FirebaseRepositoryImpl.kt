@@ -2,12 +2,14 @@ package abm.co.data.repository
 
 import abm.co.data.datastore.LanguagesDataStore
 import abm.co.data.di.ApplicationScope
+import abm.co.data.model.DatabaseRef.CARD_REF
 import abm.co.data.model.DatabaseRef.CATEGORY_REF
 import abm.co.data.model.DatabaseRef.CONFIG_REF
 import abm.co.data.model.DatabaseRef.ROOT_REF
 import abm.co.data.model.DatabaseRef.USER_ID
 import abm.co.data.model.DatabaseRef.USER_PROPERTIES_REF
 import abm.co.data.model.DatabaseRef.USER_REF
+import abm.co.data.model.card.CardItemDTO
 import abm.co.data.model.card.CategoryDTO
 import abm.co.data.model.card.toDTO
 import abm.co.data.model.card.toDomain
@@ -35,6 +37,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -139,10 +142,70 @@ class FirebaseRepositoryImpl @Inject constructor(
     }
 
     override suspend fun createCard(card: Card): Either<Failure, Unit> {
-        TODO("Not yet implemented")
+        return safeCall {
+            val ref = categoryWithLanguagesRef.firstOrNull()
+                ?.child(card.categoryID)
+                ?.child(CARD_REF)
+                ?.child(card.id)?.push()
+            ref?.setValue(
+                card.copy(
+                    id = ref.key ?: "card_id"
+                )
+            )
+        }
     }
 
     override suspend fun updateCard(card: Card): Either<Failure, Unit> {
-        TODO("Not yet implemented")
+        return safeCall {
+            categoryWithLanguagesRef.firstOrNull()
+                ?.child(card.categoryID)
+                ?.child(CARD_REF)
+                ?.updateChildren(
+                    mapOf(card.id to card.toDTO())
+                )
+        }
     }
+
+    override suspend fun getCardItems(categoryID: String): Flow<Either<Failure, List<CardItem>>> =
+        callbackFlow {
+            val categoryReference =
+                categoryWithLanguagesRef.firstOrNull()?.child(categoryID)?.child(CARD_REF)
+            val listener = categoryReference?.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    try {
+                        val items = ArrayList<CardItemDTO>()
+                        snapshot.children.map { category ->
+                            println("category: $category")
+                            try {
+                                category.getValue(CardItemDTO::class.java)
+                                    ?.let { items.add(it) }
+                            } catch (e: DatabaseException) {
+                                PlutoLog.e("getCardItems", e.message, e.cause)
+                            }
+                        }
+                        println("items: $items")
+                        trySend(
+                            Either.Right(items.map { it.toDomain() })
+                        ).isSuccess
+                    } catch (e: Exception) {
+                        trySend(Either.Left(e.firebaseError().mapToFailure())).isSuccess
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    PlutoLog.e(
+                        "DatabaseReference.asFlow",
+                        "Error reading data: ${error.message}"
+                    )
+                    trySend(
+                        Either.Left(
+                            error.toException().firebaseError().mapToFailure()
+                        )
+                    ).isSuccess
+                }
+            })
+            awaitClose {
+                listener?.let { categoryReference.removeEventListener(it) }
+            }
+        }
 }

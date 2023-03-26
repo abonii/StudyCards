@@ -4,6 +4,7 @@ import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.navigation.navhost.auth.graph.authNavGraph
 import abm.co.navigation.navhost.card.graph.NewCardOrCategoryDestinations
+import abm.co.navigation.navhost.card.graph.cardGraph
 import abm.co.navigation.navhost.card.graph.newCardOrSetGraph
 import abm.co.navigation.navhost.game.graph.gameGraph
 import abm.co.navigation.navhost.main.MainScreen
@@ -72,20 +73,9 @@ fun RootNavHost(
             MainScreen(
                 startDestination = Graph.HOME,
                 showMessage = showMessage,
-                hostNavController = navController,
                 navigateToNewCardOrCategory = navigateToNewCardOrCategory
             )
         }
-        newCardOrSetGraph(
-            route = Graph.NEW_CARD_OR_CATEGORY_GRAPH,
-            showMessage = showMessage,
-            navController = navController
-        )
-        gameGraph(
-            route = Graph.GAME,
-            showMessage = showMessage,
-            navController = navController
-        )
     }
 }
 
@@ -96,7 +86,7 @@ object Graph {
     const val MAIN = "main_graph"
     const val GAME = "game_graph"
     const val PROFILE = "profile_graph"
-    const val COLLECTION_OF_SET = "collection_of_set_graph"
+    const val CARD = "card_graph"
     const val USER_ATTRIBUTES = "user_attributes_graph"
     const val NEW_CARD_OR_CATEGORY_GRAPH = "new_card_or_set_graph"
 }

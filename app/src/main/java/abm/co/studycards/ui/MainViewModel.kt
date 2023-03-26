@@ -29,7 +29,7 @@ class MainViewModel @Inject constructor(
     private val mutableState = MutableStateFlow(MainContractState())
     val state: StateFlow<MainContractState> = mutableState.asStateFlow()
 
-    private val _startDestinationOfNewCardOrCategory = MutableStateFlow<NewCardOrCategoryDestinations>(NewCardOrCategoryDestinations.Card)
+    private val _startDestinationOfNewCardOrCategory = MutableStateFlow<NewCardOrCategoryDestinations>(NewCardOrCategoryDestinations.Card())
     val startDestinationOfNewCardOrCategory = _startDestinationOfNewCardOrCategory.asStateFlow()
 
     init {
@@ -43,7 +43,7 @@ class MainViewModel @Inject constructor(
             serverRepository.getCategories.collectLatest { either ->
                 either.onSuccess { category ->
                     _startDestinationOfNewCardOrCategory.value = if (category.isNotEmpty()) {
-                        NewCardOrCategoryDestinations.Card
+                        NewCardOrCategoryDestinations.Card()
                     } else NewCardOrCategoryDestinations.Category
                 }
             }
