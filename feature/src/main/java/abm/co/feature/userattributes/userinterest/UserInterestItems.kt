@@ -59,7 +59,7 @@ fun UserInterestItems(
                 modifier = Modifier
                     .padding(start = 20.dp, end = 20.dp, bottom = 35.dp, top = 8.dp)
                     .fillMaxWidth(),
-                title = stringResource(id = R.string.ChooseUserAttributesPage_UserInterests_continue),
+                title = stringResource(id = R.string.UserPreferenceAndLanguagePage_UserInterests_continue),
                 normalContentColor = StudyCardsTheme.colors.primary,
                 normalButtonBackgroundColor = Color.White,
                 onClick = onClickContinueButton

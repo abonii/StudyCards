@@ -1,4 +1,4 @@
-package abm.co.designsystem.flow
+package abm.co.designsystem.extensions
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

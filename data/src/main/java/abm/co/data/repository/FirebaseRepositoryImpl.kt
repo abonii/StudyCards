@@ -175,7 +175,6 @@ class FirebaseRepositoryImpl @Inject constructor(
                     try {
                         val items = ArrayList<CardItemDTO>()
                         snapshot.children.map { category ->
-                            println("category: $category")
                             try {
                                 category.getValue(CardItemDTO::class.java)
                                     ?.let { items.add(it) }
@@ -183,7 +182,6 @@ class FirebaseRepositoryImpl @Inject constructor(
                                 PlutoLog.e("getCardItems", e.message, e.cause)
                             }
                         }
-                        println("items: $items")
                         trySend(
                             Either.Right(items.map { it.toDomain() })
                         ).isSuccess

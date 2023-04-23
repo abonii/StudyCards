@@ -1,81 +1,73 @@
 package abm.co.studycards.ui
 
-import abm.co.designsystem.message.alert.MessageAlertDialog
-import abm.co.designsystem.message.common.MessageAlertContent
-import abm.co.designsystem.message.common.MessageContent
-import abm.co.designsystem.message.common.toMessageContent
-import abm.co.designsystem.message.snackbar.MessageSnackbar
-import abm.co.designsystem.message.snackbar.showSnackbarWithContent
-import abm.co.designsystem.theme.StudyCardsTheme
-import abm.co.navigation.navhost.root.RootNavHost
+import abm.co.designsystem.extensions.launchLifecycleScope
+import abm.co.studycards.R
+import abm.co.studycards.navigation.BottomNavigationBar
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.navigation.fragment.NavHostFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.serialization.ExperimentalSerializationApi
-
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.mapNotNull
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
-    @OptIn(ExperimentalSerializationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setFullScreen()
+        setupSplash()
+        setContentView(R.layout.activity_main)
+        setupStartupDestination()
+        setupBottomNavigation()
+    }
+
+    private fun setFullScreen() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
+    }
+
+    private fun setupSplash() {
         installSplashScreen().apply {
             setKeepOnScreenCondition {
                 viewModel.state.value.isSplashScreenVisible
             }
         }
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                finish()
-            }
-        })
-        setContent {
-            StudyCardsTheme {
-                val snackbarHostState = remember { SnackbarHostState() }
-                var showAlertDialog by remember { mutableStateOf<MessageAlertContent?>(null) }
-                val state by viewModel.state.collectAsState()
-                state.startDestination?.let {
-                    val startDestinationOfNewCardOrCategory =
-                        viewModel.startDestinationOfNewCardOrCategory.collectAsState()
-                    RootNavHost(
-                        startDestination = it,
-                        navigateToNewCardOrCategory = startDestinationOfNewCardOrCategory,
-                        showMessage = { messageContent ->
-                            when (messageContent) {
-                                is MessageContent.AlertDialog -> {
-                                    showAlertDialog = messageContent.toMessageContent(this)
-                                }
-                                is MessageContent.Snackbar -> {
-                                    snackbarHostState.showSnackbarWithContent(
-                                        messageContent.toMessageContent(this)
-                                    )
-                                }
-                            }
-                        }
-                    )
-                }
-                MessageAlertDialog(
-                    showAlertDialog = showAlertDialog,
-                    onDismiss = { showAlertDialog = null },
-                )
-                MessageSnackbar(snackbarHostState = snackbarHostState)
-            }
+    }
 
+    private fun setupStartupDestination() {
+        launchLifecycleScope {
+            viewModel.startDestination.collectLatest {
+                val navHostFragment =
+                    supportFragmentManager.findFragmentById(R.id.main_host_fragment) as NavHostFragment
+                val inflater = navHostFragment.navController.navInflater
+                val graph = inflater.inflate(R.navigation.root_nav_graph)
+
+                graph.setStartDestination(it)
+
+                val navController = navHostFragment.navController
+                navController.setGraph(graph, intent.extras)
+            }
+        }
+    }
+
+    private fun setupBottomNavigation() {
+        val navHostFragment = supportFragmentManager.findFragmentById(
+            R.id.main_host_fragment
+        ) as NavHostFragment
+
+        val navController = navHostFragment.navController
+
+        val bottomNavigationHolder = findViewById<ComposeView>(R.id.bottom_navigation_view)
+        bottomNavigationHolder.setContent {
+            BottomNavigationBar(
+                navController = navController
+            )
         }
     }
 }

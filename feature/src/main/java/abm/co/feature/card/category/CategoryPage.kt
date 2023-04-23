@@ -5,7 +5,7 @@ import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.widget.LinearProgress
 import abm.co.designsystem.component.widget.LoadingView
-import abm.co.designsystem.flow.collectInLaunchedEffect
+import abm.co.designsystem.extensions.collectInLaunchedEffect
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R

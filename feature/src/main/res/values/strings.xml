@@ -75,15 +75,15 @@
     <string name="SignUpPage.PasswordEmpty">Password cannot be empty</string>
     <string name="SignUpPage.PasswordLengthNotCorrect">Password length should be more than 6</string>
 
-    <string name="ChooseUserAttributesPage.NativeLanguage.title">Native language</string>
-    <string name="ChooseUserAttributesPage.LearningLanguage.title">I want to learn</string>
-    <string name="ChooseUserAttributesPage.UserGoal.title">What are your goals?</string>
-    <string name="ChooseUserAttributesPage.UserInterests.title">What are you interested in?</string>
-    <string name="ChooseUserAttributesPage.NativeLanguage.subtitle">Select your native language from the list</string>
-    <string name="ChooseUserAttributesPage.LearningLanguage.subtitle">Choose one language to study</string>
-    <string name="ChooseUserAttributesPage.UserGoal.subtitle">Select all the appropriate options</string>
-    <string name="ChooseUserAttributesPage.UserInterests.subtitle">Select all the appropriate options</string>
-    <string name="ChooseUserAttributesPage.UserInterests.continue">Continue</string>
+    <string name="UserPreferenceAndLanguagePage.NativeLanguage.title">Native language</string>
+    <string name="UserPreferenceAndLanguagePage.LearningLanguage.title">I want to learn</string>
+    <string name="UserPreferenceAndLanguagePage.UserGoal.title">What are your goals?</string>
+    <string name="UserPreferenceAndLanguagePage.UserInterests.title">What are you interested in?</string>
+    <string name="UserPreferenceAndLanguagePage.NativeLanguage.subtitle">Select your native language from the list</string>
+    <string name="UserPreferenceAndLanguagePage.LearningLanguage.subtitle">Choose one language to study</string>
+    <string name="UserPreferenceAndLanguagePage.UserGoal.subtitle">Select all the appropriate options</string>
+    <string name="UserPreferenceAndLanguagePage.UserInterests.subtitle">Select all the appropriate options</string>
+    <string name="UserPreferenceAndLanguagePage.UserInterests.continue">Continue</string>
 
     <string name="HomePage.Toolbar.title">Home</string>
     <string name="HomePage.Toolbar.language">Language</string>

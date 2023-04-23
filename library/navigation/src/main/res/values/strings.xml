@@ -1,6 +1,0 @@
-<resources>
-    <string name="nav_home">Home</string>
-    <string name="nav_card">Cards</string>
-    <string name="nav_game">Game</string>
-    <string name="nav_profile">Profile</string>
-</resources>

@@ -87,12 +87,12 @@ class LoginViewModel @Inject constructor(
 
     private fun navigateToHomeOrUserAttributionPage() {
         viewModelScope.launch {
-            if (languagesRepository.getNativeLanguage().firstOrNull() != null &&
-                languagesRepository.getLearningLanguage().firstOrNull() != null
+            if (languagesRepository.getNativeLanguage().firstOrNull() == null ||
+                languagesRepository.getLearningLanguage().firstOrNull() == null
             ) {
-                _channel.send(LoginContractChannel.NavigateToHome)
-            } else {
                 _channel.send(LoginContractChannel.NavigateToChooseUserAttributes)
+            } else {
+                _channel.send(LoginContractChannel.NavigateToHome)
             }
         }
     }

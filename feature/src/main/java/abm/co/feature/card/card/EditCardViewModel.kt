@@ -18,10 +18,6 @@ class EditCardViewModel @Inject constructor(
 
     private val cardItem: CardItemUI? = savedStateHandle["card_item"]
 
-    init {
-        println("cardItem: $cardItem")
-    }
-
     val channel: Flow<Nothing> get() = emptyFlow()
 
     private val mutableState = MutableStateFlow(EditCardContractState())

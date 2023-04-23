@@ -6,7 +6,6 @@ import androidx.annotation.Keep
 import androidx.annotation.StringRes
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 @Keep
 data class LanguageDTO(

@@ -1,6 +1,6 @@
 package abm.co.feature.welcomelogin
 
-import abm.co.designsystem.flow.collectInLaunchedEffect
+import abm.co.designsystem.extensions.collectInLaunchedEffect
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.button.ButtonSize
 import abm.co.designsystem.component.button.ButtonState

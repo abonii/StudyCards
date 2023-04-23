@@ -6,7 +6,8 @@ import abm.co.designsystem.component.modifier.animateDp
 import abm.co.designsystem.component.modifier.baseBackground
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.widget.LoadingView
-import abm.co.designsystem.flow.collectInLaunchedEffect
+import abm.co.designsystem.extensions.collectInLaunchedEffect
+import abm.co.designsystem.extensions.getActivity
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
@@ -16,6 +17,7 @@ import abm.co.feature.home.component.HomeCollapsingToolbar
 import abm.co.feature.toolbar.ToolbarState
 import abm.co.feature.toolbar.rememberToolbarState
 import abm.co.feature.utils.AnalyticsManager
+import abm.co.permissions.extension.requestPushNotificationsPermission
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
@@ -72,6 +74,10 @@ fun HomePage(
 ) {
     LaunchedEffect(Unit) {
         AnalyticsManager.sendEvent("home_page_viewed")
+    }
+    val activity = getActivity()
+    LaunchedEffect(Unit) {
+        activity?.requestPushNotificationsPermission()
     }
     viewModel.channel.collectInLaunchedEffect {
         when (it) {

@@ -68,38 +68,19 @@ dependencies {
 //        implementation(assistedInjectAnnotation)
 //        implementation(assistedInjectProcessor)
     }
-    NavigationDependencies.apply {
-        implementation(navigationCompose)
-        implementation(composeHiltNavigation)
-    }
-    ComposeDependencies.apply {
-        implementation(platform(composeBOM))
-        implementation(composeUi)
-        implementation(composeUiPreview)
-        implementation(composeUiTooling)
-        implementation(composeUiTestManifest)
-        implementation(composeMaterial)
-        implementation(constraintCompose)
-        implementation(composeCoil)
-        implementation(composeActivity)
-        implementation(composeViewModel)
-    }
     TestDependencies.apply {
         testImplementation(junit)
         androidTestImplementation(junitExt)
     }
     AndroidxDependencies.apply {
         implementation(splashScreen)
-        implementation(dataStore)
-        implementation(dataStorePreference)
-        implementation(lifecycleProcess)
-        implementation(lifeCycleRuntimeKtx)
-        implementation(lifeCycleRuntimeCompose)
-        implementation(lifeCycleViewModelKtx)
     }
     KotlinxDependencies.forStudyCards().forEach(::implementation)
     OtherDependencies.forStudyCards().forEach(::implementation)
     implementation(BillingDependencies.billing)
     implementation(StartupDependencies.startupRuntime)
-//    implementation(project(":library:designsystem"))
+    implementation(project(":library:designsystem"))
+    implementation(project(":feature"))
+    implementation(project(":data"))
+    implementation(project(":domain"))
 }

@@ -1,10 +1,7 @@
 package abm.co.feature.userattributes.usergoal
 
 import abm.co.designsystem.component.modifier.Modifier
-import abm.co.feature.userattributes.ChooseUserAttributesContractEvent
-import abm.co.feature.userattributes.UserAttributesPage
 import abm.co.feature.userattributes.common.AnimatableContent
-import abm.co.feature.userattributes.lanugage.LanguageItem
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable

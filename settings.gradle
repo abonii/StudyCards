@@ -2,7 +2,7 @@ rootProject.name = "StudyCards"
 include ':admin'
 include ':library:designsystem'
 include ':app'
-include ':library:navigation'
 include ':feature'
 include ':domain'
 include ':data'
+include ':library:permissions'

@@ -43,12 +43,16 @@ android {
 dependencies {
     implementation(project(":domain"))
     implementation(KotlinxDependencies.json)
+    api(MaterialDependencies.main)
     AndroidxDependencies.apply {
         api(coreKtx)
         api(activity)
         api(appcompat)
+        api(lifecycleProcess)
+        api(lifeCycleRuntimeKtx)
         api(lifeCycleRuntimeCompose)
         api(lifeCycleViewModelKtx)
+        api(constraintLayout)
     }
     OtherDependencies.apply {
         api(ssp)

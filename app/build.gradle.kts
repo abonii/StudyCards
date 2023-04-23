@@ -38,7 +38,7 @@ android {
             keyAlias = "STUDY_CARDS_ALIAS"
             storePassword = "STUDY_CARDS_PASSWORD"
             keyPassword = "STUDY_CARDS_PASSWORD"
-            storeFile = file("C:/Desktop/key.jsk")
+            storeFile = file("/Users/abylay/StudioProjects/StudyCards/key.jsk")
         }
     }
 
@@ -102,19 +102,13 @@ dependencies {
     }
     AndroidxDependencies.apply {
         implementation(splashScreen)
-        implementation(dataStore)
-        implementation(dataStorePreference)
-        implementation(lifecycleProcess)
-        implementation(lifeCycleRuntimeKtx)
-        implementation(lifeCycleRuntimeCompose)
-        implementation(lifeCycleViewModelKtx)
     }
     KotlinxDependencies.forStudyCards().forEach(::implementation)
     OtherDependencies.forStudyCards().forEach(::implementation)
     implementation(BillingDependencies.billing)
     implementation(StartupDependencies.startupRuntime)
-    implementation(project(":library:navigation"))
     implementation(project(":library:designsystem"))
+    implementation(project(":feature"))
     implementation(project(":data"))
     implementation(project(":domain"))
 }

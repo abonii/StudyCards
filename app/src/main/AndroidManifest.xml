@@ -5,13 +5,15 @@
     <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
         android:name=".StudyCardsApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="${appName}"
-        android:enableOnBackInvokedCallback="true"
+        android:enableOnBackInvokedCallback="false"
         android:configChanges="locale|orientation"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -36,7 +38,8 @@
 
                 <data android:scheme="https" />
                 <data android:scheme="http" />
-                <data android:scheme="stydycards" android:host="mobile" />
+                <data android:scheme="stydycards"/>
+                <data android:host="mobile"/>
 
                 <data android:host="studycards.app" />
                 <data android:host="studycards.org" />

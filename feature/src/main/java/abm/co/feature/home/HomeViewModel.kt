@@ -48,6 +48,10 @@ class HomeViewModel @Inject constructor(
     private val categoryList = mutableStateListOf<CategoryUI>()
 
     init {
+        println("init home viewmodel")
+    }
+
+    init {
         fetchUser()
         fetchCategories()
     }

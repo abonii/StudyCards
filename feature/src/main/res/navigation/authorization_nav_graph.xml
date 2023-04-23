@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/authorization_nav_graph"
+    app:startDestination="@id/welcome_login_destination">
+
+    <include app:graph="@navigation/user_preference_and_language_nav_graph" />
+
+    <fragment
+        android:id="@+id/welcome_login_destination"
+        android:name="abm.co.feature.welcomelogin.WelcomeLoginFragment">
+
+        <action
+            android:id="@+id/to_login_destination"
+            app:destination="@id/login_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/login_destination"
+        android:name="abm.co.feature.authorization.login.LoginFragment">
+
+        <action
+            android:id="@+id/to_sign_up_destination"
+            app:destination="@id/sign_up_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/authorization_nav_graph"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/sign_up_destination"
+        android:name="abm.co.feature.authorization.signup.SignUpFragment" >
+
+        <action
+            android:id="@+id/to_login_destination"
+            app:destination="@id/login_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/authorization_nav_graph"/>
+    </fragment>
+</navigation>

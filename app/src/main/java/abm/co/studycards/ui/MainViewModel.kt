@@ -1,62 +1,39 @@
 package abm.co.studycards.ui
 
-import abm.co.domain.base.onSuccess
 import abm.co.domain.repository.LanguagesRepository
-import abm.co.domain.repository.ServerRepository
-import abm.co.navigation.navhost.card.graph.NewCardOrCategoryDestinations
-import abm.co.navigation.navhost.root.Graph
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import abm.co.feature.R as featureR
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val languagesRepository: LanguagesRepository,
-    private val serverRepository: ServerRepository
+    private val languagesRepository: LanguagesRepository
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(MainContractState())
     val state: StateFlow<MainContractState> = mutableState.asStateFlow()
 
-    private val _startDestinationOfNewCardOrCategory = MutableStateFlow<NewCardOrCategoryDestinations>(NewCardOrCategoryDestinations.Card())
-    val startDestinationOfNewCardOrCategory = _startDestinationOfNewCardOrCategory.asStateFlow()
+    private val _startDestination = Channel<Int>()
+    val startDestination: Flow<Int> = _startDestination.receiveAsFlow()
 
     init {
         fetchStartDestination()
-        listenIsUserHasCategories()
-        isEverythingReady()
-    }
-
-    private fun listenIsUserHasCategories() {
-        viewModelScope.launch {
-            serverRepository.getCategories.collectLatest { either ->
-                either.onSuccess { category ->
-                    _startDestinationOfNewCardOrCategory.value = if (category.isNotEmpty()) {
-                        NewCardOrCategoryDestinations.Card()
-                    } else NewCardOrCategoryDestinations.Category
-                }
-            }
-        }
-    }
-
-    private fun isEverythingReady() {
-        viewModelScope.launch {
-            mutableState.update {
-                delay(50) // status bar height cannot be calculated immediately
-                it.copy(isSplashScreenVisible = it.startDestination == null)
-            }
-        }
     }
 
     private fun fetchStartDestination() {
@@ -64,23 +41,29 @@ class MainViewModel @Inject constructor(
             mutableState.update {
                 val hasUser = firebaseAuth.currentUser != null
                 val startDestination = if (hasUser) {
-                    if (languagesRepository.getNativeLanguage()
-                            .firstOrNull() == null || languagesRepository.getLearningLanguage()
-                            .firstOrNull() == null
-                    ) {
-                        Graph.USER_ATTRIBUTES
-                    } else Graph.MAIN
+                    val languagesNotStored = combine(
+                        languagesRepository.getLearningLanguage(),
+                        languagesRepository.getNativeLanguage()
+                    ) { learning, native ->
+                        learning == null || native == null
+                    }.firstOrNull() ?: true
+                    if (languagesNotStored) {
+                        featureR.id.user_preference_and_language_nav_graph
+                    } else {
+                        featureR.id.main_nav_graph
+                    }
                 } else {
-                    Graph.AUTH
+                    featureR.id.authorization_nav_graph
                 }
-                it.copy(startDestination = startDestination)
+                _startDestination.send(startDestination)
+                delay(50) // status bar height cannot be calculated immediately
+                it.copy(isSplashScreenVisible = false)
             }
         }
     }
 }
 
 data class MainContractState(
-    val startDestination: String? = null,
     val isSplashScreenVisible: Boolean = true
 )
 

@@ -65,7 +65,6 @@ object FirebaseModule {
 //                .child(native?.code ?: "en")
 //                .child(learning?.code ?: "en")
 //                .apply { keepSynced(true) }
-//            println("a.key: ${a.key}")
 //            return@combine a
 //        }
 //    }

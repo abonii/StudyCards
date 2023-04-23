@@ -56,6 +56,7 @@ android {
 
 dependencies {
     api(project(":library:designsystem"))
+    implementation(project(":library:permissions"))
     api(project(":domain"))
     DIDependencies.apply {
         implementation(hiltAndroid)
@@ -70,6 +71,12 @@ dependencies {
         implementation(database)
     }
     KotlinxDependencies.forStudyCards().forEach(::implementation)
+    NavigationDependencies.apply {
+        api(navigationCompose)
+        api(fragment)
+        api(ui)
+        api(runtime)
+    }
 }
 
 kapt {
