@@ -4,10 +4,14 @@
     android:id="@+id/user_preference_and_language_nav_graph"
     app:startDestination="@id/user_preference_and_language_destination">
 
-    <include app:graph="@navigation/home_nav_graph" />
-
     <fragment
         android:id="@+id/user_preference_and_language_destination"
-        android:name="abm.co.feature.userattributes.UserPreferenceAndLanguageFragment" />
+        android:name="abm.co.feature.userattributes.UserPreferenceAndLanguageFragment">
+
+        <argument
+            android:name="show_addition_quiz"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
 
 </navigation>

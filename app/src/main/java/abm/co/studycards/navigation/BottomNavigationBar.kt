@@ -15,9 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.ui.NavigationUI
 import kotlinx.collections.immutable.persistentListOf
 
 private const val BOTTOM_BAR_HEIGHT = 84f // it is as dp
@@ -37,7 +35,7 @@ private val items = persistentListOf(
     ),
     BottomNavigationItem(
         nameRes = null,
-        resId = abm.co.feature.R.id.home_nav_graph,
+        resId = abm.co.feature.R.id.new_card_nav_graph,
         iconRes = R.drawable.ic_new_card,
         order = 2
     ),

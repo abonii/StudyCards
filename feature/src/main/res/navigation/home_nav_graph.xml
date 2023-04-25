@@ -7,4 +7,13 @@
     <fragment
         android:id="@+id/home_destination"
         android:name="abm.co.feature.home.HomeFragment" />
+
+    <fragment
+        android:id="@+id/category_destination"
+        android:name="abm.co.feature.card.category.CategoryFragment">
+
+        <argument
+            android:name="category"
+            app:argType="abm.co.feature.card.model.CategoryUI" />
+    </fragment>
 </navigation>

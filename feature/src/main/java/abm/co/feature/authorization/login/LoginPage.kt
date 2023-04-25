@@ -49,9 +49,9 @@ import com.google.firebase.ktx.Firebase
 
 @Composable
 fun LoginPage(
-    onNavigateSignUpPage: () -> Unit,
-    onNavigateHomePage: () -> Unit,
-    onNavigateChooseUserAttributes: () -> Unit,
+    onNavigateToSignUpPage: () -> Unit,
+    onNavigateToMainPage: () -> Unit,
+    onNavigateToChooseUserAttributes: () -> Unit,
     onNavigateToForgotPage: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
@@ -74,14 +74,14 @@ fun LoginPage(
             LoginContractChannel.NavigateToForgotPassword -> {
                 onNavigateToForgotPage()
             }
-            LoginContractChannel.NavigateToHome -> {
-                onNavigateHomePage()
+            LoginContractChannel.NavigateToMain -> {
+                onNavigateToMainPage()
             }
             LoginContractChannel.NavigateToChooseUserAttributes -> {
-                onNavigateChooseUserAttributes()
+                onNavigateToChooseUserAttributes()
             }
             LoginContractChannel.NavigateToSignUp -> {
-                onNavigateSignUpPage()
+                onNavigateToSignUpPage()
             }
             is LoginContractChannel.ShowMessage -> showMessage(it.messageContent)
         }

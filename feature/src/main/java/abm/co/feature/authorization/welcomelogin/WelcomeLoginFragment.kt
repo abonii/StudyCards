@@ -1,4 +1,4 @@
-package abm.co.feature.userattributes
+package abm.co.feature.authorization.welcomelogin
 
 import abm.co.core.navigation.NavigationBetweenModules
 import abm.co.designsystem.base.BaseFragment
@@ -11,26 +11,36 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UserPreferenceAndLanguageFragment : BaseFragment() {
+class WelcomeLoginFragment : BaseFragment() {
 
     companion object {
         private val rootViewId = View.generateViewId()
     }
 
-    override val rootViewId: Int get() = UserPreferenceAndLanguageFragment.rootViewId
+    override val rootViewId: Int get() = Companion.rootViewId
 
     @Inject
     lateinit var navigationBetweenModules: NavigationBetweenModules
 
     @Composable
     override fun InitUI(messageContent: messageContent) {
-        UserPreferenceAndLanguage(
-            onNavigateHomePage = {
+        WelcomeLoginPage(
+            showMessage = messageContent,
+            onNavigateChooseUserAttributes = {
                 findNavController().navigateSafe(
-                    navigationBetweenModules.getNavigateFromUserPreferenceAndLanguageToMain()
+                    navigationBetweenModules.getNavigateFromAuthorizationToUserPreferenceAndLanguage()
                 )
             },
-            showMessage = messageContent
+            onNavigateSignUpPage = {
+                findNavController().navigate(
+                    WelcomeLoginFragmentDirections.toSignUpDestination()
+                )
+            },
+            onNavigateToLoginPage = {
+                findNavController().navigateSafe(
+                    WelcomeLoginFragmentDirections.toLoginDestination()
+                )
+            }
         )
     }
 }

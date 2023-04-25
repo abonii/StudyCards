@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_authorization_nav_graph"
+    app:startDestination="@id/authorization_nav_graph">
+
+    <include app:graph="@navigation/authorization_nav_graph" />
+    <include app:graph="@navigation/root_main_nav_graph" />
+    <include app:graph="@navigation/root_user_preference_and_language_nav_graph" />
+
+    <action
+        android:id="@+id/from_authorization_to_main"
+        app:destination="@id/root_main_nav_graph"
+        app:enterAnim="@anim/enter_from_right"
+        app:exitAnim="@anim/exit_to_left"
+        app:popEnterAnim="@anim/pop_enter_from_left"
+        app:popExitAnim="@anim/pop_exit_to_right"
+        app:popUpTo="@id/authorization_nav_graph"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/from_authorization_to_user_preference"
+        app:destination="@id/root_user_preference_and_language_nav_graph"
+        app:enterAnim="@anim/enter_from_right"
+        app:exitAnim="@anim/exit_to_left"
+        app:popEnterAnim="@anim/pop_enter_from_left"
+        app:popExitAnim="@anim/pop_exit_to_right"
+        app:popUpTo="@id/authorization_nav_graph"
+        app:popUpToInclusive="true" />
+</navigation>

@@ -1,6 +1,7 @@
 package abm.co.studycards.ui
 
 import abm.co.domain.repository.LanguagesRepository
+import abm.co.studycards.R
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -48,12 +48,12 @@ class MainViewModel @Inject constructor(
                         learning == null || native == null
                     }.firstOrNull() ?: true
                     if (languagesNotStored) {
-                        featureR.id.user_preference_and_language_nav_graph
+                        R.navigation.root_user_preference_and_language_nav_graph
                     } else {
-                        featureR.id.main_nav_graph
+                        R.navigation.root_main_nav_graph
                     }
                 } else {
-                    featureR.id.authorization_nav_graph
+                    R.navigation.root_authorization_nav_graph
                 }
                 _startDestination.send(startDestination)
                 delay(50) // status bar height cannot be calculated immediately

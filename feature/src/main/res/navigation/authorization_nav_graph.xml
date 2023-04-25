@@ -4,11 +4,9 @@
     android:id="@+id/authorization_nav_graph"
     app:startDestination="@id/welcome_login_destination">
 
-    <include app:graph="@navigation/user_preference_and_language_nav_graph" />
-
     <fragment
         android:id="@+id/welcome_login_destination"
-        android:name="abm.co.feature.welcomelogin.WelcomeLoginFragment">
+        android:name="abm.co.feature.authorization.welcomelogin.WelcomeLoginFragment">
 
         <action
             android:id="@+id/to_login_destination"
@@ -17,6 +15,14 @@
             app:exitAnim="@anim/exit_to_left"
             app:popEnterAnim="@anim/pop_enter_from_left"
             app:popExitAnim="@anim/pop_exit_to_right" />
+
+        <action
+            android:id="@+id/to_sign_up_destination"
+            app:destination="@id/sign_up_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right"/>
     </fragment>
 
     <fragment

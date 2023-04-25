@@ -1,10 +1,14 @@
 package abm.co.feature.authorization.signup
 
+import abm.co.core.navigation.NavigationBetweenModules
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
+import abm.co.designsystem.navigation.extension.navigateSafe
 import android.view.View
 import androidx.compose.runtime.Composable
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SignUpFragment : BaseFragment() {
@@ -15,6 +19,9 @@ class SignUpFragment : BaseFragment() {
 
     override val rootViewId: Int get() = SignUpFragment.rootViewId
 
+    @Inject
+    lateinit var navigationBetweenModules: NavigationBetweenModules
+
     @Composable
     override fun InitUI(messageContent: messageContent) {
         SignUpPage(
@@ -22,20 +29,14 @@ class SignUpFragment : BaseFragment() {
                 messageContent(it)
             },
             onNavigateChooseUserAttributes = {
-//                navController.navigate(
-//                    route = Graph.USER_ATTRIBUTES,
-//                    args = bundleOf(
-//                        ChooseUserAttributesDestination().showAdditionQuiz to true
-//                    ),
-//                    navOptions = NavOptions.Builder().apply {
-//                        setPopUpTo(Graph.AUTH, inclusive = true)
-//                    }.build() todo navigation
-//                )
+                findNavController().navigateSafe(
+                    navigationBetweenModules.getNavigateFromAuthorizationToUserPreferenceAndLanguage()
+                )
             },
             onNavigateLoginPage = {
-//                navController.navigate(AuthDestinations.Login.route) {
-//                    popUpTo(AuthDestinations.WelcomeLogin.route) todo navigation
-//                }
+                findNavController().navigateSafe(
+                    SignUpFragmentDirections.toLoginDestination()
+                )
             }
         )
     }

@@ -111,4 +111,5 @@ dependencies {
     implementation(project(":feature"))
     implementation(project(":data"))
     implementation(project(":domain"))
+    implementation(project(":core"))
 }

@@ -85,14 +85,14 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun navigateToHomeOrUserAttributionPage() {
+    private fun navigateToMainOrUserAttributionPage() {
         viewModelScope.launch {
             if (languagesRepository.getNativeLanguage().firstOrNull() == null ||
                 languagesRepository.getLearningLanguage().firstOrNull() == null
             ) {
                 _channel.send(LoginContractChannel.NavigateToChooseUserAttributes)
             } else {
-                _channel.send(LoginContractChannel.NavigateToHome)
+                _channel.send(LoginContractChannel.NavigateToMain)
             }
         }
     }
@@ -108,7 +108,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun loginViaEmail() {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             with(state.value) {
                 when {
                     TextUtils.isEmpty(email.trim()) -> {
@@ -184,7 +184,7 @@ class LoginViewModel @Inject constructor(
             )
         }
         if (currentUser != null) {
-            navigateToHomeOrUserAttributionPage()
+            navigateToMainOrUserAttributionPage()
         }
     }
 
@@ -234,7 +234,7 @@ sealed interface LoginContractEvent {
 sealed interface LoginContractChannel {
     data class LoginViaGoogle(val intent: Intent) : LoginContractChannel
     object NavigateToSignUp : LoginContractChannel
-    object NavigateToHome : LoginContractChannel
+    object NavigateToMain : LoginContractChannel
     object NavigateToChooseUserAttributes : LoginContractChannel
     object NavigateToForgotPassword : LoginContractChannel
     data class ShowMessage(val messageContent: MessageContent) : LoginContractChannel

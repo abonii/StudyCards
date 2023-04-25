@@ -3,6 +3,8 @@ package abm.co.designsystem.message.common
 import abm.co.designsystem.message.snackbar.MessageType
 import android.content.Context
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,7 +18,7 @@ class MessageAlertContent(
     val title: String,
     val subtitle: String
 )
-
+@Immutable
 sealed interface MessageContent {
     sealed interface Snackbar: MessageContent {
         data class MessageContentRes(

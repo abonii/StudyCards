@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/new_card_nav_graph"
+    app:startDestination="@id/edit_category_destination">
+
+    <fragment
+        android:id="@+id/edit_category_destination"
+        android:name="abm.co.feature.card.editcategory.EditCategoryFragment">
+
+        <action
+            android:id="@+id/to_edit_card_destination"
+            app:destination="@id/edit_card_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/edit_card_destination"
+        android:name="abm.co.feature.card.card.EditCardFragment">
+
+        <argument
+            android:name="category"
+            app:argType="abm.co.feature.card.model.CategoryUI" />
+    </fragment>
+</navigation>

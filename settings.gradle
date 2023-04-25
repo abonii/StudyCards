@@ -1,8 +1,8 @@
 rootProject.name = "StudyCards"
-include ':admin'
 include ':library:designsystem'
 include ':app'
 include ':feature'
 include ':domain'
 include ':data'
 include ':library:permissions'
+include ':core'

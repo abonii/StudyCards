@@ -1,46 +1,49 @@
 package abm.co.feature.authorization.login
 
+import abm.co.core.navigation.NavigationBetweenModules
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
+import abm.co.designsystem.navigation.extension.navigateSafe
 import android.view.View
 import androidx.compose.runtime.Composable
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginFragment: BaseFragment() {
+class LoginFragment : BaseFragment() {
 
     companion object {
         private val rootViewId = View.generateViewId()
     }
+
+    @Inject
+    lateinit var navigationBetweenModules: NavigationBetweenModules
 
     override val rootViewId: Int get() = LoginFragment.rootViewId
 
     @Composable
     override fun InitUI(messageContent: messageContent) {
         LoginPage(
-            onNavigateChooseUserAttributes = {
-//                navController.navigate(Graph.MAIN) {
-//                    popUpTo(Graph.AUTH) { inclusive = true } todo navigation
-//                }
+            onNavigateToChooseUserAttributes = {
+                findNavController().navigateSafe(
+                    navigationBetweenModules.getNavigateFromAuthorizationToUserPreferenceAndLanguage()
+                )
             },
-            onNavigateHomePage = {
-//                navController.navigate(Graph.MAIN) {
-//                    popUpTo(Graph.AUTH) { inclusive = true } todo navigation
-//                }
+            onNavigateToMainPage = {
+                findNavController().navigateSafe(
+                    navigationBetweenModules.getNavigateFromAuthorizationToMain()
+                )
             },
-            onNavigateSignUpPage = {
-//                navOptionsController.navigate(
-//                    route = AuthDestinations.SignUp.route
-//                ) {
-//                    popUpTo(AuthDestinations.WelcomeLogin.route) todo navigation
-//                }
+            onNavigateToSignUpPage = {
+                findNavController().navigate(
+                    LoginFragmentDirections.toSignUpDestination()
+                )
             },
             onNavigateToForgotPage = {
 
             },
-            showMessage = {
-                messageContent(it)
-            }
+            showMessage = messageContent
         )
     }
 }
