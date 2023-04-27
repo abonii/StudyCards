@@ -48,10 +48,6 @@ class HomeViewModel @Inject constructor(
     private val categoryList = mutableStateListOf<CategoryUI>()
 
     init {
-        println("init home viewmodel")
-    }
-
-    init {
         fetchUser()
         fetchCategories()
     }
@@ -98,7 +94,7 @@ class HomeViewModel @Inject constructor(
             }
             is HomeContractEvent.OnClickPlayCategory -> {
                 viewModelScope.launch {
-                    _channel.send(HomeContractChannel.NavigateToCategoryGame(event.value))
+                    _channel.send(HomeContractChannel.NavigateToGameKinds(event.value))
                 }
             }
             is HomeContractEvent.OnClickCategory -> {
@@ -172,7 +168,7 @@ sealed interface HomeContractChannel {
     object OpenDrawer : HomeContractChannel
     object NavigateToLanguageSelectPage : HomeContractChannel
     object NavigateToAllCategory : HomeContractChannel
-    data class NavigateToCategoryGame(val value: CategoryUI) : HomeContractChannel
+    data class NavigateToGameKinds(val value: CategoryUI) : HomeContractChannel
     data class NavigateToCategory(val category: CategoryUI) : HomeContractChannel
     data class ShowMessage(val messageContent: MessageContent) : HomeContractChannel
 }

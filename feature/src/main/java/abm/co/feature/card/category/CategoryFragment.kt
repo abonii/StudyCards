@@ -2,6 +2,7 @@ package abm.co.feature.card.category
 
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
+import abm.co.designsystem.navigation.extension.navigateSafe
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.navigation.fragment.findNavController
@@ -25,11 +26,13 @@ class CategoryFragment : BaseFragment() {
             onBack = {
                 findNavController().navigateUp()
             },
-            navigateToCard = {
-//                navController.navigate(
-//                    route = NewCardOrCategoryDestinations.Card().route,
-//                    args = bundleOf(NewCardOrCategoryDestinations.Card().card to it)
-//                ) // todo navigate
+            navigateToCard = { cardItem, category ->
+                findNavController().navigateSafe(
+                    CategoryFragmentDirections.toEditCardDestination(
+                        cardItem = cardItem,
+                        category = category
+                    )
+                )
             },
             navigateToEditCategory = {
 

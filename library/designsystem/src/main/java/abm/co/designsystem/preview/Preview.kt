@@ -3,6 +3,9 @@ package abm.co.designsystem.preview
 import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview
 
+@Preview(name = "Phone", device = "spec:width=411dp,height=891dp")
+@Preview(name = "Foldable", device = "spec:width=673.5dp,height=841dp,dpi=480")
+@Preview(showSystemUi = true)
 @Preview(name = "Light", showBackground = true)
 @Preview(
     name = "Dark",

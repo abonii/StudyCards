@@ -103,6 +103,18 @@
     <string name="Game.Swipe.know">Known</string>
     <string name="Game.Swipe.uncertain">Uncertain</string>
 
+    <string name="EditCard.Toolbar.title">Add Card</string>
+    <string name="EditCard.Category.doesntExist">No Category</string>
+    <string name="EditCard.Category.prefix">Category: </string>
+    <string name="EditCard.LanuageField.title">Word in %s</string>
+    <string name="EditCard.LearningLanuageField.hint">Enter a word</string>
+    <string name="EditCard.NativeLanuageField.hint">Translation of word</string>
+    <string name="EditCard.ImageField.title">Image</string>
+    <string name="EditCard.ImageField.hint">Image URL</string>
+    <string name="EditCard.Button.save">Save</string>
+    <string name="EditCard.Button.back">Navigate Back</string>
+    <string name="EditCard.Example.add">+ Add example</string>
+
     <plurals name="words">
         <item quantity="one"> %d word</item>
         <item quantity="zero"> %d word</item>

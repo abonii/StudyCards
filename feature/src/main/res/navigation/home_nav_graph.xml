@@ -4,9 +4,20 @@
     android:id="@+id/home_nav_graph"
     app:startDestination="@id/home_destination">
 
+    <include app:graph="@navigation/edit_card_nav_graph" />
+
     <fragment
         android:id="@+id/home_destination"
-        android:name="abm.co.feature.home.HomeFragment" />
+        android:name="abm.co.feature.home.HomeFragment" >
+
+        <action
+            android:id="@+id/to_category_destination"
+            app:destination="@id/category_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/category_destination"
@@ -15,5 +26,28 @@
         <argument
             android:name="category"
             app:argType="abm.co.feature.card.model.CategoryUI" />
+
+        <action
+            android:id="@+id/to_edit_card_destination"
+            app:destination="@id/edit_card_nav_graph"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right">
+
+            <argument
+                android:name="card_item"
+                android:defaultValue="@null"
+                app:argType="abm.co.feature.card.model.CardItemUI"
+                app:nullable="true" />
+            <argument
+                android:name="show_progress"
+                app:argType="boolean"
+                android:defaultValue="false" />
+            <argument
+                android:name="category"
+                app:argType="abm.co.feature.card.model.CategoryUI" />
+        </action>
     </fragment>
+
 </navigation>

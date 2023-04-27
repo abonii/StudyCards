@@ -5,6 +5,7 @@ import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.studycards.R
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -18,7 +19,14 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import kotlinx.collections.immutable.persistentListOf
 
-private const val BOTTOM_BAR_HEIGHT = 84f // it is as dp
+private const val BOTTOM_BAR_HEIGHT = 72f // it is as dp
+
+private val bottomNavigationVisibleItemsId = persistentListOf(
+    abm.co.feature.R.id.home_destination,
+    abm.co.feature.R.id.main_card_destination,
+    abm.co.feature.R.id.main_game_destination,
+    abm.co.feature.R.id.profile_destination
+)
 
 val bottomNavigationItems = persistentListOf(
     BottomNavigationItem(
@@ -35,7 +43,7 @@ val bottomNavigationItems = persistentListOf(
     ),
     BottomNavigationItem(
         nameRes = null,
-        resId = abm.co.feature.R.id.new_card_nav_graph,
+        resId = abm.co.feature.R.id.new_category_nav_graph,
         iconRes = R.drawable.ic_new_card,
         order = 2
     ),
@@ -61,11 +69,11 @@ fun BottomNavigationBar(
     CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentScreenRoute = backStackEntry?.destination?.parent?.id
-        val bottomNavVisible = remember(backStackEntry) {
+        val bottomNavVisible = remember {
             derivedStateOf {
-                bottomNavigationItems.any {
-                    currentScreenRoute == it.resId
-                } && currentScreenRoute != abm.co.feature.R.id.new_card_nav_graph
+                bottomNavigationVisibleItemsId.any {
+                    backStackEntry?.destination?.id == it
+                }
             }
         }
         val bottomBarHeight = remember { Animatable(0f) }
@@ -79,7 +87,9 @@ fun BottomNavigationBar(
             )
         }
         BottomNavigation(
-            modifier = modifier.height(bottomBarHeight.value.dp),
+            modifier = modifier
+                .navigationBarsPadding()
+                .height(bottomBarHeight.value.dp),
             elevation = 5.dp,
             backgroundColor = StudyCardsTheme.colors.backgroundPrimary
         ) {

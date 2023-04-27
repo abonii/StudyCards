@@ -11,7 +11,7 @@ ext {
             constraint         : '2.0.4',
             paging             : '3.1.1',
 
-            gradlePlugin       : '7.2.2',
+            gradlePlugin       : '8.0.0',
             gmsServicesPlugin  : '4.3.8',
 
             analytics          : '19.0.0',
@@ -20,8 +20,8 @@ ext {
 
             workManager        : '2.7.1',
 
-            navigation         : '2.4.2',
-            navigationCompose  : '2.4.2',
+            navigation         : '2.5.0',
+            navigationCompose  : '2.5.0',
             lifecycle          : '2.4.1',
 
             kotlin             : '1.8.10',

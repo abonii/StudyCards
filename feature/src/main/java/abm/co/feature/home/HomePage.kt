@@ -67,7 +67,7 @@ fun HomePage(
     openDrawer: () -> Unit,
     onNavigateToLanguageSelectPage: () -> Unit,
     navigateToAllCategory: () -> Unit,
-    navigateToCategoryGame: () -> Unit,
+    navigateToGameKinds: () -> Unit,
     navigateToCategory: (CategoryUI) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
@@ -85,7 +85,7 @@ fun HomePage(
             HomeContractChannel.OpenDrawer -> openDrawer()
             HomeContractChannel.NavigateToAllCategory -> navigateToAllCategory()
             is HomeContractChannel.ShowMessage -> showMessage(it.messageContent)
-            is HomeContractChannel.NavigateToCategoryGame -> navigateToCategoryGame()
+            is HomeContractChannel.NavigateToGameKinds -> navigateToGameKinds()
             is HomeContractChannel.NavigateToCategory -> navigateToCategory(it.category)
         }
     }

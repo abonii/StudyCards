@@ -12,6 +12,7 @@ import abm.co.feature.R
 import abm.co.feature.card.category.component.CategoryCollapsingToolbar
 import abm.co.feature.card.model.CardItemUI
 import abm.co.feature.card.model.CardKindUI
+import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.toolbar.ToolbarState
 import abm.co.feature.toolbar.rememberToolbarState
 import androidx.compose.animation.Crossfade
@@ -61,7 +62,7 @@ private val MaxToolbarHeight = 150.dp
 fun CategoryPage(
     onBack: () -> Unit,
     navigateToEditCategory: () -> Unit,
-    navigateToCard: (CardItemUI?) -> Unit,
+    navigateToCard: (CardItemUI?, CategoryUI) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: CategoryViewModel = hiltViewModel(),
 ) {
@@ -73,7 +74,7 @@ fun CategoryPage(
     viewModel.channel.collectInLaunchedEffect {
         when (it) {
             CategoryContractChannel.NavigateBack -> onBack()
-            is CategoryContractChannel.NavigateToCard -> navigateToCard(it.cardItem)
+            is CategoryContractChannel.NavigateToCard -> navigateToCard(it.cardItem, it.category)
             CategoryContractChannel.NavigateToEditCategory -> navigateToEditCategory()
             is CategoryContractChannel.ShowMessage -> showMessage(it.messageContent)
         }

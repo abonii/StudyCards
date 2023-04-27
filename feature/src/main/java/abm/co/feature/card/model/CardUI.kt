@@ -1,7 +1,9 @@
 package abm.co.feature.card.model
 
 import abm.co.domain.model.Card
+import androidx.compose.runtime.Immutable
 
+@Immutable
 data class CardUI(
     val name: String,
     val translations: String,

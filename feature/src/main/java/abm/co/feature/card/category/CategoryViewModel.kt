@@ -5,9 +5,6 @@ import abm.co.designsystem.message.common.toMessageContent
 import abm.co.domain.base.Failure
 import abm.co.domain.base.onFailure
 import abm.co.domain.base.onSuccess
-import abm.co.domain.model.Card
-import abm.co.domain.model.CardKind
-import abm.co.domain.model.Category
 import abm.co.domain.repository.ServerRepository
 import abm.co.feature.card.model.CardItemUI
 import abm.co.feature.card.model.CategoryUI
@@ -19,7 +16,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +23,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
@@ -78,23 +75,43 @@ class CategoryViewModel @Inject constructor(
             is CategoryContractEvent.OnClickPlayCard -> {
 
             }
+
             CategoryContractEvent.OnClickNewCard -> {
                 viewModelScope.launch {
-                    _channel.send(CategoryContractChannel.NavigateToCard(null))
+                    _channel.send(
+                        CategoryContractChannel.NavigateToCard(
+                            cardItem = null,
+                            category = category
+                        )
+                    )
                 }
             }
+
             CategoryContractEvent.OnBackClicked -> {
                 viewModelScope.launch {
                     _channel.send(CategoryContractChannel.NavigateBack)
                 }
             }
+
             is CategoryContractEvent.OnClickCardItem -> {
                 viewModelScope.launch {
-                    _channel.send(CategoryContractChannel.NavigateToCard(event.cardItem))
+                    _channel.send(
+                        CategoryContractChannel.NavigateToCard(
+                            cardItem = event.cardItem,
+                            category = category
+                        )
+                    )
                 }
             }
+
             CategoryContractEvent.OnClickEditCategory -> {
                 viewModelScope.launch {
+                    _channel.trySend(
+                        CategoryContractChannel.NavigateToCard(
+                            cardItem = null,
+                            category = category
+                        )
+                    )
                 }
             }
         }
@@ -110,6 +127,7 @@ class CategoryViewModel @Inject constructor(
                                 cardItems.clear()
                                 cardItems.addAll(items.map { it.toUI() })
                             }
+
                             else -> {
                                 cardItems.addAll(items.map { it.toUI() })
                                 mutableScreenState.value = CategoryContract.ScreenState.Success(
@@ -183,7 +201,10 @@ sealed interface CategoryContractChannel {
     object NavigateBack : CategoryContractChannel
 
     @Immutable
-    data class NavigateToCard(val cardItem: CardItemUI?) : CategoryContractChannel
+    data class NavigateToCard(
+        val cardItem: CardItemUI?,
+        val category: CategoryUI
+    ) : CategoryContractChannel
 
     @Immutable
     object NavigateToEditCategory : CategoryContractChannel

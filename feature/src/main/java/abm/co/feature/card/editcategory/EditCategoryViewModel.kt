@@ -1,11 +1,13 @@
 package abm.co.feature.card.editcategory
 
-import abm.co.domain.model.Category
 import abm.co.domain.repository.ServerRepository
+import abm.co.feature.card.model.CategoryUI
+import abm.co.feature.card.model.toDomain
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class EditCategoryViewModel @Inject constructor(
@@ -32,9 +35,11 @@ class EditCategoryViewModel @Inject constructor(
                     it.copy(categoryName = event.value)
                 }
             }
+
             EditCategoryContractEvent.OnContinueButtonClicked -> {
-               onContinueButtonClicked()
+                onContinueButtonClicked()
             }
+
             EditCategoryContractEvent.OnBackClicked -> {
                 viewModelScope.launch {
                     _channel.send(EditCategoryContractChannel.NavigateBack)
@@ -45,18 +50,17 @@ class EditCategoryViewModel @Inject constructor(
 
     private fun onContinueButtonClicked() {
         viewModelScope.launch {
-            serverRepository.createCategory(
-                Category(
-                    name = state.value.categoryName,
-                    cardsCount = 0,
-                    bookmarked = false,
-                    creatorName = null,
-                    creatorID = null,
-                    imageURL = null,
-                    id = ""
-                )
+            val category = CategoryUI(
+                name = state.value.categoryName,
+                cardsCount = 0,
+                bookmarked = false,
+                creatorName = null,
+                creatorID = null,
+                imageURL = null,
+                id = ""
             )
-            _channel.send(EditCategoryContractChannel.NavigateToNewCard)
+            serverRepository.createCategory(category.toDomain())
+            _channel.send(EditCategoryContractChannel.NavigateToNewCard(category = category))
         }
     }
 }
@@ -65,13 +69,15 @@ data class EditCategoryContractState(
     val categoryName: String = ""
 )
 
+@Stable
 sealed interface EditCategoryContractEvent {
     data class OnEnterCategoryName(val value: String) : EditCategoryContractEvent
     object OnContinueButtonClicked : EditCategoryContractEvent
     object OnBackClicked : EditCategoryContractEvent
 }
 
+@Immutable
 sealed interface EditCategoryContractChannel {
     object NavigateBack : EditCategoryContractChannel
-    object NavigateToNewCard : EditCategoryContractChannel
+    data class NavigateToNewCard(val category: CategoryUI) : EditCategoryContractChannel
 }

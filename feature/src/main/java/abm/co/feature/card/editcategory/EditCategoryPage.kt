@@ -9,6 +9,7 @@ import abm.co.designsystem.extensions.collectInLaunchedEffect
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
+import abm.co.feature.card.model.CategoryUI
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,14 +21,19 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -35,10 +41,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EditCategoryPage(
     onBack: () -> Unit,
-    navigateToNewCard: () -> Unit,
+    navigateToNewCard: (CategoryUI) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: EditCategoryViewModel = hiltViewModel(),
 ) {
@@ -52,7 +59,14 @@ fun EditCategoryPage(
     viewModel.channel.collectInLaunchedEffect {
         when (it) {
             EditCategoryContractChannel.NavigateBack -> onBack()
-            EditCategoryContractChannel.NavigateToNewCard -> navigateToNewCard()
+            is EditCategoryContractChannel.NavigateToNewCard -> navigateToNewCard(it.category)
+        }
+    }
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+    DisposableEffect(Unit) {
+        onDispose {
+            keyboardController?.hide()
         }
     }
 
@@ -82,7 +96,11 @@ private fun CategoryScreen(
                 event(EditCategoryContractEvent.OnBackClicked)
             }
         )
-        ScrollableContent(modifier = Modifier.weight(1f))
+        ScrollableContent(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+        )
         PrimaryButton(
             modifier = Modifier
                 .padding(bottom = 30.dp, start = 20.dp, end = 20.dp, top = 10.dp)

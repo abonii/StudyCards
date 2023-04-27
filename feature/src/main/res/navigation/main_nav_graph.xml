@@ -7,7 +7,7 @@
     <include app:graph="@navigation/home_nav_graph" />
     <include app:graph="@navigation/cards_nav_graph" />
     <include app:graph="@navigation/game_nav_graph" />
-    <include app:graph="@navigation/new_card_nav_graph" />
+    <include app:graph="@navigation/new_category_nav_graph" />
     <include app:graph="@navigation/profile_nav_graph" />
 
 </navigation>

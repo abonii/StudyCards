@@ -30,6 +30,14 @@ data class OxfordTranslationResponseDTO(
             ) {
 
                 @Keep
+                data class PronunciationDTO(
+                    val audioFile: String,
+                    val dialects: List<String>,
+                    val phoneticNotation: String,
+                    val phoneticSpelling: String
+                )
+
+                @Keep
                 data class SenseDTO(
                     val domains: List<DomainDTO>,
                     val examples: List<ExampleDTO>,
@@ -88,14 +96,6 @@ data class OxfordTranslationResponseDTO(
                         }
                     }
                 }
-
-                @Keep
-                data class PronunciationDTO(
-                    val audioFile: String,
-                    val dialects: List<String>,
-                    val phoneticNotation: String,
-                    val phoneticSpelling: String
-                )
             }
 
             @Keep

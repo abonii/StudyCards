@@ -22,9 +22,7 @@ class EditCardFragment : BaseFragment() {
             onBack = {
                 findNavController().navigateUp()
             },
-            showMessage = {
-                messageContent(it)
-            }
+            showMessage = messageContent
         )
     }
 }

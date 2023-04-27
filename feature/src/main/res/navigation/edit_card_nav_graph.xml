@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/edit_card_nav_graph"
+    app:startDestination="@id/edit_card_destination">
+
+    <fragment
+        android:id="@+id/edit_card_destination"
+        android:name="abm.co.feature.card.card.EditCardFragment" >
+
+        <argument
+            android:name="card_item"
+            app:argType="abm.co.feature.card.model.CardItemUI"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
+        <argument
+            android:name="show_progress"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="category"
+            app:argType="abm.co.feature.card.model.CategoryUI" />
+    </fragment>
+</navigation>

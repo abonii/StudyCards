@@ -1,5 +1,6 @@
 package abm.co.studycards.ui
 
+import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.studycards.R
 import abm.co.studycards.navigation.BottomNavigationBar
 import abm.co.studycards.navigation.BottomNavigationUI
@@ -39,7 +40,9 @@ class MainFragment : Fragment() {
             navController
         )
         bottomNavigationHolder.setContent {
-            BottomNavigationBar(navController = navController)
+            StudyCardsTheme {
+                BottomNavigationBar(navController = navController)
+            }
         }
     }
 }

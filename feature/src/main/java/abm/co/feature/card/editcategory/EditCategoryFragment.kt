@@ -22,8 +22,13 @@ class EditCategoryFragment : BaseFragment() {
             onBack = {
                 findNavController().navigateUp()
             },
-            navigateToNewCard = {
-//                navController.navigate(NewCardOrCategoryDestinations.Card().route) todo navigation
+            navigateToNewCard = { categoryUI ->
+                findNavController().navigate(
+                    EditCategoryFragmentDirections.toEditCardDestination(
+                        cardItem = null,
+                        category = categoryUI
+                    )
+                )
             },
             showMessage = {
                 messageContent(it)
