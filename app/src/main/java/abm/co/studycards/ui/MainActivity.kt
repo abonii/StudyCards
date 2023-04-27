@@ -44,8 +44,6 @@ class MainActivity : AppCompatActivity() {
                 val inflater = navHostFragment.navController.navInflater
                 val graph = inflater.inflate(it)
 
-//                graph.setStartDestination(it)
-
                 val navController = navHostFragment.navController
                 navController.setGraph(graph, intent.extras)
             }
