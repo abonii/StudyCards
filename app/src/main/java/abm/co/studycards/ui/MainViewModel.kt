@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import abm.co.feature.R as featureR
 
 @HiltViewModel
 class MainViewModel @Inject constructor(

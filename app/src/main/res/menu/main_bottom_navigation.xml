@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/nav_home"
+        android:id="@+id/home_nav_graph"
         android:icon="@drawable/ic_home"
         android:title="@string/nav_home" />
     <item
-        android:id="@+id/nav_card"
+        android:id="@+id/main_card_nav_graph"
         android:icon="@drawable/ic_card"
         android:title="@string/nav_home" />
     <item
-        android:id="@+id/nav_new_card"
+        android:id="@+id/new_card_nav_graph"
         android:icon="@drawable/ic_new_card"
         android:title="@null" />
     <item
-        android:id="@+id/nav_game"
+        android:id="@+id/main_game_nav_graph"
         android:icon="@drawable/ic_game"
         android:title="@string/nav_home" />
     <item
-        android:id="@+id/nav_profile"
+        android:id="@+id/profile_nav_graph"
         android:icon="@drawable/ic_user"
         android:title="@string/nav_profile" />
 </menu>

@@ -20,7 +20,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 private const val BOTTOM_BAR_HEIGHT = 84f // it is as dp
 
-private val items = persistentListOf(
+val bottomNavigationItems = persistentListOf(
     BottomNavigationItem(
         nameRes = R.string.nav_home,
         resId = abm.co.feature.R.id.home_nav_graph,
@@ -60,17 +60,17 @@ fun BottomNavigationBar(
 ) {
     CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
         val backStackEntry by navController.currentBackStackEntryAsState()
-        val currentScreenRoute = backStackEntry?.destination?.id
+        val currentScreenRoute = backStackEntry?.destination?.parent?.id
         val bottomNavVisible = remember(backStackEntry) {
             derivedStateOf {
-                items.any {
+                bottomNavigationItems.any {
                     currentScreenRoute == it.resId
-                }
+                } && currentScreenRoute != abm.co.feature.R.id.new_card_nav_graph
             }
         }
-        val bottomBarHeightPx = remember { Animatable(0f) }
+        val bottomBarHeight = remember { Animatable(0f) }
         LaunchedEffect(bottomNavVisible.value) {
-            bottomBarHeightPx.animateTo(
+            bottomBarHeight.animateTo(
                 targetValue = if (bottomNavVisible.value) {
                     BOTTOM_BAR_HEIGHT
                 } else {
@@ -79,11 +79,11 @@ fun BottomNavigationBar(
             )
         }
         BottomNavigation(
-            modifier = modifier.height(bottomBarHeightPx.value.dp),
+            modifier = modifier.height(bottomBarHeight.value.dp),
             elevation = 5.dp,
             backgroundColor = StudyCardsTheme.colors.backgroundPrimary
         ) {
-            items.forEach { item ->
+            bottomNavigationItems.forEach { item ->
                 BottomNavigationIcon(
                     selected = item.resId == currentScreenRoute,
                     item = item,

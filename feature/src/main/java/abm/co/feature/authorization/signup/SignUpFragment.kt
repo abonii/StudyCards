@@ -29,8 +29,8 @@ class SignUpFragment : BaseFragment() {
                 messageContent(it)
             },
             onNavigateChooseUserAttributes = {
-                findNavController().navigateSafe(
-                    navigationBetweenModules.getNavigateFromAuthorizationToUserPreferenceAndLanguage()
+                navigationBetweenModules.navigateFromAuthorizationToUserPreferenceAndLanguage(
+                    findNavController()
                 )
             },
             onNavigateLoginPage = {

@@ -3,7 +3,6 @@ package abm.co.feature.userattributes
 import abm.co.core.navigation.NavigationBetweenModules
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
-import abm.co.designsystem.navigation.extension.navigateSafe
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.navigation.fragment.findNavController
@@ -26,8 +25,8 @@ class UserPreferenceAndLanguageFragment : BaseFragment() {
     override fun InitUI(messageContent: messageContent) {
         UserPreferenceAndLanguage(
             onNavigateHomePage = {
-                findNavController().navigateSafe(
-                    navigationBetweenModules.getNavigateFromUserPreferenceAndLanguageToMain()
+                navigationBetweenModules.navigateFromUserPreferenceAndLanguageToMain(
+                    findNavController()
                 )
             },
             showMessage = messageContent

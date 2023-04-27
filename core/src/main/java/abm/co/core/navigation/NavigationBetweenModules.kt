@@ -1,7 +1,9 @@
 package abm.co.core.navigation
 
+import androidx.navigation.NavController
+
 interface NavigationBetweenModules {
-    fun getNavigateFromAuthorizationToMain(): Int
-    fun getNavigateFromAuthorizationToUserPreferenceAndLanguage(): Int
-    fun getNavigateFromUserPreferenceAndLanguageToMain(): Int
+    fun navigateFromAuthorizationToMain(navController: NavController)
+    fun navigateFromAuthorizationToUserPreferenceAndLanguage(navController: NavController)
+    fun navigateFromUserPreferenceAndLanguageToMain(navController: NavController)
 }

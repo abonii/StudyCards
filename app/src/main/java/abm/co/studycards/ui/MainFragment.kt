@@ -2,6 +2,8 @@ package abm.co.studycards.ui
 
 import abm.co.studycards.R
 import abm.co.studycards.navigation.BottomNavigationBar
+import abm.co.studycards.navigation.BottomNavigationUI
+import abm.co.studycards.navigation.bottomNavigationItems
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,10 +34,12 @@ class MainFragment : Fragment() {
         val navController = navHostFragment.navController
 
         val bottomNavigationHolder = view.findViewById<ComposeView>(R.id.bottom_navigation_view)
+        BottomNavigationUI.onNavDestinationSelected(
+            bottomNavigationItems[0],
+            navController
+        )
         bottomNavigationHolder.setContent {
-            BottomNavigationBar(
-                navController = navController
-            )
+            BottomNavigationBar(navController = navController)
         }
     }
 }

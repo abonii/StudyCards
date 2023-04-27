@@ -27,8 +27,8 @@ class WelcomeLoginFragment : BaseFragment() {
         WelcomeLoginPage(
             showMessage = messageContent,
             onNavigateChooseUserAttributes = {
-                findNavController().navigateSafe(
-                    navigationBetweenModules.getNavigateFromAuthorizationToUserPreferenceAndLanguage()
+                navigationBetweenModules.navigateFromAuthorizationToUserPreferenceAndLanguage(
+                    findNavController()
                 )
             },
             onNavigateSignUpPage = {
