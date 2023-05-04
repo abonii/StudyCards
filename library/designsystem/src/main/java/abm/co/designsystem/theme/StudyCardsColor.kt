@@ -23,6 +23,9 @@ internal val LightColors = StudyCardsColor(
     grayishBlue = Color(0xFF_AFB5C1),
     blueMiddle = Color(0xFF_AFCDFB),
     middleGray = Color(0xFF_B7B7B7),
+    gray = Color(0xFF_F2F2F2),
+    grayishBlack = Color(0xFF_828282),
+    grayishWhite = Color(0xFF_BDBDBD),
     milky = Color(0xFF_F8F8F8),
     opposition = Color(0xFF_000000),
     pressed = Color(0x33_F8F8FF),
@@ -46,6 +49,9 @@ internal val DarkColors = StudyCardsColor(
     selfish = Color(0xFF_000000),
     grayishBlue = Color(0xFF_AFB5C1),
     middleGray = Color(0xFF_555555),
+    gray = Color(0xFF_F2F2F2),
+    grayishBlack = Color(0xFF_828282),
+    grayishWhite = Color(0xFF_BDBDBD),
     milky = Color(0xFF_070707),
     blueMiddle = Color(0xFF_6E8CA6),
     opposition = Color(0xFF_FFFFFF),
@@ -67,6 +73,9 @@ class StudyCardsColor(
     selfish: Color,
     grayishBlue: Color,
     middleGray: Color,
+    gray: Color,
+    grayishBlack: Color,
+    grayishWhite: Color,
     milky: Color,
     backgroundPrimary: Color,
     backgroundSecondary: Color,
@@ -107,6 +116,15 @@ class StudyCardsColor(
         private set
 
     var middleGray by mutableStateOf(middleGray)
+        private set
+
+    var gray by mutableStateOf(gray)
+        private set
+
+    var grayishBlack by mutableStateOf(grayishBlack)
+        private set
+
+    var grayishWhite by mutableStateOf(grayishWhite)
         private set
 
     var milky by mutableStateOf(milky)
@@ -153,6 +171,9 @@ class StudyCardsColor(
         selfish: Color = this.selfish,
         grayishBlue: Color = this.grayishBlue,
         middleGray: Color = this.middleGray,
+        gray: Color = this.gray,
+        grayishBlack: Color = this.grayishBlack,
+        grayishWhite: Color = this.grayishWhite,
         milky: Color = this.milky,
         backgroundPrimary: Color = this.backgroundPrimary,
         backgroundSecondary: Color = this.backgroundSecondary,
@@ -174,6 +195,9 @@ class StudyCardsColor(
         stroke = stroke,
         selfish = selfish,
         middleGray = middleGray,
+        gray = gray,
+        grayishBlack = grayishBlack,
+        grayishWhite = grayishWhite,
         milky = milky,
         grayishBlue = grayishBlue,
         backgroundPrimary = backgroundPrimary,
@@ -199,6 +223,9 @@ class StudyCardsColor(
         selfish = other.selfish
         grayishBlue = other.grayishBlue
         middleGray = other.middleGray
+        gray = other.gray
+        grayishBlack = other.grayishBlack
+        grayishWhite = other.grayishWhite
         milky = other.milky
         backgroundPrimary = other.backgroundPrimary
         backgroundSecondary = other.backgroundSecondary

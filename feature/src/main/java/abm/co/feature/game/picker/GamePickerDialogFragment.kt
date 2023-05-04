@@ -1,6 +1,6 @@
-package abm.co.feature.card.category
+package abm.co.feature.game.picker
 
-import abm.co.designsystem.base.BaseFragment
+import abm.co.designsystem.base.BaseDialogFragment
 import abm.co.designsystem.base.messageContent
 import abm.co.designsystem.navigation.extension.navigateSafe
 import android.view.View
@@ -9,34 +9,31 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CategoryFragment : BaseFragment() {
+class GamePickerDialogFragment : BaseDialogFragment() {
 
     companion object {
         private val rootViewId = View.generateViewId()
     }
 
-    override val rootViewId: Int get() = CategoryFragment.rootViewId
+    override val rootViewId: Int get() = GamePickerDialogFragment.rootViewId
 
     @Composable
     override fun InitUI(messageContent: messageContent) {
-        CategoryPage(
-            showMessage = {
-                messageContent(it)
+        GamePickerPage(
+            navigateToGame = { gameKind, cards ->
+
             },
-            onBack = {
-                findNavController().navigateUp()
-            },
-            navigateToCard = { cardItem, category ->
+            navigateToLearn = { category ->
                 findNavController().navigateSafe(
-                    CategoryFragmentDirections.toEditCardNavGraph(
-                        cardItem = cardItem,
+                    GamePickerDialogFragmentDirections.toLearnNavGraph(
                         category = category
                     )
                 )
             },
-            navigateToEditCategory = {
+            navigateToRepeat = {
 
-            }
+            },
+            showMessage = messageContent
         )
     }
 }

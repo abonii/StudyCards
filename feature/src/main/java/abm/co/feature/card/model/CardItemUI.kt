@@ -1,6 +1,6 @@
 package abm.co.feature.card.model
 
-import abm.co.domain.model.CardItem
+import abm.co.domain.model.Card
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import kotlinx.parcelize.Parcelize
@@ -17,7 +17,7 @@ data class CardItemUI(
     val id: String
 ): Parcelable
 
-fun CardItem.toUI() = CardItemUI(
+fun Card.toItemUI() = CardItemUI(
     name = name,
     translation = translation,
     kind = kind.toUI(),

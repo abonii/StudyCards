@@ -5,10 +5,11 @@
     app:startDestination="@id/home_destination">
 
     <include app:graph="@navigation/edit_card_nav_graph" />
+    <include app:graph="@navigation/game_picker_nav_graph" />
 
     <fragment
         android:id="@+id/home_destination"
-        android:name="abm.co.feature.home.HomeFragment" >
+        android:name="abm.co.feature.home.HomeFragment">
 
         <action
             android:id="@+id/to_category_destination"
@@ -17,6 +18,14 @@
             app:exitAnim="@anim/exit_to_left"
             app:popEnterAnim="@anim/pop_enter_from_left"
             app:popExitAnim="@anim/pop_exit_to_right" />
+
+        <action
+            android:id="@+id/to_game_picker_nav_graph"
+            app:destination="@id/game_picker_nav_graph">
+            <argument
+                android:name="category"
+                app:argType="abm.co.feature.card.model.CategoryUI" />
+        </action>
     </fragment>
 
     <fragment
@@ -28,7 +37,7 @@
             app:argType="abm.co.feature.card.model.CategoryUI" />
 
         <action
-            android:id="@+id/to_edit_card_destination"
+            android:id="@+id/to_edit_card_nav_graph"
             app:destination="@id/edit_card_nav_graph"
             app:enterAnim="@anim/enter_from_right"
             app:exitAnim="@anim/exit_to_left"
@@ -42,12 +51,11 @@
                 app:nullable="true" />
             <argument
                 android:name="show_progress"
-                app:argType="boolean"
-                android:defaultValue="false" />
+                android:defaultValue="false"
+                app:argType="boolean" />
             <argument
                 android:name="category"
                 app:argType="abm.co.feature.card.model.CategoryUI" />
         </action>
     </fragment>
-
 </navigation>

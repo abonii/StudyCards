@@ -1,5 +1,6 @@
 package abm.co.studycards.ui
 
+import abm.co.designsystem.extensions.addPaddingOnShownKeyboard
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.studycards.R
 import abm.co.studycards.navigation.BottomNavigationBar
@@ -44,5 +45,10 @@ class MainFragment : Fragment() {
                 BottomNavigationBar(navController = navController)
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().window.addPaddingOnShownKeyboard(view)
     }
 }

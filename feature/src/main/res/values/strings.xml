@@ -115,9 +115,26 @@
     <string name="EditCard.Button.back">Navigate Back</string>
     <string name="EditCard.Example.add">+ Add example</string>
 
-    <plurals name="words">
-        <item quantity="one"> %d word</item>
+    <string name="GamePicker.Learn.title">Learn</string>
+    <string name="GamePicker.Learn.subtitle">%s to learn</string>
+    <string name="GamePicker.Repeat.title">Repeat</string>
+    <string name="GamePicker.Repeat.subtitle">%s to repeat</string>
+    <string name="GamePicker.OneGame.title">One Game</string>
+    <string name="GamePicker.OneGame.subtitle">%s to learn\n%s to repeat</string>
+    <string name="GamePicker.Review.title">Review</string>
+    <string name="GamePicker.Review.subtitle">%s to review</string>
+    <string name="GamePicker.Pairing.title">Pairing</string>
+    <string name="GamePicker.Guessing.title">Guessing</string>
+
+    <plurals name="cards">
+        <item quantity="one"> %d card</item>
         <item quantity="zero"> %d word</item>
         <item quantity="other"> %d words</item>
+    </plurals>
+
+    <plurals name="new_cards">
+        <item quantity="one"> %d new card</item>
+        <item quantity="zero"> %d new word</item>
+        <item quantity="other"> %d new words</item>
     </plurals>
 </resources>

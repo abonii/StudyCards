@@ -5,11 +5,17 @@ import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
 import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.domain.base.Failure
+import abm.co.domain.base.onFailure
+import abm.co.domain.base.onSuccess
 import abm.co.domain.model.oxford.OxfordTranslationResponse
 import abm.co.domain.repository.DictionaryRepository
 import abm.co.domain.repository.LanguagesRepository
+import abm.co.domain.repository.ServerRepository
 import abm.co.feature.card.model.CardItemUI
+import abm.co.feature.card.model.CardKindUI
+import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
+import abm.co.feature.card.model.toDomain
 import abm.co.feature.userattributes.lanugage.LanguageUI
 import abm.co.feature.userattributes.lanugage.toUI
 import androidx.compose.runtime.Immutable
@@ -32,7 +38,8 @@ import javax.inject.Inject
 class EditCardViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val languagesRepository: LanguagesRepository,
-    private val repository: DictionaryRepository
+    private val dictionaryRepository: DictionaryRepository,
+    private val serverRepository: ServerRepository
 ) : ViewModel() {
 
     private val cardItem: CardItemUI? = savedStateHandle["card_item"]
@@ -137,7 +144,30 @@ class EditCardViewModel @Inject constructor(
 
     private fun EditCardContractState.onSaveCard() {
         viewModelScope.launch {
-
+            val card = CardUI(
+                name = this@onSaveCard.nativeText,
+                kind = CardKindUI.UNDEFINED,
+                translation = this@onSaveCard.learningText,
+                imageUrl = this@onSaveCard.imageURL,
+                repeatedCount = 0,
+                example = this@onSaveCard.example,
+                categoryID = category?.id ?: "no_category_id",
+                nextRepeatTime = System.currentTimeMillis(),
+                cardID = "",
+                learnedPercent = 0f
+            )
+            serverRepository.createCard(card.toDomain())
+                .onFailure {
+                    it.sendException()
+                }.onSuccess {
+                    if(cardItem!=null){
+                        _state.update {
+                            it.copy(progress = 1f)
+                        }
+                    } else {
+                        _channel.send(EditCardContractChannel.NavigateBack)
+                    }
+                }
         }
     }
 
@@ -158,7 +188,7 @@ data class EditCardContractState(
     val learningLanguage: LanguageUI? = null,
     val learningText: String = "",
     val nativeText: String = "",
-    val example: String? = null,
+    val example: String = "",
     val imageURL: String = "",
     val oxfordTranslationResponse: OxfordTranslationResponse? = null,
 )

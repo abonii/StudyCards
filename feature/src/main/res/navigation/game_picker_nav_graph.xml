@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/game_picker_nav_graph"
+    app:startDestination="@id/game_picker_destination">
+
+    <include app:graph="@navigation/learn_nav_graph" />
+
+    <dialog
+        android:id="@+id/game_picker_destination"
+        android:name="abm.co.feature.game.picker.GamePickerDialogFragment">
+
+        <argument
+            android:name="category"
+            app:argType="abm.co.feature.card.model.CategoryUI" />
+
+        <action
+            android:id="@+id/to_learn_nav_graph"
+            app:destination="@id/learn_nav_graph">
+            <argument
+                android:name="category"
+                app:argType="abm.co.feature.card.model.CategoryUI" />
+        </action>
+    </dialog>
+</navigation>

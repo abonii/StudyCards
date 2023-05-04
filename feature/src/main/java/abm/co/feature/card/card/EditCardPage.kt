@@ -1,5 +1,8 @@
 package abm.co.feature.card.card
 
+import abm.co.designsystem.component.button.PrimaryButton
+import abm.co.designsystem.component.button.SecondaryButton
+import abm.co.designsystem.component.button.TextButton
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.systembar.SetStatusBarColor
@@ -10,8 +13,10 @@ import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.preview.ThemePreviews
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,10 +26,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -102,7 +109,6 @@ fun EditCardPage(
     )
 }
 
-
 @Composable
 private fun EditCardScreen(
     uiState: EditCardContractState,
@@ -112,22 +118,24 @@ private fun EditCardScreen(
         modifier = Modifier
             .background(StudyCardsTheme.colors.backgroundPrimary)
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
-            .systemBarsPadding()
     ) {
         Spacer(modifier = Modifier.height(29.dp))
         Toolbar(
+            modifier = Modifier
+                .padding(start = 6.dp, top = 10.dp, end = 16.dp),
             onClickSearch = {
                 onEvent(EditCardContractEvent.OnClickCategory)
+            },
+            onBack = {
+                onEvent(EditCardContractEvent.OnClickBack)
             }
         )
         Spacer(modifier = Modifier.height(24.dp))
         uiState.progress?.let { progress ->
             LinearProgress(
                 progressFloat = progress,
-                contentColor = StudyCardsTheme.colors.blueMiddle,
-                backgroundColor = StudyCardsTheme.colors.silver.copy(alpha = 0.15f),
                 modifier = Modifier
+                    .padding(horizontal = 16.dp)
                     .clip(RoundedCornerShape(7.dp))
                     .height(6.dp)
                     .fillMaxWidth(),
@@ -143,10 +151,16 @@ private fun EditCardScreen(
             onClick = {
                 onEvent(EditCardContractEvent.OnClickCategory)
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
         )
         Spacer(modifier = Modifier.height(24.dp))
         Fields(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
             nativeLanguage = uiState.nativeLanguage?.languageNameResCode?.let {
                 stringResource(id = it)
             } ?: "",
@@ -169,19 +183,56 @@ private fun EditCardScreen(
                 onEvent(EditCardContractEvent.OnClickTranslate(it))
             },
             exampleContent = {
-                if (uiState.example != null) {
+                if (uiState.example.isNotBlank()) {
                     // todo not empty content
                 } else {
-                    Text(
-                        modifier = Modifier.clickableWithoutRipple {
+                    TextButton(
+                        title = stringResource(id = R.string.EditCard_Example_add),
+                        onClick = {
                             onEvent(EditCardContractEvent.OnClickEnterExample(""))
                         },
-                        text = stringResource(id = R.string.EditCard_Example_add),
-                        style = StudyCardsTheme.typography.weight500Size14LineHeight20,
-                        color = StudyCardsTheme.colors.textPrimary
+                        textStyle = StudyCardsTheme.typography.weight500Size14LineHeight20
+                            .copy(color = StudyCardsTheme.colors.buttonPrimary)
                     )
                 }
             }
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Buttons(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
+            onClickPrimary = {
+                onEvent(EditCardContractEvent.OnClickSaveCard)
+            },
+            onClickSecondary = {
+                onEvent(EditCardContractEvent.OnClickBack)
+            }
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+    }
+}
+
+@Composable
+private fun Buttons(
+    modifier: Modifier = Modifier,
+    onClickPrimary: () -> Unit,
+    onClickSecondary: () -> Unit
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        PrimaryButton(
+            modifier = Modifier.fillMaxWidth(),
+            title = stringResource(id = R.string.EditCard_Button_save),
+            onClick = onClickPrimary
+
+        )
+        SecondaryButton(
+            modifier = Modifier.fillMaxWidth(),
+            title = stringResource(id = R.string.EditCard_Button_back),
+            onClick = onClickSecondary
         )
     }
 }
@@ -227,7 +278,6 @@ private fun Fields(
         TextFieldWithLabel(
             label = stringResource(
                 id = R.string.EditCard_LanuageField_title,
-                nativeLanguage,
                 nativeLanguage
             ),
             hint = stringResource(id = R.string.EditCard_NativeLanuageField_hint),
@@ -250,7 +300,6 @@ private fun Fields(
         TextFieldWithLabel(
             label = stringResource(
                 id = R.string.EditCard_LanuageField_title,
-                learningLanguage,
                 learningLanguage
             ),
             hint = stringResource(id = R.string.EditCard_LearningLanuageField_hint),
@@ -270,8 +319,10 @@ private fun Fields(
                 .wrapContentWidth()
         )
         Spacer(modifier = Modifier.height(7.dp))
-        exampleContent()
-        Spacer(modifier = Modifier.height(24.dp))
+        Box(modifier = Modifier.animateContentSize()) {
+            exampleContent()
+        }
+        Spacer(modifier = Modifier.height(12.dp))
         TextFieldWithLabel(
             label = stringResource(id = R.string.EditCard_ImageField_title),
             hint = stringResource(id = R.string.EditCard_ImageField_hint),
@@ -293,10 +344,22 @@ private fun Fields(
 
 @Composable
 private fun Toolbar(
+    onBack: () -> Unit,
     onClickSearch: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            modifier = Modifier
+                .clickableWithoutRipple(onBack)
+                .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 10.dp)
+                .size(24.dp),
+            painter = painterResource(id = R.drawable.ic_left),
+            contentDescription = null
+        )
         Text(
             text = stringResource(id = R.string.EditCard_Toolbar_title),
             modifier = Modifier
@@ -331,9 +394,8 @@ private fun CategoryInfo(
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(StudyCardsTheme.colors.middleGray)
-            .clickableWithoutRipple { onClick() }
-            .wrapContentWidth(),
+            .background(StudyCardsTheme.colors.gray)
+            .clickableWithoutRipple { onClick() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
@@ -346,11 +408,10 @@ private fun CategoryInfo(
             contentDescription = null
         )
         Text(
-            text = stringResource(id = R.string.EditCard_Category_prefix) + name,
-            modifier = Modifier
-                .padding(top = 12.dp, bottom = 12.dp, end = 10.dp),
+            text = stringResource(id = R.string.EditCard_Category_prefix) + " $name",
+            modifier = Modifier.padding(top = 12.dp, bottom = 12.dp, end = 10.dp),
             style = StudyCardsTheme.typography.weight400Size16LineHeight20,
-            color = StudyCardsTheme.colors.textPrimary,
+            color = StudyCardsTheme.colors.onyx,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

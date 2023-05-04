@@ -20,7 +20,7 @@ class EditCardFragment : BaseFragment() {
     override fun InitUI(messageContent: messageContent) {
         EditCardPage(
             onBack = {
-                findNavController().navigateUp()
+                with(findNavController()) { navigateUp() }
             },
             showMessage = messageContent
         )

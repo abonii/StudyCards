@@ -2,12 +2,13 @@ package abm.co.domain.model
 
 data class Card(
     val name: String,
-    val translations: String,
+    val translation: String,
     val imageUrl: String,
-    val examples: String,
+    val example: String,
     val kind: CardKind,
+    val learnedPercent: Float, // 0..1
     val categoryID: String,
-    val repeatCount: Int,
+    val repeatedCount: Int,
     val nextRepeatTime: Long,
     val id: String
 )

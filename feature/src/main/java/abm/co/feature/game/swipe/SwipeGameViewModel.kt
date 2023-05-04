@@ -61,14 +61,15 @@ class SwipeGameViewModel @Inject constructor(
                         add(
                             CardUI(
                                 name = "$it",
-                                translations = "",
+                                translation = "",
                                 imageUrl = "",
-                                examples = "",
+                                example = "",
                                 kind = CardKindUI.UNKNOWN,
                                 categoryID = "",
-                                repeatCount = 0,
+                                repeatedCount = 0,
                                 nextRepeatTime = 0,
-                                cardID = "$it"
+                                cardID = "$it",
+                                learnedPercent = 0f
                             )
                         )
                     }

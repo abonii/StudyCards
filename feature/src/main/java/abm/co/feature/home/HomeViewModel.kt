@@ -69,10 +69,10 @@ class HomeViewModel @Inject constructor(
         repository.getCategories.map { setsOfCardsEither ->
             setsOfCardsEither.onFailure {
                 it.sendException()
-            }.onSuccess { setsOfCards ->
+            }.onSuccess { categories ->
                 categoryList.clear()
-                categoryList.addAll(setsOfCards.map { it.toUI() })
-                if (setsOfCards.isEmpty()) {
+                categoryList.addAll(categories.map { it.toUI() })
+                if (categories.isEmpty()) {
                     mutableScreenState.value = HomeContract.ScreenState.Empty
                 } else {
                     mutableScreenState.value = HomeContract.ScreenState.Success(
@@ -83,7 +83,7 @@ class HomeViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun event(event: HomeContractEvent) {
+    fun onEvent(event: HomeContractEvent) {
         when (event) {
             HomeContractEvent.OnClickDrawer -> openDrawer()
             HomeContractEvent.OnClickToolbarLanguage -> onClickToolbarLanguage()

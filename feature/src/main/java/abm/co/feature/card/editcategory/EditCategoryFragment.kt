@@ -2,6 +2,8 @@ package abm.co.feature.card.editcategory
 
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
+import abm.co.designsystem.extensions.addPaddingOnShownKeyboard
+import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.navigation.fragment.findNavController
@@ -24,7 +26,7 @@ class EditCategoryFragment : BaseFragment() {
             },
             navigateToNewCard = { categoryUI ->
                 findNavController().navigate(
-                    EditCategoryFragmentDirections.toEditCardDestination(
+                    EditCategoryFragmentDirections.toEditCardNavGraph(
                         cardItem = null,
                         category = categoryUI
                     )

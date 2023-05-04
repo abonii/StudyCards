@@ -2,6 +2,8 @@ package abm.co.feature.home
 
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
+import abm.co.designsystem.message.common.MessageContent
+import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.designsystem.navigation.extension.navigateSafe
 import android.view.View
 import androidx.compose.runtime.Composable
@@ -27,16 +29,27 @@ class HomeFragment : BaseFragment() {
                 // TODO navigation
             },
             openDrawer = {
+                messageContent(
+                    MessageContent.Snackbar.MessageContentTitleRes(
+                        titleRes = abm.co.designsystem.R.string.Messages_OK,
+                        subtitle = "Will be in future versions...",
+                        type = MessageType.Info
+                    )
+                )
                 // TODO open drawer
             },
-            navigateToAllCategory = {},
+            navigateToAllCategory = {/*TODO implement to all categories*/ },
             navigateToCategory = { category ->
                 findNavController().navigateSafe(
                     HomeFragmentDirections.toCategoryDestination(category)
                 )
             },
-            navigateToGameKinds = {
-//                findNavController().navigate(GameDestinations.SwipeGame.route) TODO navigation
+            navigateToGameKinds = { category ->
+                findNavController().navigateSafe(
+                    HomeFragmentDirections.toGamePickerNavGraph(
+                        category = category
+                    )
+                )
             }
         )
     }

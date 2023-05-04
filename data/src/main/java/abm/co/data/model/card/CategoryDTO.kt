@@ -6,7 +6,6 @@ import androidx.annotation.Keep
 @Keep
 data class CategoryDTO(
     val name: String = "",
-    val cardsCount: Int = 0,
     val bookmarked: Boolean = false,
     val creatorName: String? = null,
     val creatorID: String? = null,
@@ -14,7 +13,7 @@ data class CategoryDTO(
     val id: String = ""
 )
 
-fun CategoryDTO.toDomain() = Category(
+fun CategoryDTO.toDomain(cardsCount: Int) = Category(
     name = name,
     cardsCount = cardsCount,
     bookmarked = bookmarked,
@@ -26,7 +25,6 @@ fun CategoryDTO.toDomain() = Category(
 
 fun Category.toDTO() = CategoryDTO(
     name = name,
-    cardsCount = cardsCount,
     bookmarked = bookmarked,
     creatorName = creatorName,
     creatorID = creatorID,

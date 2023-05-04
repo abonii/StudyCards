@@ -101,6 +101,8 @@ private fun UserPreferenceAndLanguageScreen(
                 .clip(RoundedCornerShape(9.dp))
                 .height(6.dp)
                 .fillMaxWidth(),
+            contentColor = Color(0x5E_CADAE7),
+            backgroundColor = Color.White,
             onReach100Percent = { /*Just ignore*/ }
         )
         Column(

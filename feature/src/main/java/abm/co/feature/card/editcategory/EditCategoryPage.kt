@@ -1,15 +1,18 @@
 package abm.co.feature.card.editcategory
 
 import abm.co.designsystem.component.button.PrimaryButton
+import abm.co.designsystem.component.button.SecondaryButton
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.textfield.TextFieldWithLabel
+import abm.co.designsystem.component.widget.LinearProgress
 import abm.co.designsystem.extensions.collectInLaunchedEffect
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.card.model.CategoryUI
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,12 +20,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -60,6 +62,7 @@ fun EditCategoryPage(
         when (it) {
             EditCategoryContractChannel.NavigateBack -> onBack()
             is EditCategoryContractChannel.NavigateToNewCard -> navigateToNewCard(it.category)
+            is EditCategoryContractChannel.ShowMessage -> showMessage(it.messageContent)
         }
     }
 
@@ -72,15 +75,15 @@ fun EditCategoryPage(
 
     SetStatusBarColor()
     CategoryScreen(
-        state = state,
-        event = viewModel::event
+        uiState = state,
+        onEvent = viewModel::onEvent
     )
 }
 
 @Composable
 private fun CategoryScreen(
-    state: EditCategoryContractState,
-    event: (EditCategoryContractEvent) -> Unit
+    uiState: EditCategoryContractState,
+    onEvent: (EditCategoryContractEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -88,28 +91,62 @@ private fun CategoryScreen(
             .statusBarsPadding()
     ) {
         Toolbar(
-            categoryName = state.categoryName,
+            categoryName = uiState.categoryName,
             onEnterCategoryName = {
-                event(EditCategoryContractEvent.OnEnterCategoryName(it))
+                onEvent(EditCategoryContractEvent.OnEnterCategoryName(it))
             },
             onBack = {
-                event(EditCategoryContractEvent.OnBackClicked)
+                onEvent(EditCategoryContractEvent.OnBackClicked)
+            },
+            middleContent = {
+                uiState.progress?.let { progress ->
+                    LinearProgress(
+                        progressFloat = progress,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .clip(RoundedCornerShape(7.dp))
+                            .height(6.dp)
+                            .fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(29.dp))
+                }
             }
         )
         ScrollableContent(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
+            modifier = Modifier.weight(1f)
         )
+        Buttons(
+            modifier = Modifier.padding(bottom = 15.dp, start = 20.dp, end = 20.dp, top = 10.dp),
+            onClickPrimary = {
+                onEvent(EditCategoryContractEvent.OnContinue)
+            },
+            onClickSecondary = {
+                onEvent(EditCategoryContractEvent.OnBackClicked)
+            }
+        )
+    }
+}
+
+@Composable
+private fun Buttons(
+    onClickPrimary: () -> Unit,
+    onClickSecondary: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         PrimaryButton(
             modifier = Modifier
-                .padding(bottom = 30.dp, start = 20.dp, end = 20.dp, top = 10.dp)
-                .navigationBarsPadding()
                 .fillMaxWidth(),
             title = stringResource(id = R.string.Category_Button_title),
-            onClick = {
-                event(EditCategoryContractEvent.OnContinueButtonClicked)
-            }
+            onClick = onClickPrimary
+        )
+        SecondaryButton(
+            modifier = Modifier.fillMaxWidth(),
+            title = stringResource(id = R.string.EditCard_Button_back),
+            onClick = onClickSecondary
         )
     }
 }
@@ -119,6 +156,7 @@ private fun Toolbar(
     categoryName: String,
     onEnterCategoryName: (String) -> Unit,
     onBack: () -> Unit,
+    middleContent: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -143,6 +181,7 @@ private fun Toolbar(
             )
         }
         Spacer(modifier = Modifier.height(30.dp))
+        middleContent()
         TextFieldWithLabel(
             label = stringResource(id = R.string.Category_Input_title),
             hint = stringResource(id = R.string.Category_Input_hint),

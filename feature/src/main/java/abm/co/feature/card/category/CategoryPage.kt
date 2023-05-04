@@ -2,6 +2,7 @@ package abm.co.feature.card.category
 
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
+import abm.co.designsystem.component.modifier.scalableClick
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.widget.LinearProgress
 import abm.co.designsystem.component.widget.LoadingView
@@ -29,7 +30,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -55,8 +55,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 
-private val MinToolbarHeight = 70.dp
-private val MaxToolbarHeight = 150.dp
+private val MinToolbarHeight = 80.dp
+private val MaxToolbarHeight = 120.dp
 
 @Composable
 fun CategoryPage(
@@ -85,7 +85,7 @@ fun CategoryPage(
     CategoryScreen(
         screenState = screenState,
         toolbarState = toolbarState,
-        event = viewModel::event
+        onEvent = viewModel::event
     )
 }
 
@@ -93,13 +93,12 @@ fun CategoryPage(
 private fun CategoryScreen(
     screenState: CategoryContract.ScreenState,
     toolbarState: CategoryContract.ToolbarState,
-    event: (CategoryContractEvent) -> Unit
+    onEvent: (CategoryContractEvent) -> Unit
 ) {
     Box(
         modifier = Modifier
             .background(StudyCardsTheme.colors.backgroundPrimary)
             .fillMaxSize()
-            .statusBarsPadding()
     ) {
         val toolbarScrollable = rememberToolbarState(
             minHeight = MinToolbarHeight,
@@ -110,25 +109,28 @@ private fun CategoryScreen(
             scrollState = scrollState,
             toolbarState = toolbarScrollable
         )
-        Crossfade(targetState = screenState) { state ->
+        Crossfade(
+            targetState = screenState,
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+        ) { state ->
             when (state) {
                 CategoryContract.ScreenState.Loading -> {
-                    LoadingScreen(modifier = Modifier.fillMaxSize())
+                    LoadingScreen()
                 }
                 is CategoryContract.ScreenState.Empty -> {
-                    EmptyScreen(modifier = Modifier.fillMaxSize())
+                    EmptyScreen()
                 }
                 is CategoryContract.ScreenState.Success -> {
                     SuccessScreen(
-                        modifier = Modifier
-                            .verticalScroll(scrollState)
-                            .fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         screenState = state,
                         onClickCard = {
-                            event(CategoryContractEvent.OnClickCardItem(it))
+                            onEvent(CategoryContractEvent.OnClickCardItem(it))
                         },
                         onClickPlay = {
-                            event(CategoryContractEvent.OnClickPlayCard(it))
+                            onEvent(CategoryContractEvent.OnClickPlayCard(it))
                         }
                     )
                 }
@@ -139,13 +141,16 @@ private fun CategoryScreen(
             subtitle = toolbarState.description,
             progress = toolbarScrollable.progress,
             onClickEndIcon = {
-                event(CategoryContractEvent.OnClickEditCategory)
+                onEvent(CategoryContractEvent.OnClickEditCategory)
             },
             endIconRes = R.drawable.ic_add,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(with(LocalDensity.current) { toolbarScrollable.height.toDp() })
-                .graphicsLayer { translationY = toolbarScrollable.offset }
+                .graphicsLayer { translationY = toolbarScrollable.offset },
+            onBack = {
+                onEvent(CategoryContractEvent.OnBackClicked)
+            }
         )
     }
 }
@@ -159,8 +164,7 @@ private fun SuccessScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .padding(top = MaxToolbarHeight)
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(11.dp)
@@ -186,10 +190,10 @@ private fun CardItem(
 ) {
     Row(
         modifier = modifier
+            .scalableClick(onClick = onClick)
             .height(70.dp)
             .clip(RoundedCornerShape(11.dp))
-            .background(StudyCardsTheme.colors.milky)
-            .padding(vertical = 8.dp),
+            .background(StudyCardsTheme.colors.milky),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -207,7 +211,11 @@ private fun CardItem(
                 .fillMaxHeight()
         )
         Spacer(modifier = Modifier.width(24.dp))
-        Column(modifier = Modifier.weight(1f)) {
+        Column(
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .weight(1f)
+        ) {
             Text(
                 text = cardItem.name,
                 color = StudyCardsTheme.colors.textPrimary,
@@ -262,7 +270,6 @@ private fun LoadingScreen(
     Column(
         modifier = modifier
             .padding(top = MaxToolbarHeight)
-            .statusBarsPadding()
     ) {
         Spacer(modifier = Modifier.weight(0.4f))
         LoadingView(modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -275,9 +282,7 @@ private fun EmptyScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier
-            .padding(top = MaxToolbarHeight)
-            .statusBarsPadding()
+        modifier = modifier.padding(top = MaxToolbarHeight)
     ) {
         Spacer(modifier = Modifier.weight(0.4f))
         Text(

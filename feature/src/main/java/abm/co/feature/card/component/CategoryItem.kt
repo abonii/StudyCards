@@ -70,7 +70,7 @@ fun CategoryItem(
                     style = StudyCardsTheme.typography.weight500Size16LineHeight20
                 )
                 Text(
-                    text = pluralString(id = R.plurals.words, count = category.cardsCount),
+                    text = pluralString(id = R.plurals.cards, count = category.cardsCount),
                     color = StudyCardsTheme.colors.textSecondary,
                     style = StudyCardsTheme.typography.weight400Size16LineHeight20
                 )

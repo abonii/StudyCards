@@ -64,10 +64,10 @@ private val MaxToolbarHeight = 174.dp
 
 @Composable
 fun HomePage(
-    openDrawer: () -> Unit,
+    openDrawer: suspend () -> Unit,
     onNavigateToLanguageSelectPage: () -> Unit,
     navigateToAllCategory: () -> Unit,
-    navigateToGameKinds: () -> Unit,
+    navigateToGameKinds: (CategoryUI) -> Unit,
     navigateToCategory: (CategoryUI) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
@@ -85,7 +85,7 @@ fun HomePage(
             HomeContractChannel.OpenDrawer -> openDrawer()
             HomeContractChannel.NavigateToAllCategory -> navigateToAllCategory()
             is HomeContractChannel.ShowMessage -> showMessage(it.messageContent)
-            is HomeContractChannel.NavigateToGameKinds -> navigateToGameKinds()
+            is HomeContractChannel.NavigateToGameKinds -> navigateToGameKinds(it.value)
             is HomeContractChannel.NavigateToCategory -> navigateToCategory(it.category)
         }
     }
@@ -95,7 +95,7 @@ fun HomePage(
     HomeScreen(
         screenState = screenState,
         toolbarState = toolbarState,
-        event = viewModel::event
+        event = viewModel::onEvent
     )
 }
 
@@ -124,9 +124,11 @@ private fun HomeScreen(
                 HomeContract.ScreenState.Loading -> {
                     LoadingScreen(modifier = Modifier.fillMaxSize())
                 }
+
                 is HomeContract.ScreenState.Empty -> {
                     EmptyScreen(modifier = Modifier.fillMaxSize())
                 }
+
                 is HomeContract.ScreenState.Success -> {
                     SuccessScreen(
                         modifier = Modifier
@@ -152,13 +154,13 @@ private fun HomeScreen(
         HomeCollapsingToolbar(
             toolbarTitle = stringResource(id = R.string.HomePage_Toolbar_title),
             learningLanguageText = stringResource(R.string.HomePage_Toolbar_learningLanguage) + " " +
-                stringResource(
-                    toolbarState.learningLanguage?.languageNameResCode
-                        ?: R.string.HomePage_Toolbar_language
-                ),
+                    stringResource(
+                        toolbarState.learningLanguage?.languageNameResCode
+                            ?: R.string.HomePage_Toolbar_language
+                    ),
             learningLanguageRes = toolbarState.learningLanguage?.flagFromDrawable,
             welcomeText = stringResource(id = R.string.HomePage_Toolbar_welcome) + ", " +
-                (toolbarState.userName ?: stringResource(id = R.string.HomePage_Toolbar_guest)),
+                    (toolbarState.userName ?: stringResource(id = R.string.HomePage_Toolbar_guest)),
             progress = toolbarScrollable.progress,
             onClickDrawerIcon = { event(HomeContractEvent.OnClickDrawer) },
             onClickLearningLanguageIcon = { event(HomeContractEvent.OnClickToolbarLanguage) },
@@ -186,7 +188,7 @@ private fun SuccessScreen(
     ) {
         ItemTitle(
             title = stringResource(id = R.string.HomePage_Category_title),
-            onClickShowAll = onClickShowAllCategory
+            onClickShowAll = null // todo implement show all categories
         )
         Spacer(modifier = Modifier.height(10.dp))
         Column(

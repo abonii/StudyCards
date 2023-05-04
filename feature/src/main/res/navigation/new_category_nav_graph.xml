@@ -11,8 +11,8 @@
         android:name="abm.co.feature.card.editcategory.EditCategoryFragment">
 
         <action
-            android:id="@+id/to_edit_card_destination"
-            app:destination="@id/edit_card_destination"
+            android:id="@+id/to_edit_card_nav_graph"
+            app:destination="@id/edit_card_nav_graph"
             app:enterAnim="@anim/enter_from_right"
             app:exitAnim="@anim/exit_to_left"
             app:popEnterAnim="@anim/pop_enter_from_left"

@@ -6,36 +6,39 @@ import androidx.compose.runtime.Immutable
 @Immutable
 data class CardUI(
     val name: String,
-    val translations: String,
+    val translation: String,
     val imageUrl: String,
-    val examples: String,
+    val example: String,
     val kind: CardKindUI,
     val categoryID: String,
-    val repeatCount: Int,
+    val repeatedCount: Int,
     val nextRepeatTime: Long,
-    val cardID: String
+    val cardID: String,
+    val learnedPercent: Float, // 0..1
 )
 
 fun CardUI.toDomain() = Card(
     name = name,
-    translations = translations,
+    translation = translation,
     imageUrl = imageUrl,
-    examples = examples,
+    example = example,
     kind = kind.toDomain(),
     categoryID = categoryID,
-    repeatCount = repeatCount,
+    repeatedCount = repeatedCount,
     nextRepeatTime = nextRepeatTime,
-    id = cardID
+    id = cardID,
+    learnedPercent = learnedPercent
 )
 
 fun Card.toUI() = CardUI(
     name = name,
-    translations = translations,
+    translation = translation,
     imageUrl = imageUrl,
-    examples = examples,
+    example = example,
     kind = kind.toUI(),
     categoryID = categoryID,
-    repeatCount = repeatCount,
+    repeatedCount = repeatedCount,
     nextRepeatTime = nextRepeatTime,
-    cardID = id
+    cardID = id,
+    learnedPercent = learnedPercent
 )

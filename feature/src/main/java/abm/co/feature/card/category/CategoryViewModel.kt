@@ -8,6 +8,7 @@ import abm.co.domain.base.onSuccess
 import abm.co.domain.repository.ServerRepository
 import abm.co.feature.card.model.CardItemUI
 import abm.co.feature.card.model.CategoryUI
+import abm.co.feature.card.model.toItemUI
 import abm.co.feature.card.model.toUI
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -119,17 +120,17 @@ class CategoryViewModel @Inject constructor(
 
     private fun fetchCardItems() {
         viewModelScope.launch {
-            serverRepository.getCardItems(category.id)
+            serverRepository.getCards(category.id)
                 .collectLatest { either ->
                     either.onSuccess { items ->
                         when (screenState.value) {
                             is CategoryContract.ScreenState.Success -> {
                                 cardItems.clear()
-                                cardItems.addAll(items.map { it.toUI() })
+                                cardItems.addAll(items.map { it.toItemUI() })
                             }
 
                             else -> {
-                                cardItems.addAll(items.map { it.toUI() })
+                                cardItems.addAll(items.map { it.toItemUI() })
                                 mutableScreenState.value = CategoryContract.ScreenState.Success(
                                     cardItems
                                 )

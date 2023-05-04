@@ -7,5 +7,5 @@ data class Category(
     val creatorName: String?,
     val creatorID: String?,
     val imageURL: String?,
-    val id: String
+    val id: String,
 )

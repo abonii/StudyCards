@@ -3,15 +3,18 @@ package abm.co.feature.card.category.component
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.theme.StudyCardsTheme
+import abm.co.feature.R
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,7 +26,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
+import kotlin.math.roundToInt
 
 private val ExpandedPadding = 4.dp
 private val CollapsedPadding = 8.dp
@@ -37,6 +42,7 @@ fun CategoryCollapsingToolbar(
     subtitle: String,
     progress: Float,
     @DrawableRes endIconRes: Int,
+    onBack: () -> Unit,
     onClickEndIcon: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -52,7 +58,7 @@ fun CategoryCollapsingToolbar(
                 )
             }
             .fillMaxSize()
-            .padding(top = 18.dp)
+            .padding(top = 10.dp)
             .statusBarsPadding()
     ) {
         Box(
@@ -67,6 +73,30 @@ fun CategoryCollapsingToolbar(
                 val drawerEndPadding = with(LocalDensity.current) {
                     lerp(CollapsedPadding.toPx(), ExpandedPadding.toPx(), progress).toDp()
                 }
+                Icon(
+                    modifier = Modifier
+                        .clickableWithoutRipple(onBack)
+                        .padding(end = 10.dp, top = 10.dp, bottom = 10.dp)
+                        .size(24.dp),
+                    painter = painterResource(id = R.drawable.ic_left),
+                    contentDescription = null
+                )
+                Text(
+                    modifier = Modifier
+                        .absoluteOffset(y = (-1).dp)
+                        .wrapContentWidth(),
+                    text = title,
+                    style = StudyCardsTheme.typography.weight600Size23LineHeight24
+                        .copy(
+                            letterSpacing = ((1 - progress) * 1.5).sp,
+                            fontSize = (StudyCardsTheme
+                                .typography
+                                .weight600Size23LineHeight24
+                                .fontSize.value + ((1 - progress) * 2)).sp
+                        ),
+                    color = StudyCardsTheme.colors.textPrimary,
+                    textAlign = TextAlign.Center
+                )
                 Text(
                     modifier = Modifier
                         .graphicsLayer {
@@ -75,15 +105,8 @@ fun CategoryCollapsingToolbar(
                             else 1f
                         }
                         .wrapContentWidth(),
-                    text = title,
-                    style = StudyCardsTheme.typography.weight400Size16LineHeight20,
-                    color = StudyCardsTheme.colors.textPrimary,
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    modifier = Modifier.wrapContentWidth(),
                     text = subtitle,
-                    style = StudyCardsTheme.typography.weight600Size23LineHeight24,
+                    style = StudyCardsTheme.typography.weight400Size16LineHeight20,
                     color = StudyCardsTheme.colors.textPrimary,
                     textAlign = TextAlign.Center
                 )
@@ -110,7 +133,7 @@ private fun CollapsingToolbarLayout(
         modifier = modifier,
         content = content
     ) { measures, constraints ->
-        check(measures.size == 3)
+        check(measures.size == 4)
 
         val placeables = measures.map {
             it.measure(constraints)
@@ -119,24 +142,33 @@ private fun CollapsingToolbarLayout(
             width = constraints.maxWidth,
             height = constraints.maxHeight
         ) {
-            val title = placeables[0]
-            val subtitle = placeables[1]
-            val endIcon = placeables[2]
-            title.place(x = 0, y = 0)
-            subtitle.placeRelative(
+            val back = placeables[0]
+            val title = placeables[1]
+            val subtitle = placeables[2]
+            val endIcon = placeables[3]
+            back.place(
+                x = 0,
+                y = 0
+            )
+            title.placeRelative(
                 x = lerp(
-                    start = constraints.maxWidth / 2 - subtitle.width,
-                    stop = 0,
+                    start = back.width - 5.dp.roundToPx(),
+                    stop = back.width,
                     fraction = progress
                 ),
+                y = back.height / 2 - title.height / 2
+            )
+            subtitle.placeRelative(
+                x = 0,
                 y = lerp(
                     start = title.height / 2 - subtitle.height / 2,
-                    stop = constraints.maxHeight - endIcon.height - subtitle.height - 10.dp.roundToPx(),
+                    stop = constraints.maxHeight - (subtitle.height * 1.5).roundToInt(),
                     fraction = progress
                 )
             )
             endIcon.placeRelative(
-                x = constraints.maxWidth - endIcon.width, y = 0
+                x = constraints.maxWidth - endIcon.width,
+                y = back.height / 2 - title.height / 2
             )
         }
     }
