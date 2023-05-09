@@ -4,7 +4,18 @@
     android:id="@+id/main_card_nav_graph"
     app:startDestination="@id/main_card_destination">
 
+    <include app:graph="@navigation/learn_nav_graph" />
+
     <fragment
         android:id="@+id/main_card_destination"
-        android:name="abm.co.feature.card.main.MainCardFragment" />
+        android:name="abm.co.feature.card.main.MainCardFragment" >
+
+        <action
+            android:id="@+id/to_learn_nav_graph"
+            app:destination="@id/learn_nav_graph">
+            <argument
+                android:name="category"
+                app:argType="abm.co.feature.card.model.CategoryUI" />
+        </action>
+    </fragment>
 </navigation>

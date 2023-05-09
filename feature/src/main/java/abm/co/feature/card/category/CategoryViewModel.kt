@@ -119,7 +119,7 @@ class CategoryViewModel @Inject constructor(
 
     private fun fetchCardItems() {
         viewModelScope.launch {
-            serverRepository.getCards(category.id)
+            serverRepository.getUserCards(category.id)
                 .collectLatest { either ->
                     either.onSuccess { items ->
                         when (screenState.value) {

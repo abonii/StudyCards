@@ -19,6 +19,8 @@ sealed class Either<out L, out R> {
     val isRight get() = this is Right<R>
     val isLeft get() = this is Left<L>
 
+    val asRight get() = this as? Right<R>
+
     fun <L> left(a: L) = Left(a)
     fun <R> right(b: R) = Right(b)
 

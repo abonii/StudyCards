@@ -14,17 +14,19 @@ data class CategoryUI(
     val creatorName: String?,
     val creatorID: String?,
     val imageURL: String?,
-    val id: String
+    val id: String,
+    val published: Boolean?
 ) : Parcelable
 
-fun Category.toUI() = CategoryUI(
+fun Category.toUI(published: Boolean? = null) = CategoryUI(
     name = name,
     cardsCount = cardsCount,
     bookmarked = bookmarked,
     creatorName = creatorName,
     creatorID = creatorID,
     imageURL = imageURL,
-    id = id
+    id = id,
+    published = published
 )
 
 fun CategoryUI.toDomain() = Category(

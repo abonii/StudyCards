@@ -156,7 +156,7 @@ class EditCardViewModel @Inject constructor(
                 cardID = "",
                 learnedPercent = 0f
             )
-            serverRepository.createCard(card.toDomain())
+            serverRepository.createUserCard(card.toDomain())
                 .onFailure {
                     it.sendException()
                 }.onSuccess {

@@ -126,10 +126,42 @@
     <string name="GamePicker.Pairing.title">Pairing</string>
     <string name="GamePicker.Guessing.title">Guessing</string>
 
+    <string name="MainCard.Toolbar.title">Sets Of Cards</string>
+    <string name="MainCard.OurSet.title">Our collections</string>
+    <string name="MainCard.YourSet.title">Your collections</string>
+    <string name="MainCard.YouMayLike.title">You may like it</string>
+    <string name="MainCard.Empty.title">No Set Of Cards\nCreate new one to share</string>
+
+    <string name="MainCard.Share.title">Publish a card</string>
+    <string name="MainCard.Share.subtitle">You can share your cards with other users</string>
+    <string name="MainCard.Share.Button.NotPublish.title">Cancel publication</string>
+    <string name="MainCard.Share.Button.Publish.title">Publish</string>
+    <string name="MainCard.Share.Button.secondary">Close</string>
+
+    <string name="Profile.Toolbar.title">Profile</string>
+    <string name="Profile.Anonymous.title">Register in order to use in several phones simultaneously</string>
+    <string name="Profile.NotVerified.title">We have sent a confirmation to your email address, please check your email address</string>
+    <string name="Profile.Anonymous.Google.signIn">Continue with Google</string>
+    <string name="Profile.Anonymous.or">Or</string>
+    <string name="Profile.Anonymous.Email.title">Email</string>
+    <string name="Profile.Anonymous.Email.hint">Enter your email</string>
+    <string name="Profile.Anonymous.Password.title">Password</string>
+    <string name="Profile.Anonymous.Password.hint">Enter password</string>
+    <string name="Profile.Anonymous.Email.login">Sign up</string>
+    <string name="Profile.Settings.title">SETTINGS</string>
+    <string name="Profile.Settings.Store.title">Buy more translations</string>
+    <string name="Profile.Settings.Langauge.title">Language of the app</string>
+    <string name="Profile.Settings.Langauge.notSelected">System\'s language</string>
+    <string name="Profile.Settings.Contact.title">Contact us</string>
+    <string name="Profile.Settings.SendConfirmation.title">Send confirmation</string>
+    <string name="Profile.Settings.ChangePassword.title">Change password</string>
+    <string name="Profile.Settings.SignOut.title">Sign Out</string>
+    <string name="Profile.Version.title">Version: %s</string>
+
     <plurals name="cards">
         <item quantity="one"> %d card</item>
-        <item quantity="zero"> %d word</item>
-        <item quantity="other"> %d words</item>
+        <item quantity="zero"> %d card</item>
+        <item quantity="other"> %d cards</item>
     </plurals>
 
     <plurals name="new_cards">

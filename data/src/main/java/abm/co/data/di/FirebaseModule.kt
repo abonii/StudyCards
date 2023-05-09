@@ -1,7 +1,5 @@
 package abm.co.data.di
 
-import abm.co.data.datastore.LanguagesDataStore
-import abm.co.data.model.DatabaseRef.CATEGORY_REF
 import abm.co.data.model.DatabaseRef.CONFIG_REF
 import abm.co.data.model.DatabaseRef.ROOT_REF
 import abm.co.data.model.DatabaseRef.USER_ID
@@ -17,8 +15,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
 import javax.inject.Singleton
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -41,12 +37,6 @@ object FirebaseModule {
     @Named(ROOT_REF)
     @Provides
     fun provideRootReference(db: FirebaseDatabase): DatabaseReference = db.reference.child(ROOT_REF)
-
-    @Singleton
-    @Provides
-    @Named(CONFIG_REF)
-    fun provideApiKeys(@Named(ROOT_REF) root: DatabaseReference):
-        DatabaseReference = root.child(CONFIG_REF)
 
 //    @Provides
 //    @Named(CATEGORY_REF)

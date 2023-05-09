@@ -1,7 +1,10 @@
 package abm.co.studycards.ui
 
 import abm.co.designsystem.extensions.launchLifecycleScope
+import abm.co.domain.prefs.Prefs
+import abm.co.feature.utils.LocaleHelper
 import abm.co.studycards.R
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -48,5 +51,19 @@ class MainActivity : AppCompatActivity() {
                 navController.setGraph(graph, intent.extras)
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context?) {
+        val lang = newBase?.let { getLang(it) }
+        if (lang != null) {
+            val context = LocaleHelper.setLocale(newBase, lang)
+            super.attachBaseContext(context)
+        } else
+            super.attachBaseContext(newBase)
+    }
+
+    private fun getLang(context: Context): String? {
+        val sf = context.getSharedPreferences(Prefs.SHARED_PREFERENCES, Context.MODE_PRIVATE)
+        return sf.getString(Prefs.APP_LANGUAGE, null)
     }
 }

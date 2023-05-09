@@ -12,4 +12,8 @@ interface LanguagesRepository {
     suspend fun setNativeLanguage(language: Language)
 
     suspend fun setLearningLanguage(language: Language)
+
+    suspend fun setAppLanguage(language: Language)
+
+    fun getAppLanguage(): Language?
 }

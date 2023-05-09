@@ -49,7 +49,7 @@ class GamePickerViewModel @Inject constructor(
 
     private fun fetchAllCards() {
         viewModelScope.launch {
-            serverRepository.getCards(categoryID = category?.id ?: return@launch)
+            serverRepository.getUserCards(categoryID = category?.id ?: return@launch)
                 .collectLatest { either ->
                     either.onSuccess { items ->
                         allCards = items.map { it.toUI() }

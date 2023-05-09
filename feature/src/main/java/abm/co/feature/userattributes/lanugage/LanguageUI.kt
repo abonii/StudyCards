@@ -98,6 +98,6 @@ val defaultLanguages = listOf(
     )
 )
 
-fun List<LanguageUI>.filter(codes: List<String>) = filter { lang -> codes.any { it == lang.code } }
+fun List<LanguageUI>.filterByCodes(codes: List<String>) = filter { lang -> codes.any { it == lang.code } }
 
 fun List<LanguageUI>.findByCode(code: String) = find { lang -> code == lang.code }

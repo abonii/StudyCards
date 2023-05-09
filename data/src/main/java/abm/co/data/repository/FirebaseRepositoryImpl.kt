@@ -5,6 +5,7 @@ import abm.co.data.di.ApplicationScope
 import abm.co.data.model.DatabaseRef.CARD_REF
 import abm.co.data.model.DatabaseRef.CATEGORY_REF
 import abm.co.data.model.DatabaseRef.CONFIG_REF
+import abm.co.data.model.DatabaseRef.EXPLORE_REF
 import abm.co.data.model.DatabaseRef.ROOT_REF
 import abm.co.data.model.DatabaseRef.USER_ID
 import abm.co.data.model.DatabaseRef.USER_PROPERTIES_REF
@@ -13,6 +14,7 @@ import abm.co.data.model.card.CardDTO
 import abm.co.data.model.card.CategoryDTO
 import abm.co.data.model.card.toDTO
 import abm.co.data.model.card.toDomain
+import abm.co.data.model.config.ConfigDTO
 import abm.co.data.model.user.UserDTO
 import abm.co.data.model.user.toDomain
 import abm.co.data.utils.asFlow
@@ -23,7 +25,9 @@ import abm.co.domain.base.mapToFailure
 import abm.co.domain.base.safeCall
 import abm.co.domain.model.Card
 import abm.co.domain.model.Category
+import abm.co.domain.model.config.Config
 import abm.co.domain.repository.ServerRepository
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseException
@@ -47,15 +51,15 @@ import javax.inject.Singleton
 @Singleton
 class FirebaseRepositoryImpl @Inject constructor(
     @Named(USER_PROPERTIES_REF) private val userPropertiesReference: DatabaseReference,
-    @Named(CONFIG_REF) private var configReference: DatabaseReference,
     @ApplicationScope private val coroutineScope: CoroutineScope,
     @Named(ROOT_REF) private val root: DatabaseReference,
     @Named(USER_ID) private val userId: String,
+    private val firebaseAuth: FirebaseAuth,
     languagesDataStore: LanguagesDataStore,
     private val gson: Gson
 ) : ServerRepository {
 
-    private val categoryWithLanguagesRef = combine(
+    private val userCategoryWithLanguagesRef = combine(
         languagesDataStore.getNativeLanguage(),
         languagesDataStore.getLearningLanguage()
     ) { native, learning ->
@@ -69,6 +73,51 @@ class FirebaseRepositoryImpl @Inject constructor(
             }
     }.distinctUntilChanged()
 
+    private val categoryWithLanguagesRef = combine(
+        languagesDataStore.getNativeLanguage(),
+        languagesDataStore.getLearningLanguage()
+    ) { native, learning ->
+        root.child(EXPLORE_REF)
+            .child(native?.code ?: "en")
+            .child(learning?.code ?: "en")
+            .apply {
+                keepSynced(true)
+            }
+    }.distinctUntilChanged()
+
+    override fun getConfig(): Flow<Either<Failure, Config>> {
+        return callbackFlow {
+            val configRef = root.child(CONFIG_REF)
+            val listener = configRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    try {
+                        val config = snapshot.getValue(ConfigDTO::class.java)
+                        trySend(
+                            Either.Right(config?.toDomain() ?: ConfigDTO().toDomain())
+                        ).isSuccess
+                    } catch (e: Exception) {
+                        trySend(Either.Left(e.firebaseError().mapToFailure())).isSuccess
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    PlutoLog.e(
+                        "DatabaseReference.asFlow",
+                        "Error reading data: ${error.message}"
+                    )
+                    trySend(
+                        Either.Left(
+                            error.toException().firebaseError().mapToFailure()
+                        )
+                    ).isSuccess
+                }
+            })
+            awaitClose {
+                listener.let { configRef.removeEventListener(it) }
+            }
+        }
+    }
+
     override val getUser = userPropertiesReference.asFlow(
         scope = coroutineScope,
         converter = { snapshot ->
@@ -78,6 +127,47 @@ class FirebaseRepositoryImpl @Inject constructor(
             userDTO?.toDomain()
         }
     )
+
+    override val getUserCategories: Flow<Either<Failure, List<Category>>> = callbackFlow {
+        var previousListener: Pair<DatabaseReference, ValueEventListener>? = null
+        userCategoryWithLanguagesRef.collectLatest { reference ->
+            val listener = reference.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    try {
+                        val items = ArrayList<Category>()
+                        snapshot.children.map { category ->
+                            try {
+                                category.getValue(CategoryDTO::class.java)
+                                    ?.let {
+                                        val cardsCount = category
+                                            .child(CARD_REF)
+                                            .childrenCount
+                                            .toInt()
+                                        items.add(it.toDomain(cardsCount))
+                                    }
+                            } catch (e: DatabaseException) {
+                                PlutoLog.e("getCategories", e.message, e.cause)
+                            }
+                        }
+                        trySend(
+                            Either.Right(
+                                items.sortedByDescending { it.bookmarked }
+                            )
+                        ).isSuccess
+                    } catch (e: Exception) {
+                        trySend(Either.Left(e.firebaseError().mapToFailure())).isSuccess
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    trySend(Either.Left(error.toException().firebaseError().mapToFailure()))
+                        .isSuccess
+                }
+            })
+            previousListener?.let { it.first.removeEventListener(it.second) }
+            previousListener = reference to listener
+        }
+    }
 
     override val getCategories: Flow<Either<Failure, List<Category>>> = callbackFlow {
         var previousListener: Pair<DatabaseReference, ValueEventListener>? = null
@@ -120,28 +210,22 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCategory(id: String): Flow<Either<Failure, Category>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getCard(id: String): Flow<Either<Failure, Card>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun createCategory(category: Category): Either<Failure, Category> {
+    override suspend fun createUserCategory(category: Category): Either<Failure, Category> {
         return safeCall {
-            val ref = categoryWithLanguagesRef.firstOrNull()?.push()
+            val ref = userCategoryWithLanguagesRef.firstOrNull()?.push()
             val updatedCategory = category.copy(
-                id = ref?.key ?: "category_id"
+                id = ref?.key ?: "category_id",
+                creatorID = firebaseAuth.currentUser?.uid,
+                creatorName = getUser.firstOrNull()?.asRight?.b?.name
             )
             ref?.setValue(updatedCategory.toDTO())
             updatedCategory
         }
     }
 
-    override suspend fun updateCategory(category: Category): Either<Failure, Unit> {
+    override suspend fun updateUserCategory(category: Category): Either<Failure, Unit> {
         return safeCall {
-            categoryWithLanguagesRef.firstOrNull()?.updateChildren(
+            userCategoryWithLanguagesRef.firstOrNull()?.updateChildren(
                 mapOf(
                     category.id to category.toDTO()
                 )
@@ -149,9 +233,9 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun createCard(card: Card): Either<Failure, Unit> {
+    override suspend fun createUserCard(card: Card): Either<Failure, Unit> {
         return safeCall {
-            val ref = categoryWithLanguagesRef.firstOrNull()
+            val ref = userCategoryWithLanguagesRef.firstOrNull()
                 ?.child(card.categoryID)
                 ?.child(CARD_REF)
                 ?.child(card.id)?.push()
@@ -163,9 +247,9 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateCard(card: Card): Either<Failure, Unit> {
+    override suspend fun updateUserCard(card: Card): Either<Failure, Unit> {
         return safeCall {
-            categoryWithLanguagesRef.firstOrNull()
+            userCategoryWithLanguagesRef.firstOrNull()
                 ?.child(card.categoryID)
                 ?.child(CARD_REF)
                 ?.updateChildren(
@@ -174,10 +258,10 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCards(categoryID: String): Flow<Either<Failure, List<Card>>> =
+    override suspend fun getUserCards(categoryID: String): Flow<Either<Failure, List<Card>>> =
         callbackFlow {
             val categoryReference =
-                categoryWithLanguagesRef.firstOrNull()?.child(categoryID)?.child(CARD_REF)
+                userCategoryWithLanguagesRef.firstOrNull()?.child(categoryID)?.child(CARD_REF)
             val listener = categoryReference?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     try {
@@ -214,4 +298,61 @@ class FirebaseRepositoryImpl @Inject constructor(
                 listener?.let { categoryReference.removeEventListener(it) }
             }
         }
+
+    override suspend fun copyExploreCategoryToUserCollection(categoryID: String): Either<Failure, Unit> {
+        return safeCall {
+            val userCategoryRef = userCategoryWithLanguagesRef.firstOrNull()?.child(categoryID)
+            val categoryRef = categoryWithLanguagesRef.firstOrNull()?.child(categoryID)
+            userCategoryRef?.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.value == null) {
+                        categoryRef?.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                userCategoryRef.setValue(snapshot.value)
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                throw error.toException()
+                            }
+                        })
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    throw error.toException()
+                }
+            })
+        }
+    }
+
+    override suspend fun copyUserCategoryToExploreCollection(categoryID: String): Either<Failure, Unit> {
+        return safeCall {
+            val categoryRef = categoryWithLanguagesRef.firstOrNull()?.child(categoryID)
+            userCategoryWithLanguagesRef
+                .firstOrNull()
+                ?.child(categoryID)
+                ?.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        categoryRef?.setValue(snapshot.value)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        throw error.toException()
+                    }
+                })
+        }
+    }
+
+    override suspend fun removeCategory(categoryID: String): Either<Failure, Unit> {
+        return safeCall {
+            categoryWithLanguagesRef.firstOrNull()?.child(categoryID)
+                ?.removeValue()
+        }
+    }
+
+    override suspend fun removeUserDatabase() {
+        root.child(USER_REF)
+            .child(userId)
+            .removeValue()
+    }
 }

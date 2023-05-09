@@ -64,7 +64,7 @@ class ChooseOrCreateCategoryViewModel @Inject constructor(
 
     private fun fetchCategories() {
         viewModelScope.launch {
-            serverRepository.getCategories.collectLatest { either ->
+            serverRepository.getUserCategories.collectLatest { either ->
                 either.onFailure {
                     it.sendException()
                 }
@@ -88,9 +88,10 @@ class ChooseOrCreateCategoryViewModel @Inject constructor(
                 creatorName = null,
                 creatorID = null,
                 imageURL = null,
-                id = ""
+                id = "",
+                published = false
             )
-            val newCategory = serverRepository.createCategory(category.toDomain())
+            val newCategory = serverRepository.createUserCategory(category.toDomain())
             newCategory.onSuccess {
                 _channel.send(ChooseOrCreateCategoryContractChannel.NavigateToNewCard(category = it.toUI()))
             }.onFailure {

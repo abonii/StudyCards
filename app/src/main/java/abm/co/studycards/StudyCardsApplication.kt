@@ -1,6 +1,7 @@
 package abm.co.studycards
 
 import android.app.Application
+import com.google.firebase.database.FirebaseDatabase
 import com.mocklets.pluto.Pluto
 import com.mocklets.pluto.PlutoLog
 import com.mocklets.pluto.modules.exceptions.ANRException
@@ -13,6 +14,7 @@ class StudyCardsApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         initPluto()
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
     }
 
     private fun initPluto() {

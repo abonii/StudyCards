@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -66,7 +66,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun fetchCategories() {
-        repository.getCategories.map { setsOfCardsEither ->
+        repository.getUserCategories.onEach { setsOfCardsEither ->
             setsOfCardsEither.onFailure {
                 it.sendException()
             }.onSuccess { categories ->
@@ -110,7 +110,7 @@ class HomeViewModel @Inject constructor(
 
     private fun updateCategory(category: CategoryUI) {
         viewModelScope.launch {
-            repository.updateCategory(category.toDomain())
+            repository.updateUserCategory(category.toDomain())
         }
     }
 

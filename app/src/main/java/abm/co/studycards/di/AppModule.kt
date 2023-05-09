@@ -1,6 +1,8 @@
 package abm.co.studycards.di
 
+import abm.co.core.appinfo.ApplicationInfo
 import abm.co.core.navigation.NavigationBetweenModules
+import abm.co.studycards.appinfo.ApplicationInfoImpl
 import abm.co.studycards.navigation.NavigationBetweenModulesImpl
 import dagger.Binds
 import dagger.Module
@@ -18,5 +20,9 @@ object AppModule {
         abstract fun bindNavigationBetweenModules(
             impl: NavigationBetweenModulesImpl
         ): NavigationBetweenModules
+        @Binds
+        abstract fun bindApplicationInfo(
+            impl: ApplicationInfoImpl
+        ): ApplicationInfo
     }
 }

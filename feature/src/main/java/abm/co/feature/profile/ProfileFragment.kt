@@ -18,6 +18,8 @@ class ProfileFragment : BaseFragment() {
 
     @Composable
     override fun InitUI(messageContent: messageContent) {
-        ProfilePage()
+        ProfilePage(
+            showMessage = messageContent
+        )
     }
 }
