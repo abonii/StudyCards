@@ -34,7 +34,7 @@ class CategoryFragment : BaseFragment() {
                     )
                 )
             },
-            navigateToEditCategory = {
+            navigateToChooseOrCreateCategory = {
 
             }
         )

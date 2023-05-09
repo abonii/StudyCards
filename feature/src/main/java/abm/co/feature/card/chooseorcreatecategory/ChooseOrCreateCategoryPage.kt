@@ -1,4 +1,4 @@
-package abm.co.feature.card.editcategory
+package abm.co.feature.card.chooseorcreatecategory
 
 import abm.co.designsystem.component.button.PrimaryButton
 import abm.co.designsystem.component.button.SecondaryButton
@@ -45,11 +45,11 @@ import com.google.firebase.ktx.Firebase
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun EditCategoryPage(
+fun ChooseOrCreateCategoryPage(
     onBack: () -> Unit,
     navigateToNewCard: (CategoryUI) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
-    viewModel: EditCategoryViewModel = hiltViewModel(),
+    viewModel: ChooseOrCreateCategoryViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
         Firebase.analytics.logEvent(
@@ -60,9 +60,9 @@ fun EditCategoryPage(
 
     viewModel.channel.collectInLaunchedEffect {
         when (it) {
-            EditCategoryContractChannel.NavigateBack -> onBack()
-            is EditCategoryContractChannel.NavigateToNewCard -> navigateToNewCard(it.category)
-            is EditCategoryContractChannel.ShowMessage -> showMessage(it.messageContent)
+            ChooseOrCreateCategoryContractChannel.NavigateBack -> onBack()
+            is ChooseOrCreateCategoryContractChannel.NavigateToNewCard -> navigateToNewCard(it.category)
+            is ChooseOrCreateCategoryContractChannel.ShowMessage -> showMessage(it.messageContent)
         }
     }
 
@@ -82,8 +82,8 @@ fun EditCategoryPage(
 
 @Composable
 private fun CategoryScreen(
-    uiState: EditCategoryContractState,
-    onEvent: (EditCategoryContractEvent) -> Unit
+    uiState: ChooseOrCreateCategoryContractState,
+    onEvent: (ChooseOrCreateCategoryContractEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -93,10 +93,10 @@ private fun CategoryScreen(
         Toolbar(
             categoryName = uiState.categoryName,
             onEnterCategoryName = {
-                onEvent(EditCategoryContractEvent.OnEnterCategoryName(it))
+                onEvent(ChooseOrCreateCategoryContractEvent.OnEnterCategoryName(it))
             },
             onBack = {
-                onEvent(EditCategoryContractEvent.OnBackClicked)
+                onEvent(ChooseOrCreateCategoryContractEvent.OnBackClicked)
             },
             middleContent = {
                 uiState.progress?.let { progress ->
@@ -118,10 +118,10 @@ private fun CategoryScreen(
         Buttons(
             modifier = Modifier.padding(bottom = 15.dp, start = 20.dp, end = 20.dp, top = 10.dp),
             onClickPrimary = {
-                onEvent(EditCategoryContractEvent.OnContinue)
+                onEvent(ChooseOrCreateCategoryContractEvent.OnContinue)
             },
             onClickSecondary = {
-                onEvent(EditCategoryContractEvent.OnBackClicked)
+                onEvent(ChooseOrCreateCategoryContractEvent.OnBackClicked)
             }
         )
     }

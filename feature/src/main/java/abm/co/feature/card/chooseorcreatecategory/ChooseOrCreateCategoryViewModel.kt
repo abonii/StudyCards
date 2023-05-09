@@ -1,4 +1,4 @@
-package abm.co.feature.card.editcategory
+package abm.co.feature.card.chooseorcreatecategory
 
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
@@ -24,39 +24,39 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EditCategoryViewModel @Inject constructor(
+class ChooseOrCreateCategoryViewModel @Inject constructor(
     private val serverRepository: ServerRepository
 ) : ViewModel() {
 
-    private val _channel = Channel<EditCategoryContractChannel>()
+    private val _channel = Channel<ChooseOrCreateCategoryContractChannel>()
     val channel = _channel.receiveAsFlow()
 
     private val _state = MutableStateFlow(
-        EditCategoryContractState(
+        ChooseOrCreateCategoryContractState(
             progress = 0.3f
         )
     )
-    val state: StateFlow<EditCategoryContractState> = _state.asStateFlow()
+    val state: StateFlow<ChooseOrCreateCategoryContractState> = _state.asStateFlow()
 
     init {
         fetchCategories()
     }
 
-    fun onEvent(event: EditCategoryContractEvent) {
+    fun onEvent(event: ChooseOrCreateCategoryContractEvent) {
         when (event) {
-            is EditCategoryContractEvent.OnEnterCategoryName -> {
+            is ChooseOrCreateCategoryContractEvent.OnEnterCategoryName -> {
                 _state.update {
                     it.copy(categoryName = event.value)
                 }
             }
 
-            EditCategoryContractEvent.OnContinue -> {
+            ChooseOrCreateCategoryContractEvent.OnContinue -> {
                 onContinueButtonClicked()
             }
 
-            EditCategoryContractEvent.OnBackClicked -> {
+            ChooseOrCreateCategoryContractEvent.OnBackClicked -> {
                 viewModelScope.launch {
-                    _channel.send(EditCategoryContractChannel.NavigateBack)
+                    _channel.send(ChooseOrCreateCategoryContractChannel.NavigateBack)
                 }
             }
         }
@@ -92,7 +92,7 @@ class EditCategoryViewModel @Inject constructor(
             )
             val newCategory = serverRepository.createCategory(category.toDomain())
             newCategory.onSuccess {
-                _channel.send(EditCategoryContractChannel.NavigateToNewCard(category = it.toUI()))
+                _channel.send(ChooseOrCreateCategoryContractChannel.NavigateToNewCard(category = it.toUI()))
             }.onFailure {
                 it.sendException()
             }
@@ -102,29 +102,29 @@ class EditCategoryViewModel @Inject constructor(
     private fun Failure.sendException() {
         viewModelScope.launch {
             this@sendException.toMessageContent()?.let {
-                _channel.send(EditCategoryContractChannel.ShowMessage(it))
+                _channel.send(ChooseOrCreateCategoryContractChannel.ShowMessage(it))
             }
         }
     }
 }
 
 @Immutable
-data class EditCategoryContractState(
+data class ChooseOrCreateCategoryContractState(
     val progress: Float?, // 0..1
     val categoryName: String = "",
     val categories: List<CategoryUI> = emptyList()
 )
 
 @Immutable
-sealed interface EditCategoryContractEvent {
-    data class OnEnterCategoryName(val value: String) : EditCategoryContractEvent
-    object OnContinue : EditCategoryContractEvent
-    object OnBackClicked : EditCategoryContractEvent
+sealed interface ChooseOrCreateCategoryContractEvent {
+    data class OnEnterCategoryName(val value: String) : ChooseOrCreateCategoryContractEvent
+    object OnContinue : ChooseOrCreateCategoryContractEvent
+    object OnBackClicked : ChooseOrCreateCategoryContractEvent
 }
 
 @Immutable
-sealed interface EditCategoryContractChannel {
-    object NavigateBack : EditCategoryContractChannel
-    data class NavigateToNewCard(val category: CategoryUI) : EditCategoryContractChannel
-    data class ShowMessage(val messageContent: MessageContent) : EditCategoryContractChannel
+sealed interface ChooseOrCreateCategoryContractChannel {
+    object NavigateBack : ChooseOrCreateCategoryContractChannel
+    data class NavigateToNewCard(val category: CategoryUI) : ChooseOrCreateCategoryContractChannel
+    data class ShowMessage(val messageContent: MessageContent) : ChooseOrCreateCategoryContractChannel
 }

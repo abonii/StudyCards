@@ -61,7 +61,7 @@ private val MaxToolbarHeight = 120.dp
 @Composable
 fun CategoryPage(
     onBack: () -> Unit,
-    navigateToEditCategory: () -> Unit,
+    navigateToChooseOrCreateCategory: () -> Unit,
     navigateToCard: (CardItemUI?, CategoryUI) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: CategoryViewModel = hiltViewModel(),
@@ -75,7 +75,7 @@ fun CategoryPage(
         when (it) {
             CategoryContractChannel.NavigateBack -> onBack()
             is CategoryContractChannel.NavigateToCard -> navigateToCard(it.cardItem, it.category)
-            CategoryContractChannel.NavigateToEditCategory -> navigateToEditCategory()
+            CategoryContractChannel.NavigateToChooseOrCreateCategory -> navigateToChooseOrCreateCategory()
             is CategoryContractChannel.ShowMessage -> showMessage(it.messageContent)
         }
     }
@@ -150,6 +150,9 @@ private fun CategoryScreen(
                 .graphicsLayer { translationY = toolbarScrollable.offset },
             onBack = {
                 onEvent(CategoryContractEvent.OnBackClicked)
+            },
+            onChangeTitle = {
+                onEvent(CategoryContractEvent.OnClickEditCategory)
             }
         )
     }

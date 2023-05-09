@@ -2,13 +2,13 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/new_category_nav_graph"
-    app:startDestination="@id/edit_category_destination">
+    app:startDestination="@id/choose_or_create_category_destination">
 
     <include app:graph="@navigation/edit_card_nav_graph" />
 
     <fragment
-        android:id="@+id/edit_category_destination"
-        android:name="abm.co.feature.card.editcategory.EditCategoryFragment">
+        android:id="@+id/choose_or_create_category_destination"
+        android:name="abm.co.feature.card.chooseorcreatecategory.ChooseOrCreateCategoryFragment">
 
         <action
             android:id="@+id/to_edit_card_nav_graph"

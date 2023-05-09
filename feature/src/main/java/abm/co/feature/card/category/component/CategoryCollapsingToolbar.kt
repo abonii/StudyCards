@@ -43,6 +43,7 @@ fun CategoryCollapsingToolbar(
     progress: Float,
     @DrawableRes endIconRes: Int,
     onBack: () -> Unit,
+    onChangeTitle: () -> Unit,
     onClickEndIcon: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -84,7 +85,8 @@ fun CategoryCollapsingToolbar(
                 Text(
                     modifier = Modifier
                         .absoluteOffset(y = (-1).dp)
-                        .wrapContentWidth(),
+                        .wrapContentWidth()
+                        .clickableWithoutRipple(onClick = onChangeTitle),
                     text = title,
                     style = StudyCardsTheme.typography.weight600Size23LineHeight24
                         .copy(

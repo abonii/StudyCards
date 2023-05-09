@@ -9,7 +9,6 @@ import abm.co.domain.repository.ServerRepository
 import abm.co.feature.card.model.CardItemUI
 import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.card.model.toItemUI
-import abm.co.feature.card.model.toUI
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
@@ -208,7 +207,7 @@ sealed interface CategoryContractChannel {
     ) : CategoryContractChannel
 
     @Immutable
-    object NavigateToEditCategory : CategoryContractChannel
+    object NavigateToChooseOrCreateCategory : CategoryContractChannel
 
     @Immutable
     data class ShowMessage(val messageContent: MessageContent) : CategoryContractChannel
