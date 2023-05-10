@@ -4,7 +4,18 @@
     android:id="@+id/profile_nav_graph"
     app:startDestination="@id/profile_destination">
 
+    <include app:graph="@navigation/store_nav_graph" />
+
     <fragment
         android:id="@+id/profile_destination"
-        android:name="abm.co.feature.profile.ProfileFragment" />
+        android:name="abm.co.feature.profile.ProfileFragment" >
+
+        <action
+            android:id="@+id/to_store_nav_graph"
+            app:destination="@id/store_nav_graph"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right"/>
+    </fragment>
 </navigation>

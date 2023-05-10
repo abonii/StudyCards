@@ -7,6 +7,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.toFontFamily
 import androidx.compose.ui.unit.sp
 
 private val defaultFontFamily: FontFamily = FontFamily(
@@ -42,6 +43,12 @@ data class StudyCardsTypography(
         fontSize = 16.sp,
         fontWeight = FontWeight.W400,
         lineHeight = 20.sp
+    ).withDefaultFontFamily(defaultFontFamily),
+
+    val weight400Size16LineHeight24: TextStyle = TextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.W400,
+        lineHeight = 24.sp
     ).withDefaultFontFamily(defaultFontFamily),
 
     val weight400Size20LineHeight20: TextStyle = TextStyle(

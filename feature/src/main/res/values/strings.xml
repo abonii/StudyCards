@@ -158,6 +158,13 @@
     <string name="Profile.Settings.SignOut.title">Sign Out</string>
     <string name="Profile.Version.title">Version: %s</string>
 
+    <string name="Store.Toolbar.title">StudyCards Store</string>
+    <string name="Store.Info.title">You will get a certain number of word translations</string>
+    <string name="Store.Info.subtitle">You can translate words without leaving the app</string>
+
+    <string name="Library.Toolbar.title">Library</string>
+    <string name="Library.Info.title">We are creating something amazing\nComing soon…</string>
+
     <plurals name="cards">
         <item quantity="one"> %d card</item>
         <item quantity="zero"> %d card</item>

@@ -1,8 +1,8 @@
 object FirebaseDependencies {
 
     object Versions {
-        const val playAuth = "20.4.1"
-        const val firebaseBom = "30.0.0"
+        const val playAuth = "20.5.0"
+        const val firebaseBom = "32.0.0"
     }
 
     const val auth = "com.google.android.gms:play-services-auth:${Versions.playAuth}"

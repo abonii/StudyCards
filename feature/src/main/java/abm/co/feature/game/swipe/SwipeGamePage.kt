@@ -1,5 +1,6 @@
 package abm.co.feature.game.swipe
 
+import abm.co.designsystem.component.dialog.ShowDialogOnBackPressed
 import abm.co.designsystem.component.measure.MeasureUnconstrainedViewHeight
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
@@ -64,6 +65,9 @@ fun SwipeGamePage(
             is SwipeGameContractChannel.ShowMessage -> showMessage(it.messageContent)
         }
     }
+    ShowDialogOnBackPressed(
+        onConfirm = onBack
+    )
     SetStatusBarColor()
     GameScreen(
         screenState = state,

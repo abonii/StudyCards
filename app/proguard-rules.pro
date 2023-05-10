@@ -50,7 +50,7 @@
 -keepclassmembernames interface * {
     @retrofit.http.* <methods>;
 }
-
+-keep class org.json.* { *; }
 -keep class com.google.inject.** { *; }
 -keep class org.apache.http.** { *; }
 -keep class org.apache.james.mime4j.** { *; }

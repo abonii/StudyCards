@@ -1,4 +1,4 @@
-package abm.co.feature.book
+package abm.co.feature.book.library
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

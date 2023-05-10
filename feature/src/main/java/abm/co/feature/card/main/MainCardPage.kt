@@ -3,6 +3,7 @@ package abm.co.feature.card.main
 import abm.co.designsystem.component.button.PrimaryButton
 import abm.co.designsystem.component.button.SecondaryButton
 import abm.co.designsystem.component.modifier.Modifier
+import abm.co.designsystem.component.modifier.baseBackground
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.text.pluralString
@@ -87,7 +88,7 @@ private fun MainScreen(
 ) {
     Column(
         modifier = Modifier
-            .background(StudyCardsTheme.colors.backgroundPrimary)
+            .baseBackground()
             .fillMaxSize()
             .statusBarsPadding()
     ) {
@@ -204,7 +205,8 @@ private fun ScrollableContent(
                         onClickShare = {
                             onClickShareCategory(item)
                         },
-                        isPublished = item.published
+                        isPublished = item.published,
+                        modifier = Modifier.padding(bottom = 10.dp)
                     )
                 }
             } else {

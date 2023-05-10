@@ -2,6 +2,7 @@ package abm.co.feature.profile
 
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
+import abm.co.designsystem.navigation.extension.navigateSafe
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.navigation.fragment.findNavController
@@ -19,7 +20,12 @@ class ProfileFragment : BaseFragment() {
     @Composable
     override fun InitUI(messageContent: messageContent) {
         ProfilePage(
-            showMessage = messageContent
+            showMessage = messageContent,
+            navigateToStorePage = {
+                findNavController().navigateSafe(
+                    ProfileFragmentDirections.toStoreNavGraph()
+                )
+            }
         )
     }
 }

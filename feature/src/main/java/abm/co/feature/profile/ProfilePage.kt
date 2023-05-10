@@ -3,16 +3,22 @@ package abm.co.feature.profile
 import abm.co.designsystem.component.button.PrimaryButton
 import abm.co.designsystem.component.button.SecondaryButton
 import abm.co.designsystem.component.modifier.Modifier
+import abm.co.designsystem.component.modifier.baseBackground
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.textfield.TextFieldWithLabel
 import abm.co.designsystem.extensions.collectInLaunchedEffect
+import abm.co.designsystem.extensions.getActivity
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.authorization.common.TrailingIcon
+import abm.co.feature.userattributes.lanugage.LanguageUI
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +34,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -48,7 +55,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.firebase.analytics.ktx.analytics
@@ -56,6 +65,7 @@ import com.google.firebase.ktx.Firebase
 
 @Composable
 fun ProfilePage(
+    navigateToStorePage: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
@@ -69,11 +79,11 @@ fun ProfilePage(
         onResult = viewModel::firebaseAuthWithGoogle
     )
     val state by viewModel.state.collectAsState()
-
-    viewModel.channel.collectInLaunchedEffect {
-        when (it) {
+    val activity = getActivity()
+    viewModel.channel.collectInLaunchedEffect { channel ->
+        when (channel) {
             is ProfileContractChannel.ConnectWithGoogleAccount -> {
-                startGoogleLoginForResult.launch(it.intent)
+                startGoogleLoginForResult.launch(channel.intent)
             }
 
             ProfileContractChannel.NavigateToAuthorization -> {
@@ -81,22 +91,29 @@ fun ProfilePage(
             }
 
             ProfileContractChannel.NavigateToStore -> {
-
+                navigateToStorePage()
             }
 
             is ProfileContractChannel.NavigateToTelegramApp -> {
-
+                val i = Intent(Intent.ACTION_VIEW)
+                i.data = Uri.parse(channel.url)
+                activity?.startActivity(i)
             }
 
             ProfileContractChannel.ReopenTheApp -> {
-
+                activity?.let {
+                    it.startActivity(
+                        Intent(it, it::class.java)
+                    )
+                    it.finish()
+                }
             }
 
             ProfileContractChannel.NavigateToChangePassword -> {
 
             }
 
-            is ProfileContractChannel.ShowMessage -> showMessage(it.messageContent)
+            is ProfileContractChannel.ShowMessage -> showMessage(channel.messageContent)
         }
     }
 
@@ -115,7 +132,7 @@ private fun ProfileScreen(
 ) {
     Column(
         modifier = Modifier
-            .background(StudyCardsTheme.colors.backgroundPrimary)
+            .baseBackground()
             .fillMaxSize()
             .statusBarsPadding()
     ) {
@@ -126,6 +143,75 @@ private fun ProfileScreen(
             onEvent = onEvent,
             appVersion = state.appVersion,
             modifier = Modifier.weight(1f)
+        )
+        DialogContent(
+            state = state.dialog,
+            onEvent = onEvent
+        )
+    }
+}
+
+@Composable
+private fun DialogContent(
+    state: ProfileContractState.Dialog,
+    onEvent: (ProfileContractEvent.Dialog) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    state.appLanguage?.let { languages ->
+        Dialog(
+            onDismissRequest = {
+                onEvent(ProfileContractEvent.Dialog.OnDismissDialog)
+            },
+            content = {
+                Column(
+                    modifier = modifier
+                        .background(
+                            color = StudyCardsTheme.colors.backgroundPrimary,
+                            shape = RoundedCornerShape(16.dp)
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    languages.forEach { languageUI ->
+                        LanguageItem(
+                            modifier = Modifier,
+                            language = languageUI,
+                            onClick = {
+                                onEvent(ProfileContractEvent.Dialog.OnClickAppLanguage(languageUI))
+                            }
+                        )
+                        Divider()
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun LanguageItem(
+    language: LanguageUI,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .clickable(onClick = onClick)
+            .padding(horizontal = 24.dp, vertical = 13.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            modifier = Modifier.size(30.dp),
+            painter = painterResource(id = language.flagFromDrawable),
+            contentDescription = null
+        )
+        Text(
+            modifier = Modifier.weight(1f),
+            text = stringResource(id = language.languageNameResCode),
+            style = StudyCardsTheme.typography.weight400Size16LineHeight20,
+            color = StudyCardsTheme.colors.textPrimary,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
@@ -361,7 +447,7 @@ private fun SettingsContent(
                 stringResource(id = it)
             } ?: stringResource(id = R.string.Profile_Settings_Langauge_notSelected),
             onClick = {
-                onEvent(ProfileContractEvent.Settings.OnClickStore)
+                onEvent(ProfileContractEvent.Settings.OnClickAppLanguage)
             }
         )
         if (settings.isAnonymousOrVerified) {
@@ -369,7 +455,7 @@ private fun SettingsContent(
             SettingsItem(
                 title = stringResource(id = R.string.Profile_Settings_SendConfirmation_title),
                 onClick = {
-                    onEvent(ProfileContractEvent.Settings.OnClickContactUs)
+                    onEvent(ProfileContractEvent.Settings.OnClickSendConfirmation)
                 }
             )
         }

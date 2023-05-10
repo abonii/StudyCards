@@ -1,6 +1,7 @@
 package abm.co.studycards.ui
 
 import abm.co.domain.repository.LanguagesRepository
+import abm.co.domain.repository.StoreRepository
 import abm.co.studycards.R
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val languagesRepository: LanguagesRepository
+    private val languagesRepository: LanguagesRepository,
+    storeRepository: StoreRepository
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(MainContractState())
@@ -33,6 +35,7 @@ class MainViewModel @Inject constructor(
 
     init {
         fetchStartDestination()
+        storeRepository.startConnection()
     }
 
     private fun fetchStartDestination() {

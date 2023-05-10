@@ -61,6 +61,7 @@ dependencies {
     implementation(project(":library:permissions"))
     implementation(project(":core"))
     api(project(":domain"))
+    implementation(BillingDependencies.billing)
     DIDependencies.apply {
         implementation(hiltAndroid)
         implementation(hiltNavigationCompose)

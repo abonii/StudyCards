@@ -1,5 +1,6 @@
 package abm.co.designsystem.base
 
+import abm.co.designsystem.message.alert.MessageAlertDialog
 import abm.co.designsystem.message.common.MessageAlertContent
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
@@ -12,7 +13,6 @@ import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -57,6 +56,7 @@ fun Fragment.composableView(
                         is MessageContent.AlertDialog -> {
                             showAlertDialog = messageContent.toMessageContent(context)
                         }
+
                         is MessageContent.Snackbar -> {
                             snackbarHostState.showSnackbarWithContent(
                                 messageContent.toMessageContent(context)
@@ -64,6 +64,12 @@ fun Fragment.composableView(
                         }
                     }
                 }
+                MessageAlertDialog(
+                    showAlertDialog = showAlertDialog,
+                    onDismiss = {
+                        showAlertDialog = null
+                    }
+                )
                 MessageSnackbar(snackbarHostState = snackbarHostState)
             }
         }

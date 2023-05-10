@@ -37,6 +37,7 @@ android {
 dependencies {
     implementation(KotlinxDependencies.core)
     implementation(AndroidxDependencies.lifeCycleViewModelKtx)
+    implementation(BillingDependencies.billing)
     TestDependencies.apply {
         testImplementation(junit)
         testImplementation(coroutinesTest)

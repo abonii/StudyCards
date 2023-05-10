@@ -1,8 +1,8 @@
 package abm.co.data.di
 
 import abm.co.data.repository.AuthorizationRepositoryImpl
-import abm.co.domain.repository.PricingRepository
-import abm.co.data.repository.PricingRepositoryImpl
+import abm.co.domain.repository.StoreRepository
+import abm.co.data.repository.StoreRepositoryImpl
 import abm.co.domain.repository.DictionaryRepository
 import abm.co.data.repository.DictionaryRepositoryImpl
 import abm.co.data.repository.FirebaseRepositoryImpl
@@ -13,8 +13,8 @@ import abm.co.domain.repository.ServerRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -29,8 +29,9 @@ abstract class RepositoryModule {
     @Binds
     abstract fun bindDictionaryRepository(repository: DictionaryRepositoryImpl): DictionaryRepository
 
+    @Singleton
     @Binds
-    abstract fun bindBillingRepository(repository: PricingRepositoryImpl): PricingRepository
+    abstract fun bindStoreRepository(repository: StoreRepositoryImpl): StoreRepository
 
     @Binds
     abstract fun bindLanguagesRepository(repository: LanguagesRepositoryImpl): LanguagesRepository

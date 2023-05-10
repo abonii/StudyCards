@@ -1,9 +1,8 @@
 package abm.co.data.repository
 
-import abm.co.data.model.purchase.PurchaseVerifyDTO
-import abm.co.data.utils.BaseURLs.AN_APP_SKUS
-import abm.co.data.utils.BaseURLs.PRODUCT_TYPE
-import abm.co.domain.repository.PricingRepository
+import abm.co.data.di.ApplicationScope
+import abm.co.data.model.store.PurchaseVerifyDto
+import abm.co.domain.repository.StoreRepository
 import android.content.Context
 import android.widget.Toast
 import com.android.billingclient.api.BillingClient
@@ -17,39 +16,37 @@ import com.android.billingclient.api.SkuDetailsParams
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
 import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-
-private const val VERIFY_PRODUCT_FUN = "verifyProduct"
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-class PricingRepositoryImpl @Inject constructor(
-    @ApplicationContext val context: Context,
+class StoreRepositoryImpl @Inject constructor(
+    @ApplicationContext val applicationContext: Context,
     private val firebaseFunctions: FirebaseFunctions,
-    private val coroutineScope: CoroutineScope,
+    @ApplicationScope private val coroutineScope: CoroutineScope,
     private val firebaseAuth: FirebaseAuth
-) : PricingRepository, BillingClientStateListener, PurchasesUpdatedListener {
+) : StoreRepository, BillingClientStateListener, PurchasesUpdatedListener {
 
     private val _skusStateFlow = MutableStateFlow<List<SkuDetails>>(emptyList())
-    private val skusStateFlow: StateFlow<List<SkuDetails>> = _skusStateFlow.asStateFlow()
+    override val skusStateFlow: StateFlow<List<SkuDetails>> = _skusStateFlow.asStateFlow()
 
     private var _billingClient: BillingClient = BillingClient
-        .newBuilder(context.applicationContext)
+        .newBuilder(applicationContext)
         .enablePendingPurchases()
         .setListener(this)
         .build()
 
-    val billingClient get() = _billingClient
+    override val billingClient get() = _billingClient
 
-    fun startConnection() {
+    override fun startConnection() {
         coroutineScope.launch(Dispatchers.IO) {
-            _billingClient.startConnection(this@PricingRepositoryImpl)
+            _billingClient.startConnection(this@StoreRepositoryImpl)
         }
     }
 
@@ -87,7 +84,7 @@ class PricingRepositoryImpl @Inject constructor(
         firebaseFunctions.getHttpsCallable(VERIFY_PRODUCT_FUN).call(data).continueWith { task ->
             try {
                 (task.result?.data as HashMap<*, *>).let {
-                    val verifyPurchase = PurchaseVerifyDTO(
+                    val verifyPurchase = PurchaseVerifyDto(
                         status = it["status"] as Int,
                         purchaseState = it["purchaseState"] as Int?
                     )
@@ -98,7 +95,7 @@ class PricingRepositoryImpl @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -144,4 +141,13 @@ class PricingRepositoryImpl @Inject constructor(
         }
     }
 
+    companion object {
+        private const val VERIFY_PRODUCT_FUN = "verifyProduct"
+        const val PRODUCT_TYPE = BillingClient.SkuType.INAPP
+        val AN_APP_SKUS = listOf(
+            "translation_1000_times",
+            "translation_500_times",
+            "translation_250_times"
+        )
+    }
 }

@@ -13,8 +13,8 @@ class StudyCardsApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        initPluto()
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        initPluto()
     }
 
     private fun initPluto() {

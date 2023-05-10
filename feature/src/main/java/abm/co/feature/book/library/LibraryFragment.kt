@@ -1,23 +1,22 @@
-package abm.co.feature.game.main
+package abm.co.feature.book.library
 
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
 import android.view.View
 import androidx.compose.runtime.Composable
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainGameFragment : BaseFragment() {
+class LibraryFragment : BaseFragment() {
 
     companion object {
         private val rootViewId = View.generateViewId()
     }
 
-    override val rootViewId: Int get() = MainGameFragment.rootViewId
+    override val rootViewId: Int get() = Companion.rootViewId
 
     @Composable
     override fun InitUI(messageContent: messageContent) {
-        MainGamePage()
+        LibraryPage()
     }
 }

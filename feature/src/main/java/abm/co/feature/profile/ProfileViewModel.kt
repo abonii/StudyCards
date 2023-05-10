@@ -152,7 +152,7 @@ class ProfileViewModel @Inject constructor(
             ProfileContractEvent.Settings.OnClickAppLanguage -> {
                 _state.update { oldState ->
                     oldState.copy(
-                        dialog = oldState.dialog?.copy(
+                        dialog = ProfileContractState.Dialog(
                             appLanguage = defaultLanguages.filterByCodes(
                                 codes = listOf(
                                     "en",
@@ -175,7 +175,7 @@ class ProfileViewModel @Inject constructor(
                 viewModelScope.launch {
                     _channel.send(
                         ProfileContractChannel.NavigateToTelegramApp(
-                            "https://t.me/studycardsdev"
+                            url = "https://t.me/studycardsdev"
                         )
                     )
                 }
@@ -186,7 +186,10 @@ class ProfileViewModel @Inject constructor(
             }
 
             is ProfileContractEvent.Dialog.OnClickAppLanguage -> {
-                setAppLanguage(event.languageUI)
+                viewModelScope.launch {
+                    setAppLanguage(event.languageUI)
+                    _channel.send(ProfileContractChannel.ReopenTheApp)
+                }
             }
 
             ProfileContractEvent.Settings.OnClickChangePassword -> {
@@ -200,6 +203,14 @@ class ProfileViewModel @Inject constructor(
             ProfileContractEvent.Settings.OnClickSendConfirmation -> {
                 sendVerificationEmail()
             }
+
+            ProfileContractEvent.Dialog.OnDismissDialog -> {
+                _state.update { oldState ->
+                    oldState.copy(
+                        dialog = ProfileContractState.Dialog()
+                    )
+                }
+            }
         }
     }
 
@@ -211,12 +222,10 @@ class ProfileViewModel @Inject constructor(
     }
 
 
-    private fun setAppLanguage(language: LanguageUI) {
-        viewModelScope.launch {
-            languagesRepository.setAppLanguage(language.toDomain())
-            LocaleHelper.setLocale(applicationContext, language.code)
-            _channel.send(ProfileContractChannel.ReopenTheApp)
-        }
+    private suspend fun setAppLanguage(language: LanguageUI) {
+        languagesRepository.setAppLanguage(language.toDomain())
+        LocaleHelper.setLocale(applicationContext, language.code)
+        _channel.send(ProfileContractChannel.ReopenTheApp)
     }
 
     private fun ProfileContractState.UserInfo.Anonymous.createUserFromAnonymous() {
@@ -414,9 +423,10 @@ class ProfileViewModel @Inject constructor(
 data class ProfileContractState(
     val settings: Settings = Settings(),
     val userInfo: UserInfo? = null,
-    val dialog: Dialog? = null,
+    val dialog: Dialog = Dialog(),
     val appVersion: String
 ) {
+    @Immutable
     sealed interface UserInfo {
         data class Anonymous(
             val email: String = "",
@@ -432,6 +442,7 @@ data class ProfileContractState(
         ) : UserInfo
     }
 
+    @Immutable
     data class Settings(
         val selectedAppLanguage: LanguageUI? = null,
         val translationCount: String = "0",
@@ -439,8 +450,9 @@ data class ProfileContractState(
         val isVerified: Boolean = false
     )
 
+    @Immutable
     data class Dialog(
-        val appLanguage: List<LanguageUI>
+        val appLanguage: List<LanguageUI>? = null
     )
 }
 
@@ -463,9 +475,8 @@ sealed interface ProfileContractEvent {
     }
 
     sealed interface Dialog : ProfileContractEvent {
-        data class OnClickAppLanguage(
-            val languageUI: LanguageUI
-        ) : Dialog
+        data class OnClickAppLanguage(val languageUI: LanguageUI) : Dialog
+        object OnDismissDialog : Dialog
     }
 }
 
@@ -476,6 +487,6 @@ sealed interface ProfileContractChannel {
     object NavigateToStore : ProfileContractChannel
     object ReopenTheApp : ProfileContractChannel
     object NavigateToChangePassword : ProfileContractChannel
-    data class NavigateToTelegramApp(val string: String) : ProfileContractChannel
+    data class NavigateToTelegramApp(val url: String) : ProfileContractChannel
     data class ShowMessage(val messageContent: MessageContent) : ProfileContractChannel
 }

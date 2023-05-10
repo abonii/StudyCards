@@ -265,16 +265,23 @@
     <!-- Error messages -->
     <string name="Alert.allow">Allow</string>
     <string name="Alert.cancel">Cancel</string>
+    <string name="Alert.Title">Do you want to exit?</string>
+    <string name="Alert.Confirm">Yes, I do</string>
+    <string name="Alert.Dismiss">Cancel</string>
+
     <string name="Error.exceptionCode">Some kind of error occurred. Please, try again. If it happens again, contact support.</string>
     <string name="Error.InternetConnection.description">Check your connection and try again</string>
     <string name="Error.InternetConnection.title">Some Internet issues</string>
     <string name="Error.invalidToken">Your session was interrupted. Please let us know if the error occurs again</string>
     <string name="Error.standard">Some kind of error occurred. Please, try again. If it happens again, contact support</string>
     <string name="Error.timeOut">The time limit of the request exceeded</string>
+
     <string name="Network.internalError">Error occurred. Please try again. If an error is repeated, contact support.</string>
     <string name="Network.serverError">Server error</string>
+
     <string name="InternalErrorAlert.close">Close</string>
     <string name="InternalErrorAlert.title">Error</string>
+
     <string name="Messages.error">Error!</string>
     <string name="Messages.success">Successfully!</string>
     <string name="Messages.OK">OK</string>

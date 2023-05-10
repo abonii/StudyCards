@@ -27,9 +27,8 @@ internal inline fun <reified T : Any?> DatabaseReference.asFlow(
         val listener = addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 try {
-                    converter(snapshot).let {
-                        trySend(Either.Right(it)).isSuccess
-                    }
+                    val item = converter(snapshot)
+                    trySend(Either.Right(item)).isSuccess
                 } catch (e: Exception) {
                     PlutoLog.e(
                         "DatabaseReference.asFlow",
@@ -57,6 +56,7 @@ internal inline fun <reified T : Any?> DatabaseReference.asFlow(
         .shareIn(
             scope,
             SharingStarted.Eagerly,
-            0
+            1
         )
+
 }

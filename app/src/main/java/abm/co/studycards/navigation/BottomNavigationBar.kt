@@ -24,7 +24,7 @@ private const val BOTTOM_BAR_HEIGHT = 72f // it is as dp
 private val bottomNavigationVisibleItemsId = persistentListOf(
     abm.co.feature.R.id.home_destination,
     abm.co.feature.R.id.main_card_destination,
-    abm.co.feature.R.id.main_game_destination,
+    abm.co.feature.R.id.library_destination,
     abm.co.feature.R.id.profile_destination
 )
 
@@ -48,9 +48,9 @@ val bottomNavigationItems = persistentListOf(
         order = 2
     ),
     BottomNavigationItem(
-        nameRes = R.string.nav_game,
-        resId = abm.co.feature.R.id.main_game_nav_graph,
-        iconRes = R.drawable.ic_game,
+        nameRes = R.string.nav_library,
+        resId = abm.co.feature.R.id.library_nav_graph,
+        iconRes = R.drawable.ic_library,
         order = 3
     ),
     BottomNavigationItem(
