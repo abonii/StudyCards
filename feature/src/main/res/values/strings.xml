@@ -37,6 +37,8 @@
     <string name="TurkishShort">Tur</string>
     <string name="RussianShort">Rus</string>
 
+    <string name="Message.inFuture">Will be in future versions…</string>
+
     <string name="WelcomeLoginPage.LoginAsGuest">Continue as a guest</string>
     <string name="WelcomeLoginPage.LoginButton">LOGIN</string>
     <string name="WelcomeLoginPage.SignUpButton">SIGN UP</string>
@@ -57,6 +59,8 @@
     <string name="SignUpPage.Title">Create Account </string>
     <string name="SignUpPage.Subtitle">to get to started now</string>
     <string name="SignUpPage.SignUpButton">SIGN UP</string>
+    <string name="SignUpPage.NameTitle">Name</string>
+    <string name="SignUpPage.NameHint">Enter your name</string>
     <string name="SignUpPage.EmailTitle">Email</string>
     <string name="SignUpPage.EmailHint">Enter your email</string>
     <string name="SignUpPage.PasswordTitle">Password</string>

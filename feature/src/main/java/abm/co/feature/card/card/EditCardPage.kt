@@ -10,6 +10,7 @@ import abm.co.designsystem.component.textfield.TextFieldWithLabel
 import abm.co.designsystem.component.widget.LinearProgress
 import abm.co.designsystem.extensions.collectInLaunchedEffect
 import abm.co.designsystem.message.common.MessageContent
+import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.designsystem.preview.ThemePreviews
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
@@ -85,7 +86,15 @@ fun EditCardPage(
 
             EditCardContractChannel.NavigateBack -> onBack()
 
-            EditCardContractChannel.NavigateToSearchHistory -> { /*todo not released*/ }
+            EditCardContractChannel.NavigateToSearchHistory -> {
+                showMessage(
+                    MessageContent.Snackbar.MessageContentRes(
+                        titleRes = abm.co.designsystem.R.string.Messages_working,
+                        subtitleRes = R.string.Message_inFuture,
+                        type = MessageType.Info
+                    )
+                )  /*todo not released*/
+            }
 
             is EditCardContractChannel.ShowMessage -> {
                 showMessage(it.messageContent)

@@ -108,6 +108,7 @@ private fun SignUpScreen(
             IntroContent()
             Spacer(modifier = Modifier.weight(0.067f))
             InputFieldsContent(
+                name = state.name,
                 email = state.email,
                 password = state.password,
                 passwordConfirm = state.passwordConfirm,
@@ -119,6 +120,9 @@ private fun SignUpScreen(
                 },
                 onEnterPasswordConfirmValue = {
                     event(SignUpContractEvent.OnEnterPasswordConfirmValue(it))
+                },
+                onEnterNameValue = {
+                    event(SignUpContractEvent.OnEnterNameValue(it))
                 }
             )
             Spacer(modifier = Modifier.weight(0.067f))
@@ -176,18 +180,31 @@ private fun ColumnScope.IntroContent() {
 
 @Composable
 private fun ColumnScope.InputFieldsContent(
+    name: String,
     email: String,
     password: String,
     passwordConfirm: String,
     onEnterEmailValue: (String) -> Unit,
+    onEnterNameValue: (String) -> Unit,
     onEnterPasswordValue: (String) -> Unit,
     onEnterPasswordConfirmValue: (String) -> Unit
 ) {
     TextFieldWithLabel(
+        label = stringResource(id = R.string.SignUpPage_NameTitle),
+        hint = stringResource(id = R.string.SignUpPage_NameHint),
+        value = name,
+        onValueChange = onEnterEmailValue,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(68.dp)
+            .padding(horizontal = 16.dp)
+    )
+    Spacer(modifier = Modifier.weight(0.024f))
+    TextFieldWithLabel(
         label = stringResource(id = R.string.SignUpPage_EmailTitle),
         hint = stringResource(id = R.string.SignUpPage_EmailHint),
         value = email,
-        onValueChange = onEnterEmailValue,
+        onValueChange = onEnterNameValue,
         modifier = Modifier
             .fillMaxWidth()
             .height(68.dp)

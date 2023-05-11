@@ -41,14 +41,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupStartupDestination() {
         launchLifecycleScope {
-            viewModel.startDestination.collectLatest {
-                val navHostFragment =
-                    supportFragmentManager.findFragmentById(R.id.root_host_fragment) as NavHostFragment
-                val inflater = navHostFragment.navController.navInflater
-                val graph = inflater.inflate(it)
+            viewModel.startDestination.collectLatest { state ->
+                state?.let {
+                    val navHostFragment = supportFragmentManager
+                        .findFragmentById(R.id.root_host_fragment) as NavHostFragment
+                    val inflater = navHostFragment.navController.navInflater
+                    val graph = inflater.inflate(it)
+                    val navController = navHostFragment.navController
+                    navController.setGraph(graph, intent.extras)
+                }
 
-                val navController = navHostFragment.navController
-                navController.setGraph(graph, intent.extras)
             }
         }
     }

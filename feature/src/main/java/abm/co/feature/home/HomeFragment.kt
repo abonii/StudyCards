@@ -5,6 +5,7 @@ import abm.co.designsystem.base.messageContent
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.designsystem.navigation.extension.navigateSafe
+import abm.co.feature.R
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.navigation.fragment.findNavController
@@ -30,9 +31,9 @@ class HomeFragment : BaseFragment() {
             },
             openDrawer = {
                 messageContent(
-                    MessageContent.Snackbar.MessageContentTitleRes(
-                        titleRes = abm.co.designsystem.R.string.Messages_OK,
-                        subtitle = "Will be in future versions...",
+                    MessageContent.Snackbar.MessageContentRes(
+                        titleRes = abm.co.designsystem.R.string.Messages_working,
+                        subtitleRes = R.string.Message_inFuture,
                         type = MessageType.Info
                     )
                 )

@@ -285,6 +285,7 @@
     <string name="Messages.error">Error!</string>
     <string name="Messages.success">Successfully!</string>
     <string name="Messages.OK">OK</string>
+    <string name="Messages.working">We are working</string>
     <string name="Messages.UsersFault.title">It is too late</string>
     <string name="Messages.UsersFault.subtitle">You asked for it, so don\'t gripe about it:) </string>
     <string name="Messages.NotReleasedYet.title">Will be available in future versions</string>

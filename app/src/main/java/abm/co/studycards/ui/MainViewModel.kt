@@ -7,15 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,8 +27,8 @@ class MainViewModel @Inject constructor(
     private val mutableState = MutableStateFlow(MainContractState())
     val state: StateFlow<MainContractState> = mutableState.asStateFlow()
 
-    private val _startDestination = Channel<Int>()
-    val startDestination: Flow<Int> = _startDestination.receiveAsFlow()
+    private val _startDestination = MutableStateFlow<Int?>(null)
+    val startDestination: StateFlow<Int?> = _startDestination
 
     init {
         fetchStartDestination()
@@ -57,7 +54,7 @@ class MainViewModel @Inject constructor(
                 } else {
                     R.navigation.root_authorization_nav_graph
                 }
-                _startDestination.send(startDestination)
+                _startDestination.value = startDestination
                 delay(50) // status bar height cannot be calculated immediately
                 it.copy(isSplashScreenVisible = false)
             }

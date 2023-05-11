@@ -74,6 +74,12 @@ class SignUpViewModel @Inject constructor(
             SignUpContractEvent.OnSignUpViaEmailClicked -> {
                 signUpViaEmail()
             }
+
+            is SignUpContractEvent.OnEnterNameValue -> {
+                mutableState.update {
+                    it.copy(name = event.value)
+                }
+            }
         }
     }
 
@@ -225,6 +231,7 @@ class SignUpViewModel @Inject constructor(
 data class SignUpContractState(
     val isSignUpButtonLoading: Boolean = false,
     val isScreenLoading: Boolean = false,
+    val name: String = "",
     val email: String = "",
     val password: String = "",
     val passwordConfirm: String = ""
@@ -237,6 +244,7 @@ sealed interface SignUpContractEvent {
     object OnLoginViaFacebookClicked : SignUpContractEvent
     object OnLoginClicked : SignUpContractEvent
     data class OnEnterEmailValue(val value: String) : SignUpContractEvent
+    data class OnEnterNameValue(val value: String) : SignUpContractEvent
     data class OnEnterPasswordValue(val value: String) : SignUpContractEvent
     data class OnEnterPasswordConfirmValue(val value: String) : SignUpContractEvent
 }
