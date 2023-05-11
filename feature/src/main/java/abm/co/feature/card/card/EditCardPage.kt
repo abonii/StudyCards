@@ -85,8 +85,7 @@ fun EditCardPage(
 
             EditCardContractChannel.NavigateBack -> onBack()
 
-            EditCardContractChannel.NavigateToSearchHistory -> {/*todo not released*/
-            }
+            EditCardContractChannel.NavigateToSearchHistory -> { /*todo not released*/ }
 
             is EditCardContractChannel.ShowMessage -> {
                 showMessage(it.messageContent)
@@ -129,6 +128,34 @@ private fun EditCardScreen(
                 onEvent(EditCardContractEvent.OnClickBack)
             }
         )
+        ScrollableContent(
+            modifier = Modifier.weight(1f),
+            uiState = uiState,
+            onEvent = onEvent
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Buttons(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
+            onClickPrimary = {
+                onEvent(EditCardContractEvent.OnClickSaveCard)
+            },
+            onClickSecondary = {
+                onEvent(EditCardContractEvent.OnClickBack)
+            }
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+    }
+}
+
+@Composable
+private fun ScrollableContent(
+    modifier: Modifier = Modifier,
+    uiState: EditCardContractState,
+    onEvent: (EditCardContractEvent) -> Unit
+) {
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         Spacer(modifier = Modifier.height(24.dp))
         uiState.progress?.let { progress ->
             LinearProgress(
@@ -156,10 +183,7 @@ private fun EditCardScreen(
         )
         Spacer(modifier = Modifier.height(24.dp))
         Fields(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState()),
+            modifier = Modifier.padding(horizontal = 16.dp),
             nativeLanguage = uiState.nativeLanguage?.languageNameResCode?.let {
                 stringResource(id = it)
             } ?: "",
@@ -196,19 +220,6 @@ private fun EditCardScreen(
                 }
             }
         )
-        Spacer(modifier = Modifier.height(12.dp))
-        Buttons(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth(),
-            onClickPrimary = {
-                onEvent(EditCardContractEvent.OnClickSaveCard)
-            },
-            onClickSecondary = {
-                onEvent(EditCardContractEvent.OnClickBack)
-            }
-        )
-        Spacer(modifier = Modifier.height(15.dp))
     }
 }
 
@@ -264,15 +275,23 @@ private fun Fields(
                     showImage = imageURL.isNotBlank()
                 }
         }
-        if (imageURL.isNotBlank()) {
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth(0.6f)
-                    .aspectRatio(0.65f),
-                model = imageURL,
-                contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
+        Box(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .animateContentSize()
+        ) {
+            if (imageURL.isNotBlank()) {
+                AsyncImage(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .fillMaxWidth(1f)
+                        .aspectRatio(2f),
+                    model = imageURL,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+            }
         }
         TextFieldWithLabel(
             label = stringResource(
@@ -295,7 +314,7 @@ private fun Fields(
                 .height(62.dp)
                 .wrapContentWidth()
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(14.dp))
         TextFieldWithLabel(
             label = stringResource(
                 id = R.string.EditCard_LanuageField_title,

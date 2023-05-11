@@ -1,8 +1,11 @@
 package abm.co.feature.card.model
 
 import abm.co.domain.model.Card
+import android.os.Parcelable
 import androidx.compose.runtime.Immutable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Immutable
 data class CardUI(
     val name: String,
@@ -15,7 +18,7 @@ data class CardUI(
     val nextRepeatTime: Long,
     val cardID: String,
     val learnedPercent: Float, // 0..1
-)
+): Parcelable
 
 fun CardUI.toDomain() = Card(
     name = name,

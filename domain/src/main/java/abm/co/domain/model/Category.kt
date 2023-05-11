@@ -8,4 +8,8 @@ data class Category(
     val creatorID: String?,
     val imageURL: String?,
     val id: String,
-)
+) {
+    companion object {
+        const val bookmarked = "bookmarked"
+    }
+}

@@ -11,8 +11,8 @@ import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.card.category.component.CategoryCollapsingToolbar
-import abm.co.feature.card.model.CardItemUI
 import abm.co.feature.card.model.CardKindUI
+import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.toolbar.ToolbarState
 import abm.co.feature.toolbar.rememberToolbarState
@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.analytics.ktx.analytics
@@ -62,7 +63,7 @@ private val MaxToolbarHeight = 120.dp
 fun CategoryPage(
     onBack: () -> Unit,
     navigateToChooseOrCreateCategory: () -> Unit,
-    navigateToCard: (CardItemUI?, CategoryUI) -> Unit,
+    navigateToCard: (CardUI?, CategoryUI) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: CategoryViewModel = hiltViewModel(),
 ) {
@@ -162,8 +163,8 @@ private fun CategoryScreen(
 @Composable
 private fun SuccessScreen(
     screenState: CategoryContract.ScreenState.Success,
-    onClickCard: (CardItemUI) -> Unit,
-    onClickPlay: (CardItemUI) -> Unit,
+    onClickCard: (CardUI) -> Unit,
+    onClickPlay: (CardUI) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -173,7 +174,7 @@ private fun SuccessScreen(
         verticalArrangement = Arrangement.spacedBy(11.dp)
     ) {
         screenState.cards.forEach { card ->
-            key(card.id) {
+            key(card.cardID) {
                 CardItem(
                     cardItem = card,
                     onClick = { onClickCard(card) },
@@ -186,7 +187,7 @@ private fun SuccessScreen(
 
 @Composable
 private fun CardItem(
-    cardItem: CardItemUI,
+    cardItem: CardUI,
     onClick: () -> Unit,
     onClickPlay: () -> Unit,
     modifier: Modifier = Modifier
@@ -204,10 +205,10 @@ private fun CardItem(
                 .clip(RoundedCornerShape(11.dp))
                 .background(
                     when (cardItem.kind) {
-                        CardKindUI.UNDEFINED -> Color.Black
-                        CardKindUI.UNKNOWN -> Color.Cyan
-                        CardKindUI.UNCERTAIN -> Color.Blue
-                        CardKindUI.KNOWN -> Color.Cyan
+                        CardKindUI.UNDEFINED -> StudyCardsTheme.colors.blueMiddle
+                        CardKindUI.UNKNOWN -> StudyCardsTheme.colors.unknown
+                        CardKindUI.UNCERTAIN -> StudyCardsTheme.colors.uncertain
+                        CardKindUI.KNOWN -> StudyCardsTheme.colors.known
                     }
                 )
                 .width(6.dp)
@@ -222,15 +223,19 @@ private fun CardItem(
             Text(
                 text = cardItem.name,
                 color = StudyCardsTheme.colors.textPrimary,
-                style = StudyCardsTheme.typography.weight500Size16LineHeight20
+                style = StudyCardsTheme.typography.weight500Size16LineHeight20,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
-            Spacer(modifier = Modifier.width(2.dp))
+            Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = cardItem.translation,
                 color = StudyCardsTheme.colors.textSecondary,
-                style = StudyCardsTheme.typography.weight400Size12LineHeight20
+                style = StudyCardsTheme.typography.weight400Size12LineHeight20,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             LinearProgress(
                 progressFloat = cardItem.learnedPercent,
                 contentColor = StudyCardsTheme.colors.blueMiddle,

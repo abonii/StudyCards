@@ -1,8 +1,9 @@
-package abm.co.feature.card.card
+package abm.co.feature.profile.main
 
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
 import abm.co.designsystem.extensions.addPaddingOnShownKeyboard
+import abm.co.designsystem.navigation.extension.navigateSafe
 import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.Composable
@@ -10,21 +11,28 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EditCardFragment : BaseFragment() {
+class ProfileFragment : BaseFragment() {
 
     companion object {
         private val rootViewId = View.generateViewId()
     }
 
-    override val rootViewId: Int get() = EditCardFragment.rootViewId
+    override val rootViewId: Int get() = Companion.rootViewId
 
     @Composable
     override fun InitUI(messageContent: messageContent) {
-        EditCardPage(
-            onBack = {
-                with(findNavController()) { navigateUp() }
+        ProfilePage(
+            showMessage = messageContent,
+            navigateToStorePage = {
+                findNavController().navigateSafe(
+                    ProfileFragmentDirections.toStoreNavGraph()
+                )
             },
-            showMessage = messageContent
+            navigateToChangePasswordPage = {
+                findNavController().navigateSafe(
+                    ProfileFragmentDirections.toChangePasswordDestination()
+                )
+            }
         )
     }
 

@@ -14,6 +14,7 @@ import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.card.model.CategoryUI
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -436,19 +437,28 @@ private fun LoadingScreen(
 private fun EmptyScreen(
     modifier: Modifier = Modifier
 ) {
-    Box(
+    Column(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
+        Spacer(modifier = Modifier.weight(0.27f))
+        Image(
             modifier = Modifier
-                .padding(horizontal = 36.dp)
-                .fillMaxWidth(),
-            text = stringResource(R.string.MainCard_Empty_title),
-            style = StudyCardsTheme.typography.weight400Size14LineHeight24,
-            color = StudyCardsTheme.colors.middleGray,
+                .weight(0.34f)
+                .aspectRatio(1f),
+            contentScale = ContentScale.Fit,
+            painter = painterResource(id = R.drawable.illustration_card_empty),
+            contentDescription = null
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(id = R.string.MainCard_Empty_title),
+            style = StudyCardsTheme.typography.weight400Size16LineHeight24,
+            color = StudyCardsTheme.colors.grayishBlue,
+            modifier = Modifier.padding(horizontal = 16.dp),
             textAlign = TextAlign.Center
         )
+        Spacer(modifier = Modifier.weight(0.28f))
     }
 }
 

@@ -96,6 +96,13 @@ class MainCardViewModel @Inject constructor(
                     ) ?: oldState
                 }
             }
+
+            is MainCardContractEvent.OnClickCategoryBookmark -> {
+                updateBookmark(
+                    categoryID = event.item.id,
+                    bookmarked = !event.item.bookmarked
+                )
+            }
         }
     }
 
@@ -124,6 +131,15 @@ class MainCardViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    private fun updateBookmark(categoryID: String, bookmarked: Boolean) {
+        viewModelScope.launch {
+            serverRepository.updateCategoryBookmark(
+                categoryID = categoryID,
+                bookmarked = bookmarked
+            )
+        }
+    }
+
     private fun Failure.sendException() {
         viewModelScope.launch {
             this@sendException.toMessageContent()?.let {
@@ -149,6 +165,7 @@ sealed interface MainCardContractEvent {
     data class OnClickCategory(val item: CategoryUI) : MainCardContractEvent
     data class OnClickCategoryPlay(val item: CategoryUI) : MainCardContractEvent
     data class OnClickCategoryShare(val item: CategoryUI) : MainCardContractEvent
+    data class OnClickCategoryBookmark(val item: CategoryUI) : MainCardContractEvent
     data class OnClickCategoryConfirmShare(val item: CategoryUI) : MainCardContractEvent
     object OnClickCategoryConfirmClose : MainCardContractEvent
 }

@@ -31,6 +31,9 @@ internal val LightColors = StudyCardsColor(
     pressed = Color(0x33_F8F8FF),
     success = Color(0xFF_27AE60),
     error = Color(0xFF_F2376F),
+    uncertain = Color(0xFF_CFB323),
+    known = Color(0xFF_03DC03),
+    unknown = Color(0xFF_FF0000),
     isLight = true
 )
 
@@ -58,6 +61,9 @@ internal val DarkColors = StudyCardsColor(
     pressed = Color(0xFF_3A3A3C),
     success = Color(0xFF_32D74B),
     error = Color(0xFF_FF453A),
+    uncertain = Color(0xFF_CFB323),
+    known = Color(0xFF_03DC03),
+    unknown = Color(0xFF_FF0000),
     isLight = false
 )
 
@@ -86,6 +92,9 @@ class StudyCardsColor(
     pressed: Color,
     success: Color,
     error: Color,
+    uncertain: Color,
+    known: Color,
+    unknown: Color,
     isLight: Boolean,
 ) {
     var primary by mutableStateOf(primary)
@@ -157,6 +166,15 @@ class StudyCardsColor(
     var error by mutableStateOf(error)
         private set
 
+    var uncertain by mutableStateOf(uncertain)
+        private set
+
+    var known by mutableStateOf(known)
+        private set
+
+    var unknown by mutableStateOf(unknown)
+        private set
+
     var isLight by mutableStateOf(isLight)
         private set
 
@@ -184,6 +202,8 @@ class StudyCardsColor(
         pressed: Color = this.pressed,
         success: Color = this.success,
         error: Color = this.error,
+        uncertain: Color = this.uncertain,
+        known: Color = this.known,
         isLight: Boolean = this.isLight,
     ) = StudyCardsColor(
         primary = primary,
@@ -209,6 +229,9 @@ class StudyCardsColor(
         pressed = pressed,
         success = success,
         error = error,
+        uncertain = uncertain,
+        known = known,
+        unknown = unknown,
         isLight = isLight
     )
 
@@ -236,6 +259,9 @@ class StudyCardsColor(
         pressed = other.pressed
         success = other.success
         error = other.error
+        uncertain = other.uncertain
+        known = other.known
+        unknown = other.unknown
         isLight = other.isLight
     }
 }

@@ -3,6 +3,7 @@ package abm.co.feature.authorization.login
 import abm.co.core.navigation.NavigationBetweenModules
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
+import abm.co.designsystem.navigation.extension.navigateSafe
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.navigation.fragment.findNavController
@@ -33,7 +34,7 @@ class LoginFragment : BaseFragment() {
                 navigationBetweenModules.navigateFromAuthorizationToMain(findNavController())
             },
             onNavigateToSignUpPage = {
-                findNavController().navigate(
+                findNavController().navigateSafe(
                     LoginFragmentDirections.toSignUpDestination()
                 )
             },

@@ -29,7 +29,7 @@ class CategoryFragment : BaseFragment() {
             navigateToCard = { cardItem, category ->
                 findNavController().navigateSafe(
                     CategoryFragmentDirections.toEditCardNavGraph(
-                        cardItem = cardItem,
+                        card = cardItem,
                         category = category
                     )
                 )

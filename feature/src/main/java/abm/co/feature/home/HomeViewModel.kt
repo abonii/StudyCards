@@ -103,14 +103,20 @@ class HomeViewModel @Inject constructor(
                 }
             }
             is HomeContractEvent.OnClickBookmarkCategory -> {
-                updateCategory(event.value.copy(bookmarked = !event.value.bookmarked))
+                updateBookmark(
+                    categoryID = event.value.id,
+                    bookmarked = !event.value.bookmarked
+                )
             }
         }
     }
 
-    private fun updateCategory(category: CategoryUI) {
+    private fun updateBookmark(categoryID: String, bookmarked: Boolean) {
         viewModelScope.launch {
-            repository.updateUserCategory(category.toDomain())
+            repository.updateCategoryBookmark(
+                categoryID = categoryID,
+                bookmarked = bookmarked
+            )
         }
     }
 

@@ -1,5 +1,6 @@
 package abm.co.data.repository
 
+import abm.co.data.model.DatabaseRef
 import abm.co.data.model.DatabaseRef.ROOT_REF
 import abm.co.data.model.DatabaseRef.USER_REF
 import abm.co.data.model.user.toDTO
@@ -9,7 +10,6 @@ import abm.co.domain.model.UserInterest
 import abm.co.domain.repository.AuthorizationRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -25,8 +25,7 @@ class AuthorizationRepositoryImpl @Inject constructor(
     private fun getUserID(): String = firebaseAuth.currentUser?.uid ?: "no-user-id"
 
     private fun getUserDatabase(): DatabaseReference {
-        return rootDatabase.child(USER_REF).child(getUserID())
-            .apply { keepSynced(true) }
+        return rootDatabase.child(USER_REF).child(getUserID()).child(DatabaseRef.USER_PROPERTIES_REF)
     }
 
     override suspend fun setUserInfo(name: String?, email: String?, password: String?) {

@@ -2,6 +2,9 @@ package abm.co.feature.card.chooseorcreatecategory
 
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
+import abm.co.designsystem.extensions.addPaddingOnShownKeyboard
+import abm.co.designsystem.navigation.extension.navigateSafe
+import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.navigation.fragment.findNavController
@@ -23,9 +26,9 @@ class ChooseOrCreateCategoryFragment : BaseFragment() {
                 findNavController().navigateUp()
             },
             navigateToNewCard = { categoryUI ->
-                findNavController().navigate(
+                findNavController().navigateSafe(
                     ChooseOrCreateCategoryFragmentDirections.toEditCardNavGraph(
-                        cardItem = null,
+                        card = null,
                         category = categoryUI
                     )
                 )
@@ -34,5 +37,10 @@ class ChooseOrCreateCategoryFragment : BaseFragment() {
                 messageContent(it)
             }
         )
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().window.addPaddingOnShownKeyboard(view)
     }
 }

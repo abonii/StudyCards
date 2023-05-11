@@ -5,6 +5,7 @@ import abm.co.designsystem.component.button.SecondaryButton
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.systembar.SetStatusBarColor
+import abm.co.designsystem.component.text.pluralString
 import abm.co.designsystem.component.textfield.TextFieldWithLabel
 import abm.co.designsystem.component.widget.LinearProgress
 import abm.co.designsystem.extensions.collectInLaunchedEffect
@@ -12,9 +13,11 @@ import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.card.model.CategoryUI
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +26,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -113,7 +118,11 @@ private fun CategoryScreen(
             }
         )
         ScrollableContent(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            onClickItem = {
+                onEvent(ChooseOrCreateCategoryContractEvent.OnCategoryClicked(it))
+            },
+            items = uiState.categories
         )
         Buttons(
             modifier = Modifier.padding(bottom = 15.dp, start = 20.dp, end = 20.dp, top = 10.dp),
@@ -152,6 +161,74 @@ private fun Buttons(
 }
 
 @Composable
+private fun ScrollableContent(
+    items: List<CategoryUI>,
+    onClickItem: (CategoryUI) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(vertical = 16.dp)
+    ) {
+        item {
+            Text(
+                modifier = Modifier.padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                text = stringResource(id = R.string.ChooseOrCreateCategory_Available_title),
+                style = StudyCardsTheme.typography.weight600Size16LineHeight18,
+                color = StudyCardsTheme.colors.textPrimary
+            )
+        }
+        items(
+            items = items,
+            key = { it.id }
+        ) { item ->
+            CategoryItem(
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+                item = item,
+                onClick = {
+                    onClickItem(item)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun CategoryItem(
+    item: CategoryUI,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(11.dp))
+            .background(StudyCardsTheme.colors.milky)
+            .clickable(onClick = onClick)
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = item.name,
+            style = StudyCardsTheme.typography.weight500Size16LineHeight20,
+            color = StudyCardsTheme.colors.textPrimary
+        )
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = pluralString(
+                id = R.plurals.cards,
+                item.cardsCount.takeIf { it > 0 } ?: 0
+            ),
+            style = StudyCardsTheme.typography.weight400Size16LineHeight20,
+            color = StudyCardsTheme.colors.grayishBlack
+        )
+    }
+}
+
+@Composable
 private fun Toolbar(
     categoryName: String,
     onEnterCategoryName: (String) -> Unit,
@@ -159,9 +236,7 @@ private fun Toolbar(
     middleContent: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
         Row(
             modifier = Modifier.padding(start = 6.dp, top = 20.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -193,11 +268,4 @@ private fun Toolbar(
                 .padding(horizontal = 16.dp)
         )
     }
-}
-
-@Composable
-private fun ScrollableContent(
-    modifier: Modifier = Modifier
-) {
-    Box(modifier = modifier)
 }

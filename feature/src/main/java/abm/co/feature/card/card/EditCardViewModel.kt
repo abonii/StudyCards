@@ -11,7 +11,6 @@ import abm.co.domain.model.oxford.OxfordTranslationResponse
 import abm.co.domain.repository.DictionaryRepository
 import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
-import abm.co.feature.card.model.CardItemUI
 import abm.co.feature.card.model.CardKindUI
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
@@ -42,7 +41,7 @@ class EditCardViewModel @Inject constructor(
     private val serverRepository: ServerRepository
 ) : ViewModel() {
 
-    private val cardItem: CardItemUI? = savedStateHandle["card_item"]
+    private val card: CardUI? = savedStateHandle["card"]
     private val category: CategoryUI? = savedStateHandle["category"]
     private val showProgress: Boolean = savedStateHandle["show_progress"] ?: false
 
@@ -52,7 +51,11 @@ class EditCardViewModel @Inject constructor(
     private val _state = MutableStateFlow(
         EditCardContractState(
             progress = if (showProgress) 0.6f else null,
-            categoryName = category?.name
+            categoryName = category?.name,
+            nativeText = card?.name ?: "",
+            learningText = card?.translation ?: "",
+            example = card?.example ?: "",
+            imageURL = card?.imageUrl ?: ""
         )
     )
     val state: StateFlow<EditCardContractState> = _state.asStateFlow()
@@ -71,7 +74,7 @@ class EditCardViewModel @Inject constructor(
 
             EditCardContractEvent.OnClickCategory -> {
                 viewModelScope.launch {
-                    _channel.send(EditCardContractChannel.ChangeCategory(cardItem?.categoryID))
+                    _channel.send(EditCardContractChannel.ChangeCategory(card?.categoryID))
                 }
             }
 
@@ -82,7 +85,11 @@ class EditCardViewModel @Inject constructor(
             }
 
             EditCardContractEvent.OnClickSaveCard -> {
-                state.value.onSaveCard()
+                if (card == null) {
+                    state.value.onSaveCard()
+                } else {
+                    state.value.onUpdateCard(existedCard = card)
+                }
             }
 
             is EditCardContractEvent.OnEnterImage -> {
@@ -160,7 +167,38 @@ class EditCardViewModel @Inject constructor(
                 .onFailure {
                     it.sendException()
                 }.onSuccess {
-                    if(cardItem!=null){
+                    if (showProgress) {
+                        _state.update {
+                            it.copy(progress = 1f)
+                        }
+                    } else {
+                        _channel.send(EditCardContractChannel.NavigateBack)
+                    }
+                }
+        }
+    }
+
+    private fun EditCardContractState.onUpdateCard(
+        existedCard: CardUI
+    ) {
+        viewModelScope.launch {
+            val card = CardUI(
+                name = nativeText,
+                kind = CardKindUI.UNDEFINED,
+                translation = learningText,
+                imageUrl = imageURL,
+                repeatedCount = 0,
+                example = example,
+                categoryID = category?.id ?: "no_category_id",
+                nextRepeatTime = System.currentTimeMillis(),
+                cardID = existedCard.cardID,
+                learnedPercent = 0f
+            )
+            serverRepository.updateUserCard(card.toDomain())
+                .onFailure {
+                    it.sendException()
+                }.onSuccess {
+                    if (showProgress) {
                         _state.update {
                             it.copy(progress = 1f)
                         }

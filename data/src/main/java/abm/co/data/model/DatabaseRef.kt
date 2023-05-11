@@ -6,7 +6,6 @@ object DatabaseRef {
     const val ROOT_REF = "version2"
     // end
 
-
     const val CONFIG_REF = "config"
     const val USER_REF = "user"
     const val USER_PROPERTIES_REF = "user_properties"

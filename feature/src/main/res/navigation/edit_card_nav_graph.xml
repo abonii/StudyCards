@@ -9,8 +9,8 @@
         android:name="abm.co.feature.card.card.EditCardFragment" >
 
         <argument
-            android:name="card_item"
-            app:argType="abm.co.feature.card.model.CardItemUI"
+            android:name="card"
+            app:argType="abm.co.feature.card.model.CardUI"
             app:nullable="true"
             android:defaultValue="@null" />
 

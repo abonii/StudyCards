@@ -32,7 +32,7 @@ class WelcomeLoginFragment : BaseFragment() {
                 )
             },
             onNavigateSignUpPage = {
-                findNavController().navigate(
+                findNavController().navigateSafe(
                     WelcomeLoginFragmentDirections.toSignUpDestination()
                 )
             },

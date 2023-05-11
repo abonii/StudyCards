@@ -8,8 +8,15 @@
 
     <fragment
         android:id="@+id/profile_destination"
-        android:name="abm.co.feature.profile.ProfileFragment" >
+        android:name="abm.co.feature.profile.main.ProfileFragment" >
 
+        <action
+            android:id="@+id/to_change_password_destination"
+            app:destination="@id/change_password_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right"/>
         <action
             android:id="@+id/to_store_nav_graph"
             app:destination="@id/store_nav_graph"
@@ -18,4 +25,8 @@
             app:popEnterAnim="@anim/pop_enter_from_left"
             app:popExitAnim="@anim/pop_exit_to_right"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/change_password_destination"
+        android:name="abm.co.feature.profile.changepassword.ChangePasswordFragment" />
 </navigation>

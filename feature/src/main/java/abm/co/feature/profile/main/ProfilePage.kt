@@ -1,5 +1,6 @@
-package abm.co.feature.profile
+package abm.co.feature.profile.main
 
+import abm.co.designsystem.component.button.ButtonState
 import abm.co.designsystem.component.button.PrimaryButton
 import abm.co.designsystem.component.button.SecondaryButton
 import abm.co.designsystem.component.modifier.Modifier
@@ -66,6 +67,7 @@ import com.google.firebase.ktx.Firebase
 @Composable
 fun ProfilePage(
     navigateToStorePage: () -> Unit,
+    navigateToChangePasswordPage: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
@@ -87,7 +89,12 @@ fun ProfilePage(
             }
 
             ProfileContractChannel.NavigateToAuthorization -> {
-
+                activity?.let {
+                    it.startActivity(
+                        Intent(it, it::class.java)
+                    )
+                    it.finish()
+                }
             }
 
             ProfileContractChannel.NavigateToStore -> {
@@ -110,7 +117,7 @@ fun ProfilePage(
             }
 
             ProfileContractChannel.NavigateToChangePassword -> {
-
+                navigateToChangePasswordPage()
             }
 
             is ProfileContractChannel.ShowMessage -> showMessage(channel.messageContent)
@@ -250,9 +257,10 @@ private fun ScrollableContent(
                         Text(
                             modifier = Modifier
                                 .padding(horizontal = 16.dp)
+                                .padding(bottom = 20.dp)
                                 .fillMaxWidth(),
                             text = stringResource(id = R.string.Profile_NotVerified_title),
-                            style = StudyCardsTheme.typography.weight400Size12LineHeight16,
+                            style = StudyCardsTheme.typography.weight600Size14LineHeight18,
                             textAlign = TextAlign.Center,
                             color = StudyCardsTheme.colors.textPrimary
                         )
@@ -296,7 +304,7 @@ private fun AnonymousUserContent(
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth(),
             text = stringResource(id = R.string.Profile_Anonymous_title),
-            style = StudyCardsTheme.typography.weight400Size12LineHeight16,
+            style = StudyCardsTheme.typography.weight600Size16LineHeight18,
             textAlign = TextAlign.Center,
             color = StudyCardsTheme.colors.textPrimary
         )
@@ -369,7 +377,9 @@ private fun AnonymousUserContent(
             },
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            buttonState = if (anonymous.isSignUpButtonLoading) ButtonState.Loading
+            else ButtonState.Normal
         )
         Spacer(modifier = Modifier.height(20.dp))
     }
@@ -386,14 +396,16 @@ private fun SignedUserContent(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AsyncImage(
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(90.dp),
-            model = signed.photoUri,
-            contentDescription = null
-        )
-        Spacer(modifier = Modifier.height(15.dp))
+        signed.photoUri?.let {
+            AsyncImage(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(90.dp),
+                model = it,
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+        }
         signed.username?.let {
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -434,7 +446,7 @@ private fun SettingsContent(
         )
         SettingsItem(
             title = stringResource(id = R.string.Profile_Settings_Store_title),
-            description = settings.translationCount,
+            description = settings.translationCount.toString(),
             color = StudyCardsTheme.colors.buttonPrimary,
             onClick = {
                 onEvent(ProfileContractEvent.Settings.OnClickStore)
@@ -450,7 +462,7 @@ private fun SettingsContent(
                 onEvent(ProfileContractEvent.Settings.OnClickAppLanguage)
             }
         )
-        if (settings.isAnonymousOrVerified) {
+        if (settings.showSendConfirmation) {
             Divider()
             SettingsItem(
                 title = stringResource(id = R.string.Profile_Settings_SendConfirmation_title),
@@ -459,7 +471,7 @@ private fun SettingsContent(
                 }
             )
         }
-        if (settings.isVerified) {
+        if (settings.showChangePassword) {
             Divider()
             SettingsItem(
                 title = stringResource(id = R.string.Profile_Settings_ChangePassword_title),

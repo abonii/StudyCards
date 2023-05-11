@@ -99,6 +99,8 @@
     <string name="Category.Input.hint">Enter a category name</string>
     <string name="Category.Button.title">Continue</string>
 
+    <string name="ChooseOrCreateCategory.Available.title">Your categories</string>
+
     <string name="Game.Swipe.unknown">Unknown</string>
     <string name="Game.Swipe.know">Known</string>
     <string name="Game.Swipe.uncertain">Uncertain</string>
@@ -130,7 +132,7 @@
     <string name="MainCard.OurSet.title">Our collections</string>
     <string name="MainCard.YourSet.title">Your collections</string>
     <string name="MainCard.YouMayLike.title">You may like it</string>
-    <string name="MainCard.Empty.title">No Set Of Cards\nCreate new one to share</string>
+    <string name="MainCard.Empty.title">No Set Of Cards\nCreate a new one and share it with the world</string>
 
     <string name="MainCard.Share.title">Publish a card</string>
     <string name="MainCard.Share.subtitle">You can share your cards with other users</string>
@@ -164,6 +166,18 @@
 
     <string name="Library.Toolbar.title">Library</string>
     <string name="Library.Info.title">We are creating something amazing\nComing soon…</string>
+
+    <string name="ChangePassword.Toolbar.title">Change Password</string>
+    <string name="ChangePassword.CurrentPasswordField.title">Current Password</string>
+    <string name="ChangePassword.CurrentPasswordField.hint">Enter Password</string>
+    <string name="ChangePassword.NewPasswordField.title">New Password</string>
+    <string name="ChangePassword.NewPasswordField.hint">Enter Password</string>
+    <string name="ChangePassword.PrimaryButton.title">Change password</string>
+    <string name="ChangePassword.Message.Success.title">Successfully</string>
+    <string name="ChangePassword.Message.Success.passwordChange">Password changed successfully</string>
+    <string name="ChangePassword.Message.Error.title">Oops</string>
+    <string name="ChangePassword.Message.Error.empty">Verify password cannot be empty</string>
+    <string name="ChangePassword.Message.Error.length">Password length should be more than 5</string>
 
     <plurals name="cards">
         <item quantity="one"> %d card</item>

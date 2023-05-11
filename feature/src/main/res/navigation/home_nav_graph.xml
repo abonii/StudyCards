@@ -45,9 +45,9 @@
             app:popExitAnim="@anim/pop_exit_to_right">
 
             <argument
-                android:name="card_item"
+                android:name="card"
                 android:defaultValue="@null"
-                app:argType="abm.co.feature.card.model.CardItemUI"
+                app:argType="abm.co.feature.card.model.CardUI"
                 app:nullable="true" />
             <argument
                 android:name="show_progress"

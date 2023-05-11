@@ -59,6 +59,16 @@ class ChooseOrCreateCategoryViewModel @Inject constructor(
                     _channel.send(ChooseOrCreateCategoryContractChannel.NavigateBack)
                 }
             }
+
+            is ChooseOrCreateCategoryContractEvent.OnCategoryClicked -> {
+                viewModelScope.launch {
+                    _channel.send(
+                        ChooseOrCreateCategoryContractChannel.NavigateToNewCard(
+                            category = event.item
+                        )
+                    )
+                }
+            }
         }
     }
 
@@ -121,6 +131,7 @@ sealed interface ChooseOrCreateCategoryContractEvent {
     data class OnEnterCategoryName(val value: String) : ChooseOrCreateCategoryContractEvent
     object OnContinue : ChooseOrCreateCategoryContractEvent
     object OnBackClicked : ChooseOrCreateCategoryContractEvent
+    data class OnCategoryClicked(val item: CategoryUI) : ChooseOrCreateCategoryContractEvent
 }
 
 @Immutable

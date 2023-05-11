@@ -14,7 +14,10 @@ interface ServerRepository {
     val getUserCategories: Flow<Either<Failure, List<Category>>>
 
     suspend fun createUserCategory(category: Category): Either<Failure, Category>
-    suspend fun updateUserCategory(category: Category): Either<Failure, Unit>
+    suspend fun updateCategoryBookmark(
+        categoryID: String,
+        bookmarked: Boolean
+    ): Either<Failure, Unit>
 
     suspend fun createUserCard(card: Card): Either<Failure, Unit>
     suspend fun updateUserCard(card: Card): Either<Failure, Unit>

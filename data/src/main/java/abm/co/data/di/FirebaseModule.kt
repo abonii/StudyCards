@@ -1,6 +1,5 @@
 package abm.co.data.di
 
-import abm.co.data.model.DatabaseRef.CONFIG_REF
 import abm.co.data.model.DatabaseRef.ROOT_REF
 import abm.co.data.model.DatabaseRef.USER_ID
 import abm.co.data.model.DatabaseRef.USER_PROPERTIES_REF
@@ -37,27 +36,6 @@ object FirebaseModule {
     @Named(ROOT_REF)
     @Provides
     fun provideRootReference(db: FirebaseDatabase): DatabaseReference = db.reference.child(ROOT_REF)
-
-//    @Provides
-//    @Named(CATEGORY_REF)
-//    fun provideRealtimeDatabaseCategories(
-//        @Named(ROOT_REF) root: DatabaseReference,
-//        @Named(USER_ID) userId: String,
-//        languagesDataStore: LanguagesDataStore
-//    ): DatabaseReference {
-//        FirebaseDatabase.getInstance().reference
-//        return combine(
-//            languagesDataStore.getLearningLanguage(),
-//            languagesDataStore.getNativeLanguage()
-//        ) { learning, native ->
-//            val a =root.child(USER_REF).child(userId)
-//                .child(CATEGORY_REF)
-//                .child(native?.code ?: "en")
-//                .child(learning?.code ?: "en")
-//                .apply { keepSynced(true) }
-//            return@combine a
-//        }
-//    }
 
     @Named(USER_PROPERTIES_REF)
     @Provides

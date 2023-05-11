@@ -43,7 +43,6 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 import javax.inject.Named
@@ -224,13 +223,15 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateUserCategory(category: Category): Either<Failure, Unit> {
+    override suspend fun updateCategoryBookmark(
+        categoryID: String,
+        bookmarked: Boolean
+    ): Either<Failure, Unit> {
         return safeCall {
-            userCategoryWithLanguagesRef.firstOrNull()?.updateChildren(
-                mapOf(
-                    category.id to category.toDTO()
-                )
-            )
+            userCategoryWithLanguagesRef.firstOrNull()
+                ?.child(categoryID)
+                ?.child(Category.bookmarked)
+                ?.setValue(bookmarked)
         }
     }
 

@@ -1,4 +1,4 @@
-package abm.co.feature.profile
+package abm.co.feature.profile.main
 
 import abm.co.core.appinfo.ApplicationInfo
 import abm.co.designsystem.message.common.MessageContent
@@ -93,9 +93,11 @@ class ProfileViewModel @Inject constructor(
                             },
                             settings = ProfileContractState.Settings(
                                 selectedAppLanguage = languagesRepository.getAppLanguage()?.toUI(),
-                                translationCount = (user?.translateCounts ?: 0).toString(),
-                                isAnonymousOrVerified = currentUser?.isAnonymous == true || currentUser?.isEmailVerified == true,
-                                isVerified = currentUser?.isEmailVerified == true
+                                translationCount = user?.translateCounts ?: 0,
+                                showSendConfirmation = currentUser?.let { cUser ->
+                                    !cUser.isAnonymous && !cUser.isEmailVerified
+                                } ?: false,
+                                showChangePassword = currentUser?.isEmailVerified == true
                             ),
                             appVersion = applicationInfo.getVersionName()
                         )
@@ -233,15 +235,13 @@ class ProfileViewModel @Inject constructor(
         val credential = EmailAuthProvider.getCredential(email, password)
         currentUser?.linkWithCredential(credential)
             ?.addOnCompleteListener {
-                viewModelScope.launch {
-                    if (it.isSuccessful) {
-                        sendVerificationEmail()
-                        updateUser()
-                    } else {
-                        it.exception?.mapToFailure()
-                    }
-                    updateSignUpButtonLoadingState(false)
+                if (it.isSuccessful) {
+                    sendVerificationEmail()
+                    updateUser()
+                } else {
+                    it.exception?.mapToFailure()?.sendException()
                 }
+                updateSignUpButtonLoadingState(false)
             }
     }
 
@@ -260,7 +260,13 @@ class ProfileViewModel @Inject constructor(
                                 isVerified = user.isEmailVerified,
                                 photoUri = user.photoUrl
                             )
-                        }
+                        },
+                        settings = oldState.settings.copy(
+                            showSendConfirmation = currentUser?.let { cUser ->
+                                !cUser.isAnonymous && !cUser.isEmailVerified
+                            } ?: false,
+                            showChangePassword = currentUser?.isEmailVerified == true
+                        )
                     )
                 }
             }
@@ -361,18 +367,20 @@ class ProfileViewModel @Inject constructor(
     private fun sendVerificationEmail() {
         currentUser?.sendEmailVerification()
             ?.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    _channel.trySend(
-                        ProfileContractChannel.ShowMessage(
-                            MessageContent.Snackbar.MessageContentRes(
-                                titleRes = abm.co.designsystem.R.string.Messages_OK,
-                                subtitleRes = abm.co.designsystem.R.string.we_send_verification,
-                                type = MessageType.Success
+                viewModelScope.launch {
+                    if (task.isSuccessful) {
+                        _channel.send(
+                            ProfileContractChannel.ShowMessage(
+                                MessageContent.Snackbar.MessageContentRes(
+                                    titleRes = abm.co.designsystem.R.string.Messages_OK,
+                                    subtitleRes = abm.co.designsystem.R.string.we_send_verification,
+                                    type = MessageType.Success
+                                )
                             )
                         )
-                    )
-                } else {
-                    task.exception?.mapToFailure()?.sendException()
+                    } else {
+                        task.exception?.mapToFailure()?.sendException()
+                    }
                 }
             }
     }
@@ -445,9 +453,9 @@ data class ProfileContractState(
     @Immutable
     data class Settings(
         val selectedAppLanguage: LanguageUI? = null,
-        val translationCount: String = "0",
-        val isAnonymousOrVerified: Boolean = false,
-        val isVerified: Boolean = false
+        val translationCount: Long = 0,
+        val showSendConfirmation: Boolean = false,
+        val showChangePassword: Boolean = false
     )
 
     @Immutable

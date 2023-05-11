@@ -6,9 +6,9 @@ import abm.co.domain.base.Failure
 import abm.co.domain.base.onFailure
 import abm.co.domain.base.onSuccess
 import abm.co.domain.repository.ServerRepository
-import abm.co.feature.card.model.CardItemUI
+import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
-import abm.co.feature.card.model.toItemUI
+import abm.co.feature.card.model.toUI
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
@@ -49,7 +49,7 @@ class CategoryViewModel @Inject constructor(
     )
     val toolbarState: StateFlow<CategoryContract.ToolbarState> = mutableToolbarState.asStateFlow()
 
-    private val cardItems = mutableStateListOf<CardItemUI>()
+    private val cardItems = mutableStateListOf<CardUI>()
 
     init {
 //        viewModelScope.launch {
@@ -125,11 +125,11 @@ class CategoryViewModel @Inject constructor(
                         when (screenState.value) {
                             is CategoryContract.ScreenState.Success -> {
                                 cardItems.clear()
-                                cardItems.addAll(items.map { it.toItemUI() })
+                                cardItems.addAll(items.map { it.toUI() })
                             }
 
                             else -> {
-                                cardItems.addAll(items.map { it.toItemUI() })
+                                cardItems.addAll(items.map { it.toUI() })
                                 mutableScreenState.value = CategoryContract.ScreenState.Success(
                                     cardItems
                                 )
@@ -170,7 +170,7 @@ sealed interface CategoryContract {
 
         @Immutable
         data class Success(
-            val cards: List<CardItemUI>
+            val cards: List<CardUI>
         ) : ScreenState
     }
 }
@@ -179,7 +179,7 @@ sealed interface CategoryContract {
 sealed interface CategoryContractEvent {
 
     @Immutable
-    data class OnClickPlayCard(val cardItem: CardItemUI) : CategoryContractEvent
+    data class OnClickPlayCard(val cardItem: CardUI) : CategoryContractEvent
 
     @Immutable
     object OnClickNewCard : CategoryContractEvent
@@ -188,7 +188,7 @@ sealed interface CategoryContractEvent {
     object OnClickEditCategory : CategoryContractEvent
 
     @Immutable
-    data class OnClickCardItem(val cardItem: CardItemUI) : CategoryContractEvent
+    data class OnClickCardItem(val cardItem: CardUI) : CategoryContractEvent
 
     @Immutable
     object OnBackClicked : CategoryContractEvent
@@ -202,7 +202,7 @@ sealed interface CategoryContractChannel {
 
     @Immutable
     data class NavigateToCard(
-        val cardItem: CardItemUI?,
+        val cardItem: CardUI?,
         val category: CategoryUI
     ) : CategoryContractChannel
 
