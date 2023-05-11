@@ -13,18 +13,16 @@ import abm.co.domain.repository.ServerRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import dagger.hilt.android.scopes.ActivityScoped
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RepositoryModule {
-
-    @Binds
-    abstract fun bindServerCloudRepository(repository: FirebaseRepositoryImpl): ServerRepository
-
-    @Binds
-    abstract fun bindAuthorizationRepository(repository: AuthorizationRepositoryImpl): AuthorizationRepository
+abstract class RepositorySingletonModule {
 
     @Binds
     abstract fun bindDictionaryRepository(repository: DictionaryRepositoryImpl): DictionaryRepository
@@ -35,4 +33,15 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindLanguagesRepository(repository: LanguagesRepositoryImpl): LanguagesRepository
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+abstract class RepositoryModule {
+
+    @Binds
+    abstract fun bindServerCloudRepository(repository: FirebaseRepositoryImpl): ServerRepository
+
+    @Binds
+    abstract fun bindAuthorizationRepository(repository: AuthorizationRepositoryImpl): AuthorizationRepository
 }

@@ -1,10 +1,12 @@
 package abm.co.feature.home
 
 import abm.co.designsystem.component.button.TextButton
+import abm.co.designsystem.component.dialog.ConfirmAlertDialog
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.animateDp
 import abm.co.designsystem.component.modifier.baseBackground
 import abm.co.designsystem.component.systembar.SetStatusBarColor
+import abm.co.designsystem.component.text.pluralString
 import abm.co.designsystem.component.widget.LoadingView
 import abm.co.designsystem.extensions.collectInLaunchedEffect
 import abm.co.designsystem.extensions.getActivity
@@ -89,7 +91,7 @@ fun HomePage(
             is HomeContractChannel.NavigateToCategory -> navigateToCategory(it.category)
         }
     }
-    val screenState by viewModel.screenState.collectAsState()
+    val screenState by viewModel.state.collectAsState()
     val toolbarState by viewModel.toolbarState.collectAsState()
     SetStatusBarColor()
     HomeScreen(
@@ -146,6 +148,15 @@ private fun HomeScreen(
                         },
                         onClickBookmark = {
                             event(HomeContractEvent.OnClickBookmarkCategory(it))
+                        },
+                        onLongClickCategory = {
+                            event(HomeContractEvent.OnLongClickCategory(it))
+                        },
+                        onConfirmRemoveCategory = {
+                            event(HomeContractEvent.OnConfirmRemoveCategory(it))
+                        },
+                        onDismissDialog = {
+                            event(HomeContractEvent.OnDismissDialog)
                         }
                     )
                 }
@@ -177,6 +188,9 @@ private fun SuccessScreen(
     screenState: HomeContract.ScreenState.Success,
     onClickShowAllCategory: () -> Unit,
     onClickCategory: (CategoryUI) -> Unit,
+    onLongClickCategory: (CategoryUI) -> Unit,
+    onDismissDialog: () -> Unit,
+    onConfirmRemoveCategory: (CategoryUI) -> Unit,
     onClickBookmark: (CategoryUI) -> Unit,
     onClickPlayCategory: (CategoryUI) -> Unit,
     modifier: Modifier = Modifier
@@ -200,13 +214,29 @@ private fun SuccessScreen(
             screenState.setsOfCards.forEach { category ->
                 key(category.id) {
                     CategoryItem(
-                        category = category,
+                        title = category.name,
+                        subtitle = pluralString(
+                            id = R.plurals.cards,
+                            category.cardsCount.takeIf { it > 0 } ?: 0
+                        ),
                         onClick = { onClickCategory(category) },
                         onClickBookmark = { onClickBookmark(category) },
                         onClickPlay = { onClickPlayCategory(category) },
+                        onLongClick = { onLongClickCategory(category) },
+                        isPublished = category.published,
+                        isBookmarked = category.bookmarked
                     )
                 }
             }
+        }
+        screenState.removingCategory?.let {
+            ConfirmAlertDialog(
+                title = "Do you really want to delete ${it.name}?",
+                onConfirm = {
+                    onConfirmRemoveCategory(it)
+                },
+                onDismiss = onDismissDialog
+            )
         }
     }
 }

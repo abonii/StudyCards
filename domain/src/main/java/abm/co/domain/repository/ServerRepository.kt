@@ -11,30 +11,24 @@ import kotlinx.coroutines.flow.Flow
 interface ServerRepository {
 
     val getUser: Flow<Either<Failure, User?>>
+    fun getConfig(): Flow<Either<Failure, Config>>
+
     val getUserCategories: Flow<Either<Failure, List<Category>>>
-
     suspend fun createUserCategory(category: Category): Either<Failure, Category>
-    suspend fun updateCategoryBookmark(
-        categoryID: String,
-        bookmarked: Boolean
-    ): Either<Failure, Unit>
-
     suspend fun createUserCard(card: Card): Either<Failure, Unit>
     suspend fun updateUserCard(card: Card): Either<Failure, Unit>
-
     suspend fun getUserCards(categoryID: String): Flow<Either<Failure, List<Card>>>
-
-    suspend fun copyExploreCategoryToUserCollection(
-        categoryID: String
-    ): Either<Failure, Unit>
+    suspend fun removeUserCategory(categoryID: String): Either<Failure, Unit>
+    suspend fun removeUserCard(categoryID: String, cardID: String): Either<Failure, Unit>
+    suspend fun removeUserDatabase()
 
     val getCategories: Flow<Either<Failure, List<Category>>>
-    suspend fun copyUserCategoryToExploreCollection(
-        categoryID: String
+    suspend fun removeCategory(categoryID: String): Either<Failure, Unit>
+    suspend fun updateCategoryBookmark(
+        categoryID: String, bookmarked: Boolean
     ): Either<Failure, Unit>
 
-    suspend fun removeCategory(categoryID: String): Either<Failure, Unit>
+    suspend fun copyExploreCategoryToUserCollection(categoryID: String): Either<Failure, Unit>
+    suspend fun copyUserCategoryToExploreCollection(categoryID: String): Either<Failure, Unit>
 
-    suspend fun removeUserDatabase()
-    fun getConfig(): Flow<Either<Failure, Config>>
 }

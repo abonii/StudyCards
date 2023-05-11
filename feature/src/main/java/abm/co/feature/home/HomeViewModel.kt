@@ -8,17 +8,14 @@ import abm.co.domain.base.onSuccess
 import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
 import abm.co.feature.card.model.CategoryUI
-import abm.co.feature.card.model.toDomain
 import abm.co.feature.card.model.toUI
 import abm.co.feature.userattributes.lanugage.LanguageUI
 import abm.co.feature.userattributes.lanugage.toUI
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,20 +24,23 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: ServerRepository,
+    private val serverRepository: ServerRepository,
     private val languagesRepository: LanguagesRepository
 ) : ViewModel() {
 
     private val _channel = Channel<HomeContractChannel>()
     val channel = _channel.receiveAsFlow()
 
-    private val mutableScreenState =
-        MutableStateFlow<HomeContract.ScreenState>(HomeContract.ScreenState.Loading)
-    val screenState: StateFlow<HomeContract.ScreenState> = mutableScreenState.asStateFlow()
+    private val _state = MutableStateFlow<HomeContract.ScreenState>(
+        HomeContract.ScreenState.Loading
+    )
+    val state: StateFlow<HomeContract.ScreenState> = _state.asStateFlow()
 
     private val mutableToolbarState = MutableStateFlow(HomeContract.ToolbarState())
     val toolbarState: StateFlow<HomeContract.ToolbarState> = mutableToolbarState.asStateFlow()
@@ -53,7 +53,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun fetchUser() {
-        repository.getUser.combine(languagesRepository.getLearningLanguage()) { userEither, learningLang ->
+        serverRepository.getUser.combine(languagesRepository.getLearningLanguage()) { userEither, learningLang ->
             userEither.onFailure {
                 it.sendException()
             }.onSuccess { user ->
@@ -66,16 +66,16 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun fetchCategories() {
-        repository.getUserCategories.onEach { setsOfCardsEither ->
+        serverRepository.getUserCategories.onEach { setsOfCardsEither ->
             setsOfCardsEither.onFailure {
                 it.sendException()
             }.onSuccess { categories ->
                 categoryList.clear()
                 categoryList.addAll(categories.map { it.toUI() })
                 if (categories.isEmpty()) {
-                    mutableScreenState.value = HomeContract.ScreenState.Empty
+                    _state.value = HomeContract.ScreenState.Empty
                 } else {
-                    mutableScreenState.value = HomeContract.ScreenState.Success(
+                    _state.value = HomeContract.ScreenState.Success(
                         setsOfCards = categoryList
                     )
                 }
@@ -92,28 +92,54 @@ class HomeViewModel @Inject constructor(
                     _channel.send(HomeContractChannel.NavigateToAllCategory)
                 }
             }
+
             is HomeContractEvent.OnClickPlayCategory -> {
                 viewModelScope.launch {
                     _channel.send(HomeContractChannel.NavigateToGameKinds(event.value))
                 }
             }
+
             is HomeContractEvent.OnClickCategory -> {
                 viewModelScope.launch {
                     _channel.send(HomeContractChannel.NavigateToCategory(event.value))
                 }
             }
+
             is HomeContractEvent.OnClickBookmarkCategory -> {
                 updateBookmark(
                     categoryID = event.value.id,
                     bookmarked = !event.value.bookmarked
                 )
             }
+
+            is HomeContractEvent.OnLongClickCategory -> {
+                _state.update { oldState ->
+                    (oldState as? HomeContract.ScreenState.Success)
+                        ?.copy(removingCategory = event.value) ?: oldState
+                }
+            }
+
+            is HomeContractEvent.OnConfirmRemoveCategory -> {
+                viewModelScope.launch {
+                    onEvent(HomeContractEvent.OnDismissDialog)
+                    serverRepository.removeUserCategory(event.value.id)
+                        .onFailure {
+                            it.sendException()
+                        }
+                }
+            }
+            HomeContractEvent.OnDismissDialog -> {
+                _state.update { oldState ->
+                    (oldState as? HomeContract.ScreenState.Success)
+                        ?.copy(removingCategory = null) ?: oldState
+                }
+            }
         }
     }
 
     private fun updateBookmark(categoryID: String, bookmarked: Boolean) {
         viewModelScope.launch {
-            repository.updateCategoryBookmark(
+            serverRepository.updateCategoryBookmark(
                 categoryID = categoryID,
                 bookmarked = bookmarked
             )
@@ -137,39 +163,40 @@ class HomeViewModel @Inject constructor(
     }
 }
 
-@Stable
+@Immutable
 sealed interface HomeContract {
 
-    @Immutable
     data class ToolbarState(
         val userName: String? = null,
         val learningLanguage: LanguageUI? = null
     ) : HomeContract
 
-    @Stable
     sealed interface ScreenState : HomeContract {
-        @Immutable
         object Loading : ScreenState
 
-        @Immutable
         object Empty : ScreenState
 
-        @Immutable
         data class Success(
-            val setsOfCards: List<CategoryUI>
+            val setsOfCards: List<CategoryUI>,
+            val removingCategory: CategoryUI? = null
         ) : ScreenState
     }
 }
 
+@Immutable
 sealed interface HomeContractEvent {
     object OnClickDrawer : HomeContractEvent
     object OnClickToolbarLanguage : HomeContractEvent
     object OnClickShowAllCategory : HomeContractEvent
+    object OnDismissDialog : HomeContractEvent
+    data class OnConfirmRemoveCategory(val value: CategoryUI) : HomeContractEvent
     data class OnClickPlayCategory(val value: CategoryUI) : HomeContractEvent
     data class OnClickBookmarkCategory(val value: CategoryUI) : HomeContractEvent
+    data class OnLongClickCategory(val value: CategoryUI) : HomeContractEvent
     data class OnClickCategory(val value: CategoryUI) : HomeContractEvent
 }
 
+@Immutable
 sealed interface HomeContractChannel {
     object OpenDrawer : HomeContractChannel
     object NavigateToLanguageSelectPage : HomeContractChannel

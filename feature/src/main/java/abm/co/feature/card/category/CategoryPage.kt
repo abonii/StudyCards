@@ -1,5 +1,6 @@
 package abm.co.feature.card.category
 
+import abm.co.designsystem.component.dialog.ConfirmAlertDialog
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.modifier.scalableClick
@@ -44,7 +45,6 @@ import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -80,13 +80,13 @@ fun CategoryPage(
             is CategoryContractChannel.ShowMessage -> showMessage(it.messageContent)
         }
     }
-    val screenState by viewModel.screenState.collectAsState()
+    val screenState by viewModel.state.collectAsState()
     val toolbarState by viewModel.toolbarState.collectAsState()
     SetStatusBarColor()
     CategoryScreen(
         screenState = screenState,
         toolbarState = toolbarState,
-        onEvent = viewModel::event
+        onEvent = viewModel::onEvent
     )
 }
 
@@ -132,6 +132,15 @@ private fun CategoryScreen(
                         },
                         onClickPlay = {
                             onEvent(CategoryContractEvent.OnClickPlayCard(it))
+                        },
+                        onLongClick = {
+                            onEvent(CategoryContractEvent.OnLongClickCard(it))
+                        },
+                        onDismissDialog = {
+                            onEvent(CategoryContractEvent.OnDismissDialog)
+                        },
+                        onConfirmRemoveCard = {
+                            onEvent(CategoryContractEvent.OnConfirmRemoveCard(it))
                         }
                     )
                 }
@@ -139,7 +148,7 @@ private fun CategoryScreen(
         }
         CategoryCollapsingToolbar(
             title = toolbarState.categoryName,
-            subtitle = toolbarState.description,
+            subtitle = stringResource(id = toolbarState.descriptionRes),
             progress = toolbarScrollable.progress,
             onClickEndIcon = {
                 onEvent(CategoryContractEvent.OnClickEditCategory)
@@ -165,6 +174,9 @@ private fun SuccessScreen(
     screenState: CategoryContract.ScreenState.Success,
     onClickCard: (CardUI) -> Unit,
     onClickPlay: (CardUI) -> Unit,
+    onLongClick: (CardUI) -> Unit,
+    onConfirmRemoveCard: (CardUI) -> Unit,
+    onDismissDialog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -179,9 +191,19 @@ private fun SuccessScreen(
                     cardItem = card,
                     onClick = { onClickCard(card) },
                     onClickPlay = { onClickPlay(card) },
+                    onLongClick = { onLongClick(card) }
                 )
             }
         }
+    }
+    screenState.removingCard?.let {
+        ConfirmAlertDialog(
+            title = "Do you really want to delete ${it.name}?",
+            onConfirm = {
+                onConfirmRemoveCard(it)
+            },
+            onDismiss = onDismissDialog
+        )
     }
 }
 
@@ -189,12 +211,16 @@ private fun SuccessScreen(
 private fun CardItem(
     cardItem: CardUI,
     onClick: () -> Unit,
+    onLongClick: () -> Unit,
     onClickPlay: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
-            .scalableClick(onClick = onClick)
+            .scalableClick(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
             .height(70.dp)
             .clip(RoundedCornerShape(11.dp))
             .background(StudyCardsTheme.colors.milky),
@@ -278,6 +304,7 @@ private fun LoadingScreen(
     Column(
         modifier = modifier
             .padding(top = MaxToolbarHeight)
+            .fillMaxWidth()
     ) {
         Spacer(modifier = Modifier.weight(0.4f))
         LoadingView(modifier = Modifier.align(Alignment.CenterHorizontally))

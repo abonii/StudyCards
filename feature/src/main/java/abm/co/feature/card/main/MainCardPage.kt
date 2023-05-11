@@ -9,10 +9,10 @@ import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.text.pluralString
 import abm.co.designsystem.component.widget.LoadingView
 import abm.co.designsystem.extensions.collectInLaunchedEffect
-import abm.co.designsystem.functional.safeLet
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
+import abm.co.feature.card.component.CategoryItem
 import abm.co.feature.card.model.CategoryUI
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -332,78 +331,6 @@ private fun OurSetItem(
 }
 
 @Composable
-private fun CategoryItem(
-    isBookmarked: Boolean?,
-    title: String,
-    subtitle: String,
-    onClickBookmark: (() -> Unit)?,
-    onClickShare: (() -> Unit)?,
-    modifier: Modifier = Modifier,
-    onClickPlay: (() -> Unit)? = null,
-    isPublished: Boolean? = null
-) {
-    Row(
-        modifier = modifier
-            .background(
-                color = StudyCardsTheme.colors.milky,
-                shape = RoundedCornerShape(11.dp)
-            )
-            .padding(12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        safeLet(isBookmarked, onClickBookmark) { isBookmarked, onClickBookmark ->
-            BookmarkIcon(
-                isBookmarked = isBookmarked,
-                onClick = onClickBookmark
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-        }
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Text(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                text = title,
-                style = StudyCardsTheme.typography.weight500Size16LineHeight20,
-                color = StudyCardsTheme.colors.textPrimary
-            )
-            Text(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                text = subtitle,
-                style = StudyCardsTheme.typography.weight400Size16LineHeight20,
-                color = StudyCardsTheme.colors.grayishBlack
-            )
-        }
-        Spacer(modifier = Modifier.width(16.dp))
-        onClickPlay?.let {
-            Icon(
-                modifier = Modifier
-                    .clickableWithoutRipple(onClick = onClickPlay)
-                    .padding(top = 10.dp, bottom = 10.dp)
-                    .size(24.dp),
-                painter = painterResource(id = R.drawable.ic_play),
-                tint = StudyCardsTheme.colors.buttonPrimary,
-                contentDescription = null
-            )
-        }
-        safeLet(isPublished, onClickShare) { isPublished, onClickShare ->
-            Spacer(modifier = Modifier.width(16.dp))
-            Icon(
-                modifier = Modifier
-                    .clickableWithoutRipple(onClick = onClickShare)
-                    .padding(top = 10.dp, bottom = 10.dp)
-                    .size(24.dp),
-                painter = painterResource(id = R.drawable.ic_share),
-                tint = if (isPublished) StudyCardsTheme.colors.buttonPrimary
-                else StudyCardsTheme.colors.blueMiddle,
-                contentDescription = null
-            )
-        }
-    }
-}
-
-@Composable
 private fun Toolbar(
     modifier: Modifier = Modifier
 ) {
@@ -463,23 +390,6 @@ private fun EmptyScreen(
 }
 
 @Composable
-private fun BookmarkIcon(
-    isBookmarked: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Icon(
-        modifier = modifier
-            .clickableWithoutRipple(onClick)
-            .size(20.dp),
-        painter = painterResource(id = R.drawable.ic_bookmark),
-        contentDescription = null,
-        tint = if (isBookmarked) StudyCardsTheme.colors.error
-        else StudyCardsTheme.colors.blueMiddle
-    )
-}
-
-@Composable
 private fun DialogContent(
     shareCategory: CategoryUI,
     onDismiss: () -> Unit,
@@ -519,10 +429,7 @@ private fun DialogContent(
                     subtitle = pluralString(
                         id = R.plurals.cards,
                         shareCategory.cardsCount.takeIf { it > 0 } ?: 0
-                    ),
-                    onClickPlay = null,
-                    onClickBookmark = null,
-                    onClickShare = null
+                    )
                 )
                 Spacer(modifier = Modifier.height(32.dp))
                 PrimaryButton(

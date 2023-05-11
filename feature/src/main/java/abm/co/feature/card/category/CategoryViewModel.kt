@@ -6,9 +6,11 @@ import abm.co.domain.base.Failure
 import abm.co.domain.base.onFailure
 import abm.co.domain.base.onSuccess
 import abm.co.domain.repository.ServerRepository
+import abm.co.feature.R
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.card.model.toUI
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
@@ -22,6 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,14 +40,15 @@ class CategoryViewModel @Inject constructor(
     private val _channel = Channel<CategoryContractChannel>()
     val channel = _channel.receiveAsFlow()
 
-    private val mutableScreenState =
-        MutableStateFlow<CategoryContract.ScreenState>(CategoryContract.ScreenState.Loading)
-    val screenState: StateFlow<CategoryContract.ScreenState> = mutableScreenState.asStateFlow()
+    private val _state = MutableStateFlow<CategoryContract.ScreenState>(
+        CategoryContract.ScreenState.Loading
+    )
+    val state: StateFlow<CategoryContract.ScreenState> = _state.asStateFlow()
 
     private val mutableToolbarState = MutableStateFlow(
         CategoryContract.ToolbarState(
             categoryName = category.name,
-            description = "Добавленные слова" // TODO store it in strings
+            descriptionRes = R.string.Category_Toolbar_subtitle
         )
     )
     val toolbarState: StateFlow<CategoryContract.ToolbarState> = mutableToolbarState.asStateFlow()
@@ -52,26 +56,11 @@ class CategoryViewModel @Inject constructor(
     private val cardItems = mutableStateListOf<CardUI>()
 
     init {
-//        viewModelScope.launch {
-//            serverRepository.createCard(
-//                Card(
-//                    name = "name",
-//                    translations = "translations",
-//                    imageUrl = "",
-//                    examples = "examples",
-//                    kind = CardKind.KNOWN,
-//                    categoryID = category.id,
-//                    repeatCount = 0,
-//                    nextRepeatTime = System.currentTimeMillis(),
-//                    id = ""
-//                )
-//            )
-//        }
         fetchCardItems()
     }
 
-    fun event(event: CategoryContractEvent) {
-        when (event) {
+    fun onEvent(onEvent: CategoryContractEvent) {
+        when (onEvent) {
             is CategoryContractEvent.OnClickPlayCard -> {
 
             }
@@ -97,7 +86,7 @@ class CategoryViewModel @Inject constructor(
                 viewModelScope.launch {
                     _channel.send(
                         CategoryContractChannel.NavigateToCard(
-                            cardItem = event.cardItem,
+                            cardItem = onEvent.cardItem,
                             category = category
                         )
                     )
@@ -114,6 +103,29 @@ class CategoryViewModel @Inject constructor(
                     )
                 }
             }
+
+            is CategoryContractEvent.OnLongClickCard -> {
+                _state.update { oldState ->
+                    (oldState as? CategoryContract.ScreenState.Success)
+                        ?.copy(removingCard = onEvent.cardItem) ?: oldState
+                }
+            }
+
+            is CategoryContractEvent.OnConfirmRemoveCard -> {
+                viewModelScope.launch {
+                    onEvent(CategoryContractEvent.OnDismissDialog)
+                    serverRepository.removeUserCard(
+                        categoryID = onEvent.cardItem.categoryID,
+                        cardID = onEvent.cardItem.cardID
+                    )
+                }
+            }
+            CategoryContractEvent.OnDismissDialog -> {
+                _state.update { oldState ->
+                    (oldState as? CategoryContract.ScreenState.Success)
+                        ?.copy(removingCard = null) ?: oldState
+                }
+            }
         }
     }
 
@@ -122,7 +134,7 @@ class CategoryViewModel @Inject constructor(
             serverRepository.getUserCards(category.id)
                 .collectLatest { either ->
                     either.onSuccess { items ->
-                        when (screenState.value) {
+                        when (state.value) {
                             is CategoryContract.ScreenState.Success -> {
                                 cardItems.clear()
                                 cardItems.addAll(items.map { it.toUI() })
@@ -130,7 +142,7 @@ class CategoryViewModel @Inject constructor(
 
                             else -> {
                                 cardItems.addAll(items.map { it.toUI() })
-                                mutableScreenState.value = CategoryContract.ScreenState.Success(
+                                _state.value = CategoryContract.ScreenState.Success(
                                     cardItems
                                 )
                             }
@@ -157,7 +169,7 @@ sealed interface CategoryContract {
     @Immutable
     data class ToolbarState(
         val categoryName: String,
-        val description: String
+        @StringRes val descriptionRes: Int
     ) : CategoryContract
 
     @Stable
@@ -170,7 +182,8 @@ sealed interface CategoryContract {
 
         @Immutable
         data class Success(
-            val cards: List<CardUI>
+            val cards: List<CardUI>,
+            val removingCard: CardUI? = null
         ) : ScreenState
     }
 }
@@ -192,6 +205,15 @@ sealed interface CategoryContractEvent {
 
     @Immutable
     object OnBackClicked : CategoryContractEvent
+
+    @Immutable
+    data class OnLongClickCard(val cardItem: CardUI) : CategoryContractEvent
+
+    @Immutable
+    data class OnConfirmRemoveCard(val cardItem: CardUI) : CategoryContractEvent
+
+    @Immutable
+    object OnDismissDialog : CategoryContractEvent
 }
 
 @Stable

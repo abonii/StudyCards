@@ -4,6 +4,7 @@ import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.modifier.scalableClick
 import abm.co.designsystem.component.text.pluralString
+import abm.co.designsystem.functional.safeLet
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.card.model.CategoryUI
@@ -32,11 +33,16 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CategoryItem(
-    category: CategoryUI,
-    onClick: () -> Unit,
-    onClickBookmark: () -> Unit,
-    onClickPlay: () -> Unit,
-    modifier: Modifier = Modifier
+    title: String,
+    subtitle: String,
+    isBookmarked: Boolean?,
+    modifier: Modifier = Modifier,
+    onClickBookmark: (() -> Unit)? = null,
+    onClickShare: (() -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
+    onLongClick: (() -> Unit)? = null,
+    onClickPlay: (() -> Unit)? = null,
+    isPublished: Boolean? = null
 ) {
     Box {
         val pressed = rememberSaveable { mutableStateOf(false) }
@@ -45,47 +51,70 @@ fun CategoryItem(
             modifier = Modifier
                 .scalableClick(
                     pressed = pressed,
-                    onClick = onClick
+                    onClick = { onClick?.invoke() },
+                    onLongClick = { onLongClick?.invoke() }
                 )
                 .matchParentSize()
         )
         Row(
             modifier = modifier
                 .scale(scale.value)
-                .clip(RoundedCornerShape(10.dp))
-                .background(StudyCardsTheme.colors.milky)
-                .padding(top = 12.dp, bottom = 12.dp)
+                .background(
+                    color = StudyCardsTheme.colors.milky,
+                    shape = RoundedCornerShape(11.dp)
+                )
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            BookmarkIcon(
-                isBookmarked = category.bookmarked,
-                onClick = onClickBookmark
-            )
+            safeLet(isBookmarked, onClickBookmark) { isBookmarked, onClickBookmark ->
+                BookmarkIcon(
+                    isBookmarked = isBookmarked,
+                    onClick = onClickBookmark
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+            }
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
-                    text = category.name,
-                    color = StudyCardsTheme.colors.textPrimary,
-                    style = StudyCardsTheme.typography.weight500Size16LineHeight20
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    text = title,
+                    style = StudyCardsTheme.typography.weight500Size16LineHeight20,
+                    color = StudyCardsTheme.colors.textPrimary
                 )
                 Text(
-                    text = pluralString(id = R.plurals.cards, count = category.cardsCount),
-                    color = StudyCardsTheme.colors.textSecondary,
-                    style = StudyCardsTheme.typography.weight400Size16LineHeight20
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    text = subtitle,
+                    style = StudyCardsTheme.typography.weight400Size16LineHeight20,
+                    color = StudyCardsTheme.colors.grayishBlack
                 )
             }
-            Spacer(modifier = Modifier.width(25.dp))
-            Icon(
-                modifier = Modifier
-                    .clickableWithoutRipple(onClick = onClickPlay)
-                    .align(Alignment.CenterVertically)
-                    .padding(end = 12.dp, top = 10.dp, bottom = 10.dp)
-                    .size(24.dp),
-                painter = painterResource(id = R.drawable.ic_play),
-                tint = StudyCardsTheme.colors.buttonPrimary,
-                contentDescription = null
-            )
+            Spacer(modifier = Modifier.width(16.dp))
+            onClickPlay?.let {
+                Icon(
+                    modifier = Modifier
+                        .clickableWithoutRipple(onClick = onClickPlay)
+                        .padding(top = 10.dp, bottom = 10.dp)
+                        .size(24.dp),
+                    painter = painterResource(id = R.drawable.ic_play),
+                    tint = StudyCardsTheme.colors.buttonPrimary,
+                    contentDescription = null
+                )
+            }
+            safeLet(isPublished, onClickShare) { isPublished, onClickShare ->
+                Spacer(modifier = Modifier.width(16.dp))
+                Icon(
+                    modifier = Modifier
+                        .clickableWithoutRipple(onClick = onClickShare)
+                        .padding(top = 10.dp, bottom = 10.dp)
+                        .size(24.dp),
+                    painter = painterResource(id = R.drawable.ic_share),
+                    tint = if (isPublished) StudyCardsTheme.colors.buttonPrimary
+                    else StudyCardsTheme.colors.blueMiddle,
+                    contentDescription = null
+                )
+            }
         }
     }
 }

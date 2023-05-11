@@ -47,12 +47,12 @@ fun ShowDialogOnBackPressed(
 }
 
 @Composable
-private fun ConfirmAlertDialog(
+fun ConfirmAlertDialog(
     title: String,
-    confirm: String,
-    dismiss: String,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
+    confirm: String = stringResource(id = R.string.Alert_Confirm),
+    dismiss: String = stringResource(id = R.string.Alert_Dismiss),
     subtitle: String? = null,
 ) {
     AlertDialog(

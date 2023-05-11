@@ -7,36 +7,58 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun Modifier.scalableClick(
-    scaleTo: Float = 1.05f,
-    onClick: () -> Unit
+    scaleTo: Float = 0.95f,
+    onClick: () -> Unit,
+    onLongClick: (() -> Unit)? = null,
+    longClickDelay: Long = 700
 ): Modifier = composed {
+    val scope = rememberCoroutineScope()
+    val longClickJob = remember { mutableStateOf<Job?>(null) }
     val pressed = remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
         animationSpec = tween(),
         targetValue = if (pressed.value) scaleTo else 1f
     )
-    this.graphicsLayer {
+    graphicsLayer {
         scaleX = scale
         scaleY = scale
-    }.pointerInteropFilter {
-        when (it.action) {
+    }.pointerInteropFilter { event ->
+        when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 pressed.value = true
+                onLongClick?.let {
+                    longClickJob.value = scope.launch {
+                        delay(longClickDelay)
+                        it.invoke()
+                    }
+                }
             }
+
             MotionEvent.ACTION_UP -> {
                 pressed.value = false
-                onClick()
+                longClickJob.value?.let {
+                    if (it.isActive) {
+                        onClick()
+                    }
+                } ?: onClick()
             }
+
             MotionEvent.ACTION_CANCEL -> {
                 pressed.value = false
+                longClickJob.value?.cancel()
+                longClickJob.value = null
             }
         }
         true
@@ -47,19 +69,36 @@ fun Modifier.scalableClick(
 @OptIn(ExperimentalComposeUiApi::class)
 fun Modifier.scalableClick(
     pressed: MutableState<Boolean>,
-    onClick: () -> Unit
-): Modifier {
-    return pointerInteropFilter {
+    onClick: () -> Unit,
+    onLongClick: (() -> Unit)? = null,
+    longClickDelay: Long = 700
+): Modifier = composed {
+    val scope = rememberCoroutineScope()
+    var longClickJob = remember { mutableStateOf<Job?>(null) }
+
+    pointerInteropFilter {
         when (it.action) {
             MotionEvent.ACTION_DOWN -> {
                 pressed.value = true
+                onLongClick?.let {
+                    longClickJob.value = scope.launch {
+                        delay(longClickDelay)
+                        it.invoke()
+                    }
+                }
             }
+
             MotionEvent.ACTION_UP -> {
                 pressed.value = false
-                onClick()
+                if (longClickJob.value?.isActive == true) {
+                    onClick()
+                }
             }
+
             MotionEvent.ACTION_CANCEL -> {
                 pressed.value = false
+                longClickJob.value?.cancel()
+                longClickJob.value = null
             }
         }
         true

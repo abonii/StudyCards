@@ -41,9 +41,11 @@ object FirebaseModule {
     @Provides
     fun provideRealtimeDatabaseUser(
         @Named(ROOT_REF) root: DatabaseReference,
-        @Named(USER_ID) userId: String
+        firebaseAuth: FirebaseAuth
     ): DatabaseReference {
-        return root.child(USER_REF).child(userId).child(USER_PROPERTIES_REF)
+        return root.child(USER_REF)
+            .child(firebaseAuth.currentUser?.uid ?: "no-user-id")
+            .child(USER_PROPERTIES_REF)
             .apply { keepSynced(true) }
     }
 }

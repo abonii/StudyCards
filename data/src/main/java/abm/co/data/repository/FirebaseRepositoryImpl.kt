@@ -36,6 +36,7 @@ import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
 import com.google.gson.Gson
 import com.mocklets.pluto.PlutoLog
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -48,12 +49,11 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Singleton
+@ActivityRetainedScoped
 class FirebaseRepositoryImpl @Inject constructor(
     @Named(USER_PROPERTIES_REF) private val userPropertiesReference: DatabaseReference,
     @ApplicationScope private val coroutineScope: CoroutineScope,
     @Named(ROOT_REF) private val root: DatabaseReference,
-    @Named(USER_ID) private val userId: String,
     private val firebaseAuth: FirebaseAuth,
     languagesDataStore: LanguagesDataStore,
     private val gson: Gson
@@ -64,7 +64,7 @@ class FirebaseRepositoryImpl @Inject constructor(
         languagesDataStore.getLearningLanguage()
     ) { native, learning ->
         root.child(USER_REF)
-            .child(userId)
+            .child(firebaseAuth.currentUser?.uid ?: "no-user-id")
             .child(CATEGORY_REF)
             .child(native?.code ?: "en")
             .child(learning?.code ?: "en")
@@ -352,9 +352,30 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun removeUserCategory(categoryID: String): Either<Failure, Unit> {
+        return safeCall {
+            userCategoryWithLanguagesRef.firstOrNull()
+                ?.child(categoryID)
+                ?.removeValue()
+        }
+    }
+
+    override suspend fun removeUserCard(
+        categoryID: String,
+        cardID: String
+    ): Either<Failure, Unit> {
+        return safeCall {
+            userCategoryWithLanguagesRef.firstOrNull()
+                ?.child(categoryID)
+                ?.child(CARD_REF)
+                ?.child(cardID)
+                ?.removeValue()
+        }
+    }
+
     override suspend fun removeUserDatabase() {
         root.child(USER_REF)
-            .child(userId)
+            .child(firebaseAuth.currentUser?.uid ?: "no-user-id")
             .removeValue()
     }
 }

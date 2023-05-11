@@ -95,6 +95,7 @@
     <string name="HomePage.Category.showAll">Show all</string>
 
     <string name="Category.Toolbar.title">Categories</string>
+    <string name="Category.Toolbar.subtitle">Added cards</string>
     <string name="Category.Input.title">Category name</string>
     <string name="Category.Input.hint">Enter a category name</string>
     <string name="Category.Button.title">Continue</string>
