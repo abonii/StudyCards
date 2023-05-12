@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 class SignUpViewModel @Inject constructor(
     private val googleSignInClient: GoogleSignInClient,
     private val firebaseAuth: FirebaseAuth,
-    private val repository: AuthorizationRepository
+    private val authorizationRepository: AuthorizationRepository
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(SignUpContractState())
@@ -55,11 +55,6 @@ class SignUpViewModel @Inject constructor(
             is SignUpContractEvent.OnEnterPasswordValue -> {
                 mutableState.update {
                     it.copy(password = event.value)
-                }
-            }
-            is SignUpContractEvent.OnEnterPasswordConfirmValue -> {
-                mutableState.update {
-                    it.copy(passwordConfirm = event.value)
                 }
             }
             SignUpContractEvent.OnLoginViaGoogleClicked -> {
@@ -118,8 +113,12 @@ class SignUpViewModel @Inject constructor(
                                 if (!task.isSuccessful) {
                                     task.exception?.mapToFailure()?.sendException()
                                 } else {
-                                    val user = firebaseAuth.currentUser
-                                    saveUserInfo(email = user?.email, name = user?.displayName)
+                                    val user = state.value
+                                    val firebaseUser = firebaseAuth.currentUser
+                                    saveUserInfo(
+                                        email = firebaseUser?.email ?: user.email,
+                                        name = user.name
+                                    )
                                 }
                             }
                     }
@@ -146,17 +145,17 @@ class SignUpViewModel @Inject constructor(
                         Failure.FailureSnackbar(ExpectedMessage.Res(R.string.SignUpPage_PasswordLengthNotCorrect))
                             .sendException()
                     }
-                    passwordConfirm != password -> {
-                        Failure.FailureSnackbar(ExpectedMessage.Res(R.string.SignUpPage_PasswordsNotSame))
-                            .sendException()
-                    }
                     else -> {
                         mutableState.update { it.copy(isSignUpButtonLoading = true) }
                         firebaseAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     sendVerificationEmail()
-                                    saveUserInfo(email = email.trim(), password = password)
+                                    saveUserInfo(
+                                        name = name.trim(),
+                                        email = email.trim(),
+                                        password = password
+                                    )
                                 } else {
                                     mutableState.update { it.copy(isSignUpButtonLoading = false) }
                                     task.exception?.mapToFailure()?.sendException()
@@ -210,7 +209,7 @@ class SignUpViewModel @Inject constructor(
         password: String? = null
     ) {
         viewModelScope.launch {
-            repository.setUserInfo(
+            authorizationRepository.setUserInfo(
                 name = name,
                 email = email,
                 password = password
@@ -234,7 +233,6 @@ data class SignUpContractState(
     val name: String = "",
     val email: String = "",
     val password: String = "",
-    val passwordConfirm: String = ""
 )
 
 @Immutable
@@ -246,7 +244,6 @@ sealed interface SignUpContractEvent {
     data class OnEnterEmailValue(val value: String) : SignUpContractEvent
     data class OnEnterNameValue(val value: String) : SignUpContractEvent
     data class OnEnterPasswordValue(val value: String) : SignUpContractEvent
-    data class OnEnterPasswordConfirmValue(val value: String) : SignUpContractEvent
 }
 
 @Immutable

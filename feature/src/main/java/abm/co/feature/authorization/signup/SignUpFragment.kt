@@ -30,7 +30,8 @@ class SignUpFragment : BaseFragment() {
             },
             onNavigateChooseUserAttributes = {
                 navigationBetweenModules.navigateFromAuthorizationToUserPreferenceAndLanguage(
-                    findNavController()
+                    showAdditionQuiz = true,
+                    navController = findNavController()
                 )
             },
             onNavigateLoginPage = {

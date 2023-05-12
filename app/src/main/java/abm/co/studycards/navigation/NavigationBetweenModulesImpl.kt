@@ -3,6 +3,7 @@ package abm.co.studycards.navigation
 import abm.co.core.navigation.NavigationBetweenModules
 import abm.co.designsystem.navigation.extension.navigateSafe
 import abm.co.studycards.R
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import javax.inject.Inject
@@ -24,13 +25,18 @@ class NavigationBetweenModulesImpl @Inject constructor() : NavigationBetweenModu
         navController.navigateSafe(R.id.root_main_nav_graph, null, navOptions)
     }
 
-    override fun navigateFromAuthorizationToUserPreferenceAndLanguage(navController: NavController) {
+    override fun navigateFromAuthorizationToUserPreferenceAndLanguage(
+        navController: NavController,
+        showAdditionQuiz: Boolean
+    ) {
         val navOptions = builder
             .setPopUpTo(abm.co.feature.R.id.authorization_nav_graph, true)
             .build()
         navController.navigateSafe(
             R.id.root_user_preference_and_language_nav_graph,
-            null,
+            args = bundleOf(
+                "show_addition_quiz" to showAdditionQuiz
+            ),
             navOptions
         )
     }

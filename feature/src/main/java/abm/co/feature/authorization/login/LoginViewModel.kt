@@ -75,6 +75,10 @@ class LoginViewModel @Inject constructor(
             LoginContractEvent.OnLoadingDismissWanted -> {
                 onLoadingDismissWanted()
             }
+
+            LoginContractEvent.OnClickForgotPassword -> {
+                navigateToForgotPassword()
+            }
         }
     }
 
@@ -97,8 +101,10 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun navigateToForgotPassword() = viewModelScope.launch(Dispatchers.IO) {
-        _channel.send(LoginContractChannel.NavigateToForgotPassword)
+    private fun navigateToForgotPassword() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _channel.send(LoginContractChannel.NavigateToForgotPassword)
+        }
     }
 
     private fun loginViaGoogle() = viewModelScope.launch(Dispatchers.IO) {
@@ -221,6 +227,7 @@ data class LoginContractState(
 
 @Immutable
 sealed interface LoginContractEvent {
+    object OnClickForgotPassword : LoginContractEvent
     object OnLoginViaEmailClicked : LoginContractEvent
     object OnLoginViaGoogleClicked : LoginContractEvent
     object OnLoginViaFacebookClicked : LoginContractEvent

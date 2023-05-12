@@ -28,7 +28,8 @@ class WelcomeLoginFragment : BaseFragment() {
             showMessage = messageContent,
             onNavigateChooseUserAttributes = {
                 navigationBetweenModules.navigateFromAuthorizationToUserPreferenceAndLanguage(
-                    findNavController()
+                    showAdditionQuiz = true,
+                    navController = findNavController()
                 )
             },
             onNavigateSignUpPage = {

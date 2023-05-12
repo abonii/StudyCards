@@ -55,6 +55,15 @@
     <string name="LoginPage.AlternativeLogin">Or log in with</string>
     <string name="LoginPage.SignUpTitle">Don’t have an account?</string>
     <string name="LoginPage.SignUpNow">Sign up now</string>
+    <string name="LoginPage.ForgotPassword">Forgot password</string>
+
+    <string name="ForgotPassword.Toolbar.title">Forgot password</string>
+    <string name="ForgotPassword.Message.Success.sendVerification">We have sent a confirmation to your email address, please check your email address</string>
+    <string name="ForgotPassword.Message.Error.emptyEmail">Email cannot be empty</string>
+    <string name="ForgotPassword.Message.Success.title">Success</string>
+    <string name="ForgotPassword.EmailField.title">Email</string>
+    <string name="ForgotPassword.EmailField.hint">Enter your email</string>
+    <string name="ForgotPassword.PrimaryButton.title">Reset the password</string>
 
     <string name="SignUpPage.Title">Create Account </string>
     <string name="SignUpPage.Subtitle">to get to started now</string>
@@ -74,7 +83,6 @@
     <string name="SignUpPage.WeCouldntSentVerification.subtitle">We cannot send verification to this email</string>
     <string name="SignUpPage.WeSentVerification.title">Hooray</string>
     <string name="SignUpPage.WeSentVerification.subtitle">We have sent a confirmation to your email address, please check your email address</string>
-    <string name="SignUpPage.PasswordsNotSame">Passwords are not same</string>
     <string name="SignUpPage.EmailEmpty">Email cannot be empty</string>
     <string name="SignUpPage.PasswordEmpty">Password cannot be empty</string>
     <string name="SignUpPage.PasswordLengthNotCorrect">Password length should be more than 6</string>
@@ -178,7 +186,7 @@
     <string name="ChangePassword.NewPasswordField.title">New Password</string>
     <string name="ChangePassword.NewPasswordField.hint">Enter Password</string>
     <string name="ChangePassword.PrimaryButton.title">Change password</string>
-    <string name="ChangePassword.Message.Success.title">Successfully</string>
+    <string name="ChangePassword.Message.Success.title">Success</string>
     <string name="ChangePassword.Message.Success.passwordChange">Password changed successfully</string>
     <string name="ChangePassword.Message.Error.title">Oops</string>
     <string name="ChangePassword.Message.Error.empty">Verify password cannot be empty</string>

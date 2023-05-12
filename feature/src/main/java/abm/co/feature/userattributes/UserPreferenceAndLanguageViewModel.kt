@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class UserPreferenceAndLanguageViewModel @Inject constructor(
     private val languagesRepository: LanguagesRepository,
-    private val repository: AuthorizationRepository,
+    private val authorizationRepository: AuthorizationRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -118,8 +118,9 @@ class UserPreferenceAndLanguageViewModel @Inject constructor(
     private fun onClickContinue() {
         viewModelScope.launch {
             mutableState.update { contractState -> contractState.copy(progress = 1f) }
-            repository.setUserInterests(
-                state.value.userInterests.filter { it.isSelected }.map { it.toDomain() })
+            authorizationRepository.setUserInterests(
+                state.value.userInterests.filter { it.isSelected }.map { it.toDomain() }
+            )
             delay(500)
             navigateToHomePage()
         }
@@ -139,7 +140,7 @@ class UserPreferenceAndLanguageViewModel @Inject constructor(
 
     private fun saveUserGoal(userGoal: UserGoalUI) {
         viewModelScope.launch {
-            repository.setUserGoal(userGoal.toDomain())
+            authorizationRepository.setUserGoal(userGoal.toDomain())
         }
     }
 

@@ -10,9 +10,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupStartupDestination() {
-        launchLifecycleScope {
+        lifecycleScope.launch {
             viewModel.startDestination.collectLatest { state ->
                 state?.let {
                     val navHostFragment = supportFragmentManager

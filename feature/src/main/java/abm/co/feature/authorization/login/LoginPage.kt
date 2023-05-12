@@ -119,7 +119,18 @@ private fun LoginScreen(
                 event(LoginContractEvent.OnEnterPasswordValue(it))
             }
         )
-        Spacer(modifier = Modifier.weight(0.067f))
+        Spacer(modifier = Modifier.weight(0.01f))
+        TextButton(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            title = stringResource(id = R.string.LoginPage_ForgotPassword),
+            textStyle = StudyCardsTheme.typography.weight500Size14LineHeight20.copy(
+                color = StudyCardsTheme.colors.buttonPrimary
+            ),
+            onClick = {
+                event(LoginContractEvent.OnClickForgotPassword)
+            }
+        )
+        Spacer(modifier = Modifier.weight(0.03f))
         PrimaryButton(
             modifier = Modifier
                 .padding(horizontal = 16.dp)

@@ -27,7 +27,8 @@ class LoginFragment : BaseFragment() {
         LoginPage(
             onNavigateToChooseUserAttributes = {
                 navigationBetweenModules.navigateFromAuthorizationToUserPreferenceAndLanguage(
-                    findNavController()
+                    showAdditionQuiz = false,
+                    navController = findNavController()
                 )
             },
             onNavigateToMainPage = {
@@ -39,7 +40,9 @@ class LoginFragment : BaseFragment() {
                 )
             },
             onNavigateToForgotPage = {
-
+                findNavController().navigateSafe(
+                    LoginFragmentDirections.toForgotPasswordDestination()
+                )
             },
             showMessage = messageContent
         )

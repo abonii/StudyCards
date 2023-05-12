@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -111,15 +112,11 @@ private fun SignUpScreen(
                 name = state.name,
                 email = state.email,
                 password = state.password,
-                passwordConfirm = state.passwordConfirm,
                 onEnterEmailValue = {
                     event(SignUpContractEvent.OnEnterEmailValue(it))
                 },
                 onEnterPasswordValue = {
                     event(SignUpContractEvent.OnEnterPasswordValue(it))
-                },
-                onEnterPasswordConfirmValue = {
-                    event(SignUpContractEvent.OnEnterPasswordConfirmValue(it))
                 },
                 onEnterNameValue = {
                     event(SignUpContractEvent.OnEnterNameValue(it))
@@ -183,17 +180,15 @@ private fun ColumnScope.InputFieldsContent(
     name: String,
     email: String,
     password: String,
-    passwordConfirm: String,
     onEnterEmailValue: (String) -> Unit,
     onEnterNameValue: (String) -> Unit,
     onEnterPasswordValue: (String) -> Unit,
-    onEnterPasswordConfirmValue: (String) -> Unit
 ) {
     TextFieldWithLabel(
         label = stringResource(id = R.string.SignUpPage_NameTitle),
         hint = stringResource(id = R.string.SignUpPage_NameHint),
         value = name,
-        onValueChange = onEnterEmailValue,
+        onValueChange = onEnterNameValue,
         modifier = Modifier
             .fillMaxWidth()
             .height(68.dp)
@@ -204,7 +199,7 @@ private fun ColumnScope.InputFieldsContent(
         label = stringResource(id = R.string.SignUpPage_EmailTitle),
         hint = stringResource(id = R.string.SignUpPage_EmailHint),
         value = email,
-        onValueChange = onEnterNameValue,
+        onValueChange = onEnterEmailValue,
         modifier = Modifier
             .fillMaxWidth()
             .height(68.dp)
@@ -217,30 +212,6 @@ private fun ColumnScope.InputFieldsContent(
         hint = stringResource(id = R.string.SignUpPage_PasswordHint),
         value = password,
         onValueChange = onEnterPasswordValue,
-        visualTransformation = if (showPassword) {
-            VisualTransformation.None
-        } else {
-            PasswordVisualTransformation()
-        },
-        trailingIcon = {
-            TrailingIcon(
-                showPassword = showPassword,
-                onClick = {
-                    showPassword = it
-                }
-            )
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(68.dp)
-            .padding(horizontal = 16.dp)
-    )
-    Spacer(modifier = Modifier.weight(0.024f))
-    TextFieldWithLabel(
-        label = stringResource(id = R.string.SignUpPage_PasswordConfirmTitle),
-        hint = stringResource(id = R.string.SignUpPage_PasswordConfirmHint),
-        value = passwordConfirm,
-        onValueChange = onEnterPasswordConfirmValue,
         visualTransformation = if (showPassword) {
             VisualTransformation.None
         } else {

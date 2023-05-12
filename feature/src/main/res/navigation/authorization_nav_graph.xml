@@ -30,6 +30,13 @@
         android:name="abm.co.feature.authorization.login.LoginFragment">
 
         <action
+            android:id="@+id/to_forgot_password_destination"
+            app:destination="@id/forgot_password_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right"/>
+        <action
             android:id="@+id/to_sign_up_destination"
             app:destination="@id/sign_up_destination"
             app:enterAnim="@anim/enter_from_right"
@@ -54,4 +61,8 @@
             app:popUpToInclusive="true"
             app:popUpTo="@id/authorization_nav_graph"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/forgot_password_destination"
+        android:name="abm.co.feature.authorization.forgotpassword.ForgotPasswordFragment" />
 </navigation>
