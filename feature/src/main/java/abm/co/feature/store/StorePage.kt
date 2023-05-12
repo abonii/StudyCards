@@ -7,6 +7,7 @@ import abm.co.designsystem.extensions.getActivity
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
+import abm.co.feature.utils.AnalyticsManager
 import abm.co.feature.utils.StudyCardsConstants
 import abm.co.feature.utils.StudyCardsConstants.APP_NAME
 import androidx.compose.foundation.Image
@@ -43,12 +44,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.SkuDetails
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun StorePage(
@@ -58,8 +58,8 @@ fun StorePage(
 ) {
     val activity = getActivity()
     LaunchedEffect(Unit) {
-        Firebase.analytics.logEvent(
-            "store_page_viewed", null
+        AnalyticsManager.sendEvent(
+            name = "store_page_viewed"
         )
     }
     val state by viewModel.skusStateFlow.collectAsState()

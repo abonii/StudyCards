@@ -13,6 +13,7 @@ import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.card.model.CategoryUI
+import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,8 +46,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -57,8 +56,8 @@ fun ChooseOrCreateCategoryPage(
     viewModel: ChooseOrCreateCategoryViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
-        Firebase.analytics.logEvent(
-            "edit_category_page_viewed", null
+        AnalyticsManager.sendEvent(
+            name = "edit_category_page_viewed"
         )
     }
     val state by viewModel.state.collectAsState()

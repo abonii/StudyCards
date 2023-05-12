@@ -11,6 +11,7 @@ import abm.co.feature.R
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.game.model.GameKindUI
+import abm.co.feature.utils.AnalyticsManager
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -36,8 +37,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun GamePickerPage(
@@ -48,8 +47,8 @@ fun GamePickerPage(
     viewModel: GamePickerViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
-        Firebase.analytics.logEvent(
-            "game_picker_page_viewed", null
+        AnalyticsManager.sendEvent(
+            name = "game_picker_page_viewed"
         )
     }
     val state by viewModel.state.collectAsState()

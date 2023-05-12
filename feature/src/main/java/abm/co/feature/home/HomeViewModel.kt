@@ -53,13 +53,18 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun fetchUser() {
-        serverRepository.getUser.combine(languagesRepository.getLearningLanguage()) { userEither, learningLang ->
+        combine(
+            serverRepository.getUser,
+            languagesRepository.getLearningLanguage(),
+            languagesRepository.getNativeLanguage()
+        ) { userEither, learningLang, nativeLang ->
             userEither.onFailure {
                 it.sendException()
             }.onSuccess { user ->
                 mutableToolbarState.value = HomeContract.ToolbarState(
                     userName = user?.name ?: user?.email,
-                    learningLanguage = learningLang?.toUI()
+                    learningLanguage = learningLang?.toUI(),
+                    nativeLanguage = nativeLang?.toUI()
                 )
             }
         }.launchIn(viewModelScope)
@@ -168,7 +173,8 @@ sealed interface HomeContract {
 
     data class ToolbarState(
         val userName: String? = null,
-        val learningLanguage: LanguageUI? = null
+        val learningLanguage: LanguageUI? = null,
+        val nativeLanguage: LanguageUI? = null
     ) : HomeContract
 
     sealed interface ScreenState : HomeContract {

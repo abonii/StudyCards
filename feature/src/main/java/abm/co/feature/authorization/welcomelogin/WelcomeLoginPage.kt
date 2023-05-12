@@ -11,6 +11,7 @@ import abm.co.designsystem.component.modifier.baseBackground
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
+import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,8 +33,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun WelcomeLoginPage(
@@ -44,9 +43,7 @@ fun WelcomeLoginPage(
     viewModel: WelcomeLoginViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit){
-        Firebase.analytics.logEvent(
-            "welcome_login_page_viewed", null
-        )
+        AnalyticsManager.sendEvent("welcome_login_page_viewed")
     }
     val state by viewModel.state.collectAsState()
     viewModel.channel.collectInLaunchedEffect {

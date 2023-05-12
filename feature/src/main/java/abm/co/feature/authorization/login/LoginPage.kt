@@ -15,6 +15,7 @@ import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.authorization.common.TrailingIcon
+import abm.co.feature.utils.AnalyticsManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -44,8 +45,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun LoginPage(
@@ -57,9 +56,7 @@ fun LoginPage(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
-        Firebase.analytics.logEvent(
-            "login_page_viewed", null
-        )
+        AnalyticsManager.sendEvent("login_page_viewed")
     }
     val startGoogleLoginForResult = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),

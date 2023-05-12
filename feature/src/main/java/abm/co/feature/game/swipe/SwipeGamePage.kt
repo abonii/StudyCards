@@ -15,6 +15,7 @@ import abm.co.feature.game.swipe.card.BackCardItem
 import abm.co.feature.game.swipe.card.FrontCardItem
 import abm.co.feature.game.swipe.card.CardsHolder
 import abm.co.feature.game.swipe.drag.rememberCardStackController
+import abm.co.feature.utils.AnalyticsManager
 import abm.co.feature.utils.StudyCardsConstants.TOOLBAR_HEIGHT
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -44,8 +45,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun SwipeGamePage(
@@ -54,8 +53,8 @@ fun SwipeGamePage(
     viewModel: SwipeGameViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
-        Firebase.analytics.logEvent(
-            "swipe_game_page_viewed", null
+        AnalyticsManager.sendEvent(
+            name = "swipe_game_page_viewed"
         )
     }
     val state by viewModel.state.collectAsState()

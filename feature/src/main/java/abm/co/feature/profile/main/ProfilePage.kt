@@ -14,6 +14,7 @@ import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.authorization.common.TrailingIcon
 import abm.co.feature.userattributes.lanugage.LanguageUI
+import abm.co.feature.utils.AnalyticsManager
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -61,8 +62,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun ProfilePage(
@@ -72,8 +71,8 @@ fun ProfilePage(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
-        Firebase.analytics.logEvent(
-            "profile_page_viewed", null
+        AnalyticsManager.sendEvent(
+            name = "profile_page_viewed"
         )
     }
     val startGoogleLoginForResult = rememberLauncherForActivityResult(

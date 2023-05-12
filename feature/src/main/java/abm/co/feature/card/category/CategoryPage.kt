@@ -17,6 +17,7 @@ import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.toolbar.ToolbarState
 import abm.co.feature.toolbar.rememberToolbarState
+import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -53,8 +54,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 
 private val MinToolbarHeight = 80.dp
 private val MaxToolbarHeight = 120.dp
@@ -68,9 +67,7 @@ fun CategoryPage(
     viewModel: CategoryViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
-        Firebase.analytics.logEvent(
-            "category_page_viewed", null
-        )
+        AnalyticsManager.sendEvent("category_page_viewed")
     }
     viewModel.channel.collectInLaunchedEffect {
         when (it) {

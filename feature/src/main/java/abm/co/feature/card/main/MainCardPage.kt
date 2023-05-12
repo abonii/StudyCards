@@ -14,6 +14,7 @@ import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.card.component.CategoryItem
 import abm.co.feature.card.model.CategoryUI
+import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -51,8 +52,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun MainCardPage(
@@ -61,9 +60,7 @@ fun MainCardPage(
     navigateToLearnGame: (CategoryUI) -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        Firebase.analytics.logEvent(
-            "card_page_viewed", null
-        )
+        AnalyticsManager.sendEvent("card_page_viewed")
     }
     val state by viewModel.state.collectAsState()
 

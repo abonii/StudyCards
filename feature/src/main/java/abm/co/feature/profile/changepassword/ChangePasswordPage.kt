@@ -11,6 +11,7 @@ import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.authorization.common.TrailingIcon
+import abm.co.feature.utils.AnalyticsManager
 import abm.co.feature.utils.StudyCardsConstants
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,8 +41,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun ChangePasswordPage(
@@ -50,8 +49,8 @@ fun ChangePasswordPage(
     viewModel: ChangePasswordViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
-        Firebase.analytics.logEvent(
-            "change_password_page_viewed", null
+        AnalyticsManager.sendEvent(
+            name = "change_password_page_viewed"
         )
     }
 

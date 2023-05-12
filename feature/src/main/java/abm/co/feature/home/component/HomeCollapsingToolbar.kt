@@ -2,6 +2,7 @@ package abm.co.feature.home.component
 
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
+import abm.co.designsystem.functional.safeLet
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import androidx.annotation.DrawableRes
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -44,14 +46,15 @@ private val CollapsedPadding = 8.dp
 private val ExpandedIconWidth = 3.dp
 private val CollapsedIconWidth = 4.dp
 
-private val ExpandedIconHeight = 45.dp
-private val CollapsedIconHeight = 30.dp
+private val ExpandedIconHeight = 38.dp
+private val CollapsedIconHeight = 26.dp
 
 @Composable
 fun HomeCollapsingToolbar(
     welcomeText: String,
     learningLanguageText: String,
     @DrawableRes learningLanguageRes: Int?,
+    @DrawableRes nativeLanguageRes: Int?,
     toolbarTitle: String,
     progress: Float,
     onClickDrawerIcon: () -> Unit,
@@ -79,7 +82,7 @@ fun HomeCollapsingToolbar(
                 .fillMaxSize(),
         ) {
             CollapsingToolbarLayout(progress = progress) {
-                val iconHeight = with(LocalDensity.current) {
+                val iconSize = with(LocalDensity.current) {
                     lerp(CollapsedIconHeight.toPx(), ExpandedIconHeight.toPx(), progress).toDp()
                 }
                 val iconWidth = with(LocalDensity.current) {
@@ -132,29 +135,47 @@ fun HomeCollapsingToolbar(
                         textAlign = TextAlign.Center
                     )
                 }
-                val circleBorderColor = StudyCardsTheme.colors.primary
-                learningLanguageRes?.let {
-                    Image(
-                        painter = painterResource(id = learningLanguageRes),
-                        contentDescription = null,
+                safeLet(nativeLanguageRes, learningLanguageRes) { native, learning ->
+                    val circleBorderColor = StudyCardsTheme.colors.primary
+                    Box(
                         modifier = Modifier
                             .padding(start = drawerEndPadding)
-                            .size(iconHeight)
                             .clickableWithoutRipple(onClick = onClickLearningLanguageIcon)
-                            .drawBehind {
-                                val iconWidthPx = iconWidth.toPx()
-                                drawCircle(
-                                    color = circleBorderColor,
-                                    center = Offset(size.width / 2f, size.height / 2f),
-                                    radius = size.width / 2f - iconWidthPx + iconWidthPx,
-                                    style = Stroke(width = iconWidthPx)
+                    ) {
+                        Image(
+                            painter = painterResource(id = native),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .offset(
+                                    x = -iconSize / 6,
+                                    y = -iconSize / 8
                                 )
-                            }
-                    )
+                                .size(iconSize)
+                        )
+                        Image(
+                            painter = painterResource(id = learning),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .offset(
+                                    x = iconSize / 6,
+                                    y = iconSize / 6
+                                )
+                                .size(iconSize)
+                                .drawBehind {
+                                    val iconWidthPx = iconWidth.toPx()
+                                    drawCircle(
+                                        color = circleBorderColor,
+                                        center = Offset(size.width / 2f, size.height / 2f),
+                                        radius = size.width / 2f - iconWidthPx + iconWidthPx,
+                                        style = Stroke(width = iconWidthPx)
+                                    )
+                                }
+                        )
+                    }
                 } ?: Spacer(
                     modifier = Modifier
                         .padding(start = drawerEndPadding)
-                        .size(iconHeight)
+                        .size(iconSize)
                 )
             }
         }

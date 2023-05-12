@@ -95,6 +95,7 @@ fun BottomNavigationBar(
         ) {
             bottomNavigationItems.forEach { item ->
                 BottomNavigationIcon(
+                    modifier = Modifier.weight(1f),
                     selected = item.resId == currentScreenRoute,
                     item = item,
                     onClick = {

@@ -14,6 +14,7 @@ import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.designsystem.preview.ThemePreviews
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
+import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -59,8 +60,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -74,8 +73,8 @@ fun EditCardPage(
     viewModel: EditCardViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
-        Firebase.analytics.logEvent(
-            "edit_card_page_viewed", null
+        AnalyticsManager.sendEvent(
+            name = "edit_card_page_viewed"
         )
     }
     viewModel.channel.collectInLaunchedEffect {

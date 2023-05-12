@@ -170,6 +170,7 @@ private fun HomeScreen(
                             ?: R.string.HomePage_Toolbar_language
                     ),
             learningLanguageRes = toolbarState.learningLanguage?.flagFromDrawable,
+            nativeLanguageRes = toolbarState.nativeLanguage?.flagFromDrawable,
             welcomeText = stringResource(id = R.string.HomePage_Toolbar_welcome) + ", " +
                     (toolbarState.userName ?: stringResource(id = R.string.HomePage_Toolbar_guest)),
             progress = toolbarScrollable.progress,

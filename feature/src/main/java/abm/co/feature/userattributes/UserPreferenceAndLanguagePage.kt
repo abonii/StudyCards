@@ -13,6 +13,7 @@ import abm.co.feature.userattributes.usergoal.UserGoalItems
 import abm.co.feature.userattributes.usergoal.UserGoalUI
 import abm.co.feature.userattributes.userinterest.UserInterestItems
 import abm.co.feature.userattributes.userinterest.UserInterestUI
+import abm.co.feature.utils.AnalyticsManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -41,8 +42,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import kotlinx.collections.immutable.ImmutableList
 
 @Immutable
@@ -61,9 +60,8 @@ fun UserPreferenceAndLanguage(
 ) {
     val state by viewModel.state.collectAsState()
     LaunchedEffect(Unit) {
-        Firebase.analytics.logEvent(
-            "user_preference_and_language_page_viewed",
-            null
+        AnalyticsManager.sendEvent(
+            name = "user_preference_and_language_page_viewed"
         )
     }
     viewModel.channel.collectInLaunchedEffect {
@@ -101,8 +99,8 @@ private fun UserPreferenceAndLanguageScreen(
                 .clip(RoundedCornerShape(9.dp))
                 .height(6.dp)
                 .fillMaxWidth(),
-            contentColor = Color(0x5E_CADAE7),
-            backgroundColor = Color.White,
+            contentColor = Color.White,
+            backgroundColor = Color(0x5E_CADAE7),
             onReach100Percent = { /*Just ignore*/ }
         )
         Column(
@@ -218,9 +216,9 @@ private fun ChangeableContent(
             languages = languages,
             isToRight = isToRight,
             onClickItem = {
-                Firebase.analytics.logEvent(
-                    "native_language_selected",
-                    bundleOf("code" to it.code)
+                AnalyticsManager.sendEvent(
+                    name = "native_language_selected",
+                    params = bundleOf("code" to it.code)
                 )
                 event(ChooseUserPreferenceAndLanguageContractEvent.OnNavigateToLearningLanguage(it, true))
             }
@@ -234,9 +232,9 @@ private fun ChangeableContent(
             languages = languages,
             isToRight = isToRight,
             onClickItem = {
-                Firebase.analytics.logEvent(
-                    "learning_language_selected",
-                    bundleOf("code" to it.code)
+                AnalyticsManager.sendEvent(
+                    name = "learning_language_selected",
+                    params = bundleOf("code" to it.code)
                 )
                 if (showAdditionQuiz) {
                     event(ChooseUserPreferenceAndLanguageContractEvent.OnNavigateToUserGoal(it, true))
@@ -255,9 +253,9 @@ private fun ChangeableContent(
                 userGoals = userGoals,
                 isToRight = isToRight,
                 onClickItem = {
-                    Firebase.analytics.logEvent(
-                        "user_goal_selected",
-                        bundleOf("id" to it.id)
+                    AnalyticsManager.sendEvent(
+                        name = "user_goal_selected",
+                        params =   bundleOf("id" to it.id)
                     )
                     event(ChooseUserPreferenceAndLanguageContractEvent.OnNavigateToUserInterests(it))
                 }
@@ -267,9 +265,9 @@ private fun ChangeableContent(
                 userInterests = userInterests,
                 isToRight = isToRight,
                 onClickItem = {
-                    Firebase.analytics.logEvent(
-                        "user_interest_selected",
-                        bundleOf("id" to it.id, "is_selected" to !it.isSelected)
+                    AnalyticsManager.sendEvent(
+                        name = "user_interest_selected",
+                        params = bundleOf("id" to it.id, "is_selected" to !it.isSelected)
                     )
                     event(ChooseUserPreferenceAndLanguageContractEvent.OnSelectUserInterest(it))
                 },

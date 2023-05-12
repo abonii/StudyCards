@@ -5,6 +5,7 @@ import abm.co.designsystem.component.modifier.baseBackground
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
+import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,16 +29,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun LibraryPage(
     viewModel: LibraryViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
-        Firebase.analytics.logEvent(
-            "library_page_viewed", null
+        AnalyticsManager.sendEvent(
+            name = "library_page_viewed"
         )
     }
     val state by viewModel.state.collectAsState()
