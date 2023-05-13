@@ -5,7 +5,7 @@ import androidx.annotation.Keep
 
 @Keep
 data class UserGoalDTO(
-    val id: Int,
+    val id: String,
     val title: String
 )
 

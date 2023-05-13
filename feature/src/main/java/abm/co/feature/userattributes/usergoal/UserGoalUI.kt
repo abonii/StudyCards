@@ -5,7 +5,7 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class UserGoalUI(
-    val id: Int,
+    val id: String,
     val title: String
 )
 
@@ -20,14 +20,13 @@ fun UserGoal.toUI() = UserGoalUI(
 )
 
 val defaultUserGoals = listOf( // todo what to do
-    UserGoalUI(id = 0, "Изучить основы "),
-    UserGoalUI(id = 1, "Посмотреть фильм на языке\n" +
-        "(Английский(британский))"),
-    UserGoalUI(id = 2, "Познакомиться с культурой языка"),
-    UserGoalUI(id = 3, "Улучшить свой уровень"),
-    UserGoalUI(id = 4, "Улучшить грамматику"),
-    UserGoalUI(id = 5, "Сдать экзамены и ли тест"),
-    UserGoalUI(id = 6, "Научиться говорить более свободно"),
-    UserGoalUI(id = 7, "Понимать язык"),
-    UserGoalUI(id = 8, "Что то")
+    UserGoalUI(id = "Learn Basics", "Изучить основы"),
+    UserGoalUI(id = "Watch movies", "Посмотреть фильм на языке"),
+    UserGoalUI(id = "Watch movies", "Познакомиться с культурой языка"),
+    UserGoalUI(id = "Leveling up", "Улучшить свой уровень"),
+    UserGoalUI(id = "Learn grammar", "Улучшить грамматику"),
+    UserGoalUI(id = "Pass exam", "Сдать экзамены и ли тест"),
+    UserGoalUI(id = "Speak fluent", "Научиться говорить более свободно"),
+    UserGoalUI(id = "Understand language", "Понимать язык"),
+    UserGoalUI(id = "I don't want to tell", "Что то")
 )

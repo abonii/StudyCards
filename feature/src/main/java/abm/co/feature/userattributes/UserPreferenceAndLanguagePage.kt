@@ -255,7 +255,7 @@ private fun ChangeableContent(
                 onClickItem = {
                     AnalyticsManager.sendEvent(
                         name = "user_goal_selected",
-                        params =   bundleOf("id" to it.id)
+                        params = bundleOf("id" to it.id)
                     )
                     event(ChooseUserPreferenceAndLanguageContractEvent.OnNavigateToUserInterests(it))
                 }
