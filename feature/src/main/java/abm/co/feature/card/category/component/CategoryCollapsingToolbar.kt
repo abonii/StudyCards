@@ -80,7 +80,8 @@ fun CategoryCollapsingToolbar(
                         .padding(end = 10.dp, top = 10.dp, bottom = 10.dp)
                         .size(24.dp),
                     painter = painterResource(id = R.drawable.ic_left),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = StudyCardsTheme.colors.opposition
                 )
                 Text(
                     modifier = Modifier

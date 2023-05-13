@@ -7,7 +7,7 @@ import abm.co.domain.base.Failure
 
 fun Failure.toMessageContent(): MessageContent? =
     when (this) {
-        is Failure.FailureAlert -> {
+        is Failure.DefaultAlert -> {
             expectedMessage?.let {
                 MessageContent.AlertDialog.MessageContentTitleRes(
                     titleRes = R.string.InternalErrorAlert_title,
@@ -15,7 +15,7 @@ fun Failure.toMessageContent(): MessageContent? =
                 )
             }
         }
-        is Failure.FailureInternalServer -> {
+        is Failure.FailureAlert -> {
             val messageContent = when (val expectedMessage = expectedMessage) {
                 is ExpectedMessage.Res -> {
                     MessageContent.AlertDialog.MessageContentRes(

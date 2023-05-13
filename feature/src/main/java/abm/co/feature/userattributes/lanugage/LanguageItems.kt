@@ -28,7 +28,9 @@ fun LanguageItems(
             languages.forEach { language ->
                 LanguageItem(
                     language = language,
-                    onClick = onClickItem
+                    onClick = {
+                        onClickItem(language)
+                    }
                 )
             }
         }
