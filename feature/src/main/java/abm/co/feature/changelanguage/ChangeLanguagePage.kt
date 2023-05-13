@@ -169,7 +169,7 @@ private fun SuccessContent(
             contentPadding = PaddingValues(
                 start = 16.dp,
                 end = 16.dp,
-                top = 16.dp
+                top = 16.dp,
             ),
             pageSpacing = 32.dp,
             key = { it }
@@ -198,7 +198,9 @@ private fun SuccessContent(
                     onClickItem(headerKind, it)
                 },
                 modifier = Modifier
+                    .verticalScroll(rememberScrollState())
                     .weight(1f)
+                    .padding(bottom = 16.dp)
             )
         }
     }
@@ -274,7 +276,7 @@ private fun LanguageListContent(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.verticalScroll(rememberScrollState()),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         items.forEach { item ->
