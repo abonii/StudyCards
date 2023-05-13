@@ -282,6 +282,7 @@
     <string name="InternalErrorAlert.close">Close</string>
     <string name="InternalErrorAlert.title">Error</string>
 
+    <string name="Messages.oops">Error!</string>
     <string name="Messages.error">Error!</string>
     <string name="Messages.success">Successfully!</string>
     <string name="Messages.OK">OK</string>

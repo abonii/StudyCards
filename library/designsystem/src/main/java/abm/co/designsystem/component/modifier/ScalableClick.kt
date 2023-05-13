@@ -74,7 +74,7 @@ fun Modifier.scalableClick(
     longClickDelay: Long = 700
 ): Modifier = composed {
     val scope = rememberCoroutineScope()
-    var longClickJob = remember { mutableStateOf<Job?>(null) }
+    val longClickJob = remember { mutableStateOf<Job?>(null) }
 
     pointerInteropFilter {
         when (it.action) {

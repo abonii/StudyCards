@@ -111,6 +111,7 @@
     <string name="Category.Input.title">Category name</string>
     <string name="Category.Input.hint">Enter a category name</string>
     <string name="Category.Button.title">Continue</string>
+    <string name="Category.Message.Error.TextToSpeech.notFound">You don\'t have the language to speech in your device\'s system, download it please</string>
 
     <string name="ChooseOrCreateCategory.Available.title">Your categories</string>
 

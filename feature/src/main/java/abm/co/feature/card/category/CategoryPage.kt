@@ -19,6 +19,7 @@ import abm.co.feature.toolbar.ToolbarState
 import abm.co.feature.toolbar.rememberToolbarState
 import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -43,9 +44,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -212,75 +216,85 @@ private fun CardItem(
     onClickPlay: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier
-            .scalableClick(
-                onClick = onClick,
-                onLongClick = onLongClick
-            )
-            .height(70.dp)
-            .clip(RoundedCornerShape(11.dp))
-            .background(StudyCardsTheme.colors.milky),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
+    Box {
+        val pressed = rememberSaveable { mutableStateOf(false) }
+        val scale = animateFloatAsState(if (pressed.value) 0.95f else 1f)
+        Spacer(
             modifier = Modifier
-                .clip(RoundedCornerShape(11.dp))
-                .background(
-                    when (cardItem.kind) {
-                        CardKindUI.UNDEFINED -> StudyCardsTheme.colors.blueMiddle
-                        CardKindUI.UNKNOWN -> StudyCardsTheme.colors.unknown
-                        CardKindUI.UNCERTAIN -> StudyCardsTheme.colors.uncertain
-                        CardKindUI.KNOWN -> StudyCardsTheme.colors.known
-                    }
+                .scalableClick(
+                    pressed = pressed,
+                    onClick = { onClick.invoke() },
+                    onLongClick = { onLongClick.invoke() }
                 )
-                .width(6.dp)
-                .fillMaxHeight()
+                .matchParentSize()
         )
-        Spacer(modifier = Modifier.width(24.dp))
-        Column(
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .weight(1f)
+        Row(
+            modifier = modifier
+                .scale(scale.value)
+                .height(70.dp)
+                .clip(RoundedCornerShape(11.dp))
+                .background(StudyCardsTheme.colors.milky),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = cardItem.name,
-                color = StudyCardsTheme.colors.textPrimary,
-                style = StudyCardsTheme.typography.weight500Size16LineHeight20,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = cardItem.translation,
-                color = StudyCardsTheme.colors.textSecondary,
-                style = StudyCardsTheme.typography.weight400Size12LineHeight20,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            LinearProgress(
-                progressFloat = cardItem.learnedPercent,
-                contentColor = StudyCardsTheme.colors.blueMiddle,
-                backgroundColor = StudyCardsTheme.colors.silver.copy(alpha = 0.15f),
+            Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(7.dp))
-                    .height(3.dp)
-                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(11.dp))
+                    .background(
+                        when (cardItem.kind) {
+                            CardKindUI.UNDEFINED -> StudyCardsTheme.colors.blueMiddle
+                            CardKindUI.UNKNOWN -> StudyCardsTheme.colors.unknown
+                            CardKindUI.UNCERTAIN -> StudyCardsTheme.colors.uncertain
+                            CardKindUI.KNOWN -> StudyCardsTheme.colors.known
+                        }
+                    )
+                    .width(6.dp)
+                    .fillMaxHeight()
             )
+            Spacer(modifier = Modifier.width(24.dp))
+            Column(
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .weight(1f)
+            ) {
+                Text(
+                    text = cardItem.name,
+                    color = StudyCardsTheme.colors.textPrimary,
+                    style = StudyCardsTheme.typography.weight500Size16LineHeight20,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = cardItem.translation,
+                    color = StudyCardsTheme.colors.textSecondary,
+                    style = StudyCardsTheme.typography.weight400Size12LineHeight20,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                LinearProgress(
+                    progressFloat = cardItem.learnedPercent,
+                    contentColor = StudyCardsTheme.colors.blueMiddle,
+                    backgroundColor = StudyCardsTheme.colors.silver.copy(alpha = 0.15f),
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(7.dp))
+                        .height(3.dp)
+                        .fillMaxWidth()
+                )
+            }
+            Spacer(modifier = Modifier.width(4.dp))
+            Icon(
+                modifier = Modifier
+                    .clickableWithoutRipple(onClick = onClickPlay)
+                    .align(Alignment.CenterVertically)
+                    .padding(start = 10.dp, end = 12.dp, top = 10.dp, bottom = 10.dp)
+                    .size(24.dp),
+                painter = painterResource(id = R.drawable.ic_play),
+                tint = StudyCardsTheme.colors.buttonPrimary,
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.width(12.dp))
         }
-        Spacer(modifier = Modifier.width(4.dp))
-        Icon(
-            modifier = Modifier
-                .clickableWithoutRipple(onClick = onClickPlay)
-                .align(Alignment.CenterVertically)
-                .padding(start = 10.dp, end = 12.dp, top = 10.dp, bottom = 10.dp)
-                .size(24.dp),
-            painter = painterResource(id = R.drawable.ic_play),
-            tint = StudyCardsTheme.colors.buttonPrimary,
-            contentDescription = null
-        )
-        Spacer(modifier = Modifier.width(12.dp))
     }
 }
 

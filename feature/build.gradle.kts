@@ -60,7 +60,8 @@ dependencies {
     api(project(":library:designsystem"))
     implementation(project(":library:permissions"))
     implementation(project(":core"))
-    api(project(":domain"))
+    implementation(project(":domain"))
+    implementation(project(":data"))
     implementation(BillingDependencies.billing)
     DIDependencies.apply {
         implementation(hiltAndroid)
