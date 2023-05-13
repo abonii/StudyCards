@@ -5,12 +5,12 @@ import androidx.annotation.Keep
 
 @Keep
 data class UserDTO(
-    val name: String?,
-    val email: String?,
-    val translateCounts: Long?,
-    val translateCountsUpdateTime: Long?,
-    val goal: UserGoalDTO?,
-    val interests: List<UserInterestDTO>?
+    val name: String? = "",
+    val email: String? = "",
+    val translateCounts: Long? = null,
+    val translateCountsUpdateTime: Long? = null,
+    val goal: UserGoalDTO? = null,
+    val interests: List<UserInterestDTO>? = null
 )
 
 fun UserDTO.toDomain() = User(

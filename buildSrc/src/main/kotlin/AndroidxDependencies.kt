@@ -26,6 +26,6 @@ object AndroidxDependencies {
         "androidx.lifecycle:lifecycle-runtime-compose:${Versions.lifeCycleRuntimeCompose}"
     const val lifeCycleViewModelKtx =
         "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifeCycleViewModelKtx}"
-    const val constraintLayout =
-        "androidx.constraintlayout:constraintlayout:2.1.4"
+    const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.4"
+    const val fragment = "androidx.fragment:fragment-ktx:1.5.7"
 }

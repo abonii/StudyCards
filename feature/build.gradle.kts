@@ -57,7 +57,7 @@ android {
 }
 
 dependencies {
-    api(project(":library:designsystem"))
+    implementation(project(":library:designsystem"))
     implementation(project(":library:permissions"))
     implementation(project(":core"))
     implementation(project(":domain"))

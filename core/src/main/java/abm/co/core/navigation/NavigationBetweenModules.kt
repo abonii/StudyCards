@@ -1,5 +1,6 @@
 package abm.co.core.navigation
 
+import android.app.Activity
 import androidx.navigation.NavController
 
 interface NavigationBetweenModules {
@@ -9,4 +10,5 @@ interface NavigationBetweenModules {
         navController: NavController,
         showAdditionQuiz: Boolean
     )
+    fun navigateFromMainToAuthorization(activity: Activity)
 }

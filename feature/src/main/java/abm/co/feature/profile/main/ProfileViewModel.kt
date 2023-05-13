@@ -38,6 +38,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -359,6 +360,7 @@ class ProfileViewModel @Inject constructor(
             .addOnCompleteListener {
                 viewModelScope.launch {
                     currentUser?.delete()
+                    delay(100) // not needed
                     onFinish()
                 }
             }
@@ -390,6 +392,7 @@ class ProfileViewModel @Inject constructor(
         googleSignInClient.signOut()
             .addOnCompleteListener {
                 viewModelScope.launch {
+                    delay(100) // not needed
                     onFinish()
                 }
             }

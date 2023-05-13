@@ -5,27 +5,21 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class UserInterestUI(
-    val id: Int,
+    val id: String,
     val title: String,
     val isSelected: Boolean = false
 )
 
-fun UserInterest.toUI() = UserInterestUI(
-    id = id,
-    title = title
-)
-
 fun UserInterestUI.toDomain() = UserInterest(
-    id = id,
-    title = title
+    id = id
 )
 
 val defaultUserInterests = listOf( // todo what to do
-    UserInterestUI(id = 0, title = "Шоппинг"),
-    UserInterestUI(id = 1, title = "Кино"),
-    UserInterestUI(id = 2, title = "Мода"),
-    UserInterestUI(id = 3, title = "Игры"),
-    UserInterestUI(id = 4, title = "Путешествия"),
-    UserInterestUI(id = 5, title = "еда"),
-    UserInterestUI(id = 6, title = "Музыка"),
+    UserInterestUI(id = "Shopping", title = "Шоппинг"),
+    UserInterestUI(id = "Movie", title = "Кино"),
+    UserInterestUI(id = "Fashion", title = "Мода"),
+    UserInterestUI(id = "Game", title = "Игры"),
+    UserInterestUI(id = "Traveling", title = "Путешествия"),
+    UserInterestUI(id = "Food", title = "Еда"),
+    UserInterestUI(id = "Music", title = "Музыка"),
 )

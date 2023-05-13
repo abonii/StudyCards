@@ -47,12 +47,12 @@ class MainViewModel @Inject constructor(
                         learning == null || native == null
                     }.firstOrNull() ?: true
                     if (languagesNotStored) {
-                        R.navigation.root_user_preference_and_language_nav_graph
+                        R.id.root_user_preference_and_language_nav_graph
                     } else {
-                        R.navigation.root_main_nav_graph
+                        R.id.root_main_nav_graph
                     }
                 } else {
-                    R.navigation.root_authorization_nav_graph
+                    R.id.root_authorization_nav_graph
                 }
                 _startDestination.value = startDestination
                 delay(50) // status bar height cannot be calculated immediately

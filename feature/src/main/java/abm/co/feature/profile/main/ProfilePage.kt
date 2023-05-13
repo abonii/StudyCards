@@ -66,6 +66,7 @@ import coil.compose.AsyncImage
 @Composable
 fun ProfilePage(
     navigateToStorePage: () -> Unit,
+    navigateToAuthorization: () -> Unit,
     navigateToChangePasswordPage: () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
@@ -88,12 +89,7 @@ fun ProfilePage(
             }
 
             ProfileContractChannel.NavigateToAuthorization -> {
-                activity?.let {
-                    it.startActivity(
-                        Intent(it, it::class.java)
-                    )
-                    it.finish()
-                }
+                navigateToAuthorization()
             }
 
             ProfileContractChannel.NavigateToStore -> {

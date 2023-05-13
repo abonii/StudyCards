@@ -1,5 +1,6 @@
 package abm.co.feature.profile.main
 
+import abm.co.core.navigation.NavigationBetweenModules
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
 import abm.co.designsystem.extensions.addPaddingOnShownKeyboard
@@ -9,6 +10,7 @@ import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileFragment : BaseFragment() {
@@ -18,6 +20,9 @@ class ProfileFragment : BaseFragment() {
     }
 
     override val rootViewId: Int get() = Companion.rootViewId
+
+    @Inject
+    lateinit var navigationBetweenModules: NavigationBetweenModules
 
     @Composable
     override fun InitUI(messageContent: messageContent) {
@@ -32,6 +37,9 @@ class ProfileFragment : BaseFragment() {
                 findNavController().navigateSafe(
                     ProfileFragmentDirections.toChangePasswordDestination()
                 )
+            },
+            navigateToAuthorization = {
+                navigationBetweenModules.navigateFromMainToAuthorization(requireActivity())
             }
         )
     }

@@ -10,13 +10,7 @@ data class UserGoalUI(
 )
 
 fun UserGoalUI.toDomain() = UserGoal(
-    id = id,
-    title = title
-)
-
-fun UserGoal.toUI() = UserGoalUI(
-    id = id,
-    title = title
+    id = id
 )
 
 val defaultUserGoals = listOf( // todo what to do

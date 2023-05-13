@@ -7,7 +7,6 @@ import abm.co.data.model.DatabaseRef.CATEGORY_REF
 import abm.co.data.model.DatabaseRef.CONFIG_REF
 import abm.co.data.model.DatabaseRef.EXPLORE_REF
 import abm.co.data.model.DatabaseRef.ROOT_REF
-import abm.co.data.model.DatabaseRef.USER_ID
 import abm.co.data.model.DatabaseRef.USER_PROPERTIES_REF
 import abm.co.data.model.DatabaseRef.USER_REF
 import abm.co.data.model.card.CardDTO
@@ -47,7 +46,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 
 @ActivityRetainedScoped
 class FirebaseRepositoryImpl @Inject constructor(

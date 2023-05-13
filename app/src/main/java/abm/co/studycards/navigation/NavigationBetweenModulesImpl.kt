@@ -3,6 +3,9 @@ package abm.co.studycards.navigation
 import abm.co.core.navigation.NavigationBetweenModules
 import abm.co.designsystem.navigation.extension.navigateSafe
 import abm.co.studycards.R
+import abm.co.studycards.ui.MainActivity
+import android.app.Activity
+import android.content.Intent
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -46,5 +49,10 @@ class NavigationBetweenModulesImpl @Inject constructor() : NavigationBetweenModu
             .setPopUpTo(R.id.root_user_preference_and_language_nav_graph, true)
             .build()
         navController.navigateSafe(R.id.root_main_nav_graph, null, navOptions)
+    }
+
+    override fun navigateFromMainToAuthorization(activity: Activity) {
+        val intent = Intent(activity, MainActivity::class.java)
+        activity.startActivity(intent)
     }
 }

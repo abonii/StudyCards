@@ -54,6 +54,7 @@ dependencies {
         api(lifeCycleRuntimeCompose)
         api(lifeCycleViewModelKtx)
         api(constraintLayout)
+        api(fragment)
     }
     OtherDependencies.apply {
         api(ssp)
