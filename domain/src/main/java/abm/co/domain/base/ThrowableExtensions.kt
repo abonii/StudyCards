@@ -12,12 +12,12 @@ import kotlinx.coroutines.CancellationException
  */
 fun Throwable.mapToFailure(): Failure {
     return when (this) {
-        is InternalServerException -> Failure.FailureInternalServer(expectedMessage)
+        is InternalServerException -> Failure.FailureAlert(expectedMessage)
         is ClientSideException -> Failure.FailureSnackbar(expectedMessage)
         is NetworkException -> Failure.FailureNetwork
         is SocketTimeoutException -> Failure.FailureTimeout
         is CancellationException -> Failure.Ignorable
         is FirebaseException -> Failure.FailureSnackbar(expectedMessage)
-        else -> Failure.FailureAlert(this.message)
+        else -> Failure.DefaultAlert(this.message)
     }
 }

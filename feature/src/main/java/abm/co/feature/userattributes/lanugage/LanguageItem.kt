@@ -26,15 +26,17 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun LanguageItem(
     language: LanguageUI,
-    onClick: (LanguageUI) -> Unit,
-    modifier: Modifier = Modifier
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = Color(0xFF_387CEE),
+    contentColor: Color = Color.White,
 ) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFF_387CEE))
+            .background(backgroundColor)
             .fillMaxWidth()
-            .clickable { onClick(language) }
+            .clickable(onClick = onClick)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 13.dp),
@@ -49,7 +51,7 @@ fun LanguageItem(
             Text(
                 text = stringResource(id = language.languageNameResCode),
                 style = StudyCardsTheme.typography.weight400Size16LineHeight20,
-                color = Color.White,
+                color = contentColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

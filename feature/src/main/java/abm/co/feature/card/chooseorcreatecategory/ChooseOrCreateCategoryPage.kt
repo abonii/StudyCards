@@ -169,13 +169,15 @@ private fun ScrollableContent(
         modifier = modifier,
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
-        item {
-            Text(
-                modifier = Modifier.padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
-                text = stringResource(id = R.string.ChooseOrCreateCategory_Available_title),
-                style = StudyCardsTheme.typography.weight600Size16LineHeight18,
-                color = StudyCardsTheme.colors.textPrimary
-            )
+        if(items.isNotEmpty()) {
+            item {
+                Text(
+                    modifier = Modifier.padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                    text = stringResource(id = R.string.ChooseOrCreateCategory_Available_title),
+                    style = StudyCardsTheme.typography.weight600Size16LineHeight18,
+                    color = StudyCardsTheme.colors.textPrimary
+                )
+            }
         }
         items(
             items = items,
@@ -246,7 +248,8 @@ private fun Toolbar(
                     .padding(10.dp)
                     .size(24.dp),
                 painter = painterResource(id = R.drawable.ic_left),
-                contentDescription = null
+                contentDescription = null,
+                tint = StudyCardsTheme.colors.opposition
             )
             Text(
                 text = stringResource(id = R.string.Category_Toolbar_title),

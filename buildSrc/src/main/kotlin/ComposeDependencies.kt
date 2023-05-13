@@ -29,7 +29,7 @@ object ComposeDependencies {
     const val composeViewModel =
         "androidx.lifecycle:lifecycle-viewmodel-compose:${Version.composeViewModel}"
     const val pagingCompose = "androidx.paging:paging-compose${Version.pagingCompose}"
-    const val pager = "com.google.accompanist:accompanist-pager:0.24.1-alpha"
+    const val pager = "com.google.accompanist:accompanist-pager:0.30.1"
     const val flowlayout = "com.google.accompanist:accompanist-flowlayout:${Version.accompanist}"
     const val navigation =
         "com.google.accompanist:accompanist-navigation-animation:${Version.accompanist}"

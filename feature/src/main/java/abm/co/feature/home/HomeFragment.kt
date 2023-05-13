@@ -27,7 +27,9 @@ class HomeFragment : BaseFragment() {
                 messageContent(it)
             },
             onNavigateToLanguageSelectPage = {
-                // TODO navigation
+               findNavController().navigateSafe(
+                   HomeFragmentDirections.toChangeLanguageDestination()
+               )
             },
             openDrawer = {
                 messageContent(

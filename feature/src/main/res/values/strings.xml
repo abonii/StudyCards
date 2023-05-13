@@ -192,6 +192,10 @@
     <string name="ChangePassword.Message.Error.empty">Verify password cannot be empty</string>
     <string name="ChangePassword.Message.Error.length">Password length should be more than 5</string>
 
+    <string name="ChangeLanguage.Toolbar.title">Languages</string>
+    <string name="ChangeLanguage.NativeLanguage.title">Native language</string>
+    <string name="ChangeLanguage.LearningLanguage.title">Learning language</string>
+
     <plurals name="cards">
         <item quantity="one"> %d card</item>
         <item quantity="zero"> %d card</item>

@@ -12,6 +12,13 @@
         android:name="abm.co.feature.home.HomeFragment">
 
         <action
+            android:id="@+id/to_change_language_destination"
+            app:destination="@id/change_language_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right" />
+        <action
             android:id="@+id/to_category_destination"
             app:destination="@id/category_destination"
             app:enterAnim="@anim/enter_from_right"
@@ -58,4 +65,8 @@
                 app:argType="abm.co.feature.card.model.CategoryUI" />
         </action>
     </fragment>
+
+    <fragment
+        android:id="@+id/change_language_destination"
+        android:name="abm.co.feature.changelanguage.ChangeLanguageFragment" />
 </navigation>
