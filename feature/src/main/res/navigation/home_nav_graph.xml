@@ -64,9 +64,25 @@
                 android:name="category"
                 app:argType="abm.co.feature.card.model.CategoryUI" />
         </action>
+        <action
+            android:id="@+id/to_edit_category_destination"
+            app:destination="@id/edit_category_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right" />
     </fragment>
 
     <fragment
         android:id="@+id/change_language_destination"
         android:name="abm.co.feature.changelanguage.ChangeLanguageFragment" />
+
+    <fragment
+        android:id="@+id/edit_category_destination"
+        android:name="abm.co.feature.card.editcategory.EditCategoryFragment" >
+
+        <argument
+            android:name="category"
+            app:argType="abm.co.feature.card.model.CategoryUI" />
+    </fragment>
 </navigation>

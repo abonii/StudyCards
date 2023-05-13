@@ -1,7 +1,7 @@
 package abm.co.domain.model
 
 data class Category(
-    val name: String,
+    val title: String,
     val cardsCount: Int,
     val bookmarked: Boolean,
     val creatorName: String?,
@@ -11,5 +11,6 @@ data class Category(
 ) {
     companion object {
         const val bookmarked = "bookmarked"
+        const val title = "title"
     }
 }

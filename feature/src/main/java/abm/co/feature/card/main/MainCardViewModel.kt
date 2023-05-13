@@ -133,8 +133,8 @@ class MainCardViewModel @Inject constructor(
 
     private fun updateBookmark(categoryID: String, bookmarked: Boolean) {
         viewModelScope.launch {
-            serverRepository.updateCategoryBookmark(
-                categoryID = categoryID,
+            serverRepository.updateUserCategory(
+                id = categoryID,
                 bookmarked = bookmarked
             )
         }

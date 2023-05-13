@@ -12,6 +12,7 @@ import abm.co.feature.card.model.toUI
 import abm.co.feature.userattributes.lanugage.LanguageUI
 import abm.co.feature.userattributes.lanugage.toUI
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -144,8 +145,8 @@ class HomeViewModel @Inject constructor(
 
     private fun updateBookmark(categoryID: String, bookmarked: Boolean) {
         viewModelScope.launch {
-            serverRepository.updateCategoryBookmark(
-                categoryID = categoryID,
+            serverRepository.updateUserCategory(
+                id = categoryID,
                 bookmarked = bookmarked
             )
         }
@@ -168,20 +169,25 @@ class HomeViewModel @Inject constructor(
     }
 }
 
-@Immutable
+@Stable
 sealed interface HomeContract {
 
+    @Immutable
     data class ToolbarState(
         val userName: String? = null,
         val learningLanguage: LanguageUI? = null,
         val nativeLanguage: LanguageUI? = null
     ) : HomeContract
 
+    @Stable
     sealed interface ScreenState : HomeContract {
+        @Immutable
         object Loading : ScreenState
 
+        @Immutable
         object Empty : ScreenState
 
+        @Immutable
         data class Success(
             val setsOfCards: List<CategoryUI>,
             val removingCategory: CategoryUI? = null

@@ -213,7 +213,7 @@ private fun CategoryItem(
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),
-            text = item.name,
+            text = item.title,
             style = StudyCardsTheme.typography.weight500Size16LineHeight20,
             color = StudyCardsTheme.colors.textPrimary
         )

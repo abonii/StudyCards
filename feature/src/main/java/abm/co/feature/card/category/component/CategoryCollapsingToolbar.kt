@@ -41,10 +41,12 @@ fun CategoryCollapsingToolbar(
     title: String,
     subtitle: String,
     progress: Float,
-    @DrawableRes endIconRes: Int,
+    @DrawableRes addCardIconRes: Int,
+    @DrawableRes changeCategoryIconRes: Int,
     onBack: () -> Unit,
     onChangeTitle: () -> Unit,
-    onClickEndIcon: () -> Unit,
+    onClickAddCardIcon: () -> Unit,
+    onClickChangeCategoryIcon: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val backgroundColor = StudyCardsTheme.colors.backgroundPrimary
@@ -114,12 +116,20 @@ fun CategoryCollapsingToolbar(
                     textAlign = TextAlign.Center
                 )
                 Image(
-                    painter = painterResource(id = endIconRes),
+                    painter = painterResource(id = changeCategoryIconRes),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(start = drawerEndPadding)
                         .size(iconHeight)
-                        .clickableWithoutRipple(onClick = onClickEndIcon)
+                        .clickableWithoutRipple(onClick = onClickChangeCategoryIcon)
+                )
+                Image(
+                    painter = painterResource(id = addCardIconRes),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(start = drawerEndPadding)
+                        .size(iconHeight)
+                        .clickableWithoutRipple(onClick = onClickAddCardIcon)
                 )
             }
         }
@@ -136,7 +146,7 @@ private fun CollapsingToolbarLayout(
         modifier = modifier,
         content = content
     ) { measures, constraints ->
-        check(measures.size == 4)
+        check(measures.size == 5)
 
         val placeables = measures.map {
             it.measure(constraints)
@@ -148,7 +158,8 @@ private fun CollapsingToolbarLayout(
             val back = placeables[0]
             val title = placeables[1]
             val subtitle = placeables[2]
-            val endIcon = placeables[3]
+            val changeCategoryIcon = placeables[3]
+            val addCardIcon = placeables[4]
             back.place(
                 x = 0,
                 y = 0
@@ -169,8 +180,12 @@ private fun CollapsingToolbarLayout(
                     fraction = progress
                 )
             )
-            endIcon.placeRelative(
-                x = constraints.maxWidth - endIcon.width,
+            changeCategoryIcon.placeRelative(
+                x = constraints.maxWidth - addCardIcon.width - changeCategoryIcon.width - 10.dp.roundToPx(),
+                y = back.height / 2 - title.height / 2
+            )
+            addCardIcon.placeRelative(
+                x = constraints.maxWidth - addCardIcon.width,
                 y = back.height / 2 - title.height / 2
             )
         }

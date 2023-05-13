@@ -92,7 +92,7 @@ class ChooseOrCreateCategoryViewModel @Inject constructor(
     private fun onContinueButtonClicked() {
         viewModelScope.launch {
             val category = CategoryUI(
-                name = state.value.categoryName,
+                title = state.value.categoryName,
                 cardsCount = 0,
                 bookmarked = false,
                 creatorName = null,

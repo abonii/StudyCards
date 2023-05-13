@@ -33,7 +33,7 @@ class SwipeGameViewModel @Inject constructor(
     private val cardList = mutableStateListOf<CardUI>()
 
     private val mutableState: MutableStateFlow<SwipeGameContractState> =
-        MutableStateFlow(SwipeGameContractState.Loading(category?.name ?: ""))
+        MutableStateFlow(SwipeGameContractState.Loading(category?.title ?: ""))
     val state: StateFlow<SwipeGameContractState> = mutableState.asStateFlow()
 
     init {
@@ -76,7 +76,7 @@ class SwipeGameViewModel @Inject constructor(
                 }
             )
             mutableState.value = SwipeGameContractState.Success(
-                _categoryName = category?.name ?: "",
+                _categoryName = category?.title ?: "",
                 cards = cardList
             )
         }

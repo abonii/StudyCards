@@ -215,7 +215,7 @@ private fun SuccessScreen(
             screenState.setsOfCards.forEach { category ->
                 key(category.id) {
                     CategoryItem(
-                        title = category.name,
+                        title = category.title,
                         subtitle = pluralString(
                             id = R.plurals.cards,
                             category.cardsCount.takeIf { it > 0 } ?: 0
@@ -232,7 +232,7 @@ private fun SuccessScreen(
         }
         screenState.removingCategory?.let {
             ConfirmAlertDialog(
-                title = "Do you really want to delete ${it.name}?",
+                title = "Do you really want to delete ${it.title}?",
                 onConfirm = {
                     onConfirmRemoveCategory(it)
                 },

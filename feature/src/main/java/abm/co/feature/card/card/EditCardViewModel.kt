@@ -42,7 +42,7 @@ class EditCardViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val card: CardUI? = savedStateHandle["card"]
-    private val category: CategoryUI? = savedStateHandle["category"]
+    private var category: CategoryUI? = savedStateHandle["category"]
     private val showProgress: Boolean = savedStateHandle["show_progress"] ?: false
 
     private val _channel = Channel<EditCardContractChannel>()
@@ -51,7 +51,7 @@ class EditCardViewModel @Inject constructor(
     private val _state = MutableStateFlow(
         EditCardContractState(
             progress = if (showProgress) 0.6f else null,
-            categoryName = category?.name,
+            categoryName = category?.title,
             nativeText = card?.name ?: "",
             learningText = card?.translation ?: "",
             example = card?.example ?: "",
@@ -206,6 +206,13 @@ class EditCardViewModel @Inject constructor(
                         _channel.send(EditCardContractChannel.NavigateBack)
                     }
                 }
+        }
+    }
+
+    fun onSelectedCategory(category: CategoryUI){
+        this.category = category
+        _state.update {
+            it.copy(categoryName = category.title)
         }
     }
 

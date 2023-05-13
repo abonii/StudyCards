@@ -1,10 +1,8 @@
-package abm.co.feature.authorization.forgotpassword
+package abm.co.feature.card.editcategory
 
 import abm.co.designsystem.component.button.ButtonSize
-import abm.co.designsystem.component.button.ButtonState
 import abm.co.designsystem.component.button.PrimaryButton
 import abm.co.designsystem.component.modifier.Modifier
-import abm.co.designsystem.component.modifier.baseBackground
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.textfield.TextFieldWithLabel
@@ -12,6 +10,7 @@ import abm.co.designsystem.extensions.collectInLaunchedEffect
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
+import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.utils.AnalyticsManager
 import abm.co.feature.utils.StudyCardsConstants
 import androidx.compose.foundation.background
@@ -23,7 +22,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -40,72 +42,91 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun ForgotPasswordPage(
-    navigateBack: () -> Unit,
+fun EditCategoryPage(
+    navigateBack: (CategoryUI?) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
-    viewModel: ForgotPasswordViewModel = hiltViewModel()
+    viewModel: EditCategoryViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
-        AnalyticsManager.sendEvent("forgot_password_page_viewed")
+        AnalyticsManager.sendEvent("edit_category_page_viewed")
     }
-    val state by viewModel.state.collectAsState()
     viewModel.channel.collectInLaunchedEffect {
         when (it) {
-            ForgotPasswordChannel.OnBack -> navigateBack()
-            is ForgotPasswordChannel.ShowMessage -> showMessage(it.messageContent)
+            is EditCategoryContractChannel.NavigateBack -> {
+                navigateBack(it.value)
+            }
+
+            is EditCategoryContractChannel.ShowMessage -> showMessage(it.messageContent)
         }
     }
+    val uiState by viewModel.state.collectAsState()
     SetStatusBarColor()
-    MainScreen(
-        state = state,
+    Screen(
+        uiState = uiState,
         onEvent = viewModel::onEvent
     )
 }
 
 @Composable
-private fun MainScreen(
-    state: ForgotPasswordState,
-    onEvent: (ForgotPasswordContractEvent) -> Unit,
-    modifier: Modifier = Modifier
+private fun Screen(
+    uiState: EditCategoryContractState,
+    onEvent: (EditCategoryContractEvent) -> Unit
 ) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .background(StudyCardsTheme.colors.backgroundPrimary)
             .fillMaxSize()
-            .systemBarsPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .statusBarsPadding()
     ) {
         Toolbar(
             onBack = {
-                onEvent(ForgotPasswordContractEvent.OnBack)
+                onEvent(EditCategoryContractEvent.OnBack)
             }
         )
-        TextFieldWithLabel(
-            label = stringResource(id = R.string.ForgotPassword_EmailField_title),
-            hint = stringResource(id = R.string.ForgotPassword_EmailField_hint),
-            value = state.password,
-            onValueChange = {
-                onEvent(ForgotPasswordContractEvent.OnEnterPassword(it))
+        ScrollableContent(
+            title = uiState.title,
+            onEnterTitle = {
+                onEvent(EditCategoryContractEvent.OnEnterTitle(it))
             },
             modifier = Modifier
-                .fillMaxWidth()
-                .height(68.dp)
-                .padding(horizontal = 16.dp)
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
         )
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         PrimaryButton(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
+                .padding(bottom = 16.dp)
                 .fillMaxWidth(),
-            title = stringResource(id = R.string.ForgotPassword_PrimaryButton_title),
+            title = stringResource(id = R.string.EditCategory_SaveButton_title),
             components = ButtonSize(),
-            buttonState = if (state.isPrimaryButtonLoading) ButtonState.Loading else ButtonState.Normal,
             onClick = {
-                onEvent(ForgotPasswordContractEvent.OnPrimaryButtonClicked)
+                onEvent(EditCategoryContractEvent.OnClickSave)
             }
         )
     }
 }
+
+@Composable
+private fun ScrollableContent(
+    title: String,
+    onEnterTitle: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        TextFieldWithLabel(
+            label = stringResource(id = R.string.EditCategory_TitleField_title),
+            hint = stringResource(id = R.string.EditCategory_TitleField_hint),
+            value = title,
+            onValueChange = onEnterTitle,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .height(62.dp)
+                .wrapContentWidth()
+        )
+    }
+}
+
 
 @Composable
 private fun Toolbar(
@@ -130,9 +151,9 @@ private fun Toolbar(
         )
         Text(
             modifier = Modifier.align(Alignment.Center),
-            text = stringResource(id = R.string.ForgotPassword_Toolbar_title),
+            text = stringResource(id = R.string.EditCategory_Toolbar_title),
             style = StudyCardsTheme.typography.weight600Size14LineHeight18,
-            color = StudyCardsTheme.colors.buttonPrimary,
+            color = StudyCardsTheme.colors.textPrimary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             textAlign = TextAlign.Center

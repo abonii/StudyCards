@@ -197,6 +197,11 @@
     <string name="ChangeLanguage.NativeLanguage.title">Native language</string>
     <string name="ChangeLanguage.LearningLanguage.title">Learning language</string>
 
+    <string name="EditCategory.Toolbar.title">Edit category</string>
+    <string name="EditCategory.TitleField.title">Category title</string>
+    <string name="EditCategory.TitleField.hint">Enter the category title</string>
+    <string name="EditCategory.SaveButton.title">Save</string>
+
     <plurals name="cards">
         <item quantity="one"> %d card</item>
         <item quantity="zero"> %d card</item>

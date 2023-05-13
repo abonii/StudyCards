@@ -221,15 +221,16 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateCategoryBookmark(
-        categoryID: String,
-        bookmarked: Boolean
+    override suspend fun updateUserCategory(
+        id: String,
+        bookmarked: Boolean?,
+        name: String?
     ): Either<Failure, Unit> {
         return safeCall {
-            userCategoryWithLanguagesRef.firstOrNull()
-                ?.child(categoryID)
-                ?.child(Category.bookmarked)
-                ?.setValue(bookmarked)
+            val categoryRef = userCategoryWithLanguagesRef.firstOrNull()
+                ?.child(id) ?: return@safeCall
+            name?.let { categoryRef.child(Category.title).setValue(it) }
+            bookmarked?.let { categoryRef.child(Category.bookmarked).setValue(it) }
         }
     }
 

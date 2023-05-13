@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 @Immutable
 @Parcelize
 data class CategoryUI(
-    val name: String,
+    val title: String,
     val cardsCount: Int,
     val bookmarked: Boolean,
     val creatorName: String?,
@@ -19,7 +19,7 @@ data class CategoryUI(
 ) : Parcelable
 
 fun Category.toUI(published: Boolean? = null) = CategoryUI(
-    name = name,
+    title = title,
     cardsCount = cardsCount,
     bookmarked = bookmarked,
     creatorName = creatorName,
@@ -30,7 +30,7 @@ fun Category.toUI(published: Boolean? = null) = CategoryUI(
 )
 
 fun CategoryUI.toDomain() = Category(
-    name = name,
+    title = title,
     cardsCount = cardsCount,
     bookmarked = bookmarked,
     creatorName = creatorName,

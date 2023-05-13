@@ -13,7 +13,6 @@
             app:argType="abm.co.feature.card.model.CardUI"
             app:nullable="true"
             android:defaultValue="@null" />
-
         <argument
             android:name="show_progress"
             app:argType="boolean"
@@ -21,5 +20,24 @@
         <argument
             android:name="category"
             app:argType="abm.co.feature.card.model.CategoryUI" />
+
+        <action
+            android:id="@+id/to_select_category_destination"
+            app:destination="@id/select_category_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/select_category_destination"
+        android:name="abm.co.feature.card.selectcategory.SelectCategoryFragment" >
+
+        <argument
+            android:name="category_id"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 </navigation>

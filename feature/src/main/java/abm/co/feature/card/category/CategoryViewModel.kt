@@ -37,7 +37,7 @@ class CategoryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val category: CategoryUI = savedStateHandle["category"]
+    private var category: CategoryUI = savedStateHandle["category"]
         ?: throw RuntimeException("cannot be empty CATEGORY argument")
 
     private val _channel = Channel<CategoryContractChannel>()
@@ -50,7 +50,7 @@ class CategoryViewModel @Inject constructor(
 
     private val _toolbarState = MutableStateFlow(
         CategoryContract.ToolbarState(
-            categoryName = category.name,
+            categoryTitle = category.title,
             descriptionRes = R.string.Category_Toolbar_subtitle
         )
     )
@@ -70,7 +70,7 @@ class CategoryViewModel @Inject constructor(
 
             CategoryContractEvent.OnClickNewCard -> {
                 viewModelScope.launch {
-                    _channel.trySend(
+                    _channel.send(
                         CategoryContractChannel.NavigateToCard(
                             cardItem = null,
                             category = category
@@ -98,9 +98,8 @@ class CategoryViewModel @Inject constructor(
 
             CategoryContractEvent.OnClickEditCategory -> {
                 viewModelScope.launch {
-                    _channel.trySend(
-                        CategoryContractChannel.NavigateToCard(
-                            cardItem = null,
+                    _channel.send(
+                        CategoryContractChannel.NavigateToChangeCategory(
                             category = category
                         )
                     )
@@ -175,9 +174,13 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    override fun onCleared() {
-        textToSpeechManager.clear()
-        super.onCleared()
+    fun onSelectedCategory(category: CategoryUI) {
+        this.category = category
+        _toolbarState.update { oldState ->
+            oldState.copy(
+                categoryTitle = category.title
+            )
+        }
     }
 
     private fun Failure.sendException() {
@@ -187,6 +190,11 @@ class CategoryViewModel @Inject constructor(
             }
         }
     }
+
+    override fun onCleared() {
+        textToSpeechManager.clear()
+        super.onCleared()
+    }
 }
 
 @Stable
@@ -194,12 +202,12 @@ sealed interface CategoryContract {
 
     @Immutable
     data class ToolbarState(
-        val categoryName: String,
+        val categoryTitle: String,
         @StringRes val descriptionRes: Int
-    ) : CategoryContract
+    )
 
     @Stable
-    sealed interface ScreenState : CategoryContract {
+    sealed interface ScreenState {
         @Immutable
         object Loading : ScreenState
 
@@ -239,12 +247,14 @@ sealed interface CategoryContractChannel {
 
     object NavigateBack : CategoryContractChannel
 
+    data class NavigateToChangeCategory(
+        val category: CategoryUI
+    ): CategoryContractChannel
+
     data class NavigateToCard(
         val cardItem: CardUI?,
         val category: CategoryUI
     ) : CategoryContractChannel
-
-    object NavigateToChooseOrCreateCategory : CategoryContractChannel
 
     data class ShowMessage(val messageContent: MessageContent) : CategoryContractChannel
 }

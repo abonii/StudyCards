@@ -20,13 +20,15 @@ interface ServerRepository {
     suspend fun getUserCards(categoryID: String): Flow<Either<Failure, List<Card>>>
     suspend fun removeUserCategory(categoryID: String): Either<Failure, Unit>
     suspend fun removeUserCard(categoryID: String, cardID: String): Either<Failure, Unit>
+    suspend fun updateUserCategory(
+        id: String,
+        bookmarked: Boolean? = null,
+        name: String? = null
+    ): Either<Failure, Unit>
     suspend fun removeUserDatabase()
 
     val getCategories: Flow<Either<Failure, List<Category>>>
     suspend fun removeCategory(categoryID: String): Either<Failure, Unit>
-    suspend fun updateCategoryBookmark(
-        categoryID: String, bookmarked: Boolean
-    ): Either<Failure, Unit>
 
     suspend fun copyExploreCategoryToUserCollection(categoryID: String): Either<Failure, Unit>
     suspend fun copyUserCategoryToExploreCollection(categoryID: String): Either<Failure, Unit>

@@ -69,6 +69,7 @@ import kotlinx.coroutines.flow.debounce
 @Composable
 fun EditCardPage(
     onBack: () -> Unit,
+    onClickChangeCategory: (categoryID: String?) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: EditCardViewModel = hiltViewModel(),
 ) {
@@ -80,7 +81,7 @@ fun EditCardPage(
     viewModel.channel.collectInLaunchedEffect {
         when (it) {
             is EditCardContractChannel.ChangeCategory -> {
-                // todo not done yet
+                onClickChangeCategory(it.categoryId)
             }
 
             EditCardContractChannel.NavigateBack -> onBack()

@@ -13,6 +13,7 @@ import abm.co.feature.R
 import abm.co.feature.authorization.common.TrailingIcon
 import abm.co.feature.utils.AnalyticsManager
 import abm.co.feature.utils.StudyCardsConstants
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -80,7 +81,7 @@ private fun Screen(
 ) {
     Column(
         modifier = Modifier
-            .baseBackground()
+            .background(StudyCardsTheme.colors.backgroundPrimary)
             .fillMaxSize()
             .statusBarsPadding()
     ) {

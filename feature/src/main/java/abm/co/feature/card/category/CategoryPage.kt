@@ -65,8 +65,8 @@ private val MaxToolbarHeight = 120.dp
 @Composable
 fun CategoryPage(
     onBack: () -> Unit,
-    navigateToChooseOrCreateCategory: () -> Unit,
     navigateToCard: (CardUI?, CategoryUI) -> Unit,
+    navigateToChangeCategory: (CategoryUI) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: CategoryViewModel = hiltViewModel(),
 ) {
@@ -77,8 +77,8 @@ fun CategoryPage(
         when (it) {
             CategoryContractChannel.NavigateBack -> onBack()
             is CategoryContractChannel.NavigateToCard -> navigateToCard(it.cardItem, it.category)
-            CategoryContractChannel.NavigateToChooseOrCreateCategory -> navigateToChooseOrCreateCategory()
             is CategoryContractChannel.ShowMessage -> showMessage(it.messageContent)
+            is CategoryContractChannel.NavigateToChangeCategory -> navigateToChangeCategory(it.category)
         }
     }
     val screenState by viewModel.state.collectAsState()
@@ -148,13 +148,17 @@ private fun CategoryScreen(
             }
         }
         CategoryCollapsingToolbar(
-            title = toolbarState.categoryName,
+            title = toolbarState.categoryTitle,
             subtitle = stringResource(id = toolbarState.descriptionRes),
             progress = toolbarScrollable.progress,
-            onClickEndIcon = {
+            onClickAddCardIcon = {
+                onEvent(CategoryContractEvent.OnClickNewCard)
+            },
+            onClickChangeCategoryIcon = {
                 onEvent(CategoryContractEvent.OnClickEditCategory)
             },
-            endIconRes = R.drawable.ic_add,
+            addCardIconRes = R.drawable.ic_add,
+            changeCategoryIconRes = R.drawable.ic_edit,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(with(LocalDensity.current) { toolbarScrollable.height.toDp() })

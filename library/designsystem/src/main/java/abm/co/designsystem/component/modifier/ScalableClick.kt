@@ -41,7 +41,6 @@ fun Modifier.scalableClick(
                 onLongClick?.let {
                     longClickJob.value = scope.launch {
                         delay(longClickDelay)
-                        it.invoke()
                     }
                 }
             }
@@ -49,7 +48,9 @@ fun Modifier.scalableClick(
             MotionEvent.ACTION_UP -> {
                 pressed.value = false
                 longClickJob.value?.let {
-                    if (it.isActive) {
+                    if (it.isCompleted) {
+                        onLongClick?.invoke()
+                    } else {
                         onClick()
                     }
                 } ?: onClick()
@@ -76,23 +77,26 @@ fun Modifier.scalableClick(
     val scope = rememberCoroutineScope()
     val longClickJob = remember { mutableStateOf<Job?>(null) }
 
-    pointerInteropFilter {
-        when (it.action) {
+    pointerInteropFilter { event ->
+        when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 pressed.value = true
                 onLongClick?.let {
                     longClickJob.value = scope.launch {
                         delay(longClickDelay)
-                        it.invoke()
                     }
                 }
             }
 
             MotionEvent.ACTION_UP -> {
                 pressed.value = false
-                if (longClickJob.value?.isActive == true) {
-                    onClick()
-                }
+                longClickJob.value?.let {
+                    if (it.isCompleted) {
+                        onLongClick?.invoke()
+                    } else {
+                        onClick()
+                    }
+                } ?: onClick()
             }
 
             MotionEvent.ACTION_CANCEL -> {

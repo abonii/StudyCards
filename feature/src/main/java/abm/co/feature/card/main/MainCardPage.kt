@@ -187,7 +187,7 @@ private fun ScrollableContent(
                     }
                 ) { item ->
                     CategoryItem(
-                        title = item.name,
+                        title = item.title,
                         isBookmarked = item.bookmarked,
                         subtitle = pluralString(
                             id = R.plurals.cards,
@@ -248,7 +248,7 @@ private fun OurSet(
                             id = R.plurals.cards,
                             item.cardsCount.takeIf { it > 0 } ?: 0
                         ),
-                        name = item.name,
+                        name = item.title,
                         onClick = {
                             onClickItem(item)
                         },
@@ -422,7 +422,7 @@ private fun DialogContent(
                 Spacer(modifier = Modifier.height(24.dp))
                 CategoryItem(
                     isBookmarked = shareCategory.bookmarked,
-                    title = shareCategory.name,
+                    title = shareCategory.title,
                     subtitle = pluralString(
                         id = R.plurals.cards,
                         shareCategory.cardsCount.takeIf { it > 0 } ?: 0
