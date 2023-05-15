@@ -4,7 +4,6 @@ import abm.co.designsystem.component.button.IconButton
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.systembar.SetStatusBarColor
-import abm.co.designsystem.component.widget.LoadingView
 import abm.co.designsystem.extensions.collectInLaunchedEffect
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
@@ -13,7 +12,6 @@ import abm.co.feature.card.model.OxfordEntryUI
 import abm.co.feature.card.model.OxfordTranslationResponseUI
 import abm.co.feature.utils.AnalyticsManager
 import abm.co.feature.utils.StudyCardsConstants
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -116,31 +114,19 @@ private fun Screen(
                 onEvent(WordInfoContractEvent.OnBack)
             }
         )
-        Crossfade(targetState = uiState) { state ->
-            when (state) {
-                WordInfoContractState.Loading -> {
-                    LoadingScreen(
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-
-                is WordInfoContractState.Success -> {
-                    Success(
-                        oxfordResponse = state.oxfordResponse,
-                        checkedItemsID = checkedItemsID,
-                        modifier = Modifier
-                            .weight(1f)
-                            .verticalScroll(scrollState),
-                        onClickEntry = {
-                            onEvent(WordInfoContractEvent.OnClickEntry(it))
-                        },
-                        onClickPlayText = {
-                            onEvent(WordInfoContractEvent.OnClickPlayText(it))
-                        }
-                    )
-                }
+        Success(
+            oxfordResponse = uiState.oxfordResponse,
+            checkedItemsID = checkedItemsID,
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(scrollState),
+            onClickEntry = {
+                onEvent(WordInfoContractEvent.OnClickEntry(it))
+            },
+            onClickPlayText = {
+                onEvent(WordInfoContractEvent.OnClickPlayText(it))
             }
-        }
+        )
     }
 }
 
@@ -185,7 +171,8 @@ private fun Success(
                             derivedStateOf {
                                 checkedItemsID.contains(entry.id)
                             }
-                        }.value
+                        }.value,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
@@ -294,18 +281,6 @@ private fun ExampleItem(
         style = StudyCardsTheme.typography.weight400Size14LineHeight18,
         color = StudyCardsTheme.colors.textPrimary
     )
-}
-
-@Composable
-private fun LoadingScreen(
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        LoadingView()
-    }
 }
 
 @Composable

@@ -30,7 +30,7 @@ class WordInfoFragment : BaseBottomSheetDialogFragment() {
 
     private val viewModel by viewModels<WordInfoViewModel>()
 
-    var behavior: BottomSheetBehavior<*>? = null
+    private var behavior: BottomSheetBehavior<*>? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -72,7 +72,7 @@ class WordInfoFragment : BaseBottomSheetDialogFragment() {
             requestKey = WORD_INFO_CLOSED,
             result = bundleOf(
                 "oxford_checked_items_id" to viewModel.getCheckedItemsID(),
-                "oxford_response" to viewModel.getOxfordResponse()
+                "from_native" to viewModel.getFromNative(),
             )
         )
     }

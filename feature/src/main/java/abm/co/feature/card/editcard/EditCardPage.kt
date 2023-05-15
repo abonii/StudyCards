@@ -1,4 +1,4 @@
-package abm.co.feature.card.card
+package abm.co.feature.card.editcard
 
 import abm.co.designsystem.component.button.ButtonState
 import abm.co.designsystem.component.button.IconButton
@@ -16,6 +16,7 @@ import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.designsystem.preview.ThemePreviews
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
+import abm.co.feature.card.model.OxfordTranslationResponseUI
 import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -24,12 +25,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -53,6 +55,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -63,12 +66,17 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import abm.co.designsystem.R as dR
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EditCardPage(
     onBack: () -> Unit,
-    openWordInfo: (word: String, fromNativeToLearning: Boolean) -> Unit,
+    openWordInfo: (
+        fromNativeToLearning: Boolean,
+        checkedOxfordItemsID: List<String>?,
+        oxfordResponse: OxfordTranslationResponseUI
+    ) -> Unit,
     onClickChangeCategory: (categoryID: String?) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: EditCardViewModel = hiltViewModel(),
@@ -101,7 +109,11 @@ fun EditCardPage(
             }
 
             is EditCardContractChannel.NavigateToWordInfo -> {
-                openWordInfo(it.word, it.fromNativeToLearning)
+                openWordInfo(
+                    it.fromNativeToLearning,
+                    it.checkedOxfordItemsID,
+                    it.oxfordResponse
+                )
             }
         }
     }
@@ -194,13 +206,13 @@ private fun ScrollableContent(
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth(),
         )
-        Spacer(modifier = Modifier.height(24.dp))
         Fields(
             modifier = Modifier.padding(horizontal = 16.dp),
             imageURL = uiState.imageURL,
             nativeText = uiState.nativeText,
             learningText = uiState.learningText,
-            translateButtonState = uiState.translateButtonState,
+            nativeTranslateButtonState = uiState.nativeTranslateButtonState,
+            learningTranslateButtonState = uiState.learningTranslateButtonState,
             learningLanguage = uiState.learningLanguage?.languageNameResCode?.let {
                 stringResource(id = it)
             } ?: "",
@@ -221,7 +233,12 @@ private fun ScrollableContent(
             },
             exampleContent = {
                 if (uiState.example != null) {
-                    // todo not empty content
+                    ExampleContent(
+                        example = uiState.example,
+                        onEnterExample = {
+                            onEvent(EditCardContractEvent.OnClickEnterExample(it))
+                        }
+                    )
                 } else {
                     TextButton(
                         title = stringResource(id = R.string.EditCard_Example_add),
@@ -232,9 +249,31 @@ private fun ScrollableContent(
                             .copy(color = StudyCardsTheme.colors.buttonPrimary)
                     )
                 }
+            },
+            bottomContent = {
+
             }
         )
     }
+}
+
+@Composable
+private fun ExampleContent(
+    example: String,
+    onEnterExample: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TextFieldWithLabel(
+        label = stringResource(id = R.string.EditCard_ExampleField_title),
+        hint = stringResource(id = R.string.EditCard_ExapleField_hint),
+        value = example,
+        onValueChange = onEnterExample,
+        singleLine = false,
+        textStyle = StudyCardsTheme.typography.weight400Size14LineHeight18,
+        modifier = modifier
+            .heightIn(min = 62.dp)
+            .wrapContentWidth()
+    )
 }
 
 @Composable
@@ -269,12 +308,14 @@ private fun Fields(
     learningLanguage: String,
     nativeText: String,
     learningText: String,
-    translateButtonState: ButtonState,
+    nativeTranslateButtonState: ButtonState,
+    learningTranslateButtonState: ButtonState,
     onEnterImageURL: (String) -> Unit,
     onEnterNativeText: (String) -> Unit,
     onEnterLearningText: (String) -> Unit,
     onClickTranslate: (fromNative: Boolean) -> Unit,
     exampleContent: @Composable () -> Unit,
+    bottomContent: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -292,20 +333,22 @@ private fun Fields(
         }
         Box(
             modifier = Modifier
+                .padding(bottom = 10.dp, top = 10.dp)
                 .align(Alignment.CenterHorizontally)
                 .animateContentSize()
         ) {
             if (imageURL.isNotBlank()) {
                 AsyncImage(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .fillMaxWidth(1f)
-                        .aspectRatio(2f),
+                        .padding(top = 10.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .width(dimensionResource(id = dR.dimen.square_word_image_width))
+                        .height(dimensionResource(id = dR.dimen.square_word_image_height)),
                     model = imageURL,
                     contentDescription = null,
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    error = painterResource(id = R.drawable.ic_image)
                 )
-                Spacer(modifier = Modifier.height(20.dp))
             }
         }
         TextFieldWithLabel(
@@ -319,15 +362,16 @@ private fun Fields(
             trailingIcon = {
                 IconButton(
                     iconRes = R.drawable.ic_translate,
-                    buttonState = translateButtonState,
+                    buttonState = nativeTranslateButtonState,
                     onClick = {
                         onClickTranslate(true)
                     },
                     contentColor = StudyCardsTheme.colors.primary
                 )
             },
+            singleLine = false,
             modifier = Modifier
-                .height(62.dp)
+                .heightIn(min = 62.dp)
                 .wrapContentWidth()
         )
         Spacer(modifier = Modifier.height(14.dp))
@@ -342,15 +386,16 @@ private fun Fields(
             trailingIcon = {
                 IconButton(
                     iconRes = R.drawable.ic_translate,
-                    buttonState = translateButtonState,
+                    buttonState = learningTranslateButtonState,
                     onClick = {
                         onClickTranslate(false)
                     },
                     contentColor = StudyCardsTheme.colors.primary
                 )
             },
+            singleLine = false,
             modifier = Modifier
-                .height(62.dp)
+                .heightIn(min = 62.dp)
                 .wrapContentWidth()
         )
         Spacer(modifier = Modifier.height(7.dp))
@@ -363,17 +408,22 @@ private fun Fields(
             hint = stringResource(id = R.string.EditCard_ImageField_hint),
             value = imageURL,
             onValueChange = onEnterImageURL,
-            modifier = Modifier
-                .height(62.dp)
-                .wrapContentWidth(),
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_link),
                     tint = StudyCardsTheme.colors.buttonPrimary,
                     contentDescription = null
                 )
-            }
+            },
+            singleLine = false,
+            modifier = Modifier
+                .heightIn(min = 62.dp, max = 150.dp)
+                .wrapContentWidth()
         )
+        Spacer(modifier = Modifier.height(12.dp))
+        Box(modifier = Modifier.animateContentSize()) {
+            bottomContent.invoke()
+        }
     }
 }
 

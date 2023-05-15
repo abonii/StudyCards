@@ -1,19 +1,12 @@
 package abm.co.feature.card.wordinfo
 
 import abm.co.designsystem.message.common.MessageContent
-import abm.co.designsystem.message.common.toMessageContent
 import abm.co.designsystem.message.snackbar.MessageType
-import abm.co.domain.base.Failure
-import abm.co.domain.base.onFailure
-import abm.co.domain.base.onSuccess
-import abm.co.domain.repository.DictionaryRepository
 import abm.co.feature.R
 import abm.co.feature.card.model.OxfordEntryUI
 import abm.co.feature.card.model.OxfordTranslationResponseUI
-import abm.co.feature.card.model.toUI
 import abm.co.feature.utils.TextToSpeechManager
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -29,16 +22,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WordInfoViewModel @Inject constructor(
-    private val dictionaryRepository: DictionaryRepository,
     private val textToSpeechManager: TextToSpeechManager,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val word: String = savedStateHandle["word"]
-        ?: throw RuntimeException("cannot be empty WORD argument")
     private val fromNativeToLearning: Boolean = savedStateHandle["from_native_to_learning"]
         ?: throw RuntimeException("cannot be empty FROM_NATIVE_TO_LEARNING argument")
-    private val oxfordResponse: OxfordTranslationResponseUI? = savedStateHandle["oxford_response"]
+    private val oxfordResponse: OxfordTranslationResponseUI = savedStateHandle["oxford_response"]
+        ?: throw RuntimeException("cannot be empty OXFORD_RESPONSE argument")
     private val oxfordCheckedItemsID: Array<String> = savedStateHandle["oxford_checked_items_id"]
         ?: emptyArray()
 
@@ -46,16 +37,10 @@ class WordInfoViewModel @Inject constructor(
     val channel = _channel.receiveAsFlow()
 
     private val _state: MutableStateFlow<WordInfoContractState> =
-        MutableStateFlow(WordInfoContractState.Loading)
+        MutableStateFlow(WordInfoContractState(oxfordResponse = oxfordResponse))
     val state: StateFlow<WordInfoContractState> = _state.asStateFlow()
 
     val checkedItemsID = mutableStateListOf(*oxfordCheckedItemsID)
-
-    init {
-        oxfordResponse?.let {
-            _state.value = WordInfoContractState.Success(oxfordResponse = it)
-        } ?: fetchWord()
-    }
 
     fun onEvent(event: WordInfoContractEvent) {
         when (event) {
@@ -81,21 +66,6 @@ class WordInfoViewModel @Inject constructor(
         }
     }
 
-    private fun fetchWord() {
-        viewModelScope.launch {
-            dictionaryRepository.getOxfordWord(
-                word = word,
-                fromNative = fromNativeToLearning
-            ).onFailure {
-                it.sendException()
-            }.onSuccess { response ->
-                _state.value = WordInfoContractState.Success(
-                    oxfordResponse = response.toUI()
-                )
-            }
-        }
-    }
-
     private fun speak(value: String) {
         viewModelScope.launch {
             val canSpeak = textToSpeechManager.speakAndGet(value)
@@ -117,45 +87,20 @@ class WordInfoViewModel @Inject constructor(
         return checkedItemsID.toTypedArray()
     }
 
-    fun getOxfordResponse(): OxfordTranslationResponseUI? {
-        return (state.value as? WordInfoContractState.Success)?.oxfordResponse
-    }
-
-    private fun Failure.sendException() {
-        viewModelScope.launch {
-            this@sendException.toMessageContent()?.let {
-                _channel.send(WordInfoContractChannel.ShowMessage(it))
-            }
-        }
+    fun getFromNative(): Boolean {
+        return fromNativeToLearning
     }
 
     override fun onCleared() {
         textToSpeechManager.clear()
         super.onCleared()
     }
-
-    companion object {
-        private val OXFORD_CAN_TRANSLATE_MAP = mapOf(
-            "en" to listOf("ar", "zh", "de", "it", "ru"),
-            "ar" to listOf("en"),
-            "zh" to listOf("en"),
-            "de" to listOf("en"),
-            "it" to listOf("en"),
-            "ru" to listOf("en")
-        )
-    }
 }
 
-@Stable
-sealed interface WordInfoContractState {
-
-    object Loading : WordInfoContractState
-
-    @Immutable
-    data class Success(
-        val oxfordResponse: OxfordTranslationResponseUI
-    ) : WordInfoContractState
-}
+@Immutable
+data class WordInfoContractState(
+    val oxfordResponse: OxfordTranslationResponseUI
+)
 
 @Immutable
 sealed interface WordInfoContractEvent {

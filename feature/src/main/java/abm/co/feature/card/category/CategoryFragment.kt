@@ -4,11 +4,8 @@ import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
 import abm.co.designsystem.navigation.extension.getParcelableData
 import abm.co.designsystem.navigation.extension.navigateSafe
-import abm.co.feature.card.card.EditCardFragment
-import abm.co.feature.card.card.EditCardFragmentDirections
 import abm.co.feature.card.editcategory.EditCategoryFragment
 import abm.co.feature.card.model.CategoryUI
-import abm.co.feature.card.selectcategory.SelectCategoryFragment
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.fragment.app.setFragmentResultListener

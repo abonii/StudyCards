@@ -3,6 +3,8 @@ package abm.co.data.model.oxford
 import abm.co.domain.model.oxford.OxfordTranslationResponse
 import androidx.annotation.Keep
 
+const val EMPTY_TRANSLATION = "--------"
+
 @Keep
 data class OxfordTranslationResponseDTO(
     val results: List<ResultDTO>?,
@@ -88,16 +90,16 @@ fun OxfordTranslationResponseDTO.ResultDTO.LexicalEntryDTO.EntryDTO.SenseDTO.toT
     this.translations?.forEach {
         val trans = it.text ?: "***"
         translations.add(trans)
-    } ?: translations.add("--------")
+    } ?: translations.add(EMPTY_TRANSLATION)
     return translations
 }
 fun OxfordTranslationResponseDTO.ResultDTO.LexicalEntryDTO.EntryDTO.SenseDTO.toExamples(): ArrayList<OxfordTranslationResponse.LexicalEntry.Entry.Example> {
     val examples = ArrayList<OxfordTranslationResponse.LexicalEntry.Entry.Example>()
-    this.examples?.forEach {
+    this.examples?.forEach { exampleDTO ->
         examples.add(
             OxfordTranslationResponse.LexicalEntry.Entry.Example(
-                text = it.text,
-                translations = it.translations?.joinToString("; ")
+                text = exampleDTO.text,
+                translations = exampleDTO.translations?.mapNotNull { it.text }?.joinToString("; ")
             )
         )
     }

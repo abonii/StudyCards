@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/edit_card_destination"
-        android:name="abm.co.feature.card.card.EditCardFragment" >
+        android:name="abm.co.feature.card.editcard.EditCardFragment" >
 
         <argument
             android:name="card"
@@ -52,13 +52,8 @@
             android:name="from_native_to_learning"
             app:argType="boolean" />
         <argument
-            android:name="word"
-            app:argType="string" />
-        <argument
             android:name="oxford_response"
-            app:argType="abm.co.feature.card.model.OxfordTranslationResponseUI"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:argType="abm.co.feature.card.model.OxfordTranslationResponseUI" />
         <argument
             android:name="oxford_checked_items_id"
             app:argType="string[]"

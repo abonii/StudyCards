@@ -10,6 +10,7 @@ import abm.co.domain.base.Either
 import abm.co.domain.base.Failure
 import abm.co.domain.base.safeCall
 import abm.co.domain.model.oxford.OxfordTranslationResponse
+import abm.co.domain.model.yandex.TranslatedYandexText
 import abm.co.domain.repository.ConfigRepository
 import abm.co.domain.repository.DictionaryRepository
 import abm.co.domain.repository.LanguagesRepository
@@ -48,7 +49,7 @@ class DictionaryRepositoryImpl @Inject constructor(
 
     override suspend fun getYandexWord(
         word: String, fromNative: Boolean
-    ): Either<Failure, String> = safeCall {
+    ): Either<Failure, TranslatedYandexText> = safeCall {
         val config = configRepository.getConfig().firstOrNull()?.asRight?.b
             ?: throw Throwable("Couldn't find your config, please contact support")
         val myNativeLang = languagesRepository.getNativeLanguage().firstOrNull()
@@ -61,6 +62,6 @@ class DictionaryRepositoryImpl @Inject constructor(
             APIKey = config.yandexKey,
             textToTranslate = word,
             lang = "${firstLang.code}-${secondLang.code}"
-        )
+        ).toDomain()
     }
 }

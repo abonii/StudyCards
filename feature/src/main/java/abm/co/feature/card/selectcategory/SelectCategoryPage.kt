@@ -3,6 +3,7 @@ package abm.co.feature.card.selectcategory
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.text.pluralString
+import abm.co.designsystem.component.toolbar.Toolbar
 import abm.co.designsystem.component.widget.LoadingView
 import abm.co.designsystem.extensions.collectInLaunchedEffect
 import abm.co.designsystem.message.common.MessageContent
@@ -80,7 +81,13 @@ private fun Screen(
             .fillMaxSize()
             .statusBarsPadding()
     ) {
-        Crossfade(targetState = uiState) { state ->
+        Toolbar(
+            title = stringResource(id = R.string.SelectCategory_Toolbar_title),
+            onBack = {
+                event(SelectCategoryContractEvent.OnBack)
+            }
+        )
+        Crossfade(targetState = uiState, label = "SelectCategoryPage") { state ->
             when (state) {
                 SelectCategoryContractState.Loading -> {
                     LoadingScreen(

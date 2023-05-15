@@ -1,11 +1,14 @@
-package abm.co.feature.card.card
+package abm.co.feature.card.editcard
 
+import abm.co.data.model.oxford.EMPTY_TRANSLATION
 import abm.co.designsystem.component.button.ButtonState
+import abm.co.designsystem.functional.safeLet
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
 import abm.co.domain.base.Failure
 import abm.co.domain.base.onFailure
 import abm.co.domain.base.onSuccess
+import abm.co.domain.repository.DictionaryRepository
 import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
 import abm.co.feature.card.model.CardKindUI
@@ -13,6 +16,7 @@ import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.card.model.OxfordTranslationResponseUI
 import abm.co.feature.card.model.toDomain
+import abm.co.feature.card.model.toUI
 import abm.co.feature.userattributes.lanugage.LanguageUI
 import abm.co.feature.userattributes.lanugage.toUI
 import androidx.compose.runtime.Immutable
@@ -35,7 +39,8 @@ import javax.inject.Inject
 class EditCardViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val languagesRepository: LanguagesRepository,
-    private val serverRepository: ServerRepository
+    private val serverRepository: ServerRepository,
+    private val dictionaryRepository: DictionaryRepository
 ) : ViewModel() {
 
     private val card: CardUI? = savedStateHandle["card"]
@@ -57,8 +62,8 @@ class EditCardViewModel @Inject constructor(
     )
     val state: StateFlow<EditCardContractState> = _state.asStateFlow()
 
-    var oxfordResponse: OxfordTranslationResponseUI? = null
-    var checkedOxfordItemsID: Array<String>? = null
+    private var oxfordResponse: OxfordTranslationResponseUI? = null
+    private var checkedOxfordItemsID: List<String>? = null
 
     init {
         setLanguages()
@@ -79,8 +84,10 @@ class EditCardViewModel @Inject constructor(
             }
 
             is EditCardContractEvent.OnClickEnterExample -> {
-                _state.update {
-                    it.copy(example = event.value)
+                if (event.value.length < 500) {
+                    _state.update {
+                        it.copy(example = event.value)
+                    }
                 }
             }
 
@@ -99,14 +106,18 @@ class EditCardViewModel @Inject constructor(
             }
 
             is EditCardContractEvent.OnEnterLearning -> {
-                _state.update {
-                    it.copy(learningText = event.value)
+                if (event.value.length < 200) {
+                    _state.update {
+                        it.copy(learningText = event.value)
+                    }
                 }
             }
 
             is EditCardContractEvent.OnEnterNative -> {
-                _state.update {
-                    it.copy(nativeText = event.value)
+                if (event.value.length < 200) {
+                    _state.update {
+                        it.copy(nativeText = event.value)
+                    }
                 }
             }
 
@@ -126,16 +137,22 @@ class EditCardViewModel @Inject constructor(
 
             is EditCardContractEvent.OnClickTranslate -> {
                 viewModelScope.launch {
-                    _channel.send(
-                        EditCardContractChannel.NavigateToWordInfo(
-                            word = if(event.fromNative){
-                                state.value.nativeText.trim()
-                            } else {
-                                state.value.learningText.trim()
-                            },
-                            fromNativeToLearning = event.fromNative
-                        )
+                    val word: String = if (event.fromNative) {
+                        setNativeTranslateButtonState(ButtonState.Loading)
+                        state.value.nativeText.trim()
+                    } else {
+                        setLearningTranslateButtonState(ButtonState.Loading)
+                        state.value.learningText.trim()
+                    }
+                    defineDictionaryType(
+                        word = word,
+                        fromNative = event.fromNative
                     )
+                    if (event.fromNative) {
+                        setNativeTranslateButtonState(ButtonState.Normal)
+                    } else {
+                        setLearningTranslateButtonState(ButtonState.Normal)
+                    }
                 }
             }
         }
@@ -225,18 +242,162 @@ class EditCardViewModel @Inject constructor(
         }
     }
 
-    fun setTranslateButtonState(state:ButtonState){
+    private fun setNativeTranslateButtonState(state: ButtonState) {
         _state.update {
-            it.copy(translateButtonState = state)
+            it.copy(nativeTranslateButtonState = state)
+        }
+    }
+
+    private fun setLearningTranslateButtonState(state: ButtonState) {
+        _state.update {
+            it.copy(learningTranslateButtonState = state)
         }
     }
 
     fun setOxfordResponse(
-        oxfordResponse: OxfordTranslationResponseUI,
-        checkedOxfordItemsID: Array<String>
+        checkedOxfordItemsID: Array<String>,
+        fromNative: Boolean
     ) {
-        this.checkedOxfordItemsID = checkedOxfordItemsID
-        this.oxfordResponse = oxfordResponse
+        this.checkedOxfordItemsID = checkedOxfordItemsID.toList()
+        updateStateAfterOxfordResponse(
+            fromNative = fromNative,
+            checkedOxfordItemsID = checkedOxfordItemsID
+        )
+    }
+
+    private fun updateStateAfterOxfordResponse(
+        oxfordResponse: OxfordTranslationResponseUI? = this.oxfordResponse,
+        checkedOxfordItemsID: Array<String>,
+        fromNative: Boolean
+    ) {
+        _state.update { oldState ->
+            val entries = oxfordResponse?.lexicalEntry?.flatMap { lexicalEntryUI ->
+                lexicalEntryUI.entries?.filter { checkedOxfordItemsID.contains(it.id) }
+                    ?: emptyList()
+            }
+            val translations = entries?.filter {
+                it.translation != EMPTY_TRANSLATION
+            }?.joinToString("\n") { entryUI ->
+                entryUI.translation
+            } ?: ""
+            val native = if (fromNative) {
+                oldState.nativeText
+            } else {
+                translations
+            }
+            val learning = if (fromNative) {
+                translations
+            } else {
+                oldState.nativeText
+            }
+            val examples = entries?.flatMap { entryUI ->
+                entryUI.examples ?: emptyList()
+            }?.mapIndexed { index, exampleUI ->
+                (index + 1) to exampleUI
+            }?.joinToString("") { "${it.first}. ${it.second.text} - ${it.second.translation}\n" }
+            oldState.copy(
+                nativeText = native,
+                learningText = learning,
+                example = examples
+            )
+        }
+    }
+
+    private suspend fun defineDictionaryType(
+        word: String, fromNative: Boolean
+    ) {
+        if (checkIfOxfordSupport(fromNative) && isItOneThanOneWord(word)) {
+            alreadyTranslatedOxfordWord(word)?.let {
+                _channel.send(
+                    EditCardContractChannel.NavigateToWordInfo(
+                        fromNativeToLearning = fromNative,
+                        oxfordResponse = it,
+                        checkedOxfordItemsID = checkedOxfordItemsID
+                    )
+                )
+            } ?: fetchOxfordWord(word, fromNative)
+        } else fetchYandexWord(word, fromNative)
+    }
+
+    private suspend fun fetchOxfordWord(
+        word: String,
+        fromNative: Boolean
+    ) {
+        dictionaryRepository.getOxfordWord(
+            word = word,
+            fromNative = fromNative
+        ).onFailure {
+            fetchYandexWord(word, fromNative)
+        }.onSuccess { response ->
+            oxfordResponse = response.toUI().also {
+                _channel.send(
+                    EditCardContractChannel.NavigateToWordInfo(
+                        fromNativeToLearning = fromNative,
+                        oxfordResponse = it,
+                        checkedOxfordItemsID = null
+                    )
+                )
+            }
+        }
+    }
+
+    private suspend fun fetchYandexWord(
+        word: String,
+        fromNative: Boolean
+    ) {
+        dictionaryRepository.getYandexWord(
+            word = word,
+            fromNative = fromNative
+        ).onFailure {
+            it.sendException()
+        }.onSuccess { response ->
+            val native = if (fromNative) {
+                word
+            } else {
+                response.text?.joinToString() ?: ""
+            }
+            val learning = if (fromNative) {
+                response.text?.joinToString() ?: ""
+            } else {
+                word
+            }
+            _state.update { oldState ->
+                oldState.copy(
+                    nativeText = native,
+                    learningText = learning
+                )
+            }
+        }
+    }
+
+    private suspend fun checkIfOxfordSupport(
+        fromNative: Boolean
+    ): Boolean {
+        val myNativeLang = languagesRepository.getNativeLanguage().firstOrNull()
+        val myLearningLang = languagesRepository.getLearningLanguage().firstOrNull()
+        safeLet(myNativeLang, myLearningLang) { native, learning ->
+            return if (fromNative) {
+                OXFORD_CAN_TRANSLATE_MAP[native.code]?.contains(learning.code) ?: false
+            } else {
+                OXFORD_CAN_TRANSLATE_MAP[learning.code]?.contains(native.code) ?: false
+            }
+        }
+        return false
+    }
+
+    private fun isItOneThanOneWord(word: String): Boolean {
+        return word.trim().split(" ", ",", ".", ";").size == 1
+    }
+
+    private fun alreadyTranslatedOxfordWord(
+        word: String,
+        oxfordResponse: OxfordTranslationResponseUI? = this.oxfordResponse
+    ): OxfordTranslationResponseUI? {
+        return if (oxfordResponse?.word?.lowercase()?.trim() == word.lowercase().trim()) {
+            oxfordResponse
+        } else {
+            null
+        }
     }
 
     private fun Failure.sendException() {
@@ -246,6 +407,17 @@ class EditCardViewModel @Inject constructor(
             }
         }
     }
+
+    companion object {
+        private val OXFORD_CAN_TRANSLATE_MAP = mapOf(
+            "en" to listOf("ar", "zh", "de", "it", "ru"),
+            "ar" to listOf("en"),
+            "zh" to listOf("en"),
+            "de" to listOf("en"),
+            "it" to listOf("en"),
+            "ru" to listOf("en")
+        )
+    }
 }
 
 @Immutable
@@ -254,7 +426,8 @@ data class EditCardContractState(
     val categoryName: String?,
     val nativeLanguage: LanguageUI? = null,
     val learningLanguage: LanguageUI? = null,
-    val translateButtonState: ButtonState = ButtonState.Normal,
+    val nativeTranslateButtonState: ButtonState = ButtonState.Normal,
+    val learningTranslateButtonState: ButtonState = ButtonState.Normal,
     val learningText: String = "",
     val nativeText: String = "",
     val example: String? = null,
@@ -294,8 +467,9 @@ sealed interface EditCardContractChannel {
     ) : EditCardContractChannel
 
     data class NavigateToWordInfo(
-        val word: String,
-        val fromNativeToLearning: Boolean
+        val fromNativeToLearning: Boolean,
+        val oxfordResponse: OxfordTranslationResponseUI,
+        val checkedOxfordItemsID: List<String>?
     ) : EditCardContractChannel
 
     object NavigateBack : EditCardContractChannel

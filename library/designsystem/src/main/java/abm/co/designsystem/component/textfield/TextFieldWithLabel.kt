@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 
@@ -26,6 +27,8 @@ fun TextFieldWithLabel(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
+    singleLine: Boolean = true,
+    textStyle: TextStyle = StudyCardsTheme.typography.weight400Size16LineHeight20,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -43,13 +46,13 @@ fun TextFieldWithLabel(
                 value = value,
                 onValueChange = onValueChange,
                 modifier = Modifier.fillMaxWidth(),
-                textStyle = StudyCardsTheme.typography.weight400Size16LineHeight20,
+                textStyle = textStyle,
                 visualTransformation = if (value.isEmpty())
                     PlaceholderTransformation(hint)
                 else visualTransformation,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
                 shape = StudyCardsTheme.shapes.shapeBig,
-                singleLine = true,
+                singleLine = singleLine,
                 isError = isError,
                 label = {
                     Text(

@@ -1,4 +1,4 @@
-package abm.co.feature.card.card
+package abm.co.feature.card.editcard
 
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
@@ -9,7 +9,6 @@ import abm.co.designsystem.functional.safeLet
 import abm.co.designsystem.navigation.extension.getParcelableData
 import abm.co.designsystem.navigation.extension.navigateSafe
 import abm.co.feature.card.model.CategoryUI
-import abm.co.feature.card.model.OxfordTranslationResponseUI
 import abm.co.feature.card.selectcategory.SelectCategoryFragment
 import abm.co.feature.card.wordinfo.WordInfoFragment
 import android.os.Bundle
@@ -46,13 +45,12 @@ class EditCardFragment : BaseFragment() {
                     )
                 )
             },
-            openWordInfo = { word, fromNative ->
+            openWordInfo = { fromNative, checkedOxfordItemsID, oxfordResponse ->
                 findNavController().navigateSafe(
                     EditCardFragmentDirections.toWordInfoDestination(
-                        word = word,
                         fromNativeToLearning = fromNative,
-                        oxfordResponse = viewModel.oxfordResponse,
-                        oxfordCheckedItemsId = viewModel.checkedOxfordItemsID
+                        oxfordResponse = oxfordResponse,
+                        oxfordCheckedItemsId = checkedOxfordItemsID?.toTypedArray()
                     )
                 )
             }
@@ -73,14 +71,13 @@ class EditCardFragment : BaseFragment() {
             category?.let { viewModel.onSelectedCategory(it) }
         }
         setFragmentResultListener(WordInfoFragment.WORD_INFO_CLOSED) { _, bundle ->
-            viewModel.setTranslateButtonState(ButtonState.Normal)
             safeLet(
                 bundle.getStringArray("oxford_checked_items_id"),
-                bundle.getParcelableData<OxfordTranslationResponseUI>("oxford_response")
-            ) { ids, oxford ->
+                bundle.getBoolean("from_native", true)
+            ) { ids, fromNative ->
                 viewModel.setOxfordResponse(
-                    oxfordResponse = oxford,
-                    checkedOxfordItemsID = ids
+                    checkedOxfordItemsID = ids,
+                    fromNative = fromNative
                 )
             }
         }
