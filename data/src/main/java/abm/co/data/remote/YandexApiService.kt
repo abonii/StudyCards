@@ -9,5 +9,5 @@ interface YandexApiService {
         @Query("key") APIKey: String,
         @Query("text") textToTranslate: String,
         @Query("lang") lang: String,
-    ): Nothing
+    ): String
 }

@@ -14,17 +14,10 @@ data class LanguageUI(
 )
 
 fun LanguageUI.toDomain() = Language(
-    code = code,
-    languageNameResCode = languageNameResCode,
-    iconFromDrawable = flagFromDrawable
+    code = code
 )
 
-fun Language.toUI() = LanguageUI(
-    code = code,
-    languageNameResCode = languageNameResCode,
-    flagFromDrawable = iconFromDrawable
-)
-
+fun Language.toUI() = defaultLanguages.findByCode(code)
 
 val defaultLanguages = listOf(
     LanguageUI(

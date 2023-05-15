@@ -7,7 +7,6 @@ import abm.co.designsystem.theme.StudyCardsTheme
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -38,47 +37,42 @@ fun MessageAlertDialog(
 
     showAlertDialog?.let {
         Box(
-            Modifier.fillMaxSize(),
+            Modifier
+                .graphicsLayer(
+                    scaleX = scale.value,
+                    scaleY = scale.value
+                )
+                .alpha(scale.value),
             contentAlignment = Alignment.Center
         ) {
-            Box(
-                Modifier
-                    .graphicsLayer(
-                        scaleX = scale.value,
-                        scaleY = scale.value
+            AlertDialog(
+                onDismissRequest = onDismiss,
+                title = {
+                    Text(
+                        text = showAlertDialog.title,
+                        style = StudyCardsTheme.typography.weight500Size14LineHeight20
                     )
-                    .alpha(scale.value),
-                contentAlignment = Alignment.Center
-            ) {
-                AlertDialog(
-                    onDismissRequest = onDismiss,
-                    title = {
-                        Text(
-                            text = showAlertDialog.title,
-                            style = StudyCardsTheme.typography.weight500Size14LineHeight20
+                },
+                text = {
+                    Text(
+                        text = showAlertDialog.subtitle,
+                        style = StudyCardsTheme.typography.weight400Size14LineHeight20
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = onDismiss,
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = StudyCardsTheme.colors.buttonPrimary,
+                            contentColor = Color.White
                         )
-                    },
-                    text = {
-                        Text(
-                            text = showAlertDialog.subtitle,
-                            style = StudyCardsTheme.typography.weight400Size14LineHeight20
-                        )
-                    },
-                    confirmButton = {
-                        Button(
-                            onClick = onDismiss,
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = StudyCardsTheme.colors.buttonPrimary,
-                                contentColor = Color.White
-                            )
-                        ) {
-                            Text(text = stringResource(id = R.string.Messages_OK))
-                        }
-                    },
-                    backgroundColor = StudyCardsTheme.colors.backgroundPrimary,
-                    contentColor = StudyCardsTheme.colors.textPrimary
-                )
-            }
+                    ) {
+                        Text(text = stringResource(id = R.string.Messages_OK))
+                    }
+                },
+                backgroundColor = StudyCardsTheme.colors.backgroundPrimary,
+                contentColor = StudyCardsTheme.colors.textPrimary
+            )
         }
     }
 }

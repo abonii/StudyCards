@@ -1,27 +1,19 @@
 package abm.co.data.model.user
 
 import abm.co.domain.model.Language
-import androidx.annotation.DrawableRes
 import androidx.annotation.Keep
-import androidx.annotation.StringRes
 import kotlinx.serialization.Serializable
 
 @Serializable
 @Keep
 data class LanguageDTO(
-    val code: String,
-    @StringRes val languageNameResCode: Int,
-    @DrawableRes val iconFromDrawable: Int
+    val code: String
 )
 
 fun LanguageDTO.toDomain() = Language(
-    code = code,
-    languageNameResCode = languageNameResCode,
-    iconFromDrawable = iconFromDrawable
+    code = code
 )
 
 fun Language.toDTO() = LanguageDTO(
-    code = code,
-    languageNameResCode = languageNameResCode,
-    iconFromDrawable = iconFromDrawable
+    code = code
 )

@@ -1,5 +1,7 @@
 package abm.co.feature.card.card
 
+import abm.co.designsystem.component.button.ButtonState
+import abm.co.designsystem.component.button.IconButton
 import abm.co.designsystem.component.button.PrimaryButton
 import abm.co.designsystem.component.button.SecondaryButton
 import abm.co.designsystem.component.button.TextButton
@@ -34,10 +36,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Translate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -69,6 +68,7 @@ import kotlinx.coroutines.flow.debounce
 @Composable
 fun EditCardPage(
     onBack: () -> Unit,
+    openWordInfo: (word: String, fromNativeToLearning: Boolean) -> Unit,
     onClickChangeCategory: (categoryID: String?) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: EditCardViewModel = hiltViewModel(),
@@ -98,6 +98,10 @@ fun EditCardPage(
 
             is EditCardContractChannel.ShowMessage -> {
                 showMessage(it.messageContent)
+            }
+
+            is EditCardContractChannel.NavigateToWordInfo -> {
+                openWordInfo(it.word, it.fromNativeToLearning)
             }
         }
     }
@@ -131,7 +135,7 @@ private fun EditCardScreen(
             modifier = Modifier
                 .padding(start = 6.dp, top = 10.dp, end = 16.dp),
             onClickSearch = {
-                onEvent(EditCardContractEvent.OnClickCategory)
+                onEvent(EditCardContractEvent.OnClickSearchHistory)
             },
             onBack = {
                 onEvent(EditCardContractEvent.OnClickBack)
@@ -193,9 +197,10 @@ private fun ScrollableContent(
         Spacer(modifier = Modifier.height(24.dp))
         Fields(
             modifier = Modifier.padding(horizontal = 16.dp),
-            nativeLanguage = uiState.nativeLanguage?.languageNameResCode?.let {
-                stringResource(id = it)
-            } ?: "",
+            imageURL = uiState.imageURL,
+            nativeText = uiState.nativeText,
+            learningText = uiState.learningText,
+            translateButtonState = uiState.translateButtonState,
             learningLanguage = uiState.learningLanguage?.languageNameResCode?.let {
                 stringResource(id = it)
             } ?: "",
@@ -205,17 +210,17 @@ private fun ScrollableContent(
             onEnterLearningText = {
                 onEvent(EditCardContractEvent.OnEnterLearning(it))
             },
-            imageURL = uiState.imageURL,
-            nativeText = uiState.nativeText,
-            learningText = uiState.learningText,
             onEnterImageURL = {
                 onEvent(EditCardContractEvent.OnEnterImage(it))
             },
+            nativeLanguage = uiState.nativeLanguage?.languageNameResCode?.let {
+                stringResource(id = it)
+            } ?: "",
             onClickTranslate = {
                 onEvent(EditCardContractEvent.OnClickTranslate(it))
             },
             exampleContent = {
-                if (uiState.example.isNotBlank()) {
+                if (uiState.example != null) {
                     // todo not empty content
                 } else {
                     TextButton(
@@ -264,6 +269,7 @@ private fun Fields(
     learningLanguage: String,
     nativeText: String,
     learningText: String,
+    translateButtonState: ButtonState,
     onEnterImageURL: (String) -> Unit,
     onEnterNativeText: (String) -> Unit,
     onEnterLearningText: (String) -> Unit,
@@ -311,13 +317,14 @@ private fun Fields(
             value = nativeText,
             onValueChange = onEnterNativeText,
             trailingIcon = {
-                IconButton(onClick = { onClickTranslate(true) }) {
-                    Icon(
-                        imageVector = Icons.Filled.Translate,
-                        tint = StudyCardsTheme.colors.primary,
-                        contentDescription = null
-                    )
-                }
+                IconButton(
+                    iconRes = R.drawable.ic_translate,
+                    buttonState = translateButtonState,
+                    onClick = {
+                        onClickTranslate(true)
+                    },
+                    contentColor = StudyCardsTheme.colors.primary
+                )
             },
             modifier = Modifier
                 .height(62.dp)
@@ -333,13 +340,14 @@ private fun Fields(
             value = learningText,
             onValueChange = onEnterLearningText,
             trailingIcon = {
-                IconButton(onClick = { onClickTranslate(false) }) {
-                    Icon(
-                        imageVector = Icons.Filled.Translate,
-                        tint = StudyCardsTheme.colors.primary,
-                        contentDescription = null
-                    )
-                }
+                IconButton(
+                    iconRes = R.drawable.ic_translate,
+                    buttonState = translateButtonState,
+                    onClick = {
+                        onClickTranslate(false)
+                    },
+                    contentColor = StudyCardsTheme.colors.primary
+                )
             },
             modifier = Modifier
                 .height(62.dp)
@@ -401,15 +409,10 @@ private fun Toolbar(
                 .clip(CircleShape)
                 .background(StudyCardsTheme.colors.buttonPrimary)
                 .size(32.dp),
-            onClick = { onClickSearch() }
-        ) {
-            Icon(
-                modifier = Modifier,
-                painter = painterResource(id = R.drawable.ic_search),
-                tint = Color.White,
-                contentDescription = null
-            )
-        }
+            iconRes = R.drawable.ic_search,
+            onClick = onClickSearch,
+            contentColor = Color.White
+        )
     }
 }
 

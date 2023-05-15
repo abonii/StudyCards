@@ -157,7 +157,7 @@ private fun CategoryScreen(
             onClickChangeCategoryIcon = {
                 onEvent(CategoryContractEvent.OnClickEditCategory)
             },
-            addCardIconRes = R.drawable.ic_add,
+            addCardIconRes = R.drawable.ic_add_outlined,
             changeCategoryIconRes = R.drawable.ic_edit,
             modifier = Modifier
                 .fillMaxWidth()

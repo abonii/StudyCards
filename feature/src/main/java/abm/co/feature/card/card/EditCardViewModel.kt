@@ -1,19 +1,17 @@
 package abm.co.feature.card.card
 
-import abm.co.designsystem.R
+import abm.co.designsystem.component.button.ButtonState
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
-import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.domain.base.Failure
 import abm.co.domain.base.onFailure
 import abm.co.domain.base.onSuccess
-import abm.co.domain.model.oxford.OxfordTranslationResponse
-import abm.co.domain.repository.DictionaryRepository
 import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
 import abm.co.feature.card.model.CardKindUI
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
+import abm.co.feature.card.model.OxfordTranslationResponseUI
 import abm.co.feature.card.model.toDomain
 import abm.co.feature.userattributes.lanugage.LanguageUI
 import abm.co.feature.userattributes.lanugage.toUI
@@ -37,7 +35,6 @@ import javax.inject.Inject
 class EditCardViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val languagesRepository: LanguagesRepository,
-    private val dictionaryRepository: DictionaryRepository,
     private val serverRepository: ServerRepository
 ) : ViewModel() {
 
@@ -59,6 +56,9 @@ class EditCardViewModel @Inject constructor(
         )
     )
     val state: StateFlow<EditCardContractState> = _state.asStateFlow()
+
+    var oxfordResponse: OxfordTranslationResponseUI? = null
+    var checkedOxfordItemsID: Array<String>? = null
 
     init {
         setLanguages()
@@ -119,19 +119,24 @@ class EditCardViewModel @Inject constructor(
             EditCardContractEvent.OnClickSearchHistory -> {
                 viewModelScope.launch {
                     _channel.send(
-                        EditCardContractChannel.ShowMessage(
-                            MessageContent.Snackbar.MessageContentRes(
-                                titleRes = R.string.Messages_OK,
-                                subtitleRes = R.string.Messages_NotReleasedYet_title,
-                                type = MessageType.Info
-                            ) // todo not released
-                        )
+                        EditCardContractChannel.NavigateToSearchHistory
                     )
                 }
             }
 
             is EditCardContractEvent.OnClickTranslate -> {
-                // todo do request to oxford and yandex
+                viewModelScope.launch {
+                    _channel.send(
+                        EditCardContractChannel.NavigateToWordInfo(
+                            word = if(event.fromNative){
+                                state.value.nativeText.trim()
+                            } else {
+                                state.value.learningText.trim()
+                            },
+                            fromNativeToLearning = event.fromNative
+                        )
+                    )
+                }
             }
         }
     }
@@ -157,7 +162,7 @@ class EditCardViewModel @Inject constructor(
                 translation = this@onSaveCard.learningText,
                 imageUrl = this@onSaveCard.imageURL,
                 repeatedCount = 0,
-                example = this@onSaveCard.example,
+                example = this@onSaveCard.example ?: "",
                 categoryID = category?.id ?: "no_category_id",
                 nextRepeatTime = System.currentTimeMillis(),
                 cardID = "",
@@ -178,9 +183,7 @@ class EditCardViewModel @Inject constructor(
         }
     }
 
-    private fun EditCardContractState.onUpdateCard(
-        existedCard: CardUI
-    ) {
+    private fun EditCardContractState.onUpdateCard(existedCard: CardUI) {
         viewModelScope.launch {
             val card = CardUI(
                 name = nativeText,
@@ -188,7 +191,7 @@ class EditCardViewModel @Inject constructor(
                 translation = learningText,
                 imageUrl = imageURL,
                 repeatedCount = 0,
-                example = example,
+                example = example ?: "",
                 categoryID = category?.id ?: "no_category_id",
                 nextRepeatTime = System.currentTimeMillis(),
                 cardID = existedCard.cardID,
@@ -198,6 +201,12 @@ class EditCardViewModel @Inject constructor(
                 .onFailure {
                     it.sendException()
                 }.onSuccess {
+                    if (category?.id != existedCard.categoryID) {
+                        serverRepository.removeUserCard(
+                            categoryID = existedCard.categoryID,
+                            cardID = existedCard.cardID
+                        )
+                    }
                     if (showProgress) {
                         _state.update {
                             it.copy(progress = 1f)
@@ -209,11 +218,25 @@ class EditCardViewModel @Inject constructor(
         }
     }
 
-    fun onSelectedCategory(category: CategoryUI){
+    fun onSelectedCategory(category: CategoryUI) {
         this.category = category
         _state.update {
             it.copy(categoryName = category.title)
         }
+    }
+
+    fun setTranslateButtonState(state:ButtonState){
+        _state.update {
+            it.copy(translateButtonState = state)
+        }
+    }
+
+    fun setOxfordResponse(
+        oxfordResponse: OxfordTranslationResponseUI,
+        checkedOxfordItemsID: Array<String>
+    ) {
+        this.checkedOxfordItemsID = checkedOxfordItemsID
+        this.oxfordResponse = oxfordResponse
     }
 
     private fun Failure.sendException() {
@@ -231,11 +254,11 @@ data class EditCardContractState(
     val categoryName: String?,
     val nativeLanguage: LanguageUI? = null,
     val learningLanguage: LanguageUI? = null,
+    val translateButtonState: ButtonState = ButtonState.Normal,
     val learningText: String = "",
     val nativeText: String = "",
-    val example: String = "",
-    val imageURL: String = "",
-    val oxfordTranslationResponse: OxfordTranslationResponse? = null,
+    val example: String? = null,
+    val imageURL: String = ""
 )
 
 @Immutable
@@ -268,6 +291,11 @@ sealed interface EditCardContractChannel {
 
     data class ChangeCategory(
         val categoryId: String?
+    ) : EditCardContractChannel
+
+    data class NavigateToWordInfo(
+        val word: String,
+        val fromNativeToLearning: Boolean
     ) : EditCardContractChannel
 
     object NavigateBack : EditCardContractChannel

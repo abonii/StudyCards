@@ -57,6 +57,10 @@ class FirebaseRepositoryImpl @Inject constructor(
     private val gson: Gson
 ) : ServerRepository {
 
+    init {
+        println("FirebaseRepositoryImpl: inited")
+    }
+
     private val userCategoryWithLanguagesRef = combine(
         languagesDataStore.getNativeLanguage(),
         languagesDataStore.getLearningLanguage()
@@ -82,39 +86,6 @@ class FirebaseRepositoryImpl @Inject constructor(
                 keepSynced(true)
             }
     }.distinctUntilChanged()
-
-    override fun getConfig(): Flow<Either<Failure, Config>> {
-        return callbackFlow {
-            val configRef = root.child(CONFIG_REF)
-            val listener = configRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    try {
-                        val config = snapshot.getValue(ConfigDTO::class.java)
-                        trySend(
-                            Either.Right(config?.toDomain() ?: ConfigDTO().toDomain())
-                        ).isSuccess
-                    } catch (e: Exception) {
-                        trySend(Either.Left(e.firebaseError().mapToFailure())).isSuccess
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    PlutoLog.e(
-                        "DatabaseReference.asFlow",
-                        "Error reading data: ${error.message}"
-                    )
-                    trySend(
-                        Either.Left(
-                            error.toException().firebaseError().mapToFailure()
-                        )
-                    ).isSuccess
-                }
-            })
-            awaitClose {
-                listener.let { configRef.removeEventListener(it) }
-            }
-        }
-    }
 
     override val getUser = userPropertiesReference.asFlow(
         scope = coroutineScope,

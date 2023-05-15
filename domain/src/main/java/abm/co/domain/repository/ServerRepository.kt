@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 interface ServerRepository {
 
     val getUser: Flow<Either<Failure, User?>>
-    fun getConfig(): Flow<Either<Failure, Config>>
 
     val getUserCategories: Flow<Either<Failure, List<Category>>>
     suspend fun createUserCategory(category: Category): Either<Failure, Category>

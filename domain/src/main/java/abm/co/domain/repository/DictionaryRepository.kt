@@ -2,20 +2,16 @@ package abm.co.domain.repository
 
 import abm.co.domain.base.Either
 import abm.co.domain.base.Failure
+import abm.co.domain.model.oxford.OxfordTranslationResponse
 
 interface DictionaryRepository {
     suspend fun getOxfordWord(
         word: String,
-        sourceLang: String,
-        targetLang: String,
-        oxfordApiId: String,
-        oxfordApiKey: String
-    ): Either<Failure, Nothing>
+        fromNative: Boolean
+    ): Either<Failure, OxfordTranslationResponse>
 
     suspend fun getYandexWord(
         word: String,
-        sourceLang: String,
-        targetLang: String,
-        yandexApiKey: String
-    ): Either<Failure, Nothing>
+        fromNative: Boolean
+    ): Either<Failure, String>
 }

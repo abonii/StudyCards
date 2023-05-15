@@ -202,6 +202,19 @@
     <string name="EditCategory.TitleField.hint">Enter the category title</string>
     <string name="EditCategory.SaveButton.title">Save</string>
 
+    <string name="WordInfo.Toolbar.title">Word info</string>
+    <string name="WordInfo.Definition.title">Definition</string>
+    <string name="WordInfo.ExampleOfUsage.title">Definition</string>
+    <string name="WordInfo.Translation.title">Translation</string>
+    <string name="WordInfo.Intro.selectToLearn">Choose the words you want to learn</string>
+    <string name="WordInfo.Synonym.title">Synonyms</string>
+
+    <plurals name="practicedNTime">
+        <item quantity="one"> Practiced: %s time</item>
+        <item quantity="zero"> Practiced: %s time</item>
+        <item quantity="other"> Practiced: %s times</item>
+    </plurals>
+
     <plurals name="cards">
         <item quantity="one"> %d card</item>
         <item quantity="zero"> %d card</item>

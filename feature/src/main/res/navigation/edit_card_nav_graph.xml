@@ -22,6 +22,9 @@
             app:argType="abm.co.feature.card.model.CategoryUI" />
 
         <action
+            android:id="@+id/to_word_info_destination"
+            app:destination="@id/word_info_destination" />
+        <action
             android:id="@+id/to_select_category_destination"
             app:destination="@id/select_category_destination"
             app:enterAnim="@anim/enter_from_right"
@@ -40,4 +43,26 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+
+    <dialog
+        android:id="@+id/word_info_destination"
+        android:name="abm.co.feature.card.wordinfo.WordInfoFragment" >
+
+        <argument
+            android:name="from_native_to_learning"
+            app:argType="boolean" />
+        <argument
+            android:name="word"
+            app:argType="string" />
+        <argument
+            android:name="oxford_response"
+            app:argType="abm.co.feature.card.model.OxfordTranslationResponseUI"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="oxford_checked_items_id"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </dialog>
 </navigation>
