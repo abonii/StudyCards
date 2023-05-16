@@ -11,4 +11,8 @@ data class Card(
     val repeatedCount: Int,
     val nextRepeatTime: Long,
     val id: String
-)
+) {
+    companion object {
+        const val kind = "kind"
+    }
+}

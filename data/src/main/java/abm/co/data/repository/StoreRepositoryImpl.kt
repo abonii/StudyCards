@@ -1,7 +1,7 @@
 package abm.co.data.repository
 
 import abm.co.data.di.ApplicationScope
-import abm.co.data.model.store.PurchaseVerifyDto
+import abm.co.data.model.store.PurchaseVerifyDTO
 import abm.co.domain.repository.StoreRepository
 import android.content.Context
 import android.widget.Toast
@@ -84,7 +84,7 @@ class StoreRepositoryImpl @Inject constructor(
         firebaseFunctions.getHttpsCallable(VERIFY_PRODUCT_FUN).call(data).continueWith { task ->
             try {
                 (task.result?.data as HashMap<*, *>).let {
-                    val verifyPurchase = PurchaseVerifyDto(
+                    val verifyPurchase = PurchaseVerifyDTO(
                         status = it["status"] as Int,
                         purchaseState = it["purchaseState"] as Int?
                     )

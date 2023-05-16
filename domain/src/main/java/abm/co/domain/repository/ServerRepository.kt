@@ -3,6 +3,7 @@ package abm.co.domain.repository
 import abm.co.domain.base.Either
 import abm.co.domain.base.Failure
 import abm.co.domain.model.Card
+import abm.co.domain.model.CardKind
 import abm.co.domain.model.Category
 import abm.co.domain.model.User
 import abm.co.domain.model.config.Config
@@ -24,6 +25,11 @@ interface ServerRepository {
         bookmarked: Boolean? = null,
         name: String? = null
     ): Either<Failure, Unit>
+    suspend fun updateUserCardKind(
+        categoryID: String,
+        cardID: String,
+        kind: CardKind
+    ): Either<Failure, Unit>
     suspend fun removeUserDatabase()
 
     val getCategories: Flow<Either<Failure, List<Category>>>
@@ -31,5 +37,4 @@ interface ServerRepository {
 
     suspend fun copyExploreCategoryToUserCollection(categoryID: String): Either<Failure, Unit>
     suspend fun copyUserCategoryToExploreCollection(categoryID: String): Either<Failure, Unit>
-
 }

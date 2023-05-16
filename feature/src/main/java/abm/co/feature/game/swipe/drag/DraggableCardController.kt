@@ -12,6 +12,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -100,13 +101,15 @@ open class DraggableCardController(
      */
     val scale = Animatable(0.9f)
 
+    var preSwipe: (draggableSide: DraggableSide) -> Unit = {}
     var onSwipe: (draggableSide: DraggableSide) -> Unit = {}
 
     fun swipeLeft() {
         scope.apply {
             launch {
                 offsetX.animateTo(-cardWidth * 1.2f, tween(200))
-
+                preSwipe(DraggableSide.START)
+                delay(50)
                 onSwipe(DraggableSide.START)
 
                 // After the animation of swiping return back to Center to make it look like a cycle
@@ -136,6 +139,8 @@ open class DraggableCardController(
             launch {
                 offsetX.animateTo(cardWidth * 1.2f, tween(200))
 
+                preSwipe(DraggableSide.END)
+                delay(50)
                 onSwipe(DraggableSide.END)
 
                 // After the animation return back to Center to make it look like a cycle
@@ -165,6 +170,8 @@ open class DraggableCardController(
             launch {
                 offsetY.animateTo(-cardHeight * 1.2f, tween(200))
 
+                preSwipe(DraggableSide.TOP)
+                delay(50)
                 onSwipe(DraggableSide.TOP)
 
                 // After the animation return back to Center to make it look like a cycle
@@ -194,6 +201,8 @@ open class DraggableCardController(
             launch {
                 offsetY.animateTo(cardHeight * 1.2f, tween(200))
 
+                preSwipe(DraggableSide.BOTTOM)
+                delay(50)
                 onSwipe(DraggableSide.BOTTOM)
 
                 // After the animation return back to Center to make it look like a cycle

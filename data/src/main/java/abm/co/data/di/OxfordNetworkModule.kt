@@ -1,8 +1,8 @@
 package abm.co.data.di
 
 import abm.co.data.BuildConfig
-import abm.co.data.model.qualifier.OxfordNetwork
-import abm.co.data.model.qualifier.TypeEnum
+import abm.co.data.qualifier.OxfordNetwork
+import abm.co.data.qualifier.TypeEnum
 import abm.co.data.remote.OxfordApiService
 import abm.co.data.utils.BaseURLs.BASE_URL_OXFORD
 import com.google.gson.Gson

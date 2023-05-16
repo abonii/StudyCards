@@ -1,9 +1,9 @@
 package abm.co.data.repository
 
 import abm.co.data.model.oxford.toDomain
-import abm.co.data.model.qualifier.OxfordNetwork
-import abm.co.data.model.qualifier.TypeEnum
-import abm.co.data.model.qualifier.YandexNetwork
+import abm.co.data.qualifier.OxfordNetwork
+import abm.co.data.qualifier.TypeEnum
+import abm.co.data.qualifier.YandexNetwork
 import abm.co.data.remote.OxfordApiService
 import abm.co.data.remote.YandexApiService
 import abm.co.domain.base.Either
@@ -59,8 +59,8 @@ class DictionaryRepositoryImpl @Inject constructor(
         val firstLang = if (fromNative) myNativeLang else myLearningLang
         val secondLang = if (fromNative) myLearningLang else myNativeLang
         yandexApiService.getWordTranslations(
-            APIKey = config.yandexKey,
-            textToTranslate = word,
+            key = config.yandexKey,
+            text = word,
             lang = "${firstLang.code}-${secondLang.code}"
         ).toDomain()
     }

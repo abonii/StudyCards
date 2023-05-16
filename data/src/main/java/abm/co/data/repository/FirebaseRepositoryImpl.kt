@@ -23,6 +23,7 @@ import abm.co.domain.base.Failure
 import abm.co.domain.base.mapToFailure
 import abm.co.domain.base.safeCall
 import abm.co.domain.model.Card
+import abm.co.domain.model.CardKind
 import abm.co.domain.model.Category
 import abm.co.domain.model.config.Config
 import abm.co.domain.repository.ServerRepository
@@ -56,10 +57,6 @@ class FirebaseRepositoryImpl @Inject constructor(
     languagesDataStore: LanguagesDataStore,
     private val gson: Gson
 ) : ServerRepository {
-
-    init {
-        println("FirebaseRepositoryImpl: inited")
-    }
 
     private val userCategoryWithLanguagesRef = combine(
         languagesDataStore.getNativeLanguage(),
@@ -226,6 +223,22 @@ class FirebaseRepositoryImpl @Inject constructor(
                 ?.child(CARD_REF)
                 ?.updateChildren(
                     mapOf(card.id to card.toDTO())
+                )
+        }
+    }
+
+    override suspend fun updateUserCardKind(
+        categoryID: String,
+        cardID: String,
+        kind: CardKind
+    ): Either<Failure, Unit> {
+        return safeCall {
+            userCategoryWithLanguagesRef.firstOrNull()
+                ?.child(categoryID)
+                ?.child(CARD_REF)
+                ?.child(cardID)
+                ?.updateChildren(
+                    mapOf(Card.kind to kind)
                 )
         }
     }

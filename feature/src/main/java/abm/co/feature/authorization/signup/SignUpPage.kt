@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -68,12 +67,15 @@ fun SignUpPage(
             is SignUpContractChannel.LoginViaGoogle -> {
                 startGoogleLoginForResult.launch(it.intent)
             }
+
             SignUpContractChannel.NavigateToChooseUserAttributes -> {
                 onNavigateChooseUserAttributes()
             }
+
             SignUpContractChannel.NavigateToLogin -> {
                 onNavigateLoginPage()
             }
+
             is SignUpContractChannel.ShowMessage -> showMessage(it.messageContent)
         }
     }
@@ -93,12 +95,12 @@ private fun SignUpScreen(
 ) {
     Box(
         modifier = modifier
+            .baseBackground()
             .navigationBarsPadding()
             .imePadding()
     ) {
         Column(
             modifier = Modifier
-                .baseBackground()
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

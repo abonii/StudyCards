@@ -1,8 +1,8 @@
 package abm.co.data.di
 
 import abm.co.data.BuildConfig
-import abm.co.data.model.qualifier.TypeEnum
-import abm.co.data.model.qualifier.YandexNetwork
+import abm.co.data.qualifier.TypeEnum
+import abm.co.data.qualifier.YandexNetwork
 import abm.co.data.remote.YandexApiService
 import abm.co.data.utils.BaseURLs.BASE_URL_YANDEX
 import com.google.gson.Gson

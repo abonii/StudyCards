@@ -1,4 +1,4 @@
-package abm.co.data.model.qualifier
+package abm.co.data.qualifier
 
 import javax.inject.Qualifier
 

@@ -38,12 +38,14 @@ fun FrontCardItem(
             .background(StudyCardsTheme.colors.backgroundPrimary)
     ) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = cardUI.cardID,
-                style = StudyCardsTheme.typography.weight400Size14LineHeight18,
+                text = cardUI.translation,
+                style = StudyCardsTheme.typography.weight600Size16LineHeight18,
                 color = StudyCardsTheme.colors.textSecondary.copy(
                     if (isFront) {
                         1f
@@ -74,8 +76,8 @@ fun BackCardItem(
         Box(modifier = Modifier.fillMaxSize()) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
-                text = cardUI.cardID,
-                style = StudyCardsTheme.typography.weight400Size14LineHeight18,
+                text = cardUI.name,
+                style = StudyCardsTheme.typography.weight600Size16LineHeight18,
                 color = StudyCardsTheme.colors.textSecondary
             )
         }

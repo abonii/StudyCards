@@ -244,22 +244,9 @@ private fun ScrollableContent(
                 }
 
                 is ProfileContractState.UserInfo.Signed -> {
-                    if (userInfo.isVerified) {
-                        SignedUserContent(
-                            signed = userInfo
-                        )
-                    } else {
-                        Text(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .padding(bottom = 20.dp)
-                                .fillMaxWidth(),
-                            text = stringResource(id = R.string.Profile_NotVerified_title),
-                            style = StudyCardsTheme.typography.weight600Size14LineHeight18,
-                            textAlign = TextAlign.Center,
-                            color = StudyCardsTheme.colors.textPrimary
-                        )
-                    }
+                    SignedUserContent(
+                        signed = userInfo
+                    )
                 }
 
                 null -> Spacer(modifier = Modifier.height(30.dp))
@@ -420,6 +407,16 @@ private fun SignedUserContent(
                 color = StudyCardsTheme.colors.textPrimary
             )
             Spacer(modifier = Modifier.height(8.dp))
+        }
+        if(!signed.isVerified){
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(id = R.string.Profile_NotVerified_title),
+                style = StudyCardsTheme.typography.weight500Size16LineHeight20,
+                textAlign = TextAlign.Center,
+                color = StudyCardsTheme.colors.textSecondary
+            )
+            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 }

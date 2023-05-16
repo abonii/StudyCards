@@ -1,40 +1,54 @@
 package abm.co.feature.game.swipe
 
 import abm.co.designsystem.message.common.MessageContent
+import abm.co.designsystem.message.common.toMessageContent
+import abm.co.domain.base.Failure
+import abm.co.domain.base.onFailure
+import abm.co.domain.base.onSuccess
+import abm.co.domain.model.CardKind
+import abm.co.domain.repository.ServerRepository
 import abm.co.feature.card.model.CardKindUI
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
+import abm.co.feature.card.model.toDomain
+import abm.co.feature.card.model.toUI
 import abm.co.feature.game.swipe.drag.DraggableSide
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class SwipeGameViewModel @Inject constructor(
+    private val serverRepository: ServerRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val category: CategoryUI? = savedStateHandle["category"]
+    private val category: CategoryUI = savedStateHandle["category"]
+        ?: throw RuntimeException("cannot be empty CATEGORY argument")
 
     private val _channel = Channel<SwipeGameContractChannel>()
     val channel = _channel.receiveAsFlow()
 
     private val cardList = mutableStateListOf<CardUI>()
 
-    private val mutableState: MutableStateFlow<SwipeGameContractState> =
-        MutableStateFlow(SwipeGameContractState.Loading(category?.title ?: ""))
-    val state: StateFlow<SwipeGameContractState> = mutableState.asStateFlow()
+    private val _state: MutableStateFlow<SwipeGameContractState> =
+        MutableStateFlow(SwipeGameContractState.Loading(category.title))
+    val state: StateFlow<SwipeGameContractState> = _state.asStateFlow()
 
     init {
         fetchCards()
@@ -47,6 +61,7 @@ class SwipeGameViewModel @Inject constructor(
                     _channel.send(SwipeGameContractChannel.OnBack)
                 }
             }
+
             is SwipeGameContractEvent.OnSwipeOrClick -> {
                 onClickOrSwipeSide(event.kind)
             }
@@ -55,45 +70,70 @@ class SwipeGameViewModel @Inject constructor(
 
     private fun fetchCards() {
         viewModelScope.launch {
-            cardList.addAll(
-                buildList {
-                    repeat(500){
-                        add(
-                            CardUI(
-                                name = "$it",
-                                translation = "",
-                                imageUrl = "",
-                                example = "",
-                                kind = CardKindUI.UNKNOWN,
-                                categoryID = "",
-                                repeatedCount = 0,
-                                nextRepeatTime = 0,
-                                cardID = "$it",
-                                learnedPercent = 0f
-                            )
-                        )
-                    }
+            serverRepository.getUserCards(category.id).firstOrNull()
+                ?.onSuccess { cards ->
+                    cardList.addAll(cards.filter { it.kind == CardKind.UNDEFINED }
+                        .map { it.toUI() })
+                    listenToCardListEmptiness()
+                }?.onFailure {
+                    it.sendException()
                 }
-            )
-            mutableState.value = SwipeGameContractState.Success(
-                _categoryName = category?.title ?: "",
+            _state.value = SwipeGameContractState.Success(
+                _categoryName = category.title,
                 cards = cardList
             )
         }
     }
 
+    private fun listenToCardListEmptiness() {
+        snapshotFlow {
+            cardList.size
+        }.onEach {
+            if (it == 0) {
+                _channel.send(SwipeGameContractChannel.OnBack)
+            }
+        }.launchIn(viewModelScope)
+    }
+
     private fun onClickOrSwipeSide(draggableSide: DraggableSide) {
         when (draggableSide) {
             DraggableSide.BOTTOM -> {
-                cardList.removeFirstOrNull()
+                cardList.removeFirstOrNull()?.let {
+                    updateCardKind(card = it, kindUI = CardKindUI.UNCERTAIN)
+                }
             }
+
             DraggableSide.END -> {
-                cardList.removeFirstOrNull()
+                cardList.removeFirstOrNull()?.let {
+                    updateCardKind(card = it, kindUI = CardKindUI.KNOWN)
+                }
             }
+
             DraggableSide.START -> {
-                cardList.removeFirstOrNull()
+                cardList.removeFirstOrNull()?.let {
+                    updateCardKind(card = it, kindUI = CardKindUI.UNKNOWN)
+                }
             }
+
             DraggableSide.TOP -> Unit
+        }
+    }
+
+    private fun updateCardKind(card: CardUI, kindUI: CardKindUI) {
+        viewModelScope.launch {
+            serverRepository.updateUserCardKind(
+                cardID = card.cardID,
+                categoryID = card.categoryID,
+                kind = kindUI.toDomain()
+            )
+        }
+    }
+
+    private fun Failure.sendException() {
+        viewModelScope.launch {
+            this@sendException.toMessageContent()?.let {
+                _channel.send(SwipeGameContractChannel.ShowMessage(it))
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ internal fun Exception?.firebaseError(): FirebaseException {
     } catch (e: FirebaseNetworkException) {
         FirebaseException(expectedMessage = ExpectedMessage.Res(R.string.no_internet_connection))
     } catch (e: Exception) {
-        FirebaseException(expectedMessage = ExpectedMessage.Res(R.string.some_problems_occurred))
+        FirebaseException(expectedMessage = ExpectedMessage.String(e.message.toString()))
     }
 }
 

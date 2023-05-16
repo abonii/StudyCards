@@ -12,8 +12,8 @@ import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.game.swipe.card.BackCardItem
-import abm.co.feature.game.swipe.card.FrontCardItem
 import abm.co.feature.game.swipe.card.CardsHolder
+import abm.co.feature.game.swipe.card.FrontCardItem
 import abm.co.feature.game.swipe.drag.rememberCardStackController
 import abm.co.feature.utils.AnalyticsManager
 import abm.co.feature.utils.StudyCardsConstants.TOOLBAR_HEIGHT
@@ -59,7 +59,7 @@ fun SwipeGamePage(
     }
     val state by viewModel.state.collectAsState()
     viewModel.channel.collectInLaunchedEffect {
-        when(it){
+        when (it) {
             SwipeGameContractChannel.OnBack -> onBack()
             is SwipeGameContractChannel.ShowMessage -> showMessage(it.messageContent)
         }
@@ -92,11 +92,12 @@ private fun GameScreen(
                 event(SwipeGameContractEvent.OnBack)
             }
         )
-        Crossfade(targetState = screenState) { state ->
+        Crossfade(targetState = screenState, label = "GameScreen") { state ->
             when (state) {
                 is SwipeGameContractState.Loading -> {
                     LoadingScreen(modifier = Modifier.fillMaxSize())
                 }
+
                 is SwipeGameContractState.Success -> {
                     SuccessScreen(
                         modifier = Modifier.fillMaxSize(),
@@ -138,34 +139,34 @@ private fun SuccessScreen(
                         cardStackController.swipeLeft()
                     }
                 )
-                CardsHolder(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .padding(top = height),
-                    items = cards,
-                    cardHeight = cardHeight,
-                    draggableCardController = cardStackController,
-                    onSwipe = {
-                        event(SwipeGameContractEvent.OnSwipeOrClick(it))
-                    },
-                    frontContent = { card, isFront ->
-                        FrontCardItem(
-                            cardUI = card,
-                            isFront = isFront,
-                            onClickUncertain = {
-                                cardStackController.swipeBottom()
-                            }
-                        )
-                    },
-                    backContent = { card ->
-                        BackCardItem(
-                            cardUI = card,
-                            onClickUncertain = {
-                                cardStackController.swipeBottom()
-                            }
-                        )
-                    }
-                )
+                if (cards.isNotEmpty()) {
+                    CardsHolder(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .padding(top = height),
+                        items = cards,
+                        cardHeight = cardHeight,
+                        draggableCardController = cardStackController,
+                        frontContent = { card, isFront ->
+                            FrontCardItem(
+                                cardUI = card,
+                                isFront = isFront,
+                                onClickUncertain = {
+                                    cardStackController.swipeBottom()
+                                }
+                            )
+                        },
+                        backContent = { card ->
+                            BackCardItem(
+                                cardUI = card,
+                                onClickUncertain = {
+                                    cardStackController.swipeBottom()
+                                }
+                            )
+                        }
+                    )
+                }
+
             }
         }
     )

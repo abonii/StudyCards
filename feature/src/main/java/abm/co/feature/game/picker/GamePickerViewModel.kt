@@ -74,23 +74,31 @@ class GamePickerViewModel @Inject constructor(
     fun onEvent(event: GamePickerContractEvent) = when (event) {
         is GamePickerContractEvent.OnGamePicked -> {
             viewModelScope.launch {
-                _channel.send(
-                    GamePickerContractChannel.NavigateToGame(
-                        cards = allCards.filter { it.kind != CardKindUI.UNDEFINED },
-                        gameKind = event.gameKind
-                    )
-                )
+                allCards.filter { it.kind != CardKindUI.UNDEFINED }.let {
+                    if (it.isNotEmpty()) {
+                        _channel.send(
+                            GamePickerContractChannel.NavigateToGame(
+                                cards = it,
+                                gameKind = event.gameKind
+                            )
+                        )
+                    }
+                }
             }
         }
 
         GamePickerContractEvent.OnLearnPicked -> {
             viewModelScope.launch {
-                category?.let {
-                    _channel.send(
-                        GamePickerContractChannel.NavigateToLearn(
-                            category = it
-                        )
-                    )
+                allCards.filter { it.kind == CardKindUI.UNDEFINED }.let { cardUIList ->
+                    if(cardUIList.isNotEmpty()) {
+                        category?.let {
+                            _channel.send(
+                                GamePickerContractChannel.NavigateToLearn(
+                                    category = it
+                                )
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -107,13 +115,17 @@ class GamePickerViewModel @Inject constructor(
 
         GamePickerContractEvent.OnRepeatPicked -> {
             viewModelScope.launch {
-                _channel.send(
-                    GamePickerContractChannel.NavigateToRepeat(
-                        cards = allCards.filter {
-                            System.currentTimeMillis() > it.nextRepeatTime
-                        }
-                    )
-                )
+                allCards.filter {
+                    System.currentTimeMillis() > it.nextRepeatTime
+                }.let {
+                    if (it.isNotEmpty()) {
+                        _channel.send(
+                            GamePickerContractChannel.NavigateToRepeat(
+                                cards = it
+                            )
+                        )
+                    }
+                }
             }
         }
     }

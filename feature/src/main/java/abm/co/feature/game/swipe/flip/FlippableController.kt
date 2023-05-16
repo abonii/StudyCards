@@ -20,20 +20,20 @@ class FlippableController {
     private val _flipRequests = MutableSharedFlow<FlippableState>(extraBufferCapacity = 1)
     internal val flipRequests = _flipRequests.asSharedFlow()
 
-    var currentSide: FlippableState by mutableStateOf(FlippableState.INITIALIZED)
+    var currentSide: FlippableState by mutableStateOf(FlippableState.FRONT)
         private set
 
     /**
      * Flips the view to the [FlippableState.FRONT] side
      */
-    fun flipToFront() {
+    private fun flipToFront() {
         flip(FlippableState.FRONT)
     }
 
     /**
      * Flips the view to the [FlippableState.BACK] side
      */
-    fun flipToBack() {
+    private fun flipToBack() {
         flip(FlippableState.BACK)
     }
 
@@ -41,7 +41,7 @@ class FlippableController {
      * Flips the view to the passed [flippableState]
      * @param flippableState The side to flip the view to.
      */
-    fun flip(flippableState: FlippableState) {
+    private fun flip(flippableState: FlippableState) {
         currentSide = flippableState
         _flipRequests.tryEmit(flippableState)
     }
@@ -56,7 +56,7 @@ class FlippableController {
     }
 
     fun reset() {
-        currentSide = FlippableState.INITIALIZED
+        currentSide = FlippableState.FRONT
     }
 }
 
