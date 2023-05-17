@@ -11,6 +11,7 @@ data class CategoryDTO(
     val creatorName: String? = null,
     val creatorID: String? = null,
     val imageURL: String? = null,
+    val enabled: Boolean? = true,
     val id: String = ""
 )
 

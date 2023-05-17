@@ -106,7 +106,9 @@ class FirebaseRepositoryImpl @Inject constructor(
                                             .child(CARD_REF)
                                             .childrenCount
                                             .toInt()
-                                        items.add(it.toDomain(cardsCount))
+                                        if (it.enabled == true) {
+                                            items.add(it.toDomain(cardsCount))
+                                        }
                                     }
                             } catch (e: DatabaseException) {
                                 PlutoLog.e("getCategories", e.message, e.cause)
@@ -147,7 +149,9 @@ class FirebaseRepositoryImpl @Inject constructor(
                                             .child(CARD_REF)
                                             .childrenCount
                                             .toInt()
-                                        items.add(it.toDomain(cardsCount))
+                                        if (it.enabled == true) {
+                                            items.add(it.toDomain(cardsCount))
+                                        }
                                     }
                             } catch (e: DatabaseException) {
                                 PlutoLog.e("getCategories", e.message, e.cause)

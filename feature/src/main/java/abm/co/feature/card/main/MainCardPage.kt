@@ -146,7 +146,6 @@ private fun ScrollableContent(
 ) {
     LazyColumn(
         contentPadding = PaddingValues(
-            horizontal = 16.dp,
             vertical = 24.dp
         ),
         modifier = modifier,
@@ -173,7 +172,9 @@ private fun ScrollableContent(
                 contentType = "userCategoriesTitle"
             ) {
                 Text(
-                    modifier = Modifier.padding(bottom = 10.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 10.dp),
                     text = stringResource(id = R.string.MainCard_YourSet_title),
                     style = StudyCardsTheme.typography.weight600Size12LineHeight20,
                     color = StudyCardsTheme.colors.textPrimary
@@ -203,7 +204,9 @@ private fun ScrollableContent(
                             onClickShareCategory(item)
                         },
                         isPublished = item.published,
-                        modifier = Modifier.padding(bottom = 10.dp)
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .padding(bottom = 10.dp)
                     )
                 }
             } else {
@@ -211,7 +214,7 @@ private fun ScrollableContent(
                     contentType = "userCategoriesEmpty"
                 ) {
                     EmptyCategories(
-                        modifier = Modifier.padding(vertical = 12.dp)
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
                     )
                 }
             }
@@ -232,11 +235,14 @@ private fun OurSet(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
             text = title,
             style = StudyCardsTheme.typography.weight600Size12LineHeight20,
             color = StudyCardsTheme.colors.textPrimary
         )
         LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
             content = {
                 items(
                     items = items,
