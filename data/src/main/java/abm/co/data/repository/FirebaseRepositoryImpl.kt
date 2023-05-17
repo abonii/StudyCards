@@ -4,7 +4,6 @@ import abm.co.data.datastore.LanguagesDataStore
 import abm.co.data.di.ApplicationScope
 import abm.co.data.model.DatabaseRef.CARD_REF
 import abm.co.data.model.DatabaseRef.CATEGORY_REF
-import abm.co.data.model.DatabaseRef.CONFIG_REF
 import abm.co.data.model.DatabaseRef.EXPLORE_REF
 import abm.co.data.model.DatabaseRef.ROOT_REF
 import abm.co.data.model.DatabaseRef.USER_PROPERTIES_REF
@@ -13,7 +12,6 @@ import abm.co.data.model.card.CardDTO
 import abm.co.data.model.card.CategoryDTO
 import abm.co.data.model.card.toDTO
 import abm.co.data.model.card.toDomain
-import abm.co.data.model.config.ConfigDTO
 import abm.co.data.model.user.UserDTO
 import abm.co.data.model.user.toDomain
 import abm.co.data.utils.asFlow
@@ -25,7 +23,6 @@ import abm.co.domain.base.safeCall
 import abm.co.domain.model.Card
 import abm.co.domain.model.CardKind
 import abm.co.domain.model.Category
-import abm.co.domain.model.config.Config
 import abm.co.domain.repository.ServerRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -183,6 +180,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                 id = ref?.key ?: "category_id",
                 creatorID = firebaseAuth.currentUser?.uid,
                 creatorName = getUser.firstOrNull()?.asRight?.b?.name
+                    ?: firebaseAuth.currentUser?.displayName
             )
             ref?.setValue(updatedCategory.toDTO())
             updatedCategory
@@ -204,12 +202,13 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     override suspend fun createUserCard(card: Card): Either<Failure, Unit> {
         return safeCall {
+            val cardDTO = card.toDTO()
             val ref = userCategoryWithLanguagesRef.firstOrNull()
-                ?.child(card.categoryID)
+                ?.child(cardDTO.categoryID)
                 ?.child(CARD_REF)
-                ?.child(card.id)?.push()
+                ?.child(cardDTO.id)?.push()
             ref?.setValue(
-                card.copy(
+                cardDTO.copy(
                     id = ref.key ?: "card_id"
                 )
             )
@@ -218,11 +217,12 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     override suspend fun updateUserCard(card: Card): Either<Failure, Unit> {
         return safeCall {
+            val cardDTO = card.toDTO()
             userCategoryWithLanguagesRef.firstOrNull()
-                ?.child(card.categoryID)
+                ?.child(cardDTO.categoryID)
                 ?.child(CARD_REF)
                 ?.updateChildren(
-                    mapOf(card.id to card.toDTO())
+                    mapOf(cardDTO.id to cardDTO)
                 )
         }
     }
@@ -238,7 +238,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                 ?.child(CARD_REF)
                 ?.child(cardID)
                 ?.updateChildren(
-                    mapOf(Card.kind to kind)
+                    mapOf(Card.kind to kind.toDTO())
                 )
         }
     }

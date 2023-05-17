@@ -210,7 +210,7 @@ private fun ScrollableContent(
                 item(
                     contentType = "userCategoriesEmpty"
                 ) {
-                    EmptyScreen(
+                    EmptyCategories(
                         modifier = Modifier.padding(vertical = 12.dp)
                     )
                 }
@@ -384,6 +384,19 @@ private fun EmptyScreen(
         )
         Spacer(modifier = Modifier.weight(0.28f))
     }
+}
+
+@Composable
+private fun EmptyCategories(
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = stringResource(id = R.string.MainCard_Empty_title),
+        style = StudyCardsTheme.typography.weight400Size16LineHeight24,
+        color = StudyCardsTheme.colors.grayishBlue,
+        modifier = modifier.padding(horizontal = 16.dp),
+        textAlign = TextAlign.Center
+    )
 }
 
 @Composable

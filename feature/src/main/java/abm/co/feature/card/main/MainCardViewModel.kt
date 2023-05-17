@@ -61,9 +61,9 @@ class MainCardViewModel @Inject constructor(
 
             is MainCardContractEvent.OnClickCategoryConfirmShare -> {
                 viewModelScope.launch {
-                    if(event.item.published == true){
+                    if (event.item.published == true) {
                         serverRepository.removeCategory(event.item.id)
-                    } else {
+                    } else if (event.item.creatorID == firebaseAuth.currentUser?.uid) {
                         serverRepository.copyUserCategoryToExploreCollection(event.item.id)
                             .onFailure {
                                 it.sendException()
@@ -123,7 +123,12 @@ class MainCardViewModel @Inject constructor(
                             .filterNot { it.creatorID == firebaseAuth.currentUser?.uid }
                             .map { it.toUI() },
                         userCategories = userCategories
-                            .map { category -> category.toUI(published = categories.find { it.id == category.id } != null) },
+                            .filter { it.creatorID == firebaseAuth.currentUser?.uid }
+                            .map { category ->
+                                category.toUI(
+                                    published = categories.find { it.id == category.id } != null
+                                )
+                            },
                         categoryConfirmShare = null
                     )
                 }

@@ -11,15 +11,10 @@ data class CardDTO(
     val kind: CardKindDTO = CardKindDTO.UNDEFINED,
     val example: String = "",
     val translation: String = "",
-    @SerializedName("image_url")
     val imageUrl: String = "",
-    @SerializedName("learned_percent")
     val learnedPercent: Float = 0f, // 0..1
-    @SerializedName("category_id")
     val categoryID: String = "",
-    @SerializedName("repeated_count")
     val repeatedCount: Int = 0,
-    @SerializedName("next_repeat_time")
     val nextRepeatTime: Long = 0L
 )
 

@@ -8,11 +8,8 @@ import com.google.gson.annotations.SerializedName
 data class CategoryDTO(
     val title: String = "",
     val bookmarked: Boolean = false,
-    @SerializedName("creator_name")
     val creatorName: String? = null,
-    @SerializedName("creator_id")
     val creatorID: String? = null,
-    @SerializedName("image_url")
     val imageURL: String? = null,
     val id: String = ""
 )

@@ -5,8 +5,8 @@ import androidx.annotation.Keep
 
 @Keep
 data class UserDTO(
-    val name: String? = "",
-    val email: String? = "",
+    val name: String? = null,
+    val email: String? = null,
     val translateCounts: Long? = null,
     val translateCountsUpdateTime: Long? = null,
     val goal: UserGoalDTO? = null,
