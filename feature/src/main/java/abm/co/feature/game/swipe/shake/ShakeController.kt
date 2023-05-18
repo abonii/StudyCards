@@ -18,25 +18,25 @@ class ShakeController(
         if (shakeEnabled) {
             shakeEnabled = !shakeOneTime
             animate(
-                initialValue = -20f,
-                targetValue = 20f,
+                initialValue = -15f,
+                targetValue = 15f,
                 animationSpec = repeatable(
-                    iterations = 4,
+                    iterations = 3,
                     animation = tween(
-                        durationMillis = 80,
+                        durationMillis = 70,
                         easing = LinearEasing,
-                        delayMillis = 50
+                        delayMillis = 20
                     )
                 ),
                 block = { value, _ ->
                     shakeOffset.value = value
                 }
             )
-            shakeOffset.value = 0f
+            reset()
         }
     }
 
-    fun reset() {
+    private fun reset() {
         shakeOffset.value = 0f
     }
 }

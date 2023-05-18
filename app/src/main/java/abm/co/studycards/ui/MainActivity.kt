@@ -10,11 +10,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.NavHostFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -42,20 +41,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupStartupDestination() {
-        lifecycleScope.launch {
-            viewModel.startDestination.collectLatest { state ->
-                state?.let {
-                    val navHostFragment = supportFragmentManager
-                        .findFragmentById(R.id.root_host_fragment) as NavHostFragment
-                    val inflater = navHostFragment.navController.navInflater
-                    val graph = inflater.inflate(R.navigation.root_nav_graph)
-                    graph.setStartDestination(it)
-                    val navController = navHostFragment.navController
-                    navController.setGraph(graph, intent.extras)
-                }
-
-            }
+        launchLifecycleScope(Lifecycle.State.STARTED) {
+            viewModel.startDestination.collectLatest(::initNavigation)
         }
+    }
+
+    private fun initNavigation(startDestination: Int) {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.root_host_fragment) as NavHostFragment
+        val inflater = navHostFragment.navController.navInflater
+        val graph = inflater.inflate(R.navigation.root_nav_graph)
+        graph.setStartDestination(startDestination)
+        val navController = navHostFragment.navController
+        navController.setGraph(graph, intent.extras)
     }
 
     override fun attachBaseContext(newBase: Context?) {

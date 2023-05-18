@@ -2,7 +2,6 @@ package abm.co.data.model.card
 
 import abm.co.domain.model.Card
 import androidx.annotation.Keep
-import com.google.gson.annotations.SerializedName
 
 @Keep
 data class CardDTO(

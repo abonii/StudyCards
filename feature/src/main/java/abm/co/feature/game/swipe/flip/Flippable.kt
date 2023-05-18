@@ -5,6 +5,7 @@ import abm.co.feature.game.swipe.flip.FlipAnimationType.HORIZONTAL_ANTI_CLOCKWIS
 import abm.co.feature.game.swipe.flip.FlipAnimationType.HORIZONTAL_CLOCKWISE
 import abm.co.feature.game.swipe.flip.FlipAnimationType.VERTICAL_ANTI_CLOCKWISE
 import abm.co.feature.game.swipe.flip.FlipAnimationType.VERTICAL_CLOCKWISE
+import abm.co.feature.game.swipe.flip.FlippableState.INIT
 import abm.co.feature.game.swipe.flip.FlippableState.BACK
 import abm.co.feature.game.swipe.flip.FlippableState.FRONT
 import androidx.compose.animation.core.Transition
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.onEach
  * An Enum class to keep the state of side of [Flippable] like [FRONT] or [BACK]
  */
 enum class FlippableState {
+    INIT,
     FRONT,
     BACK
 }
@@ -75,14 +77,15 @@ fun Flippable(
     frontSide: @Composable (BoxScope.() -> Unit),
     backSide: @Composable (BoxScope.() -> Unit),
     flipController: FlippableController,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
     flipDurationMs: Int = 700,
     cameraDistance: Float = 30.0F
 ) {
     Box(
-        modifier = modifier
-            .clickableWithoutRipple(onClick = onClick),
+        modifier = modifier then if (onClick != null) {
+            Modifier.clickableWithoutRipple(onClick = onClick)
+        } else Modifier,
         contentAlignment = Alignment.Center
     ) {
         var flippableState = flipController.currentSide
@@ -116,7 +119,7 @@ fun Flippable(
             label = "Front Rotation"
         ) { state ->
             when (state) {
-                FRONT -> 0f
+                INIT, FRONT -> 0f
                 BACK -> 180f
             }
         }
@@ -138,7 +141,7 @@ fun Flippable(
             label = "Back Rotation"
         ) { state ->
             when (state) {
-                FRONT -> 180f
+                INIT, FRONT -> 180f
                 BACK -> 0f
             }
         }
@@ -162,7 +165,7 @@ fun Flippable(
             label = "Front Opacity"
         ) { state ->
             when (state) {
-                FRONT -> 1f
+                INIT, FRONT -> 1f
                 BACK -> 0f
             }
         }
@@ -186,7 +189,7 @@ fun Flippable(
             label = "Back Opacity"
         ) { state ->
             when (state) {
-                FRONT -> 0f
+                INIT, FRONT -> 0f
                 BACK -> 1f
             }
         }

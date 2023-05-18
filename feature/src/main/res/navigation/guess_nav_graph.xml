@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/learn_nav_graph"
-    app:startDestination="@id/swipe_game_destination">
+    android:id="@+id/guess_nav_graph"
+    app:startDestination="@id/guess_destination">
 
     <fragment
-        android:id="@+id/swipe_game_destination"
-        android:name="abm.co.feature.game.swipe.SwipeGameFragment" >
+        android:id="@+id/guess_destination"
+        android:name="abm.co.feature.game.guess.GuessFragment" >
 
         <argument
             android:name="cards"

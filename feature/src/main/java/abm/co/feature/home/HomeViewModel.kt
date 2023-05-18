@@ -43,30 +43,43 @@ class HomeViewModel @Inject constructor(
     )
     val state: StateFlow<HomeContract.ScreenState> = _state.asStateFlow()
 
-    private val mutableToolbarState = MutableStateFlow(HomeContract.ToolbarState())
-    val toolbarState: StateFlow<HomeContract.ToolbarState> = mutableToolbarState.asStateFlow()
+    private val _toolbarState = MutableStateFlow(HomeContract.ToolbarState())
+    val toolbarState: StateFlow<HomeContract.ToolbarState> = _toolbarState.asStateFlow()
+
+    private val _dialogState = MutableStateFlow(HomeContract.Dialog())
+    val dialogState: StateFlow<HomeContract.Dialog> = _dialogState.asStateFlow()
 
     private val categoryList = mutableStateListOf<CategoryUI>()
 
     init {
+        fetchLanguages()
         fetchUser()
         fetchCategories()
     }
 
-    private fun fetchUser() {
+    private fun fetchLanguages() {
         combine(
-            serverRepository.getUser,
             languagesRepository.getLearningLanguage(),
             languagesRepository.getNativeLanguage()
-        ) { userEither, learningLang, nativeLang ->
+        ) { learningLang, nativeLang ->
+            _toolbarState.value = HomeContract.ToolbarState(
+                userName = null,
+                learningLanguage = learningLang?.toUI(),
+                nativeLanguage = nativeLang?.toUI()
+            )
+        }.launchIn(viewModelScope)
+    }
+
+    private fun fetchUser() {
+        serverRepository.getUser.onEach { userEither ->
             userEither.onFailure {
                 it.sendException()
             }.onSuccess { user ->
-                mutableToolbarState.value = HomeContract.ToolbarState(
-                    userName = user?.name ?: user?.email,
-                    learningLanguage = learningLang?.toUI(),
-                    nativeLanguage = nativeLang?.toUI()
-                )
+                _toolbarState.update { oldState ->
+                    oldState.copy(
+                        userName = user?.name ?: user?.email
+                    )
+                }
             }
         }.launchIn(viewModelScope)
     }
@@ -119,9 +132,8 @@ class HomeViewModel @Inject constructor(
             }
 
             is HomeContractEvent.OnLongClickCategory -> {
-                _state.update { oldState ->
-                    (oldState as? HomeContract.ScreenState.Success)
-                        ?.copy(removingCategory = event.value) ?: oldState
+                _dialogState.update { oldState ->
+                    oldState.copy(removingCategory = event.value)
                 }
             }
 
@@ -134,10 +146,10 @@ class HomeViewModel @Inject constructor(
                         }
                 }
             }
+
             HomeContractEvent.OnDismissDialog -> {
-                _state.update { oldState ->
-                    (oldState as? HomeContract.ScreenState.Success)
-                        ?.copy(removingCategory = null) ?: oldState
+                _dialogState.update { oldState ->
+                    oldState.copy(removingCategory = null)
                 }
             }
         }
@@ -189,10 +201,13 @@ sealed interface HomeContract {
 
         @Immutable
         data class Success(
-            val setsOfCards: List<CategoryUI>,
-            val removingCategory: CategoryUI? = null
+            val setsOfCards: List<CategoryUI>
         ) : ScreenState
     }
+
+    data class Dialog(
+        val removingCategory: CategoryUI? = null
+    ) : HomeContract
 }
 
 @Immutable

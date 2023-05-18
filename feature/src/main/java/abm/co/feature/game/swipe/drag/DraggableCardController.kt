@@ -101,7 +101,7 @@ open class DraggableCardController(
      */
     val scale = Animatable(0.9f)
 
-    var preSwipe: (draggableSide: DraggableSide) -> Unit = {}
+    var preSwipe: suspend (draggableSide: DraggableSide) -> Unit = {}
     var onSwipe: (draggableSide: DraggableSide) -> Unit = {}
 
     fun swipeLeft() {

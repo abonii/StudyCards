@@ -93,11 +93,13 @@ fun HomePage(
     }
     val screenState by viewModel.state.collectAsState()
     val toolbarState by viewModel.toolbarState.collectAsState()
+    val dialogState by viewModel.dialogState.collectAsState()
     SetStatusBarColor()
     HomeScreen(
         screenState = screenState,
         toolbarState = toolbarState,
-        event = viewModel::onEvent
+        dialogState = dialogState,
+        onEvent = viewModel::onEvent
     )
 }
 
@@ -105,7 +107,8 @@ fun HomePage(
 private fun HomeScreen(
     screenState: HomeContract.ScreenState,
     toolbarState: HomeContract.ToolbarState,
-    event: (HomeContractEvent) -> Unit
+    dialogState: HomeContract.Dialog,
+    onEvent: (HomeContractEvent) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -121,7 +124,7 @@ private fun HomeScreen(
             scrollState = scrollState,
             toolbarState = toolbarScrollable
         )
-        Crossfade(targetState = screenState) { state ->
+        Crossfade(targetState = screenState, label = "HomePage") { state ->
             when (state) {
                 HomeContract.ScreenState.Loading -> {
                     LoadingScreen(modifier = Modifier.fillMaxSize())
@@ -138,25 +141,19 @@ private fun HomeScreen(
                             .fillMaxSize(),
                         screenState = state,
                         onClickPlayCategory = {
-                            event(HomeContractEvent.OnClickPlayCategory(it))
+                            onEvent(HomeContractEvent.OnClickPlayCategory(it))
                         },
                         onClickCategory = {
-                            event(HomeContractEvent.OnClickCategory(it))
+                            onEvent(HomeContractEvent.OnClickCategory(it))
                         },
                         onClickShowAllCategory = {
-                            event(HomeContractEvent.OnClickShowAllCategory)
+                            onEvent(HomeContractEvent.OnClickShowAllCategory)
                         },
                         onClickBookmark = {
-                            event(HomeContractEvent.OnClickBookmarkCategory(it))
+                            onEvent(HomeContractEvent.OnClickBookmarkCategory(it))
                         },
                         onLongClickCategory = {
-                            event(HomeContractEvent.OnLongClickCategory(it))
-                        },
-                        onConfirmRemoveCategory = {
-                            event(HomeContractEvent.OnConfirmRemoveCategory(it))
-                        },
-                        onDismissDialog = {
-                            event(HomeContractEvent.OnDismissDialog)
+                            onEvent(HomeContractEvent.OnLongClickCategory(it))
                         }
                     )
                 }
@@ -174,12 +171,21 @@ private fun HomeScreen(
             welcomeText = stringResource(id = R.string.HomePage_Toolbar_welcome) + ", " +
                     (toolbarState.userName ?: stringResource(id = R.string.HomePage_Toolbar_guest)),
             progress = toolbarScrollable.progress,
-            onClickDrawerIcon = { event(HomeContractEvent.OnClickDrawer) },
-            onClickLearningLanguageIcon = { event(HomeContractEvent.OnClickToolbarLanguage) },
+            onClickDrawerIcon = { onEvent(HomeContractEvent.OnClickDrawer) },
+            onClickLearningLanguageIcon = { onEvent(HomeContractEvent.OnClickToolbarLanguage) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(with(LocalDensity.current) { toolbarScrollable.height.toDp() })
                 .graphicsLayer { translationY = toolbarScrollable.offset }
+        )
+        Dialog(
+            dialogState = dialogState,
+            onConfirmRemoveCategory = {
+                onEvent(HomeContractEvent.OnConfirmRemoveCategory(it))
+            },
+            onDismissDialog = {
+                onEvent(HomeContractEvent.OnDismissDialog)
+            }
         )
     }
 }
@@ -190,8 +196,6 @@ private fun SuccessScreen(
     onClickShowAllCategory: () -> Unit,
     onClickCategory: (CategoryUI) -> Unit,
     onLongClickCategory: (CategoryUI) -> Unit,
-    onDismissDialog: () -> Unit,
-    onConfirmRemoveCategory: (CategoryUI) -> Unit,
     onClickBookmark: (CategoryUI) -> Unit,
     onClickPlayCategory: (CategoryUI) -> Unit,
     modifier: Modifier = Modifier
@@ -230,15 +234,26 @@ private fun SuccessScreen(
                 }
             }
         }
-        screenState.removingCategory?.let {
-            ConfirmAlertDialog(
-                title = "Do you really want to delete ${it.title}?",
-                onConfirm = {
-                    onConfirmRemoveCategory(it)
-                },
-                onDismiss = onDismissDialog
-            )
-        }
+    }
+}
+
+@Composable
+private fun Dialog(
+    dialogState: HomeContract.Dialog,
+    onDismissDialog: () -> Unit,
+    onConfirmRemoveCategory: (CategoryUI) -> Unit
+) {
+    dialogState.removingCategory?.let {
+        ConfirmAlertDialog(
+            title = stringResource(
+                id = R.string.HomePage_Dialog_removeCategoryItem,
+                it.title
+            ),
+            onConfirm = {
+                onConfirmRemoveCategory(it)
+            },
+            onDismiss = onDismissDialog
+        )
     }
 }
 

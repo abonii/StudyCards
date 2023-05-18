@@ -10,10 +10,9 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -22,17 +21,15 @@ import androidx.compose.ui.unit.dp
 fun ShowDialogOnBackPressed(
     onConfirm: () -> Unit,
     subtitle: String? = null,
+    show: MutableState<Boolean> = remember { mutableStateOf(false) },
     title: String = stringResource(id = R.string.Alert_Title),
     confirm: String = stringResource(id = R.string.Alert_Confirm),
     dismiss: String = stringResource(id = R.string.Alert_Dismiss)
 ) {
-    var showDialog by remember {
-        mutableStateOf(false)
-    }
     BackHandler {
-        showDialog = true
+        show.value = true
     }
-    if (showDialog) {
+    if (show.value) {
         ConfirmAlertDialog(
             title = title,
             subtitle = subtitle,
@@ -40,7 +37,7 @@ fun ShowDialogOnBackPressed(
             dismiss = dismiss,
             onConfirm = onConfirm,
             onDismiss = {
-                showDialog = false
+                show.value = false
             }
         )
     }

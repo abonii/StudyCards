@@ -11,6 +11,7 @@ import abm.co.feature.R
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.card.model.toUI
+import abm.co.feature.home.HomeContract
 import abm.co.feature.utils.TextToSpeechManager
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
@@ -55,6 +56,9 @@ class CategoryViewModel @Inject constructor(
         )
     )
     val toolbarState: StateFlow<CategoryContract.ToolbarState> = _toolbarState.asStateFlow()
+
+    private val _dialogState = MutableStateFlow(CategoryContract.Dialog())
+    val dialogState: StateFlow<CategoryContract.Dialog> = _dialogState.asStateFlow()
 
     private val cardItems = mutableStateListOf<CardUI>()
 
@@ -107,9 +111,8 @@ class CategoryViewModel @Inject constructor(
             }
 
             is CategoryContractEvent.OnLongClickCard -> {
-                _state.update { oldState ->
-                    (oldState as? CategoryContract.ScreenState.Success)
-                        ?.copy(removingCard = event.cardItem) ?: oldState
+                _dialogState.update { oldState ->
+                    oldState.copy(removingCard = event.cardItem)
                 }
             }
 
@@ -124,9 +127,8 @@ class CategoryViewModel @Inject constructor(
             }
 
             CategoryContractEvent.OnDismissDialog -> {
-                _state.update { oldState ->
-                    (oldState as? CategoryContract.ScreenState.Success)
-                        ?.copy(removingCard = null) ?: oldState
+                _dialogState.update { oldState ->
+                    oldState.copy(removingCard = null)
                 }
             }
         }
@@ -137,17 +139,21 @@ class CategoryViewModel @Inject constructor(
             serverRepository.getUserCards(category.id)
                 .collectLatest { either ->
                     either.onSuccess { items ->
-                        when (state.value) {
-                            is CategoryContract.ScreenState.Success -> {
-                                cardItems.clear()
-                                cardItems.addAll(items.map { it.toUI() })
-                            }
+                        if(items.isEmpty()){
+                            _state.value = CategoryContract.ScreenState.Empty
+                        } else {
+                            when (state.value) {
+                                is CategoryContract.ScreenState.Success -> {
+                                    cardItems.clear()
+                                    cardItems.addAll(items.map { it.toUI() })
+                                }
 
-                            else -> {
-                                cardItems.addAll(items.map { it.toUI() })
-                                _state.value = CategoryContract.ScreenState.Success(
-                                    cardItems
-                                )
+                                else -> {
+                                    cardItems.addAll(items.map { it.toUI() })
+                                    _state.value = CategoryContract.ScreenState.Success(
+                                        cardItems
+                                    )
+                                }
                             }
                         }
                     }.onFailure {
@@ -204,10 +210,10 @@ sealed interface CategoryContract {
     data class ToolbarState(
         val categoryTitle: String,
         @StringRes val descriptionRes: Int
-    )
+    ): CategoryContract
 
     @Stable
-    sealed interface ScreenState {
+    sealed interface ScreenState: CategoryContract {
         @Immutable
         object Loading : ScreenState
 
@@ -216,10 +222,13 @@ sealed interface CategoryContract {
 
         @Immutable
         data class Success(
-            val cards: List<CardUI>,
-            val removingCard: CardUI? = null
+            val cards: List<CardUI>
         ) : ScreenState
     }
+
+    data class Dialog(
+        val removingCard: CardUI? = null
+    ) : CategoryContract
 }
 
 @Immutable

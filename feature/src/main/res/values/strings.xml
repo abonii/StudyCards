@@ -105,12 +105,14 @@
     <string name="HomePage.Empty.title">Оh, we don\'t have the words to study yet.\nLet\'s add new words to the add button</string>
     <string name="HomePage.Category.title">Latest set of cards</string>
     <string name="HomePage.Category.showAll">Show all</string>
+    <string name="HomePage.Dialog.removeCategoryItem">Do you really want to remove %s?</string>
 
     <string name="Category.Toolbar.title">Categories</string>
     <string name="Category.Toolbar.subtitle">Added cards</string>
     <string name="Category.Input.title">Category name</string>
     <string name="Category.Input.hint">Enter a category name</string>
     <string name="Category.Button.title">Continue</string>
+    <string name="Category.Dialog.removeCardItem">Do you really want to remove %s?</string>
     <string name="Category.Message.Error.TextToSpeech.notFound">You don\'t have the language to speech in your device\'s system, download it please</string>
 
     <string name="ChooseOrCreateCategory.Available.title">Your categories</string>
@@ -212,6 +214,12 @@
     <string name="WordInfo.Translation.title">Translation</string>
     <string name="WordInfo.Intro.selectToLearn">Choose the words you want to learn</string>
     <string name="WordInfo.Synonym.title">Synonyms</string>
+
+    <string name="PairIt.Toolbar.title">Pair it</string>
+
+    <string name="Review.Toolbar.title">Review</string>
+
+    <string name="Guess.Toolbar.title">Guess</string>
 
     <plurals name="practicedNTime">
         <item quantity="one"> Practiced: %s time</item>

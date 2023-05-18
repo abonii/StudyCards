@@ -125,7 +125,8 @@ fun HomeCollapsingToolbar(
                     modifier = Modifier.graphicsLayer {
                         alpha = learningLanguageAlpha
                     },
-                    animationSpec = tween(easing = CubicBezierEasing(0.12f, 0f, 0.12f, 1f))
+                    animationSpec = tween(easing = CubicBezierEasing(0.12f, 0f, 0.12f, 1f)),
+                    label = "home collapsing toolbar"
                 ) {
                     Text(
                         modifier = Modifier.wrapContentWidth(),

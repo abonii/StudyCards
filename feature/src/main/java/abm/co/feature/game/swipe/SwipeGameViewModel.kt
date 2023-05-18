@@ -90,7 +90,7 @@ class SwipeGameViewModel @Inject constructor(
             cardList.size
         }.onEach {
             if (it == 0) {
-                _channel.send(SwipeGameContractChannel.OnBack)
+                _channel.send(SwipeGameContractChannel.OnFinish)
             }
         }.launchIn(viewModelScope)
     }
@@ -152,21 +152,17 @@ sealed class SwipeGameContractState(val categoryName: String) {
     ) : SwipeGameContractState(_categoryName)
 }
 
-@Stable
+@Immutable
 sealed interface SwipeGameContractEvent {
-    @Immutable
     object OnBack : SwipeGameContractEvent
 
-    @Immutable
     data class OnSwipeOrClick(val kind: DraggableSide) : SwipeGameContractEvent
 }
 
-@Stable
+@Immutable
 sealed interface SwipeGameContractChannel {
-    @Immutable
     object OnBack : SwipeGameContractChannel
+    object OnFinish : SwipeGameContractChannel
 
-    @Immutable
     data class ShowMessage(val messageContent: MessageContent) : SwipeGameContractChannel
 }
-

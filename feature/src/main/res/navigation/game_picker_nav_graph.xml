@@ -5,6 +5,9 @@
     app:startDestination="@id/game_picker_destination">
 
     <include app:graph="@navigation/learn_nav_graph" />
+    <include app:graph="@navigation/pair_it_nav_graph" />
+    <include app:graph="@navigation/review_nav_graph" />
+    <include app:graph="@navigation/guess_nav_graph" />
 
     <dialog
         android:id="@+id/game_picker_destination"
@@ -20,6 +23,27 @@
             <argument
                 android:name="category"
                 app:argType="abm.co.feature.card.model.CategoryUI" />
+        </action>
+        <action
+            android:id="@+id/to_pair_it_nav_graph"
+            app:destination="@id/pair_it_nav_graph">
+            <argument
+                android:name="cards"
+                app:argType="abm.co.feature.card.model.CardUI[]" />
+        </action>
+        <action
+            android:id="@+id/to_review_nav_graph"
+            app:destination="@id/review_nav_graph">
+            <argument
+                android:name="cards"
+                app:argType="abm.co.feature.card.model.CardUI[]" />
+        </action>
+        <action
+            android:id="@+id/to_guess_nav_graph"
+            app:destination="@id/guess_nav_graph">
+            <argument
+                android:name="cards"
+                app:argType="abm.co.feature.card.model.CardUI[]" />
         </action>
     </dialog>
 </navigation>

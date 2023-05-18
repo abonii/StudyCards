@@ -26,6 +26,7 @@ import android.net.Uri
 import android.text.TextUtils
 import androidx.activity.result.ActivityResult
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -430,7 +431,7 @@ class ProfileViewModel @Inject constructor(
     }
 }
 
-@Immutable
+@Stable
 data class ProfileContractState(
     val settings: Settings = Settings(),
     val userInfo: UserInfo? = null,

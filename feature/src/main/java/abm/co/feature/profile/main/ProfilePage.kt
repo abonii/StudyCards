@@ -8,6 +8,7 @@ import abm.co.designsystem.component.modifier.baseBackground
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.textfield.TextFieldWithLabel
 import abm.co.designsystem.extensions.collectInLaunchedEffect
+import abm.co.designsystem.extensions.collectInLifecycle
 import abm.co.designsystem.extensions.getActivity
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
@@ -82,7 +83,7 @@ fun ProfilePage(
     )
     val state by viewModel.state.collectAsState()
     val activity = getActivity()
-    viewModel.channel.collectInLaunchedEffect { channel ->
+    viewModel.channel.collectInLifecycle { channel ->
         when (channel) {
             is ProfileContractChannel.ConnectWithGoogleAccount -> {
                 startGoogleLoginForResult.launch(channel.intent)

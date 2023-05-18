@@ -83,10 +83,12 @@ fun CategoryPage(
     }
     val screenState by viewModel.state.collectAsState()
     val toolbarState by viewModel.toolbarState.collectAsState()
+    val dialogState by viewModel.dialogState.collectAsState()
     SetStatusBarColor()
     CategoryScreen(
         screenState = screenState,
         toolbarState = toolbarState,
+        dialogState = dialogState,
         onEvent = viewModel::onEvent
     )
 }
@@ -95,6 +97,7 @@ fun CategoryPage(
 private fun CategoryScreen(
     screenState: CategoryContract.ScreenState,
     toolbarState: CategoryContract.ToolbarState,
+    dialogState: CategoryContract.Dialog,
     onEvent: (CategoryContractEvent) -> Unit
 ) {
     Box(
@@ -113,9 +116,9 @@ private fun CategoryScreen(
         )
         Crossfade(
             targetState = screenState,
+            label = "CategoryPage",
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState)
         ) { state ->
             when (state) {
                 CategoryContract.ScreenState.Loading -> {
@@ -126,7 +129,9 @@ private fun CategoryScreen(
                 }
                 is CategoryContract.ScreenState.Success -> {
                     SuccessScreen(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState),
                         screenState = state,
                         onClickCard = {
                             onEvent(CategoryContractEvent.OnClickCardItem(it))
@@ -136,12 +141,6 @@ private fun CategoryScreen(
                         },
                         onLongClick = {
                             onEvent(CategoryContractEvent.OnLongClickCard(it))
-                        },
-                        onDismissDialog = {
-                            onEvent(CategoryContractEvent.OnDismissDialog)
-                        },
-                        onConfirmRemoveCard = {
-                            onEvent(CategoryContractEvent.OnConfirmRemoveCard(it))
                         }
                     )
                 }
@@ -170,9 +169,34 @@ private fun CategoryScreen(
                 onEvent(CategoryContractEvent.OnClickEditCategory)
             }
         )
+        Dialog(
+            dialogState = dialogState,
+            onDismissDialog = {
+                onEvent(CategoryContractEvent.OnDismissDialog)
+            },
+            onConfirmRemoveCard = {
+                onEvent(CategoryContractEvent.OnConfirmRemoveCard(it))
+            }
+        )
     }
 }
 
+@Composable
+private fun Dialog(
+    dialogState: CategoryContract.Dialog,
+    onConfirmRemoveCard: (CardUI) -> Unit,
+    onDismissDialog: () -> Unit
+) {
+    dialogState.removingCard?.let {
+        ConfirmAlertDialog(
+            title = stringResource(id = R.string.Category_Dialog_removeCardItem, it.name),
+            onConfirm = {
+                onConfirmRemoveCard(it)
+            },
+            onDismiss = onDismissDialog
+        )
+    }
+}
 
 @Composable
 private fun SuccessScreen(
@@ -180,8 +204,6 @@ private fun SuccessScreen(
     onClickCard: (CardUI) -> Unit,
     onClickPlay: (CardUI) -> Unit,
     onLongClick: (CardUI) -> Unit,
-    onConfirmRemoveCard: (CardUI) -> Unit,
-    onDismissDialog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -201,15 +223,6 @@ private fun SuccessScreen(
             }
         }
     }
-    screenState.removingCard?.let {
-        ConfirmAlertDialog(
-            title = "Do you really want to delete ${it.name}?",
-            onConfirm = {
-                onConfirmRemoveCard(it)
-            },
-            onDismiss = onDismissDialog
-        )
-    }
 }
 
 @Composable
@@ -222,7 +235,7 @@ private fun CardItem(
 ) {
     Box {
         val pressed = rememberSaveable { mutableStateOf(false) }
-        val scale = animateFloatAsState(if (pressed.value) 0.95f else 1f)
+        val scale = animateFloatAsState(if (pressed.value) 0.95f else 1f, label = "card scale")
         Spacer(
             modifier = Modifier
                 .scalableClick(
