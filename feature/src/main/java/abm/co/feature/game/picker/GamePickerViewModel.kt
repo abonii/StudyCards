@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,7 +60,7 @@ class GamePickerViewModel @Inject constructor(
                                 cardsToRepeat = allCards.filter {
                                     it.kind != CardKindUI.UNDEFINED &&
                                             it.kind != CardKindUI.KNOWN &&
-                                            System.currentTimeMillis() > it.nextRepeatTime
+                                            Calendar.getInstance().timeInMillis > it.nextRepeatTime
                                 }.size,
                                 allCards = allCards.size
                             )
@@ -116,7 +117,7 @@ class GamePickerViewModel @Inject constructor(
         GamePickerContractEvent.OnRepeatPicked -> {
             viewModelScope.launch {
                 allCards.filter {
-                    System.currentTimeMillis() > it.nextRepeatTime
+                    Calendar.getInstance().timeInMillis > it.nextRepeatTime
                 }.let {
                     if (it.isNotEmpty()) {
                         _channel.send(

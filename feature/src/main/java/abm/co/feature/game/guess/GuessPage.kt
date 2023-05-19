@@ -10,7 +10,6 @@ import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -43,7 +42,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun GuessPage(
-    navigateBack: () -> Unit,
+    nextPageAfterFinish: () -> Unit,
+    navigateBack: (isRepeat: Boolean) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: GuessViewModel = hiltViewModel()
 ) {
@@ -51,6 +51,7 @@ fun GuessPage(
         AnalyticsManager.sendEvent("guess_page_viewed")
     }
     val showDialog = remember { mutableStateOf(false) }
+    val uiState = viewModel.state
     viewModel.channel.collectInLifecycle {
         when (it) {
             is GuessContractChannel.ShowMessage -> showMessage(it.messageContent)
@@ -59,17 +60,20 @@ fun GuessPage(
             }
 
             GuessContractChannel.Finished -> {
-                navigateBack() // todo
+                if (uiState.isRepeat) {
+                    nextPageAfterFinish()
+                } else {
+                    navigateBack(false)
+                }
             }
         }
     }
     ShowDialogOnBackPressed(
         show = showDialog,
         onConfirm = {
-            navigateBack()
+            navigateBack(uiState.isRepeat)
         }
     )
-    val uiState = viewModel.state
     SetStatusBarColor()
     Screen(
         uiState = uiState,
@@ -87,15 +91,17 @@ private fun Screen(
         modifier = Modifier
             .background(StudyCardsTheme.colors.backgroundPrimary)
             .fillMaxSize()
-            .statusBarsPadding()
             .navigationBarsPadding()
     ) {
-        Toolbar(
-            title = stringResource(id = R.string.Guess_Toolbar_title),
-            onBack = {
-                onEvent(GuessContractEvent.OnBack)
-            }
-        )
+        if (!uiState.isRepeat) {
+            Toolbar(
+                modifier = Modifier.statusBarsPadding(),
+                title = stringResource(id = R.string.Guess_Toolbar_title),
+                onBack = {
+                    onEvent(GuessContractEvent.OnBack)
+                }
+            )
+        }
         uiState.item.value?.let { guessItemUI ->
             Column(
                 modifier = Modifier.padding(horizontal = 16.dp),

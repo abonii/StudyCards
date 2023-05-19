@@ -53,7 +53,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun PairItPage(
-    navigateBack: () -> Unit,
+    nextPageAfterFinish: () -> Unit,
+    navigateBack: (isRepeat: Boolean) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: PairItViewModel = hiltViewModel()
 ) {
@@ -61,24 +62,29 @@ fun PairItPage(
         AnalyticsManager.sendEvent("pair_it_page_viewed")
     }
     val showDialog = remember { mutableStateOf(false) }
+    val uiState = viewModel.state
     viewModel.channel.collectInLifecycle {
         when (it) {
             is PairItContractChannel.ShowMessage -> showMessage(it.messageContent)
             PairItContractChannel.NavigateBack -> {
                 showDialog.value = true
             }
+
             PairItContractChannel.Finished -> {
-                navigateBack() // todo
+                if (uiState.isRepeat) {
+                    nextPageAfterFinish()
+                } else {
+                    navigateBack(false)
+                }
             }
         }
     }
     ShowDialogOnBackPressed(
         show = showDialog,
         onConfirm = {
-            navigateBack()
+            navigateBack(uiState.isRepeat)
         }
     )
-    val uiState = viewModel.state
     SetStatusBarColor()
     Screen(
         uiState = uiState,
@@ -95,15 +101,17 @@ private fun Screen(
         modifier = Modifier
             .background(StudyCardsTheme.colors.backgroundPrimary)
             .fillMaxSize()
-            .statusBarsPadding()
             .navigationBarsPadding()
     ) {
-        Toolbar(
-            title = stringResource(id = R.string.PairIt_Toolbar_title),
-            onBack = {
-                onEvent(PairItContractEvent.OnBack)
-            }
-        )
+        if (!uiState.isRepeat) {
+            Toolbar(
+                modifier = Modifier.statusBarsPadding(),
+                title = stringResource(id = R.string.PairIt_Toolbar_title),
+                onBack = {
+                    onEvent(PairItContractEvent.OnBack)
+                }
+            )
+        }
         Row(
             modifier = Modifier.padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(20.dp)
@@ -119,7 +127,9 @@ private fun Screen(
                 onIncorrectAnimationFinished = {
                     onEvent(PairItContractEvent.OnNativeIncorrectAnimationFinished(it))
                 },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(top = 5.dp)
             )
             SingleColumn(
                 items = uiState.learningItems,
@@ -132,7 +142,9 @@ private fun Screen(
                 onIncorrectAnimationFinished = {
                     onEvent(PairItContractEvent.OnLearningIncorrectAnimationFinished(it))
                 },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(top = 5.dp)
             )
         }
     }

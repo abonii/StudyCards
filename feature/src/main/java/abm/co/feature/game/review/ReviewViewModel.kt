@@ -24,10 +24,12 @@ class ReviewViewModel @Inject constructor(
     private val cards: Array<CardUI> = savedStateHandle["cards"]
         ?: throw RuntimeException("cannot be empty CARDS argument")
 
+    private val isRepeat = savedStateHandle["is_repeat"] ?: false
+
     private val _channel = Channel<ReviewContractChannel>()
     val channel = _channel.receiveAsFlow()
 
-    val state = ReviewContractState()
+    val state = ReviewContractState(isRepeat = isRepeat)
 
     init {
         state.addItems(cards)
@@ -43,32 +45,36 @@ class ReviewViewModel @Inject constructor(
                 }
             }
 
-        }
-    }
-
-    private fun MessageContent.sendMessage() {
-        viewModelScope.launch {
-            this@sendMessage.let {
-                _channel.send(ReviewContractChannel.ShowMessage(it))
+            ReviewContractEvent.OnFinish -> {
+                viewModelScope.launch {
+                    _channel.send(
+                        ReviewContractChannel.Finished
+                    )
+                }
             }
         }
     }
 }
 
 @Stable
-class ReviewContractState {
+class ReviewContractState(val isRepeat: Boolean) {
     private val _items = mutableStateListOf<ReviewItemUI>()
     val items: List<ReviewItemUI> = _items
 
     fun addItems(items: Array<CardUI>) {
         _items.clear()
-        _items.addAll(items.map { it.toReviewItem() })
+        _items.addAll(
+            items.map {
+                it.toReviewItem()
+            } + ReviewItemUI("", "", "", "")
+        )
     }
 }
 
 @Immutable
 sealed interface ReviewContractEvent {
     object OnBack : ReviewContractEvent
+    object OnFinish : ReviewContractEvent
 }
 
 @Immutable

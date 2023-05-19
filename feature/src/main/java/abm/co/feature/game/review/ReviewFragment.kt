@@ -2,8 +2,7 @@ package abm.co.feature.game.review
 
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
-import abm.co.designsystem.extensions.addPaddingOnShownKeyboard
-import android.os.Bundle
+import abm.co.feature.game.repeat.RepeatFragment.Companion.BACK_PRESSED_KEY
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.core.os.bundleOf
@@ -16,6 +15,7 @@ class ReviewFragment : BaseFragment() {
 
     companion object {
         private val rootViewId = View.generateViewId()
+        const val REVIEW_FINISHED_KEY = "REVIEW_FINISHED_KEY"
     }
 
     override val rootViewId: Int get() = ReviewFragment.rootViewId
@@ -23,8 +23,21 @@ class ReviewFragment : BaseFragment() {
     @Composable
     override fun InitUI(messageContent: messageContent) {
         ReviewPage(
-            navigateBack = {
-                findNavController().navigateUp()
+            nextPageAfterFinish = {
+                requireParentFragment().setFragmentResult(
+                    REVIEW_FINISHED_KEY,
+                    bundleOf()
+                )
+            },
+            navigateBack = { isRepeat ->
+                if(isRepeat) {
+                    requireParentFragment().setFragmentResult(
+                        BACK_PRESSED_KEY,
+                        bundleOf()
+                    )
+                } else {
+                    findNavController().navigateUp()
+                }
             },
             showMessage = messageContent
         )

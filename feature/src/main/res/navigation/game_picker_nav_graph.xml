@@ -45,5 +45,16 @@
                 android:name="cards"
                 app:argType="abm.co.feature.card.model.CardUI[]" />
         </action>
+        <action
+            android:id="@+id/to_repeat_destination"
+            app:destination="@id/repeat_destination" />
     </dialog>
+
+    <fragment
+        android:id="@+id/repeat_destination"
+        android:name="abm.co.feature.game.repeat.RepeatFragment" >
+        <argument
+            android:name="cards"
+            app:argType="abm.co.feature.card.model.CardUI[]" />
+    </fragment>
 </navigation>

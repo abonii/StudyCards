@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -181,7 +182,7 @@ class EditCardViewModel @Inject constructor(
                 repeatedCount = 0,
                 example = this@onSaveCard.example ?: "",
                 categoryID = category?.id ?: "no_category_id",
-                nextRepeatTime = System.currentTimeMillis(),
+                nextRepeatTime = Calendar.getInstance().timeInMillis,
                 cardID = "",
                 learnedPercent = 0f
             )
@@ -210,7 +211,7 @@ class EditCardViewModel @Inject constructor(
                 repeatedCount = 0,
                 example = example ?: "",
                 categoryID = category?.id ?: "no_category_id",
-                nextRepeatTime = System.currentTimeMillis(),
+                nextRepeatTime = Calendar.getInstance().timeInMillis,
                 cardID = existedCard.cardID,
                 learnedPercent = 0f
             )

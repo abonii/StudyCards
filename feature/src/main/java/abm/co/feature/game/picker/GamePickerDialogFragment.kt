@@ -22,7 +22,7 @@ class GamePickerDialogFragment : BaseDialogFragment() {
     override fun InitUI(messageContent: messageContent) {
         GamePickerPage(
             navigateToGame = { gameKind, cards ->
-                when(gameKind){
+                when (gameKind) {
                     GameKindUI.Review -> {
                         findNavController().navigateSafe(
                             GamePickerDialogFragmentDirections.toReviewNavGraph(
@@ -30,6 +30,7 @@ class GamePickerDialogFragment : BaseDialogFragment() {
                             )
                         )
                     }
+
                     GameKindUI.Guess -> {
                         findNavController().navigateSafe(
                             GamePickerDialogFragmentDirections.toGuessNavGraph(
@@ -37,6 +38,7 @@ class GamePickerDialogFragment : BaseDialogFragment() {
                             )
                         )
                     }
+
                     GameKindUI.Pair -> {
                         findNavController().navigateSafe(
                             GamePickerDialogFragmentDirections.toPairItNavGraph(
@@ -53,8 +55,12 @@ class GamePickerDialogFragment : BaseDialogFragment() {
                     )
                 )
             },
-            navigateToRepeat = {
-
+            navigateToRepeat = { cards ->
+                findNavController().navigateSafe(
+                    GamePickerDialogFragmentDirections.toRepeatDestination(
+                        cards = cards.toTypedArray()
+                    )
+                )
             },
             showMessage = messageContent
         )

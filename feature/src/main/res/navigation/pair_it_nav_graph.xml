@@ -11,5 +11,9 @@
         <argument
             android:name="category"
             app:argType="abm.co.feature.card.model.CategoryUI" />
+        <argument
+            android:name="is_repeat"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 </navigation>

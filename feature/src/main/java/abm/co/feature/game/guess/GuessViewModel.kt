@@ -25,10 +25,12 @@ class GuessViewModel @Inject constructor(
     private val cards: Array<CardUI> = savedStateHandle["cards"]
         ?: throw RuntimeException("cannot be empty CARDS argument")
 
+    private val isRepeat = savedStateHandle["is_repeat"] ?: false
+
     private val _channel = Channel<GuessContractChannel>()
     val channel = _channel.receiveAsFlow()
 
-    val state = GuessContractState()
+    val state = GuessContractState(isRepeat = isRepeat)
 
     val items by lazy {
         cards.toGuessItems().takeIf { it.isNotEmpty() }
@@ -56,7 +58,7 @@ class GuessViewModel @Inject constructor(
                             state.item.value?.cardID == it.cardID
                         }
                         if (currentIndex == -1) return@launch
-                        if (currentIndex + 1 >= items.lastIndex) {
+                        if (currentIndex >= items.lastIndex) {
                             _channel.send(GuessContractChannel.Finished)
                             return@launch
                         }
@@ -80,18 +82,10 @@ class GuessViewModel @Inject constructor(
             state.updateItem(items.first())
         }
     }
-
-    private fun MessageContent.sendMessage() {
-        viewModelScope.launch {
-            this@sendMessage.let {
-                _channel.send(GuessContractChannel.ShowMessage(it))
-            }
-        }
-    }
 }
 
 @Stable
-class GuessContractState {
+class GuessContractState(val isRepeat: Boolean) {
     private val _item = mutableStateOf<GuessItemUI?>(null)
     val item: State<GuessItemUI?> = _item
 

@@ -35,10 +35,12 @@ class PairItViewModel @Inject constructor(
     private val cards: Array<CardUI> = savedStateHandle["cards"]
         ?: throw RuntimeException("cannot be empty CARDS argument")
 
+    private val isRepeat = savedStateHandle["is_repeat"] ?: false
+
     private val _channel = Channel<PairItContractChannel>()
     val channel = _channel.receiveAsFlow()
 
-    val state: PairItContractState = PairItContractState()
+    val state: PairItContractState = PairItContractState(isRepeat = isRepeat)
 
     init {
         setupCards()
@@ -111,18 +113,10 @@ class PairItViewModel @Inject constructor(
             state.selectedNativeItemID.value = null
         }.launchIn(viewModelScope)
     }
-
-    private fun MessageContent.sendMessage() {
-        viewModelScope.launch {
-            this@sendMessage.let {
-                _channel.send(PairItContractChannel.ShowMessage(it))
-            }
-        }
-    }
 }
 
 @Stable
-class PairItContractState {
+class PairItContractState(val isRepeat: Boolean) {
 
     val nativeItems = mutableStateListOf<PairItemUI>()
     val learningItems = mutableStateListOf<PairItemUI>()

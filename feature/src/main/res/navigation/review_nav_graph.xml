@@ -11,5 +11,9 @@
         <argument
             android:name="cards"
             app:argType="abm.co.feature.card.model.CardUI[]" />
+        <argument
+            android:name="is_repeat"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 </navigation>
