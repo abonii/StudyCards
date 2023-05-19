@@ -1,4 +1,4 @@
-package abm.co.feature.game.parit
+package abm.co.feature.game.pairit
 
 import abm.co.designsystem.component.dialog.ShowDialogOnBackPressed
 import abm.co.designsystem.component.modifier.Modifier
@@ -8,7 +8,7 @@ import abm.co.designsystem.extensions.collectInLifecycle
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
-import abm.co.feature.game.parit.model.PairItemUI
+import abm.co.feature.game.pairit.model.PairItemUI
 import abm.co.feature.game.swipe.shake.rememberShakeController
 import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.animation.animateColorAsState
@@ -32,7 +32,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key

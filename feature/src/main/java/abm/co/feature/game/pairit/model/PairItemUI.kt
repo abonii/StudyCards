@@ -1,4 +1,4 @@
-package abm.co.feature.game.parit.model
+package abm.co.feature.game.pairit.model
 
 import abm.co.feature.card.model.CardUI
 import androidx.compose.runtime.Immutable

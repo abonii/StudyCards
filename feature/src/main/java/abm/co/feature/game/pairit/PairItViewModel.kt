@@ -1,10 +1,10 @@
-package abm.co.feature.game.parit
+package abm.co.feature.game.pairit
 
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.feature.card.model.CardUI
-import abm.co.feature.game.parit.model.PairItemUI
-import abm.co.feature.game.parit.model.toPairLearningItem
-import abm.co.feature.game.parit.model.toPairNativeItem
+import abm.co.feature.game.pairit.model.PairItemUI
+import abm.co.feature.game.pairit.model.toPairLearningItem
+import abm.co.feature.game.pairit.model.toPairNativeItem
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf

@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/pair_it_destination"
-        android:name="abm.co.feature.game.parit.PairItFragment" >
+        android:name="abm.co.feature.game.pairit.PairItFragment" >
 
         <argument
             android:name="category"
