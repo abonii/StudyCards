@@ -2,10 +2,7 @@ package abm.co.feature.game.guess
 
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
-import abm.co.designsystem.extensions.addPaddingOnShownKeyboard
-import abm.co.feature.game.repeat.RepeatFragment
-import abm.co.feature.game.review.ReviewFragment
-import android.os.Bundle
+import abm.co.feature.game.repeat.GameHolderFragment
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.core.os.bundleOf
@@ -26,6 +23,7 @@ class GuessFragment : BaseFragment() {
     @Composable
     override fun InitUI(messageContent: messageContent) {
         GuessPage(
+            showMessage = messageContent,
             nextPageAfterFinish = {
                 requireParentFragment().setFragmentResult(
                     GUESS_FINISHED_KEY,
@@ -35,14 +33,21 @@ class GuessFragment : BaseFragment() {
             navigateBack = { isRepeat ->
                 if(isRepeat) {
                     requireParentFragment().setFragmentResult(
-                        RepeatFragment.BACK_PRESSED_KEY,
+                        GameHolderFragment.BACK_PRESSED_KEY,
                         bundleOf()
                     )
                 } else {
                     findNavController().navigateUp()
                 }
             },
-            showMessage = messageContent
+            onProgressChanged = {
+                requireParentFragment().setFragmentResult(
+                    GameHolderFragment.PROGRESS_KEY,
+                    bundleOf(
+                        "progress" to it
+                    )
+                )
+            }
         )
     }
 }

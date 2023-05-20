@@ -44,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun GuessPage(
     nextPageAfterFinish: () -> Unit,
     navigateBack: (isRepeat: Boolean) -> Unit,
+    onProgressChanged: (Float) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: GuessViewModel = hiltViewModel()
 ) {
@@ -68,10 +69,16 @@ fun GuessPage(
             }
         }
     }
+    viewModel.progress.collectInLifecycle {
+        onProgressChanged(it)
+    }
     ShowDialogOnBackPressed(
-        show = showDialog,
+        show = showDialog.value,
         onConfirm = {
             navigateBack(uiState.isRepeat)
+        },
+        onDismiss = {
+            showDialog.value = false
         }
     )
     SetStatusBarColor()

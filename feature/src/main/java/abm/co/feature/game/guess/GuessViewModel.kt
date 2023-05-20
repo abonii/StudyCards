@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,6 +38,8 @@ class GuessViewModel @Inject constructor(
             ?: throw RuntimeException("must not be empty CARDS array")
     }
 
+    val progress = MutableStateFlow(0f)
+
     init {
         setupCards()
     }
@@ -58,11 +61,17 @@ class GuessViewModel @Inject constructor(
                             state.item.value?.cardID == it.cardID
                         }
                         if (currentIndex == -1) return@launch
+                        val newProgress = try {
+                            (currentIndex + 1).toFloat() / items.size
+                        } catch (e: Exception) {
+                            0.1f
+                        }
+                        progress.value = newProgress
                         if (currentIndex >= items.lastIndex) {
                             _channel.send(GuessContractChannel.Finished)
-                            return@launch
+                        } else {
+                            state.updateItem(newItem = items[currentIndex + 1])
                         }
-                        state.updateItem(newItem = items[currentIndex + 1])
                     } else {
                         state.item.value?.let {
                             state.updateItem(

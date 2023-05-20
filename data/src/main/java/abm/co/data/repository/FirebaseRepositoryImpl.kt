@@ -36,12 +36,14 @@ import com.mocklets.pluto.PlutoLog
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
+import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -179,7 +181,7 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     override suspend fun createUserCategory(category: Category): Either<Failure, Category> {
         return safeCall {
-            if(firebaseAuth.currentUser?.uid != category.creatorID) return@safeCall category
+            if (firebaseAuth.currentUser?.uid != category.creatorID) return@safeCall category
             val ref = userCategoryWithLanguagesRef.firstOrNull()?.push()
             val updatedCategory = category.copy(
                 id = ref?.key ?: "category_id",
@@ -318,18 +320,25 @@ class FirebaseRepositoryImpl @Inject constructor(
     override suspend fun copyUserCategoryToExploreCollection(categoryID: String): Either<Failure, Unit> {
         return safeCall {
             val categoryRef = categoryWithLanguagesRef.firstOrNull()?.child(categoryID)
-            userCategoryWithLanguagesRef
-                .firstOrNull()
-                ?.child(categoryID)
-                ?.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        categoryRef?.setValue(snapshot.value)
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        throw error.toException()
-                    }
-                })
+            val cards = getUserCards(categoryID).firstOrNull()?.asRight?.b
+                ?.map {
+                    it.copy(
+                        kind = CardKind.UNDEFINED,
+                        nextRepeatTime = Calendar.getInstance().timeInMillis,
+                        repeatedCount = 0,
+                        learnedPercent = 0f
+                    ).toDTO()
+                }
+            val category = getUserCategories.firstOrNull()?.asRight?.b
+                ?.find { it.id == categoryID }
+            if (category != null) {
+                categoryRef?.setValue(category.toDTO())
+                delay(200)
+                cards?.forEach {
+                    categoryRef?.child(CARD_REF)
+                        ?.child(it.id)?.setValue(it)
+                }
+            }
         }
     }
 

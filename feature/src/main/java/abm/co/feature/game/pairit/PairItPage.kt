@@ -12,6 +12,7 @@ import abm.co.feature.game.pairit.model.PairItemUI
 import abm.co.feature.game.swipe.shake.rememberShakeController
 import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -35,7 +36,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -49,25 +49,25 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 
 @Composable
 fun PairItPage(
     nextPageAfterFinish: () -> Unit,
     navigateBack: (isRepeat: Boolean) -> Unit,
+    onProgressChanged: (Float) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: PairItViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
         AnalyticsManager.sendEvent("pair_it_page_viewed")
     }
-    val showDialog = remember { mutableStateOf(false) }
-    val uiState = viewModel.state
+    val uiState = viewModel.uiState
     viewModel.channel.collectInLifecycle {
         when (it) {
-            is PairItContractChannel.ShowMessage -> showMessage(it.messageContent)
-            PairItContractChannel.NavigateBack -> {
-                showDialog.value = true
+            is PairItContractChannel.ShowMessage -> {
+                showMessage(it.messageContent)
             }
 
             PairItContractChannel.Finished -> {
@@ -79,10 +79,17 @@ fun PairItPage(
             }
         }
     }
+    viewModel.progress.collectInLifecycle {
+        onProgressChanged(it)
+    }
+    val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()
     ShowDialogOnBackPressed(
-        show = showDialog,
+        show = dialogState.backPressConfirm,
         onConfirm = {
             navigateBack(uiState.isRepeat)
+        },
+        onDismiss = {
+            viewModel.onEvent(PairItContractEvent.OnDismissDialog)
         }
     )
     SetStatusBarColor()
@@ -209,7 +216,7 @@ private fun Item(
     val scale by animateFloatAsState(
         targetValue = if (isCorrect) 0f else 1f,
         label = "scale item",
-        animationSpec = tween(durationMillis = SCALE_DURATION)
+        animationSpec = tween(durationMillis = SCALE_DURATION, easing = LinearEasing)
     )
     val coroutineScope = rememberCoroutineScope()
     val shakeController = rememberShakeController()
@@ -265,4 +272,3 @@ private fun Item(
         )
     }
 }
-

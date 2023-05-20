@@ -16,16 +16,19 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-const val SCALE_DURATION = 700
+const val SCALE_DURATION = 500
 
 @HiltViewModel
 class PairItViewModel @Inject constructor(
@@ -40,7 +43,18 @@ class PairItViewModel @Inject constructor(
     private val _channel = Channel<PairItContractChannel>()
     val channel = _channel.receiveAsFlow()
 
-    val state: PairItContractState = PairItContractState(isRepeat = isRepeat)
+    val uiState: PairItContractState = PairItContractState(isRepeat = isRepeat)
+
+    private val _dialogState = MutableStateFlow(PairItContractState.Dialog())
+    val dialogState = _dialogState.asStateFlow()
+
+    val progress = snapshotFlow {
+        try {
+            uiState.correctNativeItemsID.size.toFloat() / cards.size
+        } catch (e: Exception) {
+            0f
+        }
+    }
 
     init {
         setupCards()
@@ -49,47 +63,53 @@ class PairItViewModel @Inject constructor(
     fun onEvent(event: PairItContractEvent) {
         when (event) {
             PairItContractEvent.OnBack -> {
-                viewModelScope.launch {
-                    _channel.send(
-                        PairItContractChannel.NavigateBack
+                _dialogState.update { oldState ->
+                    oldState.copy(
+                        backPressConfirm = true
                     )
                 }
             }
 
             is PairItContractEvent.OnClickLearningCard -> {
-                state.selectedLearningItemID.value = event.value.cardID
+                uiState.selectedLearningItemID.value = event.value.cardID
             }
 
             is PairItContractEvent.OnClickNativeCard -> {
-                state.selectedNativeItemID.value = event.value.cardID
+                uiState.selectedNativeItemID.value = event.value.cardID
             }
 
             is PairItContractEvent.OnLearningCorrectAnimationFinished -> {
-                state.correctLearningItemsID.remove(event.value.cardID)
+                uiState.correctLearningItemsID.remove(event.value.cardID)
             }
 
             is PairItContractEvent.OnLearningIncorrectAnimationFinished -> {
-                state.incorrectLearningItemID.value = null
+                uiState.incorrectLearningItemID.value = null
             }
 
             is PairItContractEvent.OnNativeIncorrectAnimationFinished -> {
-                state.incorrectNativeItemID.value = null
+                uiState.incorrectNativeItemID.value = null
+            }
+
+            PairItContractEvent.OnDismissDialog -> {
+                _dialogState.update {
+                    PairItContractState.Dialog()
+                }
             }
         }
     }
 
     private fun setupCards() {
         viewModelScope.launch {
-            state.nativeItems.addAll(cards.map { it.toPairNativeItem() }.shuffled())
-            state.learningItems.addAll(cards.map { it.toPairLearningItem() }.shuffled())
+            uiState.nativeItems.addAll(cards.map { it.toPairNativeItem() }.shuffled())
+            uiState.learningItems.addAll(cards.map { it.toPairLearningItem() }.shuffled())
             listenToLists()
         }
     }
 
     private fun listenToLists() {
         snapshotFlow {
-            state.correctNativeItemsID.size == state.nativeItems.size ||
-                    state.correctLearningItemsID.size == state.learningItems.size
+            uiState.correctNativeItemsID.size == uiState.nativeItems.size ||
+                    uiState.correctLearningItemsID.size == uiState.learningItems.size
         }.filter {
             it
         }.onEach {
@@ -98,19 +118,19 @@ class PairItViewModel @Inject constructor(
         }.launchIn(viewModelScope)
 
         snapshotFlow {
-            state.selectedNativeItemID.value to state.selectedLearningItemID.value
+            uiState.selectedNativeItemID.value to uiState.selectedLearningItemID.value
         }.filter { (native, learning) ->
             native != null && learning != null
         }.onEach { (native, learning) ->
             if (native == learning) {
-                native?.let { state.correctNativeItemsID.add(it) }
-                learning?.let { state.correctLearningItemsID.add(it) }
+                native?.let { uiState.correctNativeItemsID.add(it) }
+                learning?.let { uiState.correctLearningItemsID.add(it) }
             } else {
-                learning?.let { state.incorrectLearningItemID.value = it }
-                native?.let { state.incorrectNativeItemID.value = it }
+                learning?.let { uiState.incorrectLearningItemID.value = it }
+                native?.let { uiState.incorrectNativeItemID.value = it }
             }
-            state.selectedLearningItemID.value = null
-            state.selectedNativeItemID.value = null
+            uiState.selectedLearningItemID.value = null
+            uiState.selectedNativeItemID.value = null
         }.launchIn(viewModelScope)
     }
 }
@@ -129,11 +149,17 @@ class PairItContractState(val isRepeat: Boolean) {
 
     val incorrectLearningItemID = mutableStateOf<String?>(null)
     val incorrectNativeItemID = mutableStateOf<String?>(null)
+
+    data class Dialog(
+        val backPressConfirm: Boolean = false,
+        val continueRepeatOrFinish: Boolean = false
+    )
 }
 
 @Immutable
 sealed interface PairItContractEvent {
     object OnBack : PairItContractEvent
+    object OnDismissDialog : PairItContractEvent
     data class OnClickNativeCard(val value: PairItemUI) : PairItContractEvent
     data class OnClickLearningCard(val value: PairItemUI) : PairItContractEvent
     data class OnNativeIncorrectAnimationFinished(val value: PairItemUI) : PairItContractEvent
@@ -143,7 +169,6 @@ sealed interface PairItContractEvent {
 
 @Immutable
 sealed interface PairItContractChannel {
-    object NavigateBack : PairItContractChannel
     object Finished : PairItContractChannel
     data class ShowMessage(val messageContent: MessageContent) : PairItContractChannel
 }

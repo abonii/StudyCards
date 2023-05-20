@@ -7,6 +7,7 @@ import abm.co.feature.game.review.model.toReviewItem
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -60,6 +61,8 @@ class ReviewViewModel @Inject constructor(
 class ReviewContractState(val isRepeat: Boolean) {
     private val _items = mutableStateListOf<ReviewItemUI>()
     val items: List<ReviewItemUI> = _items
+
+    val progress = mutableStateOf(0f)
 
     fun addItems(items: Array<CardUI>) {
         _items.clear()

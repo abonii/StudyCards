@@ -22,31 +22,12 @@ class GamePickerDialogFragment : BaseDialogFragment() {
     override fun InitUI(messageContent: messageContent) {
         GamePickerPage(
             navigateToGame = { gameKind, cards ->
-                when (gameKind) {
-                    GameKindUI.Review -> {
-                        findNavController().navigateSafe(
-                            GamePickerDialogFragmentDirections.toReviewNavGraph(
-                                cards = cards.toTypedArray()
-                            )
-                        )
-                    }
-
-                    GameKindUI.Guess -> {
-                        findNavController().navigateSafe(
-                            GamePickerDialogFragmentDirections.toGuessNavGraph(
-                                cards = cards.toTypedArray()
-                            )
-                        )
-                    }
-
-                    GameKindUI.Pair -> {
-                        findNavController().navigateSafe(
-                            GamePickerDialogFragmentDirections.toPairItNavGraph(
-                                cards = cards.toTypedArray()
-                            )
-                        )
-                    }
-                }
+                findNavController().navigateSafe(
+                    GamePickerDialogFragmentDirections.toGameHolderDestination(
+                        cards = cards.toTypedArray(),
+                        gameKind = gameKind
+                    )
+                )
             },
             navigateToLearn = { category ->
                 findNavController().navigateSafe(
@@ -57,7 +38,7 @@ class GamePickerDialogFragment : BaseDialogFragment() {
             },
             navigateToRepeat = { cards ->
                 findNavController().navigateSafe(
-                    GamePickerDialogFragmentDirections.toRepeatDestination(
+                    GamePickerDialogFragmentDirections.toGameHolderDestination(
                         cards = cards.toTypedArray()
                     )
                 )

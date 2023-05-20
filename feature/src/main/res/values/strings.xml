@@ -140,7 +140,7 @@
     <string name="GamePicker.Repeat.title">Repeat</string>
     <string name="GamePicker.Repeat.subtitle">%s to repeat</string>
     <string name="GamePicker.OneGame.title">One Game</string>
-    <string name="GamePicker.OneGame.subtitle">%s to learn\n%s to repeat</string>
+    <string name="GamePicker.OneGame.subtitle">%s to learn\n%s to practice</string>
     <string name="GamePicker.Review.title">Review</string>
     <string name="GamePicker.Review.subtitle">%s to review</string>
     <string name="GamePicker.Pairing.title">Pairing</string>
@@ -237,5 +237,17 @@
         <item quantity="one"> %d new card</item>
         <item quantity="zero"> %d new word</item>
         <item quantity="other"> %d new words</item>
+    </plurals>
+
+    <plurals name="repeat_time_hour">
+        <item quantity="one">in a hour</item>
+        <item quantity="zero">in a hour</item>
+        <item quantity="other"> in %d hours</item>
+    </plurals>
+
+    <plurals name="repeat_time_minute">
+        <item quantity="one">in a minute</item>
+        <item quantity="zero">in a minute</item>
+        <item quantity="other"> in %d minutes</item>
     </plurals>
 </resources>

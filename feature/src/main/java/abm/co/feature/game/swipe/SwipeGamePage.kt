@@ -70,8 +70,11 @@ fun SwipeGamePage(
         }
     }
     ShowDialogOnBackPressed(
-        show = showDialog,
-        onConfirm = onBack
+        show = showDialog.value,
+        onConfirm = onBack,
+        onDismiss = {
+            showDialog.value = false
+        }
     )
     val state by viewModel.state.collectAsState()
     SetStatusBarColor()

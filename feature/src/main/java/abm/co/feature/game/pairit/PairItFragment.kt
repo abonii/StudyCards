@@ -2,8 +2,7 @@ package abm.co.feature.game.pairit
 
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
-import abm.co.feature.game.repeat.RepeatFragment
-import abm.co.feature.game.review.ReviewFragment
+import abm.co.feature.game.repeat.GameHolderFragment
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.core.os.bundleOf
@@ -24,6 +23,7 @@ class PairItFragment : BaseFragment() {
     @Composable
     override fun InitUI(messageContent: messageContent) {
         PairItPage(
+            showMessage = messageContent,
             nextPageAfterFinish = {
                 requireParentFragment().setFragmentResult(
                     PAIR_IT_FINISHED_KEY,
@@ -33,14 +33,21 @@ class PairItFragment : BaseFragment() {
             navigateBack = { isRepeat ->
                 if(isRepeat) {
                     requireParentFragment().setFragmentResult(
-                        RepeatFragment.BACK_PRESSED_KEY,
+                        GameHolderFragment.BACK_PRESSED_KEY,
                         bundleOf()
                     )
                 } else {
                     findNavController().navigateUp()
                 }
             },
-            showMessage = messageContent
+            onProgressChanged = {
+                requireParentFragment().setFragmentResult(
+                    GameHolderFragment.PROGRESS_KEY,
+                    bundleOf(
+                        "progress" to it
+                    )
+                )
+            }
         )
     }
 }

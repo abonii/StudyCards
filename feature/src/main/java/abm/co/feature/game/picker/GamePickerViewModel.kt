@@ -6,6 +6,7 @@ import abm.co.domain.base.Failure
 import abm.co.domain.base.onFailure
 import abm.co.domain.base.onSuccess
 import abm.co.domain.repository.ServerRepository
+import abm.co.feature.R
 import abm.co.feature.card.model.CardKindUI
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
+import kotlin.math.ceil
 
 @HiltViewModel
 class GamePickerViewModel @Inject constructor(
@@ -62,7 +64,18 @@ class GamePickerViewModel @Inject constructor(
                                             it.kind != CardKindUI.KNOWN &&
                                             Calendar.getInstance().timeInMillis > it.nextRepeatTime
                                 }.size,
-                                allCards = allCards.size
+                                actuallyCardsToRepeat = allCards.filter {
+                                    it.kind != CardKindUI.UNDEFINED &&
+                                            it.kind != CardKindUI.KNOWN
+                                }.size,
+                                allCards = allCards.size,
+                                leftHours = allCards.filter {
+                                    Calendar.getInstance().timeInMillis < it.nextRepeatTime
+                                }.sortedBy {
+                                    it.nextRepeatTime
+                                }.map {
+                                    getLeftHours(it.nextRepeatTime)
+                                }.firstOrNull()
                             )
                         }
                     }.onFailure {
@@ -75,14 +88,32 @@ class GamePickerViewModel @Inject constructor(
     fun onEvent(event: GamePickerContractEvent) = when (event) {
         is GamePickerContractEvent.OnGamePicked -> {
             viewModelScope.launch {
-                allCards.filter { it.kind != CardKindUI.UNDEFINED }.let {
-                    if (it.isNotEmpty()) {
-                        _channel.send(
-                            GamePickerContractChannel.NavigateToGame(
-                                cards = it,
-                                gameKind = event.gameKind
-                            )
-                        )
+                when (event.gameKind) {
+                    GameKindUI.Review -> {
+                        allCards.let {
+                            if (it.isNotEmpty()) {
+                                _channel.send(
+                                    GamePickerContractChannel.NavigateToGame(
+                                        cards = it,
+                                        gameKind = event.gameKind
+                                    )
+                                )
+                            }
+                        }
+                    }
+                    else -> {
+                        allCards.filter {
+                            it.kind != CardKindUI.KNOWN
+                        }.let {
+                            if (it.isNotEmpty()) {
+                                _channel.send(
+                                    GamePickerContractChannel.NavigateToGame(
+                                        cards = it,
+                                        gameKind = event.gameKind
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -91,7 +122,7 @@ class GamePickerViewModel @Inject constructor(
         GamePickerContractEvent.OnLearnPicked -> {
             viewModelScope.launch {
                 allCards.filter { it.kind == CardKindUI.UNDEFINED }.let { cardUIList ->
-                    if(cardUIList.isNotEmpty()) {
+                    if (cardUIList.isNotEmpty()) {
                         category?.let {
                             _channel.send(
                                 GamePickerContractChannel.NavigateToLearn(
@@ -117,7 +148,9 @@ class GamePickerViewModel @Inject constructor(
         GamePickerContractEvent.OnRepeatPicked -> {
             viewModelScope.launch {
                 allCards.filter {
-                    Calendar.getInstance().timeInMillis > it.nextRepeatTime
+                    it.kind != CardKindUI.UNDEFINED &&
+                            it.kind != CardKindUI.KNOWN &&
+                            Calendar.getInstance().timeInMillis >= it.nextRepeatTime
                 }.let {
                     if (it.isNotEmpty()) {
                         _channel.send(
@@ -129,6 +162,18 @@ class GamePickerViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun getLeftHours(timeMills: Long?): Pair<Int, Int>? {
+        if (timeMills == null) return null
+        val currentMills = Calendar.getInstance().timeInMillis
+        val duration = timeMills - currentMills
+        val hours = ceil(duration / (1000 * 60 * 60.0)).toInt()
+        if (hours <= 0) {
+            val min = ceil(duration / (1000 * 60.0)).toInt()
+            return R.plurals.repeat_time_minute to min
+        }
+        return R.plurals.repeat_time_hour to hours
     }
 
     private fun Failure.sendException() {
@@ -144,7 +189,9 @@ class GamePickerViewModel @Inject constructor(
 data class GamePickerContractState(
     val cardsToLearn: Int = 0,
     val cardsToRepeat: Int = 0,
+    val actuallyCardsToRepeat: Int = 0,
     val allCards: Int = 0,
+    val leftHours: Pair<Int, Int>? = null,
     val oneGameExpanded: Boolean = false
 )
 

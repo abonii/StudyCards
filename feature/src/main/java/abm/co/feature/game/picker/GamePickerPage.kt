@@ -52,17 +52,20 @@ fun GamePickerPage(
         )
     }
     val state by viewModel.state.collectAsState()
-    viewModel.channel.collectInLaunchedEffect {channel ->
-        when(channel) {
+    viewModel.channel.collectInLaunchedEffect { channel ->
+        when (channel) {
             is GamePickerContractChannel.NavigateToGame -> {
                 navigateToGame(channel.gameKind, channel.cards)
             }
+
             is GamePickerContractChannel.NavigateToLearn -> {
                 navigateToLearn(channel.category)
             }
+
             is GamePickerContractChannel.NavigateToRepeat -> {
-             navigateToRepeat(channel.cards)
+                navigateToRepeat(channel.cards)
             }
+
             is GamePickerContractChannel.ShowMessage -> showMessage(channel.messageContent)
         }
     }
@@ -107,10 +110,17 @@ private fun GamePickerScreen(
         Item(
             title = stringResource(id = R.string.GamePicker_Repeat_title),
             iconRes = R.drawable.ic_repeat,
-            subtitle = stringResource(
-                id = R.string.GamePicker_Repeat_subtitle,
-                pluralString(id = R.plurals.cards, uiState.cardsToRepeat)
-            ),
+            subtitle = if (uiState.cardsToRepeat <= 0 && uiState.leftHours != null) {
+                pluralString(
+                    id = uiState.leftHours.first,
+                    count = uiState.leftHours.second
+                )
+            } else {
+                stringResource(
+                    id = R.string.GamePicker_Repeat_subtitle,
+                    pluralString(id = R.plurals.cards, uiState.cardsToRepeat)
+                )
+            },
             onClick = {
                 onEvent(
                     GamePickerContractEvent.OnRepeatPicked
@@ -126,7 +136,7 @@ private fun GamePickerScreen(
             subtitle = stringResource(
                 id = R.string.GamePicker_OneGame_subtitle,
                 pluralString(id = R.plurals.new_cards, uiState.cardsToLearn),
-                pluralString(id = R.plurals.cards, uiState.cardsToRepeat)
+                pluralString(id = R.plurals.cards, uiState.actuallyCardsToRepeat)
             ),
             onClick = {
                 onEvent(
