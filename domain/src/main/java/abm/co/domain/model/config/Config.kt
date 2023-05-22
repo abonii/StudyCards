@@ -5,5 +5,4 @@ data class Config(
     val oxfordId: String,
     val oxfordKey: String,
     val yandexKey: String,
-    val translateCountAnonymous: Int
 )

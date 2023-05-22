@@ -15,11 +15,11 @@ fun UserInterestUI.toDomain() = UserInterest(
 )
 
 val defaultUserInterests = listOf( // todo what to do
-    UserInterestUI(id = "Shopping", title = "Шоппинг"),
-    UserInterestUI(id = "Movie", title = "Кино"),
-    UserInterestUI(id = "Fashion", title = "Мода"),
-    UserInterestUI(id = "Game", title = "Игры"),
-    UserInterestUI(id = "Traveling", title = "Путешествия"),
-    UserInterestUI(id = "Food", title = "Еда"),
-    UserInterestUI(id = "Music", title = "Музыка"),
+    UserInterestUI(id = "Shopping", title = "Shopping"),
+    UserInterestUI(id = "Movie", title = "Movie"),
+    UserInterestUI(id = "Fashion", title = "Fashion"),
+    UserInterestUI(id = "Games", title = "Games"),
+    UserInterestUI(id = "Traveling", title = "Traveling"),
+    UserInterestUI(id = "Food", title = "Food"),
+    UserInterestUI(id = "Music", title = "Music"),
 )

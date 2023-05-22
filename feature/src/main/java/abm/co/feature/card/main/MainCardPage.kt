@@ -289,15 +289,23 @@ private fun OurSetItem(
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        AsyncImage(
+        Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(9.dp))
+                .clip(RoundedCornerShape(12.dp))
+                .background(StudyCardsTheme.colors.middleGray)
                 .weight(0.62f)
-                .fillMaxWidth(),
-            model = image,
-            contentScale = ContentScale.Crop,
-            contentDescription = null
-        )
+                .fillMaxWidth()
+        ) {
+            AsyncImage(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .matchParentSize(),
+                model = image,
+                contentScale = ContentScale.Crop,
+                contentDescription = null,
+                error = painterResource(id = R.drawable.illustration_our_cards_empty)
+            )
+        }
         Row(
             modifier = Modifier.weight(0.38f),
             horizontalArrangement = Arrangement.spacedBy(20.dp),

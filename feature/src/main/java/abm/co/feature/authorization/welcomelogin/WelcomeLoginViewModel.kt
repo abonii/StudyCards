@@ -4,13 +4,13 @@ import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
 import abm.co.domain.base.Failure
 import abm.co.domain.base.mapToFailure
+import abm.co.domain.repository.AuthorizationRepository
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -20,10 +20,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class WelcomeLoginViewModel @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val authorizationRepository: AuthorizationRepository
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(WelcomeLoginContractState())
@@ -38,9 +40,11 @@ class WelcomeLoginViewModel @Inject constructor(
                 WelcomeLoginContractEvent.OnClickLogin -> {
                     _channel.send(WelcomeLoginContractChannel.NavigateToLoginPage)
                 }
+
                 WelcomeLoginContractEvent.OnClickLoginAsGuest -> {
                     loginAnonymously()
                 }
+
                 WelcomeLoginContractEvent.OnClickSignUp -> {
                     _channel.send(WelcomeLoginContractChannel.NavigateToSignUpPage)
                 }
@@ -54,10 +58,13 @@ class WelcomeLoginViewModel @Inject constructor(
             mutableState.update { it.copy(isLoading = true) }
             firebaseAuth.signInAnonymously()
                 .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        checkUserExistence()
-                    } else {
-                        task.exception?.mapToFailure()?.sendException()
+                    viewModelScope.launch {
+                        if (task.isSuccessful) {
+                            authorizationRepository.addUserTranslationCount()
+                            checkUserExistence()
+                        } else {
+                            task.exception?.mapToFailure()?.sendException()
+                        }
                     }
                     mutableState.update { it.copy(isLoading = false) }
                 }
@@ -101,5 +108,5 @@ sealed interface WelcomeLoginContractChannel {
     object NavigateToChooseUserAttributes : WelcomeLoginContractChannel
     object NavigateToLoginPage : WelcomeLoginContractChannel
     object NavigateToSignUpPage : WelcomeLoginContractChannel
-    data class ShowMessage(val messageContent: MessageContent): WelcomeLoginContractChannel
+    data class ShowMessage(val messageContent: MessageContent) : WelcomeLoginContractChannel
 }

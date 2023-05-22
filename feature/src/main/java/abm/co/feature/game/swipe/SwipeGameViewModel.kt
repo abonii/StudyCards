@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -70,10 +71,16 @@ class SwipeGameViewModel @Inject constructor(
 
     private fun fetchCards() {
         viewModelScope.launch {
+            delay(1000) // in explore copy not
             serverRepository.getUserCards(category.id).firstOrNull()
                 ?.onSuccess { cards ->
-                    cardList.addAll(cards.filter { it.kind == CardKind.UNDEFINED }
-                        .map { it.toUI() })
+                    cardList.addAll(
+                        cards.filter {
+                            it.kind == CardKind.UNDEFINED
+                        }.map {
+                            it.toUI()
+                        }
+                    )
                     listenToCardListEmptiness()
                 }?.onFailure {
                     it.sendException()
@@ -89,6 +96,7 @@ class SwipeGameViewModel @Inject constructor(
         snapshotFlow {
             cardList.size
         }.onEach {
+            println("$it")
             if (it == 0) {
                 _channel.send(SwipeGameContractChannel.OnFinish)
             }

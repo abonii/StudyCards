@@ -12,7 +12,6 @@ data class User(
         const val name = "name"
         const val email = "email"
         const val translateCounts = "translateCounts"
-        const val translateCountsUpdateTime = "translateCountsUpdateTime"
         const val goal = "goal"
         const val interests = "interests"
         const val password = "password"

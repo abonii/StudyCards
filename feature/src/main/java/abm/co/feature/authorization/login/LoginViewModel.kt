@@ -67,7 +67,18 @@ class LoginViewModel @Inject constructor(
                 loginViaEmail()
             }
             LoginContractEvent.OnLoginViaFacebookClicked -> {
-                // TODO not realized
+                // todo not released
+               viewModelScope.launch {
+                   _channel.send(
+                       LoginContractChannel.ShowMessage(
+                           MessageContent.Snackbar.MessageContentRes(
+                               titleRes = R.string.Messages_working,
+                               subtitleRes = abm.co.feature.R.string.Message_inFuture,
+                               type = MessageType.Info
+                           )
+                       )
+                   )
+               }
             }
             LoginContractEvent.OnSignUpClicked -> {
                 navigateToSignUp()

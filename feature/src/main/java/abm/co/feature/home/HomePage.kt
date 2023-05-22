@@ -77,10 +77,10 @@ fun HomePage(
     LaunchedEffect(Unit) {
         AnalyticsManager.sendEvent("home_page_viewed")
     }
-    val activity = getActivity()
-    LaunchedEffect(Unit) {
-        activity?.requestPushNotificationsPermission()
-    }
+//    val activity = getActivity()
+//    LaunchedEffect(Unit) {
+//        activity?.requestPushNotificationsPermission()
+//    }
     viewModel.channel.collectInLaunchedEffect {
         when (it) {
             HomeContractChannel.NavigateToLanguageSelectPage -> onNavigateToLanguageSelectPage()

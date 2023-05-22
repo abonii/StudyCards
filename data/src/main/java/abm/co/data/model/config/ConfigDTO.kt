@@ -14,8 +14,6 @@ data class ConfigDTO(
     val oxfordKey: String = "",
     @SerializedName("yandex_key")
     val yandexKey: String = "",
-    @SerializedName("translate_count_anonymous")
-    val translateCountAnonymous: Int = 0
 ) {
 
     fun toDomain() = Config(
@@ -23,6 +21,5 @@ data class ConfigDTO(
         oxfordId = oxfordId,
         oxfordKey = oxfordKey,
         yandexKey = yandexKey,
-        translateCountAnonymous = translateCountAnonymous
     )
 }

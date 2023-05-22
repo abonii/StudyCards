@@ -14,8 +14,6 @@ import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
 import abm.co.feature.R
 import abm.co.feature.userattributes.lanugage.LanguageUI
-import abm.co.feature.userattributes.lanugage.defaultLanguages
-import abm.co.feature.userattributes.lanugage.filterByCodes
 import abm.co.feature.userattributes.lanugage.toDomain
 import abm.co.feature.userattributes.lanugage.toUI
 import abm.co.feature.utils.LocaleHelper
@@ -154,19 +152,30 @@ class ProfileViewModel @Inject constructor(
             }
 
             ProfileContractEvent.Settings.OnClickAppLanguage -> {
-                _state.update { oldState ->
-                    oldState.copy(
-                        dialog = ProfileContractState.Dialog(
-                            appLanguage = defaultLanguages.filterByCodes(
-                                codes = listOf(
-                                    "en",
-                                    "ru",
-                                    "kz"
-                                )
+                viewModelScope.launch {
+                    _channel.send(
+                        ProfileContractChannel.ShowMessage(
+                            MessageContent.Snackbar.MessageContentRes(
+                                titleRes = abm.co.designsystem.R.string.Messages_working,
+                                subtitleRes = R.string.Message_inFuture,
+                                type = MessageType.Info
                             )
                         )
                     )
                 }
+//                _state.update { oldState ->
+//                    oldState.copy(
+//                        dialog = ProfileContractState.Dialog(
+//                            appLanguage = defaultLanguages.filterByCodes(
+//                                codes = listOf(
+//                                    "en",
+////                                    "ru",
+////                                    "kz"
+//                                )
+//                            )
+//                        )
+//                    )
+//                }
             }
 
             ProfileContractEvent.Settings.OnClickStore -> {

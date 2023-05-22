@@ -181,7 +181,6 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     override suspend fun createUserCategory(category: Category): Either<Failure, Category> {
         return safeCall {
-            if (firebaseAuth.currentUser?.uid != category.creatorID) return@safeCall category
             val ref = userCategoryWithLanguagesRef.firstOrNull()?.push()
             val updatedCategory = category.copy(
                 id = ref?.key ?: "category_id",

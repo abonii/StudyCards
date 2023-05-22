@@ -5,9 +5,11 @@ import abm.co.designsystem.component.button.ButtonState
 import abm.co.designsystem.functional.safeLet
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
+import abm.co.domain.base.ExpectedMessage
 import abm.co.domain.base.Failure
 import abm.co.domain.base.onFailure
 import abm.co.domain.base.onSuccess
+import abm.co.domain.repository.AuthorizationRepository
 import abm.co.domain.repository.DictionaryRepository
 import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
@@ -30,6 +32,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -41,6 +44,7 @@ class EditCardViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val languagesRepository: LanguagesRepository,
     private val serverRepository: ServerRepository,
+    private val authorizationRepository: AuthorizationRepository,
     private val dictionaryRepository: DictionaryRepository
 ) : ViewModel() {
 
@@ -50,6 +54,10 @@ class EditCardViewModel @Inject constructor(
 
     private val _channel = Channel<EditCardContractChannel>()
     val channel: Flow<EditCardContractChannel> = _channel.receiveAsFlow()
+
+    private val translateCountFlow = serverRepository.getUser.map {
+        it.asRight?.b?.translateCounts
+    }
 
     private val _state = MutableStateFlow(
         EditCardContractState(
@@ -324,20 +332,30 @@ class EditCardViewModel @Inject constructor(
         word: String,
         fromNative: Boolean
     ) {
-        dictionaryRepository.getOxfordWord(
-            word = word,
-            fromNative = fromNative
-        ).onFailure {
-            fetchYandexWord(word, fromNative)
-        }.onSuccess { response ->
-            oxfordResponse = response.toUI().also {
-                _channel.send(
-                    EditCardContractChannel.NavigateToWordInfo(
-                        fromNativeToLearning = fromNative,
-                        oxfordResponse = it,
-                        checkedOxfordItemsID = null
-                    )
+        val translateCount = translateCountFlow.firstOrNull() ?: 0
+        if (translateCount <= 0) {
+            Failure.FailureSnackbar(
+                expectedMessage = ExpectedMessage.String(
+                    value = "You don't have any translation attempts, you can buy it"
                 )
+            ).sendException()
+        } else {
+            dictionaryRepository.getOxfordWord(
+                word = word,
+                fromNative = fromNative
+            ).onFailure {
+                fetchYandexWord(word, fromNative)
+            }.onSuccess { response ->
+                authorizationRepository.updateUserTranslationCount(translateCount - 1)
+                oxfordResponse = response.toUI().also {
+                    _channel.send(
+                        EditCardContractChannel.NavigateToWordInfo(
+                            fromNativeToLearning = fromNative,
+                            oxfordResponse = it,
+                            checkedOxfordItemsID = null
+                        )
+                    )
+                }
             }
         }
     }
@@ -346,27 +364,37 @@ class EditCardViewModel @Inject constructor(
         word: String,
         fromNative: Boolean
     ) {
-        dictionaryRepository.getYandexWord(
-            word = word,
-            fromNative = fromNative
-        ).onFailure {
-            it.sendException()
-        }.onSuccess { response ->
-            val native = if (fromNative) {
-                word
-            } else {
-                response.text?.joinToString() ?: ""
-            }
-            val learning = if (fromNative) {
-                response.text?.joinToString() ?: ""
-            } else {
-                word
-            }
-            _state.update { oldState ->
-                oldState.copy(
-                    nativeText = native,
-                    learningText = learning
+        val translateCount = translateCountFlow.firstOrNull() ?: 0
+        if (translateCount <= 0) {
+            Failure.FailureSnackbar(
+                expectedMessage = ExpectedMessage.String(
+                    value = "You don't have any translation attempts, you can buy it"
                 )
+            ).sendException()
+        } else {
+            dictionaryRepository.getYandexWord(
+                word = word,
+                fromNative = fromNative
+            ).onFailure {
+                it.sendException()
+            }.onSuccess { response ->
+                authorizationRepository.updateUserTranslationCount(translateCount - 1)
+                val native = if (fromNative) {
+                    word
+                } else {
+                    response.text?.joinToString() ?: ""
+                }
+                val learning = if (fromNative) {
+                    response.text?.joinToString() ?: ""
+                } else {
+                    word
+                }
+                _state.update { oldState ->
+                    oldState.copy(
+                        nativeText = native,
+                        learningText = learning
+                    )
+                }
             }
         }
     }

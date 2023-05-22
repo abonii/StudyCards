@@ -14,13 +14,13 @@ fun UserGoalUI.toDomain() = UserGoal(
 )
 
 val defaultUserGoals = listOf( // todo what to do
-    UserGoalUI(id = "Learn Basics", "Изучить основы"),
-    UserGoalUI(id = "Watch movies", "Посмотреть фильм на языке"),
-    UserGoalUI(id = "Watch movies", "Познакомиться с культурой языка"),
-    UserGoalUI(id = "Leveling up", "Улучшить свой уровень"),
-    UserGoalUI(id = "Learn grammar", "Улучшить грамматику"),
-    UserGoalUI(id = "Pass exam", "Сдать экзамены и ли тест"),
-    UserGoalUI(id = "Speak fluent", "Научиться говорить более свободно"),
-    UserGoalUI(id = "Understand language", "Понимать язык"),
-    UserGoalUI(id = "I don't want to tell", "Что то")
+    UserGoalUI(id = "Learn Basics", "Learn the basics"),
+    UserGoalUI(id = "Watch movies", "Watch movies"),
+    UserGoalUI(id = "learn culture of language", "Get to know the culture of the language"),
+    UserGoalUI(id = "Leveling up", "Improve my level"),
+    UserGoalUI(id = "Learn grammar", "Improve grammar"),
+    UserGoalUI(id = "Pass exam", "Pass exam"),
+    UserGoalUI(id = "Speak fluent", "To speak fluent"),
+    UserGoalUI(id = "Understand language", "Understand language"),
+    UserGoalUI(id = "I don't want to tell", "Something else")
 )

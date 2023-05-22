@@ -22,7 +22,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +30,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
@@ -52,20 +52,36 @@ class SignUpViewModel @Inject constructor(
                     it.copy(email = event.value)
                 }
             }
+
             is SignUpContractEvent.OnEnterPasswordValue -> {
                 mutableState.update {
                     it.copy(password = event.value)
                 }
             }
+
             SignUpContractEvent.OnLoginViaGoogleClicked -> {
                 loginViaGoogle()
             }
+
             SignUpContractEvent.OnLoginViaFacebookClicked -> {
                 // TODO not realized
+                viewModelScope.launch {
+                    _channel.send(
+                        SignUpContractChannel.ShowMessage(
+                            MessageContent.Snackbar.MessageContentRes(
+                                titleRes = abm.co.designsystem.R.string.Messages_working,
+                                subtitleRes = R.string.Message_inFuture,
+                                type = MessageType.Info
+                            )
+                        )
+                    )
+                }
             }
+
             SignUpContractEvent.OnLoginClicked -> {
                 navigateToLoginPage()
             }
+
             SignUpContractEvent.OnSignUpViaEmailClicked -> {
                 signUpViaEmail()
             }
@@ -137,14 +153,17 @@ class SignUpViewModel @Inject constructor(
                         Failure.FailureSnackbar(ExpectedMessage.Res(R.string.SignUpPage_EmailEmpty))
                             .sendException()
                     }
+
                     TextUtils.isEmpty(password) -> {
                         Failure.FailureSnackbar(ExpectedMessage.Res(R.string.SignUpPage_PasswordEmpty))
                             .sendException()
                     }
+
                     password.length < 6 -> {
                         Failure.FailureSnackbar(ExpectedMessage.Res(R.string.SignUpPage_PasswordLengthNotCorrect))
                             .sendException()
                     }
+
                     else -> {
                         mutableState.update { it.copy(isSignUpButtonLoading = true) }
                         firebaseAuth.createUserWithEmailAndPassword(email, password)
@@ -209,6 +228,7 @@ class SignUpViewModel @Inject constructor(
         password: String? = null
     ) {
         viewModelScope.launch {
+            authorizationRepository.addUserTranslationCount()
             authorizationRepository.setUserInfo(
                 name = name,
                 email = email,
