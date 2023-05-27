@@ -1,4 +1,4 @@
-package abm.co.feature.toolbar
+package abm.co.designsystem.toolbar
 
 abstract class DynamicOffsetScrollFlagState(
     heightRange: IntRange,

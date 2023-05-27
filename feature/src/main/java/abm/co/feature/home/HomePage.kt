@@ -16,8 +16,8 @@ import abm.co.feature.R
 import abm.co.feature.card.component.CategoryItem
 import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.home.component.HomeCollapsingToolbar
-import abm.co.feature.toolbar.ToolbarState
-import abm.co.feature.toolbar.rememberToolbarState
+import abm.co.designsystem.toolbar.ToolbarState
+import abm.co.designsystem.toolbar.rememberToolbarState
 import abm.co.feature.utils.AnalyticsManager
 import abm.co.permissions.extension.requestPushNotificationsPermission
 import androidx.compose.animation.Crossfade

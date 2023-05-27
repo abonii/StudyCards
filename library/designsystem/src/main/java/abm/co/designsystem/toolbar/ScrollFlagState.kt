@@ -1,4 +1,4 @@
-package abm.co.feature.toolbar
+package abm.co.designsystem.toolbar
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue

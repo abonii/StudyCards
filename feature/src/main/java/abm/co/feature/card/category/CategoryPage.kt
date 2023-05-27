@@ -15,8 +15,8 @@ import abm.co.feature.card.category.component.CategoryCollapsingToolbar
 import abm.co.feature.card.model.CardKindUI
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
-import abm.co.feature.toolbar.ToolbarState
-import abm.co.feature.toolbar.rememberToolbarState
+import abm.co.designsystem.toolbar.ToolbarState
+import abm.co.designsystem.toolbar.rememberToolbarState
 import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloatAsState

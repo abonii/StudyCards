@@ -5,6 +5,7 @@ import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.extensions.getActivity
 import abm.co.designsystem.message.common.MessageContent
+import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import abm.co.feature.utils.AnalyticsManager
@@ -34,6 +35,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,6 +51,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.SkuDetails
+import kotlinx.coroutines.launch
 
 @Composable
 fun StorePage(
@@ -64,25 +67,35 @@ fun StorePage(
     }
     val state by viewModel.skusStateFlow.collectAsState()
 
+    val scope = rememberCoroutineScope()
     SetStatusBarColor()
     StoreScreen(
         items = state,
         onClickBack = navigateBack,
         onClick = { product ->
-            activity?.let {
-                val flowParams = BillingFlowParams.newBuilder()
-                    .setSkuDetails(product)
-                    .build()
-                when (
-                    viewModel.getBillingClient().launchBillingFlow(activity, flowParams)
-                        .responseCode
-                ) {
-                    BillingClient.BillingResponseCode.SERVICE_DISCONNECTED,
-                    BillingClient.BillingResponseCode.SERVICE_TIMEOUT -> {
-                        viewModel.retryConnection()
-                    }
-                }
+            scope.launch {
+                showMessage(
+                    MessageContent.Snackbar.MessageContentRes(
+                        titleRes = abm.co.designsystem.R.string.Messages_working,
+                        subtitleRes = R.string.Message_inFuture,
+                        type = MessageType.Info
+                    )
+                )
             }
+//            activity?.let { todo after correct release uncomment
+//                val flowParams = BillingFlowParams.newBuilder()
+//                    .setSkuDetails(product)
+//                    .build()
+//                when (
+//                    viewModel.getBillingClient().launchBillingFlow(activity, flowParams)
+//                        .responseCode
+//                ) {
+//                    BillingClient.BillingResponseCode.SERVICE_DISCONNECTED,
+//                    BillingClient.BillingResponseCode.SERVICE_TIMEOUT -> {
+//                        viewModel.retryConnection()
+//                    }
+//                }
+//            }
         }
     )
 }

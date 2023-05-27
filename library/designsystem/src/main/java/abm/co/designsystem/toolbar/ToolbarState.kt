@@ -1,6 +1,6 @@
-package abm.co.feature.toolbar
+package abm.co.designsystem.toolbar
 
-import abm.co.feature.toolbar.scrollflags.ExitUntilCollapsedState
+import abm.co.designsystem.toolbar.scrollflags.ExitUntilCollapsedState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember

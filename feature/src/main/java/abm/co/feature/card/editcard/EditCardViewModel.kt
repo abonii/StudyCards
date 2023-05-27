@@ -297,7 +297,7 @@ class EditCardViewModel @Inject constructor(
             val learning = if (fromNative) {
                 translations
             } else {
-                oldState.nativeText
+                oldState.learningText
             }
             val examples = entries?.flatMap { entryUI ->
                 entryUI.examples ?: emptyList()

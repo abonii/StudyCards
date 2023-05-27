@@ -1,6 +1,6 @@
-package abm.co.feature.toolbar.scrollflags
+package abm.co.designsystem.toolbar.scrollflags
 
-import abm.co.feature.toolbar.ScrollFlagState
+import abm.co.designsystem.toolbar.ScrollFlagState
 import androidx.compose.runtime.saveable.mapSaver
 
 class ExitUntilCollapsedState(
