@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -25,6 +26,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
@@ -88,19 +90,20 @@ fun CategoryCollapsingToolbar(
                 Text(
                     modifier = Modifier
                         .absoluteOffset(y = (-1).dp)
+                        .fillMaxWidth(0.64f)
                         .wrapContentWidth()
                         .clickableWithoutRipple(onClick = onChangeTitle),
                     text = title,
                     style = StudyCardsTheme.typography.weight600Size23LineHeight24
                         .copy(
-                            letterSpacing = ((1 - progress) * 1.5).sp,
                             fontSize = (StudyCardsTheme
                                 .typography
                                 .weight600Size23LineHeight24
-                                .fontSize.value + ((1 - progress) * 2)).sp
+                                .fontSize.value - ((1 - progress) * 1.4)).sp
                         ),
                     color = StudyCardsTheme.colors.textPrimary,
-                    textAlign = TextAlign.Center
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
                 )
                 Text(
                     modifier = Modifier

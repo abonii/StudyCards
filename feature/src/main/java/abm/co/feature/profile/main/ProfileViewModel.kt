@@ -29,6 +29,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -56,7 +57,8 @@ class ProfileViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val authorizationRepository: AuthorizationRepository,
     private val serverRepository: ServerRepository,
-    private val applicationInfo: ApplicationInfo
+    private val applicationInfo: ApplicationInfo,
+    private val signInOptions: GoogleSignInOptions
 ) : ViewModel() {
 
     private val _channel = Channel<ProfileContractChannel>()
@@ -229,7 +231,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun connectViaGoogle() {
         viewModelScope.launch {
-            val intent = Intent(googleSignInClient.signInIntent)
+            val intent = Intent(GoogleSignIn.getClient(applicationContext, signInOptions).signInIntent)
             _channel.send(ProfileContractChannel.ConnectWithGoogleAccount(intent))
         }
     }

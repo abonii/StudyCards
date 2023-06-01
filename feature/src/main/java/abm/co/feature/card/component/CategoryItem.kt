@@ -63,7 +63,7 @@ fun CategoryItem(
                     color = StudyCardsTheme.colors.milky,
                     shape = RoundedCornerShape(11.dp)
                 )
-                .padding(12.dp),
+                .padding(start = 12.dp, top = 12.dp, bottom = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             safeLet(isBookmarked, onClickBookmark) { isBookmarked, onClickBookmark ->
@@ -95,7 +95,7 @@ fun CategoryItem(
                 Icon(
                     modifier = Modifier
                         .clickableWithoutRipple(onClick = onClickPlay)
-                        .padding(top = 10.dp, bottom = 10.dp)
+                        .padding(top = 10.dp, bottom = 10.dp, end = 12.dp)
                         .size(24.dp),
                     painter = painterResource(id = R.drawable.ic_play),
                     tint = StudyCardsTheme.colors.buttonPrimary,
@@ -103,11 +103,15 @@ fun CategoryItem(
                 )
             }
             safeLet(isPublished, onClickShare) { isPublished, onClickShare ->
-                Spacer(modifier = Modifier.width(16.dp))
+                if(onClickPlay == null) {
+                    Spacer(modifier = Modifier.width(16.dp))
+                } else {
+                    Spacer(modifier = Modifier.width(4.dp))
+                }
                 Icon(
                     modifier = Modifier
                         .clickableWithoutRipple(onClick = onClickShare)
-                        .padding(top = 10.dp, bottom = 10.dp)
+                        .padding(top = 10.dp, bottom = 10.dp, end = 12.dp)
                         .size(24.dp),
                     painter = painterResource(id = R.drawable.ic_share),
                     tint = if (isPublished) StudyCardsTheme.colors.buttonPrimary

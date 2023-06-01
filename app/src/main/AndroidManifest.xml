@@ -15,7 +15,7 @@
         android:name=".StudyCardsApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="${appName}"
-        android:enableOnBackInvokedCallback="true"
+        android:enableOnBackInvokedCallback="false"
         android:configChanges="locale|orientation"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"

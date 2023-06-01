@@ -168,7 +168,10 @@ class LoginViewModel @Inject constructor(
                                     task.exception?.mapToFailure()?.sendException()
                                 } else {
                                     val user = firebaseAuth.currentUser
-                                    saveUserInfo(email = user?.email, name = user?.displayName)
+                                    viewModelScope.launch {
+                                        authorizationRepository.addUserTranslationCount()
+                                        saveUserInfo(email = user?.email, name = user?.displayName)
+                                    }
                                 }
                             }
                     }

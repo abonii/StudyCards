@@ -46,10 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.SkuDetails
 import kotlinx.coroutines.launch
 
@@ -74,13 +71,24 @@ fun StorePage(
         onClickBack = navigateBack,
         onClick = { product ->
             scope.launch {
-                showMessage(
-                    MessageContent.Snackbar.MessageContentRes(
-                        titleRes = abm.co.designsystem.R.string.Messages_working,
-                        subtitleRes = R.string.Message_inFuture,
-                        type = MessageType.Info
+                val canAdd = viewModel.canAddTranslateCount()
+                if(canAdd){
+                    showMessage(
+                        MessageContent.Snackbar.MessageContentTitleRes(
+                            titleRes = abm.co.designsystem.R.string.Messages_working,
+                            subtitle = "We are happy to provide it to you at no cost",
+                            type = MessageType.Info
+                        )
                     )
-                )
+                } else {
+                    showMessage(
+                        MessageContent.Snackbar.MessageContentTitleRes(
+                            titleRes = abm.co.designsystem.R.string.Messages_working,
+                            subtitle = "You currently have enough number of translations, please try again when your count is low.",
+                            type = MessageType.Info
+                        )
+                    )
+                }
             }
 //            activity?.let { todo after correct release uncomment
 //                val flowParams = BillingFlowParams.newBuilder()
@@ -154,7 +162,7 @@ private fun StoreScreen(
                             newValue = ""
                         ).trim()
                     },
-                    price = skuDetails.price,
+                    price = "Free", // todo
                     backgroundColor = if (index == items.size / 2) {
                         StudyCardsTheme.colors.primary
                     } else {
