@@ -521,7 +521,7 @@ private fun SettingsItem(
             )
         } ?: Icon(
             modifier = Modifier.size(24.dp),
-            painter = painterResource(id = R.drawable.ic_chevron_right),
+            painter = painterResource(id = abm.co.designsystem.R.drawable.ic_chevron_right),
             contentDescription = null,
             tint = color
         )

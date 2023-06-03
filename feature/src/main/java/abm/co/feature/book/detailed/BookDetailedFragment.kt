@@ -1,15 +1,14 @@
-package abm.co.feature.book.library
+package abm.co.feature.book.detailed
 
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
-import abm.co.designsystem.navigation.extension.navigateSafe
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LibraryFragment : BaseFragment() {
+class BookDetailedFragment : BaseFragment() {
 
     companion object {
         private val rootViewId = View.generateViewId()
@@ -19,12 +18,13 @@ class LibraryFragment : BaseFragment() {
 
     @Composable
     override fun InitUI(messageContent: messageContent) {
-        LibraryPage(
+        BookDetailedPage(
             showMessage = messageContent,
-            navigateToBookDetailed = {
-                findNavController().navigateSafe(
-                    LibraryFragmentDirections.toBookDetailedDestination(book = it)
-                )
+            navigateBack = {
+                findNavController().navigateUp()
+            },
+            navigateToBookReader = {
+
             }
         )
     }

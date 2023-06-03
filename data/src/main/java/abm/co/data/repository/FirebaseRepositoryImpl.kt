@@ -5,6 +5,7 @@ import abm.co.data.di.ApplicationScope
 import abm.co.data.model.DatabaseRef.CARD_REF
 import abm.co.data.model.DatabaseRef.CATEGORY_REF
 import abm.co.data.model.DatabaseRef.EXPLORE_REF
+import abm.co.data.model.DatabaseRef.LIBRARY_REF
 import abm.co.data.model.DatabaseRef.ROOT_REF
 import abm.co.data.model.DatabaseRef.USER_PROPERTIES_REF
 import abm.co.data.model.DatabaseRef.USER_REF
@@ -12,6 +13,8 @@ import abm.co.data.model.card.CardDTO
 import abm.co.data.model.card.CategoryDTO
 import abm.co.data.model.card.toDTO
 import abm.co.data.model.card.toDomain
+import abm.co.data.model.library.BookDTO
+import abm.co.data.model.library.toDTO
 import abm.co.data.model.user.UserDTO
 import abm.co.data.model.user.toDomain
 import abm.co.data.utils.asFlow
@@ -23,6 +26,7 @@ import abm.co.domain.base.safeCall
 import abm.co.domain.model.Card
 import abm.co.domain.model.CardKind
 import abm.co.domain.model.Category
+import abm.co.domain.model.library.Book
 import abm.co.domain.repository.ServerRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -43,6 +47,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Named
@@ -53,7 +58,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     @ApplicationScope private val coroutineScope: CoroutineScope,
     @Named(ROOT_REF) private val root: DatabaseReference,
     private val firebaseAuth: FirebaseAuth,
-    languagesDataStore: LanguagesDataStore,
+    private val languagesDataStore: LanguagesDataStore,
     private val gson: Gson
 ) : ServerRepository {
 
@@ -77,6 +82,14 @@ class FirebaseRepositoryImpl @Inject constructor(
     ) { native, learning ->
         root.child(EXPLORE_REF)
             .child(native?.code ?: "en")
+            .child(learning?.code ?: "en")
+            .apply {
+                keepSynced(true)
+            }
+    }.distinctUntilChanged()
+
+    private val libraryWithLanguagesRef = languagesDataStore.getLearningLanguage().map { learning ->
+        root.child(LIBRARY_REF)
             .child(learning?.code ?: "en")
             .apply {
                 keepSynced(true)
@@ -163,6 +176,39 @@ class FirebaseRepositoryImpl @Inject constructor(
                             Either.Right(
                                 items.sortedByDescending { it.bookmarked }
                             )
+                        ).isSuccess
+                    } catch (e: Exception) {
+                        trySend(Either.Left(e.firebaseError().mapToFailure())).isSuccess
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    trySend(Either.Left(error.toException().firebaseError().mapToFailure()))
+                        .isSuccess
+                }
+            })
+            previousListener?.let { it.first.removeEventListener(it.second) }
+            previousListener = reference to listener
+        }
+    }
+
+    override val getLibrary: Flow<Either<Failure, List<Book>>> = callbackFlow {
+        var previousListener: Pair<DatabaseReference, ValueEventListener>? = null
+        libraryWithLanguagesRef.collectLatest { reference ->
+            val listener = reference.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    try {
+                        val items = ArrayList<BookDTO>()
+                        snapshot.children.map { item ->
+                            try {
+                                item.getValue(BookDTO::class.java)
+                                    ?.let { items.add(it) }
+                            } catch (e: DatabaseException) {
+                                PlutoLog.e("getLibrary", e.message, e.cause)
+                            }
+                        }
+                        trySend(
+                            Either.Right(items.map { it.toDomain() })
                         ).isSuccess
                     } catch (e: Exception) {
                         trySend(Either.Left(e.firebaseError().mapToFailure())).isSuccess
@@ -290,6 +336,57 @@ class FirebaseRepositoryImpl @Inject constructor(
             }
         }
 
+    override suspend fun removeCategory(categoryID: String): Either<Failure, Unit> {
+        return safeCall {
+            categoryWithLanguagesRef.firstOrNull()?.child(categoryID)
+                ?.removeValue()
+        }
+    }
+
+    override suspend fun removeUserCategory(categoryID: String): Either<Failure, Unit> {
+        return safeCall {
+            userCategoryWithLanguagesRef.firstOrNull()
+                ?.child(categoryID)
+                ?.removeValue()
+        }
+    }
+
+    override suspend fun removeUserCard(
+        categoryID: String,
+        cardID: String
+    ): Either<Failure, Unit> {
+        return safeCall {
+            userCategoryWithLanguagesRef.firstOrNull()
+                ?.child(categoryID)
+                ?.child(CARD_REF)
+                ?.child(cardID)
+                ?.removeValue()
+        }
+    }
+
+    override suspend fun removeUserDatabase() {
+        root.child(USER_REF)
+            .child(firebaseAuth.currentUser?.uid ?: "no-user-id")
+            .removeValue()
+    }
+
+    override suspend fun addBook(book: Book): Either<Failure, Unit> {
+        return safeCall {
+            val learningLanguage = languagesDataStore.getLearningLanguage().firstOrNull()
+                ?: throw RuntimeException("learning language is empty")
+            val ref = root.child(LIBRARY_REF)
+                .child(learningLanguage.code)
+                .push()
+            val newBook = book.copy(
+                id = ref.key ?: "",
+                languageCode = learningLanguage.code
+            )
+            ref.setValue(newBook.toDTO()) { error, ref ->
+                println("$ref: ${error?.message}")
+            }
+        }
+    }
+
     override suspend fun copyExploreCategoryToUserCollection(categoryID: String): Either<Failure, Unit> {
         return safeCall {
             val userCategoryRef = userCategoryWithLanguagesRef.firstOrNull()?.child(categoryID)
@@ -339,39 +436,5 @@ class FirebaseRepositoryImpl @Inject constructor(
                 }
             }
         }
-    }
-
-    override suspend fun removeCategory(categoryID: String): Either<Failure, Unit> {
-        return safeCall {
-            categoryWithLanguagesRef.firstOrNull()?.child(categoryID)
-                ?.removeValue()
-        }
-    }
-
-    override suspend fun removeUserCategory(categoryID: String): Either<Failure, Unit> {
-        return safeCall {
-            userCategoryWithLanguagesRef.firstOrNull()
-                ?.child(categoryID)
-                ?.removeValue()
-        }
-    }
-
-    override suspend fun removeUserCard(
-        categoryID: String,
-        cardID: String
-    ): Either<Failure, Unit> {
-        return safeCall {
-            userCategoryWithLanguagesRef.firstOrNull()
-                ?.child(categoryID)
-                ?.child(CARD_REF)
-                ?.child(cardID)
-                ?.removeValue()
-        }
-    }
-
-    override suspend fun removeUserDatabase() {
-        root.child(USER_REF)
-            .child(firebaseAuth.currentUser?.uid ?: "no-user-id")
-            .removeValue()
     }
 }

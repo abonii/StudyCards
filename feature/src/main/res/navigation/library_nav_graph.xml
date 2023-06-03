@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/library_nav_graph"
+    app:startDestination="@id/library_destination">
+
+    <fragment
+        android:id="@+id/library_destination"
+        android:name="abm.co.feature.book.library.LibraryFragment">
+
+        <action
+            android:id="@+id/to_book_detailed_destination"
+            app:destination="@id/book_detailed_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/book_detailed_destination"
+        android:name="abm.co.feature.book.detailed.BookDetailedFragment">
+
+        <argument
+            android:name="book"
+            app:argType="abm.co.feature.book.model.BookUI" />
+    </fragment>
+</navigation>

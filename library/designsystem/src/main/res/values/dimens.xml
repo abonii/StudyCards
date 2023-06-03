@@ -85,6 +85,7 @@
     <dimen name="default_180dp">@dimen/_180sdp</dimen>
     <dimen name="default_200dp">@dimen/_200sdp</dimen>
     <dimen name="default_250dp">@dimen/_250sdp</dimen>
+    <dimen name="default_325dp">@dimen/_325sdp</dimen>
     <dimen name="default_10sp">@dimen/_10ssp</dimen>
     <dimen name="default_11sp">@dimen/_11ssp</dimen>
     <dimen name="default_12sp">@dimen/_12ssp</dimen>

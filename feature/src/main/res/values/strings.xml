@@ -221,6 +221,14 @@
 
     <string name="Guess.Toolbar.title">Guess</string>
 
+    <string name="BookDetailed.Button.readTitle">Read</string>
+    <string name="BookDetailed.About.title">About</string>
+    <string name="BookDetailed.About.expand">Read all</string>
+    <string name="BookDetailed.About.collapse">Close</string>
+    <string name="BookDetailed.Info.title">Info</string>
+    <string name="BookDetailed.Info.langaugeTitle">Language</string>
+    <string name="BookDetailed.Info.levelTitle">Level</string>
+
     <plurals name="practicedNTime">
         <item quantity="one"> Practiced: %s time</item>
         <item quantity="zero"> Practiced: %s time</item>

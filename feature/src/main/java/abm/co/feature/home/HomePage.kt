@@ -9,7 +9,6 @@ import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.text.pluralString
 import abm.co.designsystem.component.widget.LoadingView
 import abm.co.designsystem.extensions.collectInLaunchedEffect
-import abm.co.designsystem.extensions.getActivity
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
@@ -19,7 +18,6 @@ import abm.co.feature.home.component.HomeCollapsingToolbar
 import abm.co.designsystem.toolbar.ToolbarState
 import abm.co.designsystem.toolbar.rememberToolbarState
 import abm.co.feature.utils.AnalyticsManager
-import abm.co.permissions.extension.requestPushNotificationsPermission
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable

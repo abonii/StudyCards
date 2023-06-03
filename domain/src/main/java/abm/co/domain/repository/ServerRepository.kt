@@ -7,6 +7,7 @@ import abm.co.domain.model.CardKind
 import abm.co.domain.model.Category
 import abm.co.domain.model.User
 import abm.co.domain.model.config.Config
+import abm.co.domain.model.library.Book
 import kotlinx.coroutines.flow.Flow
 
 interface ServerRepository {
@@ -37,4 +38,7 @@ interface ServerRepository {
 
     suspend fun copyExploreCategoryToUserCollection(categoryID: String): Either<Failure, Unit>
     suspend fun copyUserCategoryToExploreCollection(categoryID: String): Either<Failure, Unit>
+
+    suspend fun addBook(book: Book): Either<Failure, Unit>
+    val getLibrary: Flow<Either<Failure, List<Book>>>
 }
