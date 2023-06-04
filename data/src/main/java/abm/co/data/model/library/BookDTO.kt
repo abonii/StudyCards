@@ -13,7 +13,8 @@ data class BookDTO(
     val bannerImage: String = "",
     val kind: String = "",
     val image: String = "",
-    val link: String = ""
+    val link: String = "",
+    val visible: Boolean = false
 ) {
     @Keep
     enum class LevelDTO {
@@ -38,7 +39,8 @@ data class BookDTO(
         image = image,
         kind = kind,
         link = link,
-        bannerImage = bannerImage
+        bannerImage = bannerImage,
+        visible = visible
     )
 }
 
@@ -51,7 +53,8 @@ fun Book.toDTO() = BookDTO(
     image = image,
     link = link,
     kind = kind,
-    bannerImage = bannerImage
+    bannerImage = bannerImage,
+    visible = visible
 )
 
 fun Book.Level.toDTO() = when (this) {

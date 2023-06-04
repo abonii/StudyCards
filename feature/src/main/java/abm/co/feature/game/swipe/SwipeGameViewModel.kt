@@ -96,7 +96,6 @@ class SwipeGameViewModel @Inject constructor(
         snapshotFlow {
             cardList.size
         }.onEach {
-            println("$it")
             if (it == 0) {
                 _channel.send(SwipeGameContractChannel.OnFinish)
             }

@@ -9,7 +9,8 @@ data class Book(
     val image: String,
     val bannerImage: String,
     val kind: String,
-    val link: String
+    val link: String,
+    val visible: Boolean
 ) {
     enum class Level {
         A1, A2, B1, B2, C1, C2;

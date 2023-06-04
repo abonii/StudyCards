@@ -16,7 +16,8 @@ data class BookUI(
     val level: LevelUI,
     val image: String,
     val bannerImage: String,
-    val link: String
+    val link: String,
+    val visible: Boolean
 ) : Parcelable {
 
     @Immutable
@@ -35,6 +36,7 @@ fun Book.toUI() = BookUI(
     kind = kind,
     link = link,
     bannerImage = bannerImage,
+    visible = visible
 )
 
 fun Book.Level.toUI() = when (this) {

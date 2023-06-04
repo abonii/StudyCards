@@ -101,7 +101,7 @@
     <string name="HomePage.Toolbar.language">Language</string>
     <string name="HomePage.Toolbar.guest">Guest</string>
     <string name="HomePage.Toolbar.welcome">Welcome</string>
-    <string name="HomePage.Toolbar.learningLanguage">Start learn</string>
+    <string name="HomePage.Toolbar.learningLanguage">Start learning</string>
     <string name="HomePage.Empty.title">Оh, we don\'t have the words to study yet.\nLet\'s add new words to the add button</string>
     <string name="HomePage.Category.title">Latest set of cards</string>
     <string name="HomePage.Category.showAll">Show all</string>
@@ -228,6 +228,8 @@
     <string name="BookDetailed.Info.title">Info</string>
     <string name="BookDetailed.Info.langaugeTitle">Language</string>
     <string name="BookDetailed.Info.levelTitle">Level</string>
+    <string name="BookDetailed.Received.Error.title">Error</string>
+    <string name="BookDetailed.Received.Error.subtitle">We couldn\'t download book</string>
 
     <plurals name="practicedNTime">
         <item quantity="one"> Practiced: %s time</item>

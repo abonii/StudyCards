@@ -71,6 +71,11 @@ dependencies {
         androidTestImplementation(junitExt)
         androidTestImplementation(coroutinesTest)
     }
+    RoomDependencies.apply {
+        implementation(roomRuntime)
+        implementation(roomKtx)
+        kapt(roomCompiler)
+    }
 }
 
 kapt {

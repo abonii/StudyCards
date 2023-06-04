@@ -381,9 +381,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                 id = ref.key ?: "",
                 languageCode = learningLanguage.code
             )
-            ref.setValue(newBook.toDTO()) { error, ref ->
-                println("$ref: ${error?.message}")
-            }
+            ref.setValue(newBook.toDTO())
         }
     }
 

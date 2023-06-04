@@ -1,6 +1,6 @@
 object RoomDependencies {
     object Versions {
-        const val room = "2.5.0"
+        const val room = "2.5.1"
     }
 
     const val roomRuntime = "androidx.room:room-runtime:${Versions.room}"

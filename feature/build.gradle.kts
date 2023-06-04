@@ -63,6 +63,9 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(BillingDependencies.billing)
+    implementation(files("libs/epublib-core-latest.jar"))
+    implementation(files("libs/jsoup-1.14.3.jar"))
+    implementation(files("libs/slf4j-android-1.6.1-RC1.jar"))
     DIDependencies.apply {
         implementation(hiltAndroid)
         implementation(hiltNavigationCompose)

@@ -49,12 +49,13 @@ class LibraryViewModel @Inject constructor(
         serverRepository.getLibrary
             .onEach { either ->
                 either.onFailure { failure ->
-                    failure.toMessageContent()?.let {
+                    failure.toMessageContent().let {
                         _channel.send(LibraryContractChannel.ShowMessage(it))
                     }
                 }.onSuccess { books ->
-                    println(books)
-                    _state.value = LibraryContractState.Success(books.map { it.toUI() })
+                    _state.value = LibraryContractState.Success(
+                        books.map { it.toUI() }.filter { it.visible }
+                    )
                 }
             }
             .launchIn(viewModelScope)

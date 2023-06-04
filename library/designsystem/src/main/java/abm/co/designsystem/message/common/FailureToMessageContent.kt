@@ -5,7 +5,7 @@ import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.domain.base.ExpectedMessage
 import abm.co.domain.base.Failure
 
-fun Failure.toMessageContent(): MessageContent? =
+fun Failure.toMessageContent(): MessageContent =
     when (this) {
         is Failure.DefaultAlert -> {
             expectedMessage?.let {
@@ -13,7 +13,10 @@ fun Failure.toMessageContent(): MessageContent? =
                     titleRes = R.string.InternalErrorAlert_title,
                     subtitle = it
                 )
-            }
+            } ?: MessageContent.AlertDialog.MessageContentRes(
+                titleRes = R.string.InternalErrorAlert_title,
+                subtitleRes = R.string.Error_standard
+            )
         }
         is Failure.FailureAlert -> {
             val messageContent = when (val expectedMessage = expectedMessage) {
@@ -63,5 +66,8 @@ fun Failure.toMessageContent(): MessageContent? =
                 subtitleRes = R.string.Messages_error
             )
         }
-        else -> null
+        else -> MessageContent.AlertDialog.MessageContentRes(
+            titleRes = R.string.InternalErrorAlert_title,
+            subtitleRes = R.string.Error_standard
+        )
     }

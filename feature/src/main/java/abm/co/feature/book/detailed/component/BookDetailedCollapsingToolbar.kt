@@ -81,9 +81,9 @@ fun BookDetailedCollapsingToolbar(
                     modifier = Modifier
                         .background(
                             Brush.verticalGradient(
-                                0f to Color.White.copy(alpha = 0f),
-                                0.44f to Color.White.copy(alpha = 0.5f),
-                                1f to Color.White.copy(alpha = 1f),
+                                0f to StudyCardsTheme.colors.backgroundPrimary.copy(alpha = 0f),
+                                0.44f to StudyCardsTheme.colors.backgroundPrimary.copy(alpha = 0.5f),
+                                1f to StudyCardsTheme.colors.backgroundPrimary.copy(alpha = 1f),
                             )
                         )
                         .matchParentSize()

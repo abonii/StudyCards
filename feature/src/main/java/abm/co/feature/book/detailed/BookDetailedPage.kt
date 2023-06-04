@@ -17,6 +17,7 @@ import abm.co.feature.userattributes.lanugage.findByCode
 import abm.co.feature.utils.AnalyticsManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +30,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -51,7 +51,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun BookDetailedPage(
     navigateBack: () -> Unit,
-    navigateToBookReader: (BookUI) -> Unit,
+    navigateToBookReader: (BookUI, String) -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: BookDetailedViewModel = hiltViewModel(),
 ) {
@@ -63,7 +63,7 @@ fun BookDetailedPage(
     viewModel.channel.collectInLaunchedEffect(function = { channel ->
         when (channel) {
             is BookDetailedContractChannel.NavigateToBookReader -> {
-                navigateToBookReader(channel.book)
+                navigateToBookReader(channel.book, channel.bookUrl)
             }
 
             is BookDetailedContractChannel.ShowMessage -> {
@@ -92,7 +92,11 @@ private fun Screen(
     uiState: BookDetailedContractState,
     onEvent: (BookDetailedContractEvent) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .background(StudyCardsTheme.colors.backgroundPrimary)
+            .fillMaxSize()
+    ) {
         val minToolbarHeight = dimensionResource(id = abm.co.designsystem.R.dimen.default_200dp)
         val maxToolbarHeight = dimensionResource(id = abm.co.designsystem.R.dimen.default_325dp)
         val toolbarScrollable = rememberToolbarState(
@@ -135,7 +139,6 @@ private fun ScrollableContent(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        Spacer(modifier = Modifier.height(10.dp))
         ParentContent(
             title = stringResource(id = R.string.BookDetailed_About_title),
             content = {

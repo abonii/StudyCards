@@ -24,5 +24,25 @@
         <argument
             android:name="book"
             app:argType="abm.co.feature.book.model.BookUI" />
+
+        <action
+            android:id="@+id/to_book_reader_destination"
+            app:destination="@id/book_reader_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/book_reader_destination"
+        android:name="abm.co.feature.book.reader.BookReaderFragment">
+
+        <argument
+            android:name="book"
+            app:argType="abm.co.feature.book.model.BookUI" />
+        <argument
+            android:name="book_url"
+            app:argType="string" />
     </fragment>
 </navigation>

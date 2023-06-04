@@ -1,6 +1,7 @@
 package abm.co.designsystem.component.about
 
 import abm.co.designsystem.R
+import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.theme.StudyCardsTheme
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
@@ -45,7 +46,7 @@ fun ExpandCollapseButton(
     )
     Row(
         modifier = modifier
-            .clickable(onClick = onClick)
+            .clickableWithoutRipple(onClick = onClick)
             .height(36.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center

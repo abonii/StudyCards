@@ -61,24 +61,3 @@ fun LibraryListItem(
         )
     }
 }
-
-@Preview(showSystemUi = true, showBackground = true, device = "spec:width=411dp,height=891dp")
-@Composable
-fun LibraryListItem_Prev() {
-    StudyCardsTheme {
-        LibraryListItem(
-            book = BookUI(
-                id = "",
-                name = "Alice in wonderland",
-                description = "",
-                languageCode = "",
-                kind = "Fantasy",
-                level = BookUI.LevelUI.A1,
-                image = "gs://study-cards-0000.appspot.com/library/cover/alice_adventures_in_wonderland.png",
-                link = "",
-                bannerImage = ""
-            ),
-            onClick = {}
-        )
-    }
-}
