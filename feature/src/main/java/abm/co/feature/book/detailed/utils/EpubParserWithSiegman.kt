@@ -16,17 +16,16 @@ fun createEpubBookWithSiegman(inputStream: InputStream): EpubBook {
     val chapterTitles = book.tableOfContents.tocReferences.map { it.completeHref to it.title }
     val contents = book.contents.mapIndexed { index, content ->
         val document = Jsoup.parse(content.inputStream, "UTF-8", "")
-//        document.select("img").forEach {
-//            val absBasePath: String = File("").canonicalPath
-//            val relPathEncoded = it.attr("src")
-//            val absPath = File(relPathEncoded.decodedURL).canonicalPath
-//                .removePrefix(absBasePath)
-//                .replace("""\""", "/")
-//                .removePrefix("/")
-//
-//            it.attr("src", absPath)
-//            it.tagName("$tag$absPath")
-//        }
+        document.select("img").forEach {
+            val absBasePath: String = File("").canonicalPath
+            val relPathEncoded = it.attr("src")
+            val absPath = File(relPathEncoded.decodedURL).canonicalPath
+                .removePrefix(absBasePath)
+                .replace("""\""", "/")
+                .removePrefix("/")
+
+            it.attr("src", absPath)
+        }
         content to document
     }
     val chapters = contents.map { (content, body) ->
@@ -51,7 +50,7 @@ fun createEpubBookWithSiegman(inputStream: InputStream): EpubBook {
         title = "empty",
         coverImagePath = "empty for now",
         chapters = chapters,
-        images = emptyList()
+        images = images
     )
 }
 
