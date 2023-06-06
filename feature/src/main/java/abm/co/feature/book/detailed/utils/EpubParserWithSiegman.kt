@@ -33,7 +33,7 @@ fun createEpubBookWithSiegman(inputStream: InputStream): EpubBook {
         EpubChapter(
             url = content.href,
             title = chapterTitles.find { content.href == it.first }?.second,
-            body = getNodeStructuredText(body.body())
+            body = body.html()
         )
     }.filter { it.body.isNotBlank() }
     val images = book.resources.all.mapNotNull { resource ->

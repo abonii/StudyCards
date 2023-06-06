@@ -44,7 +44,13 @@ class PageSplitter(
     private fun appendText(text: String) {
         val words = text.split(" ")
         words.forEach { word ->
-            appendWord("$word ")
+            if (word.contains("<img")) {
+                println("img: $words")
+                appendImage(appendedText = word.substringAfter("img_abon:"))
+                appendWord("<img ")
+            } else {
+                appendWord("$word ")
+            }
         }
     }
 

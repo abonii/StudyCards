@@ -13,8 +13,6 @@ import abm.co.feature.book.reader.BookReaderViewModel
 import abm.co.feature.book.reader.model.ChapterEntityUI
 import abm.co.feature.book.reader.model.ImageEntityUI
 import android.text.TextPaint
-import android.util.TypedValue
-import android.view.Gravity
 import android.widget.TextView
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
@@ -43,7 +41,6 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.widget.TextViewCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.collections.immutable.ImmutableList
