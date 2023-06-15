@@ -1,5 +1,6 @@
 package abm.co.data.local.converter
 
+import abm.co.data.model.LastOpenedBookPageDTO
 import abm.co.data.model.library.ChapterEntityDTO
 import abm.co.data.model.library.ImageEntityDTO
 import androidx.room.TypeConverter
@@ -8,6 +9,7 @@ import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
 object DataConverter {
+
     @TypeConverter
     fun fromChapterEntitiesToString(chapterEntities: List<ChapterEntityDTO>?): String? {
         if (chapterEntities == null) {
