@@ -52,6 +52,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun BookDetailedPage(
     navigateBack: () -> Unit,
     navigateToBookReader: (BookUI, String) -> Unit,
+    openBookIfHasPermission: suspend () -> Unit,
     showMessage: suspend (MessageContent) -> Unit,
     viewModel: BookDetailedViewModel = hiltViewModel(),
 ) {
@@ -72,6 +73,10 @@ fun BookDetailedPage(
 
             BookDetailedContractChannel.NavigateBack -> {
                 navigateBack()
+            }
+
+            BookDetailedContractChannel.RequestStoragePermission -> {
+                openBookIfHasPermission()
             }
         }
     })

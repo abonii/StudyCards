@@ -47,7 +47,11 @@ class BookDetailedViewModel @Inject constructor(
     fun onEvent(event: BookDetailedContractEvent) {
         when (event) {
             is BookDetailedContractEvent.OnClickRead -> {
-                downloadOrOpenBook()
+                viewModelScope.launch {
+                    _channel.send(
+                        BookDetailedContractChannel.RequestStoragePermission
+                    )
+                }
             }
 
             BookDetailedContractEvent.OnBack -> {
@@ -56,7 +60,7 @@ class BookDetailedViewModel @Inject constructor(
         }
     }
 
-    private fun downloadOrOpenBook() {
+    fun downloadOrOpenBook() {
         viewModelScope.launch {
             val bookEntity = libraryRepository.getBook(book.name)
             if(bookEntity != null) {
@@ -121,6 +125,20 @@ class BookDetailedViewModel @Inject constructor(
             )
         }
     }
+
+    fun enableStoragePermissionInApplicationSettings() {
+        viewModelScope.launch {
+            _channel.send(
+                BookDetailedContractChannel.ShowMessage(
+                    MessageContent.Snackbar.MessageContentTitleRes(
+                        titleRes = R.string.BookDetailed_Received_Error_title,
+                        subtitle = "Enable storage permission in the application settings",
+                        type = MessageType.Error
+                    )
+                )
+            )
+        }
+    }
 }
 
 @Stable
@@ -137,6 +155,7 @@ sealed interface BookDetailedContractEvent {
 @Immutable
 sealed interface BookDetailedContractChannel {
     object NavigateBack : BookDetailedContractChannel
+    object RequestStoragePermission : BookDetailedContractChannel
     data class NavigateToBookReader(val book: BookUI, val bookUrl: String) :
         BookDetailedContractChannel
 

@@ -1,5 +1,6 @@
 package abm.co.studycards.navigation
 
+import abm.co.designsystem.navigation.extension.navigateSafe
 import android.view.Menu
 import androidx.annotation.IdRes
 import androidx.navigation.NavController
@@ -24,7 +25,7 @@ object BottomNavigationUI {
         }
         val options = builder.build()
         return try {
-            navController.navigate(item.resId, null, options)
+            navController.navigateSafe(item.resId, null, options)
             navController.currentDestination?.matchDestination(item.resId) == true
         } catch (e: IllegalArgumentException) {
             false
