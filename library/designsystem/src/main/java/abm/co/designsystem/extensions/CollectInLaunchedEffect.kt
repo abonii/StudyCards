@@ -11,8 +11,11 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Suppress("ComposableNaming")
 @Composable
-fun <T> Flow<T>.collectInLaunchedEffect(function: suspend (value: T) -> Unit) {
-    LaunchedEffect(Unit) {
+fun <T> Flow<T>.collectInLaunchedEffect(
+    key: Any = Unit,
+    function: suspend (value: T) -> Unit
+) {
+    LaunchedEffect(key) {
         this@collectInLaunchedEffect.collectLatest(function)
     }
 }

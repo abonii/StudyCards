@@ -15,10 +15,13 @@ interface ServerRepository {
     val getUser: Flow<Either<Failure, User?>>
 
     val getUserCategories: Flow<Either<Failure, List<Category>>>
-    suspend fun createUserCategory(category: Category): Either<Failure, Category>
+    suspend fun createUserCategory(
+        category: Category,
+        id: String? = null
+    ): Either<Failure, Category>
     suspend fun createUserCard(card: Card): Either<Failure, Unit>
     suspend fun updateUserCard(card: Card): Either<Failure, Unit>
-    suspend fun getUserCards(categoryID: String): Flow<Either<Failure, List<Card>>>
+    fun getUserCards(categoryID: String): Flow<Either<Failure, List<Card>>>
     suspend fun removeUserCategory(categoryID: String): Either<Failure, Unit>
     suspend fun removeUserCard(categoryID: String, cardID: String): Either<Failure, Unit>
     suspend fun updateUserCategory(

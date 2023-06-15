@@ -1,4 +1,4 @@
-package abm.co.designsystem.functional
+package abm.co.domain.functional
 
 inline fun justTry(block: () -> Unit) {
     try {

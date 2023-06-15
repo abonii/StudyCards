@@ -1,6 +1,6 @@
 package abm.co.designsystem.navigation.extension
 
-import abm.co.designsystem.functional.justTry
+import abm.co.domain.functional.justTry
 import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.navigation.NavController

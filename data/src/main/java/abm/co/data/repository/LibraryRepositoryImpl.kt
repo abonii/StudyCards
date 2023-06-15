@@ -3,18 +3,20 @@ package abm.co.data.repository
 import abm.co.data.local.dao.LibraryDao
 import abm.co.data.model.library.toDTO
 import abm.co.data.model.library.toDomain
+import abm.co.data.model.toDTO
+import abm.co.data.model.toDomain
+import abm.co.domain.model.LastOpenedBookPage
 import abm.co.domain.model.library.BookEntity
 import abm.co.domain.model.library.ChapterEntity
 import abm.co.domain.model.library.ImageEntity
 import abm.co.domain.repository.LibraryRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class LibraryRepositoryImpl @Inject constructor(
     private val dao: LibraryDao
-): LibraryRepository {
+) : LibraryRepository {
     override suspend fun insertBook(bookEntity: BookEntity) {
         withContext(Dispatchers.IO) {
             dao.insertBooks(bookEntity.toDTO())
@@ -34,14 +36,32 @@ class LibraryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getBook(title: String): BookEntity? {
-        return dao.getBook(title)?.toDomain()
+        return withContext(Dispatchers.IO) {
+            dao.getBook(title)?.toDomain()
+        }
     }
 
     override suspend fun getChapters(bookUrl: String): List<ChapterEntity> {
-        return dao.getChapters(bookUrl).map { it.toDomain() }
+        return withContext(Dispatchers.IO) {
+            dao.getChapters(bookUrl).map { it.toDomain() }
+        }
     }
 
     override suspend fun getImages(bookUrl: String): List<ImageEntity> {
-        return dao.getImages(bookUrl).map { it.toDomain() }
+        return withContext(Dispatchers.IO) {
+            dao.getImages(bookUrl).map { it.toDomain() }
+        }
+    }
+
+    override suspend fun getLastOpenedBookPage(bookUrl: String): LastOpenedBookPage? {
+        return withContext(Dispatchers.IO) {
+            dao.getLastOpenedBookPage(bookUrl)?.toDomain()
+        }
+    }
+
+    override suspend fun setLastOpenedBookPage(item: LastOpenedBookPage) {
+        withContext(Dispatchers.IO) {
+            dao.insertLastOpenedBookPage(item.toDTO())
+        }
     }
 }

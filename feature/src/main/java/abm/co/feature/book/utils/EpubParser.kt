@@ -1,4 +1,4 @@
-package abm.co.feature.book.detailed.utils
+package abm.co.feature.book.utils
 
 import abm.co.domain.model.library.BookEntity
 import abm.co.domain.model.library.ChapterEntity
@@ -16,7 +16,6 @@ import java.net.URLDecoder
 import java.util.zip.ZipInputStream
 import javax.xml.parsers.DocumentBuilderFactory
 
-val String.decodedURL: String get() = URLDecoder.decode(this, "UTF-8")
 data class EpubChapter(val url: String, val title: String?, val body: String)
 data class EpubImage(val path: String, val encodedImage: String)
 data class EpubBook(

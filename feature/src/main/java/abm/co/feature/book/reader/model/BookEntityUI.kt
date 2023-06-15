@@ -3,7 +3,9 @@ package abm.co.feature.book.reader.model
 import abm.co.domain.model.library.BookEntity
 import abm.co.domain.model.library.ChapterEntity
 import abm.co.domain.model.library.ImageEntity
+import androidx.compose.runtime.Immutable
 
+@Immutable
 data class BookEntityUI(
     val url: String,
     val title: String,
@@ -12,6 +14,7 @@ data class BookEntityUI(
     val imagesPath: List<String>?
 )
 
+@Immutable
 data class ImageEntityUI(
     val bookUrl: String,
     val path: String,
@@ -19,6 +22,7 @@ data class ImageEntityUI(
     val id: Int = 0
 )
 
+@Immutable
 data class ChapterEntityUI(
     val url: String,
     val bookUrl: String,

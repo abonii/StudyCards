@@ -1,5 +1,6 @@
 package abm.co.data.local.dao
 
+import abm.co.data.model.LastOpenedBookPageDTO
 import abm.co.data.model.library.BookEntityDTO
 import abm.co.data.model.library.ChapterEntityDTO
 import abm.co.data.model.library.ImageEntityDTO
@@ -31,6 +32,12 @@ interface LibraryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertChapters(images: List<ChapterEntityDTO>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertLastOpenedBookPage(item: LastOpenedBookPageDTO)
+
+    @Query("SELECT * FROM LastOpenedBookPageDTO WHERE bookUrl = :bookUrl")
+    suspend fun getLastOpenedBookPage(bookUrl: String): LastOpenedBookPageDTO?
 
     @Query("SELECT * FROM ChapterEntityDTO WHERE bookUrl = :bookUrl")
     suspend fun getChapters(bookUrl: String): List<ChapterEntityDTO>

@@ -1,7 +1,7 @@
 package abm.co.permissions.dialog
 
 import abm.co.designsystem.base.composableView
-import abm.co.designsystem.functional.safeLet
+import abm.co.domain.functional.safeLet
 import abm.co.permissions.R
 import android.os.Bundle
 import android.view.LayoutInflater

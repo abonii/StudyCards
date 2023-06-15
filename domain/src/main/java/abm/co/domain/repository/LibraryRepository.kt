@@ -1,5 +1,6 @@
 package abm.co.domain.repository
 
+import abm.co.domain.model.LastOpenedBookPage
 import abm.co.domain.model.library.BookEntity
 import abm.co.domain.model.library.ChapterEntity
 import abm.co.domain.model.library.ImageEntity
@@ -17,4 +18,8 @@ interface LibraryRepository {
     suspend fun getImages(bookUrl: String): List<ImageEntity>
 
     suspend fun getBook(title: String): BookEntity?
+
+    suspend fun getLastOpenedBookPage(bookUrl: String): LastOpenedBookPage?
+
+    suspend fun setLastOpenedBookPage(item: LastOpenedBookPage)
 }

@@ -4,6 +4,8 @@
     android:id="@+id/edit_card_nav_graph"
     app:startDestination="@id/edit_card_destination">
 
+    <include app:graph="@navigation/word_info_nav_graph"/>
+
     <fragment
         android:id="@+id/edit_card_destination"
         android:name="abm.co.feature.card.editcard.EditCardFragment" >
@@ -23,7 +25,19 @@
 
         <action
             android:id="@+id/to_word_info_destination"
-            app:destination="@id/word_info_destination" />
+            app:destination="@id/word_info_nav_graph" >
+            <argument
+                android:name="from_native_to_learning"
+                app:argType="boolean" />
+            <argument
+                android:name="oxford_response"
+                app:argType="abm.co.feature.card.model.OxfordTranslationResponseUI" />
+            <argument
+                android:name="oxford_checked_items_id"
+                app:argType="string[]"
+                app:nullable="true"
+                android:defaultValue="@null" />
+        </action>
         <action
             android:id="@+id/to_select_category_destination"
             app:destination="@id/select_category_destination"
@@ -43,21 +57,4 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
-
-    <dialog
-        android:id="@+id/word_info_destination"
-        android:name="abm.co.feature.card.wordinfo.WordInfoFragment" >
-
-        <argument
-            android:name="from_native_to_learning"
-            app:argType="boolean" />
-        <argument
-            android:name="oxford_response"
-            app:argType="abm.co.feature.card.model.OxfordTranslationResponseUI" />
-        <argument
-            android:name="oxford_checked_items_id"
-            app:argType="string[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
-    </dialog>
 </navigation>

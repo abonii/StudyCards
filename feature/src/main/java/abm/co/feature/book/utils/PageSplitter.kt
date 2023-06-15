@@ -1,11 +1,10 @@
-package abm.co.feature.book.detailed.utils
+package abm.co.feature.book.utils
 
 import abm.co.feature.book.reader.model.ImageEntityUI
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
-import java.util.regex.Pattern
 
-class ChapterWithTitle(
+data class ChapterWithTitle(
     val title: String,
     val url: String,
     val chapterText: CharSequence

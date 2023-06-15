@@ -7,8 +7,8 @@ import abm.co.domain.base.onFailure
 import abm.co.domain.base.onSuccess
 import abm.co.domain.repository.LibraryRepository
 import abm.co.feature.R
-import abm.co.feature.book.detailed.utils.downloadEpubFile
-import abm.co.feature.book.detailed.utils.unzipEpubFile
+import abm.co.feature.book.utils.downloadEpubFile
+import abm.co.feature.book.utils.unzipEpubFile
 import abm.co.feature.book.model.BookUI
 import android.content.Context
 import androidx.compose.runtime.Immutable

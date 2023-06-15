@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Checkbox
@@ -84,7 +85,7 @@ fun WordInfoPage(
     val state by viewModel.state.collectAsState()
 
     SetStatusBarColor()
-    Screen(
+    WordInfoScreen(
         uiState = state,
         onEvent = viewModel::onEvent,
         scrollState = scrollState,
@@ -93,14 +94,15 @@ fun WordInfoPage(
 }
 
 @Composable
-private fun Screen(
-    scrollState: ScrollState,
+fun WordInfoScreen(
     uiState: WordInfoContractState,
     checkedItemsID: SnapshotStateList<String>,
-    onEvent: (WordInfoContractEvent) -> Unit
+    onEvent: (WordInfoContractEvent) -> Unit,
+    modifier: Modifier = Modifier,
+    scrollState: ScrollState = rememberScrollState()
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .background(
                 color = StudyCardsTheme.colors.backgroundPrimary,
                 shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
@@ -117,9 +119,7 @@ private fun Screen(
         Success(
             oxfordResponse = uiState.oxfordResponse,
             checkedItemsID = checkedItemsID,
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(scrollState),
+            modifier = Modifier.verticalScroll(scrollState),
             onClickEntry = {
                 onEvent(WordInfoContractEvent.OnClickEntry(it))
             },

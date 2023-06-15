@@ -29,10 +29,11 @@ data class ImageEntityDTO(
 @Keep
 @Entity
 data class ChapterEntityDTO(
-    @PrimaryKey val url: String,
+    val url: String,
     val bookUrl: String,
     val title: String?,
-    val body: String
+    val body: String,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0
 )
 
 fun BookEntity.toDTO() = BookEntityDTO(

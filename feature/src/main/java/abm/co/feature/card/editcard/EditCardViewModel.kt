@@ -2,17 +2,16 @@ package abm.co.feature.card.editcard
 
 import abm.co.data.model.oxford.EMPTY_TRANSLATION
 import abm.co.designsystem.component.button.ButtonState
-import abm.co.designsystem.functional.safeLet
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
-import abm.co.domain.base.ExpectedMessage
 import abm.co.domain.base.Failure
 import abm.co.domain.base.onFailure
+import abm.co.domain.base.onLeft
+import abm.co.domain.base.onRight
 import abm.co.domain.base.onSuccess
-import abm.co.domain.repository.AuthorizationRepository
-import abm.co.domain.repository.DictionaryRepository
 import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.ServerRepository
+import abm.co.domain.usecase.GetWordInfoUseCase
 import abm.co.feature.card.model.CardKindUI
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
@@ -32,7 +31,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -44,8 +42,7 @@ class EditCardViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val languagesRepository: LanguagesRepository,
     private val serverRepository: ServerRepository,
-    private val authorizationRepository: AuthorizationRepository,
-    private val dictionaryRepository: DictionaryRepository
+    private val getWordInfoUseCase: GetWordInfoUseCase
 ) : ViewModel() {
 
     private val card: CardUI? = savedStateHandle["card"]
@@ -54,10 +51,6 @@ class EditCardViewModel @Inject constructor(
 
     private val _channel = Channel<EditCardContractChannel>()
     val channel: Flow<EditCardContractChannel> = _channel.receiveAsFlow()
-
-    private val translateCountFlow = serverRepository.getUser.map {
-        it.asRight?.b?.translateCounts
-    }
 
     private val _state = MutableStateFlow(
         EditCardContractState(
@@ -153,7 +146,15 @@ class EditCardViewModel @Inject constructor(
                         setLearningTranslateButtonState(ButtonState.Loading)
                         state.value.learningText.trim()
                     }
-                    defineDictionaryType(
+                    alreadyTranslatedOxfordWord(word = word)?.let {
+                        _channel.send(
+                            EditCardContractChannel.NavigateToWordInfo(
+                                fromNativeToLearning = event.fromNative,
+                                oxfordResponse = it,
+                                checkedOxfordItemsID = checkedOxfordItemsID
+                            )
+                        )
+                    } ?: getWordInfo(
                         word = word,
                         fromNative = event.fromNative
                     )
@@ -312,110 +313,44 @@ class EditCardViewModel @Inject constructor(
         }
     }
 
-    private suspend fun defineDictionaryType(
-        word: String, fromNative: Boolean
-    ) {
-        if (checkIfOxfordSupport(fromNative) && isItOneThanOneWord(word)) {
-            alreadyTranslatedOxfordWord(word)?.let {
-                _channel.send(
-                    EditCardContractChannel.NavigateToWordInfo(
-                        fromNativeToLearning = fromNative,
-                        oxfordResponse = it,
-                        checkedOxfordItemsID = checkedOxfordItemsID
-                    )
-                )
-            } ?: fetchOxfordWord(word, fromNative)
-        } else fetchYandexWord(word, fromNative)
-    }
-
-    private suspend fun fetchOxfordWord(
+    private suspend fun getWordInfo(
         word: String,
         fromNative: Boolean
     ) {
-        val translateCount = translateCountFlow.firstOrNull() ?: 0
-        if (translateCount <= 0) {
-            Failure.FailureSnackbar(
-                expectedMessage = ExpectedMessage.String(
-                    value = "You don't have any translation attempts, you can buy it"
-                )
-            ).sendException()
-        } else {
-            dictionaryRepository.getOxfordWord(
-                word = word,
-                fromNative = fromNative
-            ).onFailure {
-                fetchYandexWord(word, fromNative)
-            }.onSuccess { response ->
-                authorizationRepository.updateUserTranslationCount(translateCount - 1)
-                oxfordResponse = response.toUI().also {
-                    _channel.send(
-                        EditCardContractChannel.NavigateToWordInfo(
-                            fromNativeToLearning = fromNative,
-                            oxfordResponse = it,
-                            checkedOxfordItemsID = null
-                        )
-                    )
-                }
-            }
-        }
-    }
-
-    private suspend fun fetchYandexWord(
-        word: String,
-        fromNative: Boolean
-    ) {
-        val translateCount = translateCountFlow.firstOrNull() ?: 0
-        if (translateCount <= 0) {
-            Failure.FailureSnackbar(
-                expectedMessage = ExpectedMessage.String(
-                    value = "You don't have any translation attempts, you can buy it"
-                )
-            ).sendException()
-        } else {
-            dictionaryRepository.getYandexWord(
-                word = word,
-                fromNative = fromNative
-            ).onFailure {
+        getWordInfoUseCase(word = word, fromNative = fromNative)
+            .onFailure {
                 it.sendException()
-            }.onSuccess { response ->
-                authorizationRepository.updateUserTranslationCount(translateCount - 1)
-                val native = if (fromNative) {
-                    word
-                } else {
-                    response.text?.joinToString() ?: ""
-                }
-                val learning = if (fromNative) {
-                    response.text?.joinToString() ?: ""
-                } else {
-                    word
-                }
-                _state.update { oldState ->
-                    oldState.copy(
-                        nativeText = native,
-                        learningText = learning
-                    )
+            }
+            .onSuccess { either ->
+                either.onLeft { response ->
+                    oxfordResponse = response.toUI().also {
+                        _channel.send(
+                            EditCardContractChannel.NavigateToWordInfo(
+                                fromNativeToLearning = fromNative,
+                                oxfordResponse = it,
+                                checkedOxfordItemsID = null
+                            )
+                        )
+                    }
+                }.onRight { response ->
+                    val native = if (fromNative) {
+                        word
+                    } else {
+                        response.text?.joinToString() ?: ""
+                    }
+                    val learning = if (fromNative) {
+                        response.text?.joinToString() ?: ""
+                    } else {
+                        word
+                    }
+                    _state.update { oldState ->
+                        oldState.copy(
+                            nativeText = native,
+                            learningText = learning
+                        )
+                    }
                 }
             }
-        }
-    }
-
-    private suspend fun checkIfOxfordSupport(
-        fromNative: Boolean
-    ): Boolean {
-        val myNativeLang = languagesRepository.getNativeLanguage().firstOrNull()
-        val myLearningLang = languagesRepository.getLearningLanguage().firstOrNull()
-        safeLet(myNativeLang, myLearningLang) { native, learning ->
-            return if (fromNative) {
-                OXFORD_CAN_TRANSLATE_MAP[native.code]?.contains(learning.code) ?: false
-            } else {
-                OXFORD_CAN_TRANSLATE_MAP[learning.code]?.contains(native.code) ?: false
-            }
-        }
-        return false
-    }
-
-    private fun isItOneThanOneWord(word: String): Boolean {
-        return word.trim().split(" ", ",", ".", ";").size == 1
     }
 
     private fun alreadyTranslatedOxfordWord(
@@ -431,21 +366,10 @@ class EditCardViewModel @Inject constructor(
 
     private fun Failure.sendException() {
         viewModelScope.launch {
-            this@sendException.toMessageContent()?.let {
+            this@sendException.toMessageContent().let {
                 _channel.send(EditCardContractChannel.ShowMessage(it))
             }
         }
-    }
-
-    companion object {
-        private val OXFORD_CAN_TRANSLATE_MAP = mapOf(
-            "en" to listOf("ar", "zh", "de", "it", "ru"),
-            "ar" to listOf("en"),
-            "zh" to listOf("en"),
-            "de" to listOf("en"),
-            "it" to listOf("en"),
-            "ru" to listOf("en")
-        )
     }
 }
 

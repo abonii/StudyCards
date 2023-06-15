@@ -48,6 +48,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Named
@@ -225,17 +226,46 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun createUserCategory(category: Category): Either<Failure, Category> {
+    override suspend fun createUserCategory(
+        category: Category,
+        id: String?
+    ): Either<Failure, Category> {
         return safeCall {
-            val ref = userCategoryWithLanguagesRef.firstOrNull()?.push()
-            val updatedCategory = category.copy(
-                id = ref?.key ?: "category_id",
-                creatorID = firebaseAuth.currentUser?.uid,
-                creatorName = getUser.firstOrNull()?.asRight?.b?.name
-                    ?: firebaseAuth.currentUser?.displayName
-            )
-            ref?.setValue(updatedCategory.toDTO())
-            updatedCategory
+            val categoryRef = userCategoryWithLanguagesRef.firstOrNull()
+            if (id != null) {
+                categoryRef?.child(id)?.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        coroutineScope.launch {
+                            val isEmpty = snapshot.value == null
+                            if (isEmpty) {
+                                val categoryPushedRef = categoryRef.child(id)
+                                val updatedCategory = category.copy(
+                                    id = id,
+                                    creatorID = firebaseAuth.currentUser?.uid,
+                                    creatorName = getUser.firstOrNull()?.asRight?.b?.name
+                                        ?: firebaseAuth.currentUser?.displayName
+                                )
+                                categoryPushedRef.setValue(updatedCategory.toDTO())
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+
+                    }
+                })
+                category
+            } else {
+                val categoryPushedRef = categoryRef?.push()
+                val updatedCategory = category.copy(
+                    id = id ?: categoryPushedRef?.key ?: "category_id",
+                    creatorID = firebaseAuth.currentUser?.uid,
+                    creatorName = getUser.firstOrNull()?.asRight?.b?.name
+                        ?: firebaseAuth.currentUser?.displayName
+                )
+                categoryPushedRef?.setValue(updatedCategory.toDTO())
+                updatedCategory
+            }
         }
     }
 
@@ -295,7 +325,7 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserCards(categoryID: String): Flow<Either<Failure, List<Card>>> =
+    override fun getUserCards(categoryID: String): Flow<Either<Failure, List<Card>>> =
         callbackFlow {
             val categoryReference =
                 userCategoryWithLanguagesRef.firstOrNull()?.child(categoryID)?.child(CARD_REF)

@@ -1,4 +1,4 @@
-package abm.co.feature.book.detailed.utils;
+package abm.co.feature.book.utils;
 
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;

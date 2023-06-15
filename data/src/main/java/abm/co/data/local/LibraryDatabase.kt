@@ -1,5 +1,8 @@
 package abm.co.data.local
 
+import abm.co.data.local.converter.DataConverter
+import abm.co.data.local.dao.LibraryDao
+import abm.co.data.model.LastOpenedBookPageDTO
 import abm.co.data.model.library.BookEntityDTO
 import abm.co.data.model.library.ChapterEntityDTO
 import abm.co.data.model.library.ImageEntityDTO
@@ -8,9 +11,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.AutoMigrationSpec
+import androidx.room.migration.Migration
 import androidx.room.withTransaction
-import abm.co.data.local.converter.DataConverter
-import abm.co.data.local.dao.LibraryDao
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 
 interface AppDatabaseOperations {
@@ -24,9 +28,10 @@ interface AppDatabaseOperations {
     entities = [
         BookEntityDTO::class,
         ImageEntityDTO::class,
-        ChapterEntityDTO::class
+        ChapterEntityDTO::class,
+        LastOpenedBookPageDTO::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(DataConverter::class)
@@ -38,6 +43,7 @@ abstract class AppDatabase : RoomDatabase(), AppDatabaseOperations {
     companion object {
         fun createRoom(ctx: Context, name: String) = Room
             .databaseBuilder(ctx, AppDatabase::class.java, name)
+            .fallbackToDestructiveMigration()
             .build()
     }
 }

@@ -1,4 +1,4 @@
-package abm.co.feature.book.detailed.utils
+package abm.co.feature.book.utils
 
 import android.content.res.Resources
 import android.graphics.BitmapFactory
@@ -25,7 +25,6 @@ fun createEpubBookWithSiegman(inputStream: InputStream): EpubBook {
 //                .removePrefix("/")
 //
 //            it.attr("src", absPath)
-//            it.tagName("$tag$absPath")
 //        }
         content to document
     }
@@ -35,17 +34,19 @@ fun createEpubBookWithSiegman(inputStream: InputStream): EpubBook {
             title = chapterTitles.find { content.href == it.first }?.second,
             body = getNodeStructuredText(body.body())
         )
-    }.filter { it.body.isNotBlank() }
-    val images = book.resources.all.mapNotNull { resource ->
-        if (resource.mediaType.name.startsWith("image/")) {
-            resource.href to resource.inputStream.use { it.readBytes() }
-        } else null
-    }.map { (path, image)->
-        EpubImage(
-            path = path,
-            encodedImage = toEncodedImage(image)
-        )
+    }.filter {
+        it.body.isNotBlank() && !(it.body == "</br>" || it.body == "<br>")
     }
+//    val images = book.resources.all.mapNotNull { resource ->
+//        if (resource.mediaType.name.startsWith("image/")) {
+//            resource.href to resource.inputStream.use { it.readBytes() }
+//        } else null
+//    }.map { (path, image)->
+//        EpubImage(
+//            path = path,
+//            encodedImage = toEncodedImage(image)
+//        )
+//    }
     return EpubBook(
         fileName = book.title,
         title = "empty",

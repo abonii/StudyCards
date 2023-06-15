@@ -231,6 +231,8 @@
     <string name="BookDetailed.Received.Error.title">Error</string>
     <string name="BookDetailed.Received.Error.subtitle">We couldn\'t download book</string>
 
+    <string name="BookReader.WordInfo.Action.learn">Learn</string>
+
     <plurals name="practicedNTime">
         <item quantity="one"> Practiced: %s time</item>
         <item quantity="zero"> Practiced: %s time</item>

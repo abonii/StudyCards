@@ -3,11 +3,9 @@ package abm.co.feature.card.component
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.modifier.scalableClick
-import abm.co.designsystem.component.text.pluralString
-import abm.co.designsystem.functional.safeLet
+import abm.co.domain.functional.safeLet
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
-import abm.co.feature.card.model.CategoryUI
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +24,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp

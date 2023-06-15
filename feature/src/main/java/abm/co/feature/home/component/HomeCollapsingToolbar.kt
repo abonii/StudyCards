@@ -2,7 +2,7 @@ package abm.co.feature.home.component
 
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
-import abm.co.designsystem.functional.safeLet
+import abm.co.domain.functional.safeLet
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
 import androidx.annotation.DrawableRes

@@ -1,4 +1,4 @@
-package abm.co.feature.book.detailed.utils
+package abm.co.feature.book.utils
 
 import abm.co.domain.base.Either
 import abm.co.domain.base.Failure

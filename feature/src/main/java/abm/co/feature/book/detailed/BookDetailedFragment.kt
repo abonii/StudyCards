@@ -3,8 +3,8 @@ package abm.co.feature.book.detailed
 import abm.co.designsystem.base.BaseFragment
 import abm.co.designsystem.base.messageContent
 import abm.co.designsystem.navigation.extension.navigateSafe
-import abm.co.feature.book.detailed.utils.DownloadedFileReceivedInterface
-import abm.co.feature.book.detailed.utils.FileReceiverBroadcastReceiver
+import abm.co.feature.book.utils.DownloadedFileReceivedInterface
+import abm.co.feature.book.utils.FileReceiverBroadcastReceiver
 import android.app.DownloadManager
 import android.content.IntentFilter
 import android.os.Bundle

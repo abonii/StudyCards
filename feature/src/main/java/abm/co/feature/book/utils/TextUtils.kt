@@ -1,4 +1,4 @@
-package abm.co.feature.book.detailed.utils
+package abm.co.feature.book.utils
 
 import abm.co.feature.book.reader.model.ImageEntityUI
 import android.os.Build
@@ -73,7 +73,7 @@ fun TextView.makeClickable(
         })
 }
 
-fun CharSequence.toHtml(imageGetter: Html.ImageGetter?): CharSequence =
+fun CharSequence.toHtml(imageGetter: Html.ImageGetter? = null): CharSequence =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         Html.fromHtml(
             this.toString(), Html.FROM_HTML_MODE_COMPACT, imageGetter, null

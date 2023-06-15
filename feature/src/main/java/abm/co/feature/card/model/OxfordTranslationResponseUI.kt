@@ -14,6 +14,16 @@ data class OxfordTranslationResponseUI(
     val word: String?
 ) : Parcelable {
 
+    fun getOnlyTranslations(): String {
+        val translations = ArrayList<String>()
+        this.lexicalEntry?.forEach { lexicalEntryUI ->
+            lexicalEntryUI.entries?.forEach { entryUI ->
+                translations.add(entryUI.translation)
+            }
+        }
+        return translations.joinToString("; ")
+    }
+
     @Parcelize
     @Immutable
     data class LexicalEntryUI(

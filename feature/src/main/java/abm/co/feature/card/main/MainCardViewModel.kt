@@ -1,6 +1,6 @@
 package abm.co.feature.card.main
 
-import abm.co.designsystem.functional.safeLet
+import abm.co.domain.functional.safeLet
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
 import abm.co.domain.base.Failure

@@ -40,6 +40,7 @@ android {
 
 dependencies {
     implementation(project(":library:designsystem"))
+    implementation(project(":domain"))
     AndroidxDependencies.apply {
         implementation(coreKtx)
         implementation(activity)
