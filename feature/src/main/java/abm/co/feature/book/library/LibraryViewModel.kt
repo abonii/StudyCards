@@ -53,9 +53,12 @@ class LibraryViewModel @Inject constructor(
                         _channel.send(LibraryContractChannel.ShowMessage(it))
                     }
                 }.onSuccess { books ->
-                    _state.value = LibraryContractState.Success(
-                        books.map { it.toUI() }.filter { it.visible }
-                    )
+                    val uiBooks = books.map { it.toUI() }.filter { it.visible }
+                    if(uiBooks.isNotEmpty()) {
+                        _state.value = LibraryContractState.Success(uiBooks)
+                    } else {
+                        _state.value = LibraryContractState.Empty
+                    }
                 }
             }
             .launchIn(viewModelScope)
@@ -66,6 +69,7 @@ class LibraryViewModel @Inject constructor(
 sealed interface LibraryContractState {
     object Loading : LibraryContractState
     data class Success(val books: List<BookUI>) : LibraryContractState
+    object Empty : LibraryContractState
 }
 
 @Immutable

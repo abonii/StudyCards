@@ -102,7 +102,7 @@
     <string name="HomePage.Toolbar.guest">Guest</string>
     <string name="HomePage.Toolbar.welcome">Welcome</string>
     <string name="HomePage.Toolbar.learningLanguage">Start learning</string>
-    <string name="HomePage.Empty.title">Оh, we don\'t have the words to study yet.\nLet\'s add new words to the add button</string>
+    <string name="HomePage.Empty.title">We have no words to study now.\nAdd new ones using the \'add\' button</string>
     <string name="HomePage.Category.title">Latest set of cards</string>
     <string name="HomePage.Category.showAll">Show all</string>
     <string name="HomePage.Dialog.removeCategoryItem">Do you really want to remove %s?</string>
@@ -184,6 +184,7 @@
 
     <string name="Library.Toolbar.title">Library</string>
     <string name="Library.Info.title">We are creating something amazing\nComing soon…</string>
+    <string name="Library.Info.Empty.title">Switch your learning language to English to read books</string>
 
     <string name="ChangePassword.Toolbar.title">Change Password</string>
     <string name="ChangePassword.CurrentPasswordField.title">Current Password</string>

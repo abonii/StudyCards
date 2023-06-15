@@ -301,7 +301,7 @@ private fun EmptyScreen(
                 .padding(horizontal = 36.dp)
                 .fillMaxWidth(),
             text = stringResource(R.string.HomePage_Empty_title),
-            style = StudyCardsTheme.typography.weight400Size14LineHeight24,
+            style = StudyCardsTheme.typography.weight400Size16LineHeight24,
             color = StudyCardsTheme.colors.middleGray,
             textAlign = TextAlign.Center
         )

@@ -382,7 +382,7 @@ private fun EmptyScreen(
         Spacer(modifier = Modifier.weight(0.27f))
         Image(
             modifier = Modifier
-                .weight(0.34f)
+                .weight(0.3f)
                 .aspectRatio(1f),
             contentScale = ContentScale.Fit,
             painter = painterResource(id = R.drawable.illustration_card_empty),
