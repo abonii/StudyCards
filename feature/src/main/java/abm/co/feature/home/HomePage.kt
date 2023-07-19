@@ -232,6 +232,7 @@ private fun SuccessScreen(
                 }
             }
         }
+        Spacer(modifier = Modifier.height(10.dp))
     }
 }
 

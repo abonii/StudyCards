@@ -4,7 +4,7 @@ import abm.co.designsystem.component.button.PrimaryButton
 import abm.co.designsystem.component.button.SecondaryButton
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.baseBackground
-import abm.co.designsystem.component.modifier.clickableWithoutRipple
+import abm.co.designsystem.component.modifier.scalableClick
 import abm.co.designsystem.component.systembar.SetStatusBarColor
 import abm.co.designsystem.component.text.pluralString
 import abm.co.designsystem.component.widget.LoadingView
@@ -15,8 +15,10 @@ import abm.co.feature.R
 import abm.co.feature.card.component.CategoryItem
 import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.utils.AnalyticsManager
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,8 +33,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -40,14 +44,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -142,77 +152,34 @@ private fun ScrollableContent(
     onClickShareCategory: (CategoryUI) -> Unit,
     onClickPlayCategory: (CategoryUI) -> Unit,
     onClickBookmark: (CategoryUI) -> Unit
-
 ) {
     LazyColumn(
-        contentPadding = PaddingValues(
-            vertical = 24.dp
-        ),
+        contentPadding = PaddingValues(vertical = 24.dp),
         modifier = modifier,
         content = {
             if (ourCategories.isNotEmpty()) {
-                item(
-                    contentType = "ourCategories"
-                ) {
-                    OurSet(
+                item(contentType = "ourCategories") {
+                    OurRecommendedSet(
                         modifier = Modifier
                             .padding(bottom = 24.dp)
                             .fillMaxWidth(),
                         items = ourCategories,
-                        onClickItem = {
-                            // todo
-                        },
-                        onClickItemPlay = {
-                            onClickPlayCategory(it)
-                        }
+                        onClickItem = onClickPlayCategory,
+                        onClickItemPlay = onClickPlayCategory
                     )
                 }
             }
-            item(
-                contentType = "userCategoriesTitle"
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 10.dp),
-                    text = stringResource(id = R.string.MainCard_YourSet_title),
-                    style = StudyCardsTheme.typography.weight600Size12LineHeight20,
-                    color = StudyCardsTheme.colors.textPrimary
-                )
-            }
             if (userCategories.isNotEmpty()) {
-                items(
-                    items = userCategories,
-                    contentType = {
-                        "userCategories"
-                    }
-                ) { item ->
-                    CategoryItem(
-                        title = item.title,
-                        isBookmarked = item.bookmarked,
-                        subtitle = pluralString(
-                            id = R.plurals.cards,
-                            item.cardsCount.takeIf { it > 0 } ?: 0
-                        ),
-                        onClickPlay = {
-                            onClickPlayCategory(item)
-                        },
-                        onClickBookmark = {
-                            onClickBookmark(item)
-                        },
-                        onClickShare = {
-                            onClickShareCategory(item)
-                        },
-                        isPublished = item.published,
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .padding(bottom = 10.dp)
+                item(contentType = { "userCategories" }) {
+                    SetOfCategories(
+                        userCategories = userCategories,
+                        onClickShareCategory = onClickShareCategory,
+                        onClickPlayCategory = onClickPlayCategory,
+                        onClickBookmark = onClickBookmark
                     )
                 }
             } else {
-                item(
-                    contentType = "userCategoriesEmpty"
-                ) {
+                item(contentType = "userCategoriesEmpty") {
                     EmptyCategories(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
                     )
@@ -223,7 +190,7 @@ private fun ScrollableContent(
 }
 
 @Composable
-private fun OurSet(
+private fun OurRecommendedSet(
     items: List<CategoryUI>,
     onClickItem: (CategoryUI) -> Unit,
     onClickItemPlay: (CategoryUI) -> Unit,
@@ -234,11 +201,9 @@ private fun OurSet(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text(
+        Title(
             modifier = Modifier.padding(horizontal = 16.dp),
-            text = title,
-            style = StudyCardsTheme.typography.weight600Size12LineHeight20,
-            color = StudyCardsTheme.colors.textPrimary
+            title = title
         )
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp),
@@ -248,7 +213,7 @@ private fun OurSet(
                     items = items,
                     key = { it.id }
                 ) { item ->
-                    OurSetItem(
+                    OurRecommendedSetItem(
                         image = item.imageURL,
                         wordCount = pluralString(
                             id = R.plurals.cards,
@@ -260,7 +225,8 @@ private fun OurSet(
                         },
                         onClickPlay = {
                             onClickItemPlay(item)
-                        }
+                        },
+                        modifier = Modifier.fillParentMaxWidth()
                     )
                 }
             }
@@ -269,7 +235,65 @@ private fun OurSet(
 }
 
 @Composable
-private fun OurSetItem(
+private fun LazyItemScope.SetOfCategories(
+    userCategories: List<CategoryUI>,
+    onClickShareCategory: (CategoryUI) -> Unit,
+    onClickPlayCategory: (CategoryUI) -> Unit,
+    onClickBookmark: (CategoryUI) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Title(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 10.dp),
+            title = stringResource(id = R.string.MainCard_YourSet_title)
+        )
+        Row(
+            modifier = Modifier
+                .fillParentMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(19.dp)
+        ) {
+            val chunkedItems = remember(userCategories) {
+                userCategories.chunked(2)
+            }
+            chunkedItems.forEach { columnItems ->
+                Column(
+                    modifier = Modifier.fillParentMaxWidth(0.8f),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    columnItems.forEach { item ->
+                        CategoryItem(
+                            title = item.title,
+                            isBookmarked = item.bookmarked,
+                            subtitle = pluralString(
+                                id = R.plurals.cards,
+                                count = remember(item.cardsCount) {
+                                    item.cardsCount.takeIf { it > 0 } ?: 0
+                                }
+                            ),
+                            onClickPlay = {
+                                onClickPlayCategory(item)
+                            },
+                            onClickBookmark = {
+                                onClickBookmark(item)
+                            },
+                            onClickShare = {
+                                onClickShareCategory(item)
+                            },
+                            isPublished = item.published
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun OurRecommendedSetItem(
     image: String?,
     name: String,
     wordCount: String,
@@ -277,68 +301,103 @@ private fun OurSetItem(
     onClickPlay: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .clickableWithoutRipple(onClick)
-            .background(
-                color = StudyCardsTheme.colors.grayishBlue,
-                shape = RoundedCornerShape(11.dp)
-            )
-            .height(156.dp)
-            .aspectRatio(2.2f)
-            .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Box(
+    val shape = RoundedCornerShape(12.dp)
+    Box {
+        val pressed = rememberSaveable { mutableStateOf(false) }
+        val scale = animateFloatAsState(if (pressed.value) 0.95f else 1f)
+        Spacer(
             modifier = Modifier
-                .clip(RoundedCornerShape(12.dp))
-                .background(StudyCardsTheme.colors.middleGray)
-                .weight(0.62f)
-                .fillMaxWidth()
-        ) {
-            AsyncImage(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .matchParentSize(),
-                model = image,
-                contentScale = ContentScale.Crop,
-                contentDescription = null,
-                error = painterResource(id = R.drawable.illustration_our_cards_empty)
-            )
-        }
-        Row(
-            modifier = Modifier.weight(0.38f),
-            horizontalArrangement = Arrangement.spacedBy(20.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    text = name,
-                    style = StudyCardsTheme.typography.weight500Size16LineHeight20,
-                    color = Color.White
+                .scalableClick(
+                    pressed = pressed,
+                    onClick = onClick
                 )
-                Text(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    text = wordCount,
-                    style = StudyCardsTheme.typography.weight400Size16LineHeight20,
-                    color = Color.White
+                .matchParentSize()
+        )
+        Column(
+            modifier = modifier
+                .scale(scale.value)
+                .shadow(
+                    elevation = 5.dp,
+                    shape = shape,
+                    ambientColor = Color.Transparent,
+                    spotColor = StudyCardsTheme.colors.opposition
+                )
+                .background(
+                    color = StudyCardsTheme.colors.backgroundPrimary,
+                    shape = shape
+                )
+                .padding(12.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .clip(shape)
+                    .height(74.dp)
+                    .fillMaxWidth()
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .clip(shape)
+                        .matchParentSize(),
+                    model = image,
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null,
+                    error = painterResource(id = R.drawable.illustration_our_cards_empty)
                 )
             }
-            Icon(
-                modifier = Modifier
-                    .clickableWithoutRipple(onClick = onClickPlay)
-                    .padding(top = 10.dp, bottom = 10.dp)
-                    .size(24.dp),
-                painter = painterResource(id = R.drawable.ic_play),
-                tint = StudyCardsTheme.colors.buttonPrimary,
-                contentDescription = null
-            )
+            Row(
+                modifier = Modifier,
+                horizontalArrangement = Arrangement.spacedBy(20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.padding(end = 16.dp),
+                        text = name,
+                        style = StudyCardsTheme.typography.weight500Size16LineHeight20,
+                        color = StudyCardsTheme.colors.textPrimary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        modifier = Modifier.padding(end = 16.dp),
+                        text = wordCount,
+                        style = StudyCardsTheme.typography.weight400Size16LineHeight20,
+                        color = StudyCardsTheme.colors.textSecondary
+                    )
+                }
+                Icon(
+                    modifier = Modifier
+                        .scalableClick(
+                            pressed = pressed,
+                            onClick = onClickPlay
+                        )
+                        .padding(top = 10.dp, bottom = 10.dp)
+                        .size(24.dp),
+                    painter = painterResource(id = R.drawable.ic_play),
+                    tint = StudyCardsTheme.colors.buttonPrimary,
+                    contentDescription = null
+                )
+            }
         }
     }
+}
+
+@Composable
+private fun Title(
+    title: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        modifier = modifier,
+        text = title,
+        style = StudyCardsTheme.typography.weight600Size12LineHeight20,
+        color = StudyCardsTheme.colors.textPrimary
+    )
 }
 
 @Composable

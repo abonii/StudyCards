@@ -22,6 +22,7 @@ fun <T> LazyListScope.gridItemsIndexed(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     key: ((index: Int, item: T) -> Any)? = null,
     itemModifier: (columnIndex: Int) -> Modifier = { Modifier },
+    contentType: (index: Int) -> Any? = { null },
     itemContent: @Composable BoxScope.(index: Int, item: T) -> Unit
 ) {
     gridItemsIndexed(
@@ -29,7 +30,8 @@ fun <T> LazyListScope.gridItemsIndexed(
         spanCount = spanCount,
         horizontalArrangement = horizontalArrangement,
         key = key,
-        itemModifier = itemModifier
+        itemModifier = itemModifier,
+        contentType = contentType,
     ) { index, item, _, _ ->
         itemContent.invoke(this, index, item)
     }
@@ -41,10 +43,11 @@ fun <T> LazyListScope.gridItemsIndexed(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     key: ((index: Int, item: T) -> Any)? = null,
     itemModifier: (columnIndex: Int) -> Modifier = { Modifier },
-    itemContent: @Composable BoxScope.(index: Int, item: T, rawIndex: Int, columnIndex: Int) -> Unit
+    contentType: (index: Int) -> Any? = { null },
+    itemContent: @Composable (BoxScope.(index: Int, item: T, rawIndex: Int, columnIndex: Int) -> Unit)
 ) {
     val rows = if (data.isEmpty()) 0 else 1 + (data.count() - 1) / spanCount
-    items(rows) { columnIndex ->
+    items(count = rows, contentType = contentType) { columnIndex ->
         Row(horizontalArrangement = horizontalArrangement) {
             for (rowIndex in 0 until spanCount) {
                 val itemIndex = columnIndex * spanCount + rowIndex

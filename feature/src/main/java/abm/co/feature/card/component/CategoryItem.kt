@@ -24,9 +24,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 
 @Composable
 fun CategoryItem(
@@ -34,11 +40,12 @@ fun CategoryItem(
     subtitle: String,
     isBookmarked: Boolean?,
     modifier: Modifier = Modifier,
+    icon: String? = null,
     onClickBookmark: (() -> Unit)? = null,
-    onClickShare: (() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null,
     onClickPlay: (() -> Unit)? = null,
+    onClickShare: (() -> Unit)? = null,
     isPublished: Boolean? = null
 ) {
     Box {
@@ -56,29 +63,51 @@ fun CategoryItem(
         Row(
             modifier = modifier
                 .scale(scale.value)
-                .background(
-                    color = StudyCardsTheme.colors.milky,
-                    shape = RoundedCornerShape(11.dp)
+                .shadow(
+                    elevation = 5.dp,
+                    shape = RoundedCornerShape(22.dp),
+                    ambientColor = Color.Transparent,
+                    spotColor = StudyCardsTheme.colors.opposition
                 )
-                .padding(start = 12.dp, top = 12.dp, bottom = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
+                .background(
+                    color = StudyCardsTheme.colors.backgroundPrimary,
+                    shape = RoundedCornerShape(22.dp)
+                )
+                .padding(top = 12.dp, bottom = 12.dp)
         ) {
             safeLet(isBookmarked, onClickBookmark) { isBookmarked, onClickBookmark ->
                 BookmarkIcon(
                     isBookmarked = isBookmarked,
                     onClick = onClickBookmark
                 )
+            } ?: Spacer(modifier = Modifier.width(10.dp))
+            icon?.let {
+                AsyncImage(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(9.dp))
+                        .size(50.dp)
+                        .align(Alignment.CenterVertically),
+                    model = it,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+            }
+            safeLet(onClickBookmark, icon) { _, _ ->
                 Spacer(modifier = Modifier.width(10.dp))
             }
             Column(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .align(Alignment.CenterVertically),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     text = title,
                     style = StudyCardsTheme.typography.weight500Size16LineHeight20,
-                    color = StudyCardsTheme.colors.textPrimary
+                    color = StudyCardsTheme.colors.textPrimary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -87,32 +116,30 @@ fun CategoryItem(
                     color = StudyCardsTheme.colors.grayishBlack
                 )
             }
-            Spacer(modifier = Modifier.width(16.dp))
-            onClickPlay?.let {
-                Icon(
-                    modifier = Modifier
-                        .clickableWithoutRipple(onClick = onClickPlay)
-                        .padding(top = 10.dp, bottom = 10.dp, end = 12.dp)
-                        .size(24.dp),
-                    painter = painterResource(id = R.drawable.ic_play),
-                    tint = StudyCardsTheme.colors.buttonPrimary,
-                    contentDescription = null
-                )
-            }
+            Spacer(modifier = Modifier.width(10.dp))
             safeLet(isPublished, onClickShare) { isPublished, onClickShare ->
-                if(onClickPlay == null) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                } else {
-                    Spacer(modifier = Modifier.width(4.dp))
-                }
                 Icon(
                     modifier = Modifier
                         .clickableWithoutRipple(onClick = onClickShare)
                         .padding(top = 10.dp, bottom = 10.dp, end = 12.dp)
-                        .size(24.dp),
+                        .size(24.dp)
+                        .align(Alignment.CenterVertically),
                     painter = painterResource(id = R.drawable.ic_share),
                     tint = if (isPublished) StudyCardsTheme.colors.buttonPrimary
                     else StudyCardsTheme.colors.blueMiddle,
+                    contentDescription = null
+                )
+            }
+            onClickPlay?.let {
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(
+                    modifier = Modifier
+                        .clickableWithoutRipple(onClick = onClickPlay)
+                        .padding(top = 10.dp, bottom = 10.dp, end = 12.dp)
+                        .size(24.dp)
+                        .align(Alignment.CenterVertically),
+                    painter = painterResource(id = R.drawable.ic_play),
+                    tint = StudyCardsTheme.colors.buttonPrimary,
                     contentDescription = null
                 )
             }
@@ -129,7 +156,7 @@ private fun BookmarkIcon(
     Icon(
         modifier = modifier
             .clickableWithoutRipple(onClick)
-            .padding(start = 12.dp, bottom = 20.dp, end = 20.dp)
+            .padding(start = 12.dp, bottom = 10.dp, end = 10.dp)
             .size(20.dp),
         painter = painterResource(id = R.drawable.ic_bookmark),
         contentDescription = null,
