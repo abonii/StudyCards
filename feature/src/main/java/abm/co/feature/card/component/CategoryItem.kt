@@ -73,7 +73,7 @@ fun CategoryItem(
                     color = StudyCardsTheme.colors.backgroundPrimary,
                     shape = RoundedCornerShape(22.dp)
                 )
-                .padding(top = 12.dp, bottom = 12.dp)
+                .padding(vertical = 16.dp)
         ) {
             safeLet(isBookmarked, onClickBookmark) { isBookmarked, onClickBookmark ->
                 BookmarkIcon(

@@ -47,7 +47,9 @@ class MainCardViewModel @Inject constructor(
         when (event) {
             is MainCardContractEvent.OnClickCategory -> {
                 viewModelScope.launch {
-//                    _channel.send() todo
+                    _channel.send(
+                        MainCardContractChannel.NavigateToCategory(event.item)
+                    )
                 }
             }
 
@@ -72,20 +74,6 @@ class MainCardViewModel @Inject constructor(
                                 onEvent(MainCardContractEvent.OnClickCategoryConfirmClose)
                             }
                     }
-                }
-            }
-
-            is MainCardContractEvent.OnClickCategoryPlay -> {
-                viewModelScope.launch {
-                    serverRepository.copyExploreCategoryToUserCollection(event.item.id)
-                        .onFailure {
-                            it.sendException()
-                        }
-                        .onSuccess {
-                            _channel.send(
-                                MainCardContractChannel.NavigateToLearnGame(event.item)
-                            )
-                        }
                 }
             }
 
@@ -147,7 +135,7 @@ class MainCardViewModel @Inject constructor(
 
     private fun Failure.sendException() {
         viewModelScope.launch {
-            this@sendException.toMessageContent()?.let {
+            this@sendException.toMessageContent().let {
                 _channel.send(MainCardContractChannel.ShowMessage(it))
             }
         }
@@ -168,7 +156,6 @@ sealed interface MainCardContractState {
 @Immutable
 sealed interface MainCardContractEvent {
     data class OnClickCategory(val item: CategoryUI) : MainCardContractEvent
-    data class OnClickCategoryPlay(val item: CategoryUI) : MainCardContractEvent
     data class OnClickCategoryShare(val item: CategoryUI) : MainCardContractEvent
     data class OnClickCategoryBookmark(val item: CategoryUI) : MainCardContractEvent
     data class OnClickCategoryConfirmShare(val item: CategoryUI) : MainCardContractEvent
@@ -178,7 +165,7 @@ sealed interface MainCardContractEvent {
 @Immutable
 sealed interface MainCardContractChannel {
 
-    data class NavigateToLearnGame(
+    data class NavigateToCategory(
         val item: CategoryUI
     ) : MainCardContractChannel
 

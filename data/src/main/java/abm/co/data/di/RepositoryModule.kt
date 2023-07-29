@@ -5,11 +5,13 @@ import abm.co.data.repository.ConfigRepositoryImpl
 import abm.co.data.repository.DictionaryRepositoryImpl
 import abm.co.data.repository.FirebaseRepositoryImpl
 import abm.co.data.repository.LanguagesRepositoryImpl
+import abm.co.data.repository.RedesignServerRepositoryImplTest
 import abm.co.data.repository.StoreRepositoryImpl
 import abm.co.domain.repository.AuthorizationRepository
 import abm.co.domain.repository.ConfigRepository
 import abm.co.domain.repository.DictionaryRepository
 import abm.co.domain.repository.LanguagesRepository
+import abm.co.domain.repository.RedesignServerRepository
 import abm.co.domain.repository.ServerRepository
 import abm.co.domain.repository.StoreRepository
 import dagger.Binds
@@ -41,6 +43,9 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindServerCloudRepository(repository: FirebaseRepositoryImpl): ServerRepository
+
+    @Binds
+    abstract fun bindServerRedesignRepository(repository: RedesignServerRepositoryImplTest): RedesignServerRepository
 
     @Binds
     abstract fun bindAuthorizationRepository(repository: AuthorizationRepositoryImpl): AuthorizationRepository

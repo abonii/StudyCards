@@ -234,6 +234,11 @@
 
     <string name="BookReader.WordInfo.Action.learn">Learn</string>
 
+    <string name="ExploreCategory.About.expand">Read all</string>
+    <string name="ExploreCategory.About.collapse">Close</string>
+    <string name="ExploreCategory.Button.add">Add: %s</string>
+    <string name="ExploreCategory.Button.addAll">Add: %s</string>
+
     <plurals name="practicedNTime">
         <item quantity="one"> Practiced: %s time</item>
         <item quantity="zero"> Practiced: %s time</item>

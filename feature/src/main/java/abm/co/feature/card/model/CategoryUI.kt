@@ -15,7 +15,8 @@ data class CategoryUI(
     val creatorID: String?,
     val imageURL: String?,
     val id: String,
-    val published: Boolean?
+    val published: Boolean?,
+    val description: String = "Description" // todo
 ) : Parcelable
 
 fun Category.toUI(published: Boolean? = null) = CategoryUI(

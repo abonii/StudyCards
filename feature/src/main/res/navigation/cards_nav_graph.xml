@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/main_card_destination"
-        android:name="abm.co.feature.card.main.MainCardFragment" >
+        android:name="abm.co.feature.card.main.MainCardFragment">
 
         <action
             android:id="@+id/to_learn_nav_graph"
@@ -17,5 +17,20 @@
                 android:name="category"
                 app:argType="abm.co.feature.card.model.CategoryUI" />
         </action>
+        <action
+            android:id="@+id/to_explore_category_destination"
+            app:destination="@id/explore_category_destination">
+            <argument
+                android:name="category"
+                app:argType="abm.co.feature.card.model.CategoryUI" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/explore_category_destination"
+        android:name="abm.co.feature.card.explorecategory.ExploreCategoryFragment">
+        <argument
+            android:name="category"
+            app:argType="abm.co.feature.card.model.CategoryUI" />
     </fragment>
 </navigation>

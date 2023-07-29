@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 
 private const val MINIMIZED_LINES = 4
@@ -22,6 +23,8 @@ fun AboutView(
     readAllText: String,
     collapseText: String,
     modifier: Modifier = Modifier,
+    textStyle: TextStyle = StudyCardsTheme.typography.weight400Size14LineHeight24
+        .copy(color = StudyCardsTheme.colors.textPrimary),
 ) {
     Column(
         modifier = modifier.animateContentSize(),
@@ -31,8 +34,7 @@ fun AboutView(
         var isButtonVisible by remember { mutableStateOf(false) }
         Text(
             text = details,
-            style = StudyCardsTheme.typography.weight400Size14LineHeight24,
-            color = StudyCardsTheme.colors.textPrimary,
+            style = textStyle,
             maxLines = if (isDetailsExpanded) Int.MAX_VALUE else MINIMIZED_LINES,
             overflow = TextOverflow.Ellipsis,
             onTextLayout = { textLayoutResult ->

@@ -67,7 +67,7 @@ import coil.compose.AsyncImage
 fun MainCardPage(
     viewModel: MainCardViewModel = hiltViewModel(),
     showMessage: suspend (MessageContent) -> Unit,
-    navigateToLearnGame: (CategoryUI) -> Unit,
+    navigateToCategory: (CategoryUI) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         AnalyticsManager.sendEvent("card_page_viewed")
@@ -76,7 +76,7 @@ fun MainCardPage(
 
     viewModel.channel.collectInLaunchedEffect {
         when (it) {
-            is MainCardContractChannel.NavigateToLearnGame -> navigateToLearnGame(it.item)
+            is MainCardContractChannel.NavigateToCategory -> navigateToCategory(it.item)
             is MainCardContractChannel.ShowMessage -> showMessage(it.messageContent)
         }
     }
@@ -121,8 +121,8 @@ private fun MainScreen(
                     ourCategories = state.ourCategories,
                     userCategories = state.userCategories,
                     onClickBookmark = {},
-                    onClickPlayCategory = {
-                        onEvent(MainCardContractEvent.OnClickCategoryPlay(it))
+                    onClickCategory = {
+                        onEvent(MainCardContractEvent.OnClickCategory(it))
                     },
                     onClickShareCategory = {
                         onEvent(MainCardContractEvent.OnClickCategoryShare(it))
@@ -150,7 +150,7 @@ private fun ScrollableContent(
     ourCategories: List<CategoryUI>,
     userCategories: List<CategoryUI>,
     onClickShareCategory: (CategoryUI) -> Unit,
-    onClickPlayCategory: (CategoryUI) -> Unit,
+    onClickCategory: (CategoryUI) -> Unit,
     onClickBookmark: (CategoryUI) -> Unit
 ) {
     LazyColumn(
@@ -164,8 +164,8 @@ private fun ScrollableContent(
                             .padding(bottom = 24.dp)
                             .fillMaxWidth(),
                         items = ourCategories,
-                        onClickItem = onClickPlayCategory,
-                        onClickItemPlay = onClickPlayCategory
+                        onClickItem = onClickCategory,
+                        onClickItemPlay = onClickCategory
                     )
                 }
             }
@@ -174,7 +174,7 @@ private fun ScrollableContent(
                     SetOfCategories(
                         userCategories = userCategories,
                         onClickShareCategory = onClickShareCategory,
-                        onClickPlayCategory = onClickPlayCategory,
+                        onClickPlayCategory = onClickCategory,
                         onClickBookmark = onClickBookmark
                     )
                 }
@@ -283,7 +283,10 @@ private fun LazyItemScope.SetOfCategories(
                             onClickShare = {
                                 onClickShareCategory(item)
                             },
-                            isPublished = item.published
+                            isPublished = item.published,
+                            onClick = {
+                                onClickPlayCategory(item)
+                            }
                         )
                     }
                 }
@@ -394,9 +397,9 @@ private fun Title(
 ) {
     Text(
         modifier = modifier,
-        text = title,
-        style = StudyCardsTheme.typography.weight600Size12LineHeight20,
-        color = StudyCardsTheme.colors.textPrimary
+        text = remember(title) { title.uppercase() },
+        style = StudyCardsTheme.typography.weight500Size16LineHeight20,
+        color = StudyCardsTheme.colors.textSecondary
     )
 }
 
