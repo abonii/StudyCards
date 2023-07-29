@@ -111,6 +111,12 @@ data class StudyCardsTypography(
         lineHeight = 20.sp
     ).withDefaultFontFamily(defaultFontFamily),
 
+    val weight500Size23LineHeight24: TextStyle = TextStyle(
+        fontSize = 23.sp,
+        fontWeight = FontWeight.W500,
+        lineHeight = 24.sp
+    ).withDefaultFontFamily(defaultFontFamily),
+
     val weight400Size14LineHeight18: TextStyle = TextStyle(
         fontSize = 14.sp,
         fontWeight = FontWeight.W400,
@@ -123,6 +129,12 @@ data class StudyCardsTypography(
         lineHeight = 16.sp
     ).withDefaultFontFamily(defaultFontFamily),
 
+    val weight400Size10LineHeight11: TextStyle = TextStyle(
+        fontSize = 10.sp,
+        fontWeight = FontWeight.W400,
+        lineHeight = 11.sp
+    ).withDefaultFontFamily(defaultFontFamily),
+
     val weight400Size12LineHeight20: TextStyle = TextStyle(
         fontSize = 12.sp,
         fontWeight = FontWeight.W400,
@@ -133,6 +145,12 @@ data class StudyCardsTypography(
         fontSize = 32.sp,
         fontWeight = FontWeight.W600,
         lineHeight = 24.sp
+    ).withDefaultFontFamily(defaultFontFamily),
+
+    val weight700Size15LineHeight20: TextStyle = TextStyle(
+        fontSize = 15.sp,
+        fontWeight = FontWeight.W700,
+        lineHeight = 20.sp
     ).withDefaultFontFamily(defaultFontFamily)
 )
 

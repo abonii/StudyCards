@@ -1,26 +1,27 @@
 package abm.co.feature.card.category
 
+import abm.co.designsystem.base.WrapperList
+import abm.co.designsystem.base.toWrapperList
 import abm.co.designsystem.component.dialog.ConfirmAlertDialog
+import abm.co.designsystem.component.measure.MeasureUnconstrainedViewHeight
 import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.component.modifier.clickableWithoutRipple
 import abm.co.designsystem.component.modifier.scalableClick
+import abm.co.designsystem.component.statistics.CardsToLearn
+import abm.co.designsystem.component.statistics.WeeklyReport
 import abm.co.designsystem.component.systembar.SetStatusBarColor
+import abm.co.designsystem.component.text.pluralString
 import abm.co.designsystem.component.widget.LinearProgress
 import abm.co.designsystem.component.widget.LoadingView
 import abm.co.designsystem.extensions.collectInLaunchedEffect
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.feature.R
-import abm.co.feature.card.category.component.CategoryCollapsingToolbar
 import abm.co.feature.card.model.CardKindUI
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
-import abm.co.designsystem.toolbar.ToolbarState
-import abm.co.designsystem.toolbar.rememberToolbarState
 import abm.co.feature.utils.AnalyticsManager
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,30 +35,31 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 
 private val MinToolbarHeight = 80.dp
 private val MaxToolbarHeight = 120.dp
@@ -100,75 +102,39 @@ private fun CategoryScreen(
     dialogState: CategoryContract.Dialog,
     onEvent: (CategoryContractEvent) -> Unit
 ) {
-    Box(
+    Column(
         modifier = Modifier
-            .background(StudyCardsTheme.colors.backgroundPrimary)
+            .background(StudyCardsTheme.colors.backgroundSecondary)
             .fillMaxSize()
     ) {
-        val toolbarScrollable = rememberToolbarState(
-            minHeight = MinToolbarHeight,
-            maxHeight = MaxToolbarHeight
-        )
-        val scrollState = rememberScrollState()
-        ListenToScrollAndUpdateToolbarState(
-            scrollState = scrollState,
-            toolbarState = toolbarScrollable
-        )
-        Crossfade(
-            targetState = screenState,
-            label = "CategoryPage",
-            modifier = Modifier
-                .fillMaxSize()
-        ) { state ->
-            when (state) {
-                CategoryContract.ScreenState.Loading -> {
-                    LoadingScreen()
-                }
-                is CategoryContract.ScreenState.Empty -> {
-                    EmptyScreen()
-                }
-                is CategoryContract.ScreenState.Success -> {
-                    SuccessScreen(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(scrollState),
-                        screenState = state,
-                        onClickCard = {
-                            onEvent(CategoryContractEvent.OnClickCardItem(it))
-                        },
-                        onClickPlay = {
-                            onEvent(CategoryContractEvent.OnClickPlayCard(it))
-                        },
-                        onLongClick = {
-                            onEvent(CategoryContractEvent.OnLongClickCard(it))
-                        }
-                    )
-                }
+        when (screenState) {
+            CategoryContract.ScreenState.Loading -> {
+                Toolbar(
+                    toolbarState = toolbarState,
+                    onEvent = onEvent,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                LoadingScreen()
+            }
+
+            is CategoryContract.ScreenState.Empty -> {
+                Toolbar(
+                    toolbarState = toolbarState,
+                    onEvent = onEvent,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                EmptyScreen()
+            }
+
+            is CategoryContract.ScreenState.Success -> {
+                SuccessScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    screenState = screenState,
+                    toolbarState = toolbarState,
+                    onEvent = onEvent
+                )
             }
         }
-        CategoryCollapsingToolbar(
-            title = toolbarState.categoryTitle,
-            subtitle = stringResource(id = toolbarState.descriptionRes),
-            progress = toolbarScrollable.progress,
-            onClickAddCardIcon = {
-                onEvent(CategoryContractEvent.OnClickNewCard)
-            },
-            onClickChangeCategoryIcon = {
-                onEvent(CategoryContractEvent.OnClickEditCategory)
-            },
-            addCardIconRes = R.drawable.ic_add_outlined,
-            changeCategoryIconRes = R.drawable.ic_edit,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(with(LocalDensity.current) { toolbarScrollable.height.toDp() })
-                .graphicsLayer { translationY = toolbarScrollable.offset },
-            onBack = {
-                onEvent(CategoryContractEvent.OnBackClicked)
-            },
-            onChangeTitle = {
-                onEvent(CategoryContractEvent.OnClickEditCategory)
-            }
-        )
         Dialog(
             dialogState = dialogState,
             onDismissDialog = {
@@ -201,26 +167,41 @@ private fun Dialog(
 @Composable
 private fun SuccessScreen(
     screenState: CategoryContract.ScreenState.Success,
-    onClickCard: (CardUI) -> Unit,
-    onClickPlay: (CardUI) -> Unit,
-    onLongClick: (CardUI) -> Unit,
+    toolbarState: CategoryContract.ToolbarState,
+    onEvent: (CategoryContractEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .padding(top = MaxToolbarHeight)
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(11.dp)
-    ) {
-        screenState.cards.forEach { card ->
-            key(card.cardID) {
-                CardItem(
-                    cardItem = card,
-                    onClick = { onClickCard(card) },
-                    onClickPlay = { onClickPlay(card) },
-                    onLongClick = { onLongClick(card) }
-                )
-            }
+    LazyColumn(modifier = modifier) {
+        item(contentType = "toolbar") {
+            Toolbar(
+                toolbarState = toolbarState,
+                modifier = Modifier.fillParentMaxWidth(),
+                onEvent = onEvent
+            )
+        }
+        item(contentType = "statistics") {
+            Statistics(
+                modifier = Modifier.fillParentMaxWidth()
+            )
+        }
+        items(
+            items = screenState.cards,
+            key = { it.cardID },
+            contentType = { "cards" }
+        ) { card ->
+            CardItem(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp),
+                cardItem = card,
+                onClick = {
+                    onEvent(CategoryContractEvent.Success.OnClickCardItem(card))
+                },
+                onClickPlay = {
+                    onEvent(CategoryContractEvent.Success.OnClickPlayCard(card))
+                },
+                onLongClick = {
+                    onEvent(CategoryContractEvent.Success.OnLongClickCard(card))
+                }
+            )
         }
     }
 }
@@ -250,7 +231,7 @@ private fun CardItem(
                 .scale(scale.value)
                 .height(70.dp)
                 .clip(RoundedCornerShape(11.dp))
-                .background(StudyCardsTheme.colors.milky),
+                .background(StudyCardsTheme.colors.backgroundPrimary),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
@@ -316,16 +297,6 @@ private fun CardItem(
 }
 
 @Composable
-private fun ListenToScrollAndUpdateToolbarState(
-    scrollState: ScrollState,
-    toolbarState: ToolbarState
-) {
-    LaunchedEffect(scrollState.value) {
-        toolbarState.scrollValue = scrollState.value
-    }
-}
-
-@Composable
 private fun LoadingScreen(
     modifier: Modifier = Modifier
 ) {
@@ -362,5 +333,205 @@ private fun EmptyScreen(
                 .weight(0.6f)
                 .align(Alignment.CenterHorizontally)
         )
+    }
+}
+
+@Composable
+private fun Toolbar(
+    toolbarState: CategoryContract.ToolbarState,
+    onEvent: (CategoryContractEvent.Toolbar) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .background(StudyCardsTheme.colors.backgroundPrimary)
+            .padding(
+                bottom = 12.dp,
+                top = 32.dp
+            )
+    ) {
+        Row {
+            Icon(
+                modifier = Modifier
+                    .clickableWithoutRipple(onClick = {
+                        onEvent(CategoryContractEvent.Toolbar.OnBack)
+                    })
+                    .padding(10.dp)
+                    .size(24.dp),
+                painter = painterResource(id = abm.co.designsystem.R.drawable.ic_left),
+                tint = StudyCardsTheme.colors.opposition,
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                modifier = Modifier
+                    .clickableWithoutRipple(onClick = {
+                        onEvent(CategoryContractEvent.Toolbar.OnClickNewCard)
+                    })
+                    .padding(10.dp)
+                    .size(24.dp),
+                painter = painterResource(id = R.drawable.ic_add_outlined),
+                tint = StudyCardsTheme.colors.buttonPrimary,
+                contentDescription = null
+            )
+            Icon(
+                modifier = Modifier
+                    .clickableWithoutRipple(onClick = {
+                        onEvent(CategoryContractEvent.Toolbar.OnClickEditCategory)
+                    })
+                    .padding(10.dp)
+                    .size(24.dp),
+                painter = painterResource(id = R.drawable.ic_edit),
+                tint = StudyCardsTheme.colors.buttonPrimary,
+                contentDescription = null
+            )
+            Icon(
+                modifier = Modifier
+                    .clickableWithoutRipple(onClick = {
+                        onEvent(CategoryContractEvent.Toolbar.OnClickShare)
+                    })
+                    .padding(10.dp)
+                    .size(24.dp),
+                painter = painterResource(id = R.drawable.ic_share),
+                tint = StudyCardsTheme.colors.buttonPrimary,
+                contentDescription = null
+            )
+        }
+        AsyncImage(
+            modifier = Modifier
+                .height(150.dp)
+                .background(Color(0xFF_B8BDC8)),
+            model = toolbarState.categoryTitle,
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            placeholder = painterResource(id = R.drawable.illustration_our_cards_empty),
+            error = painterResource(id = R.drawable.illustration_our_cards_empty)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = toolbarState.categoryTitle,
+            color = StudyCardsTheme.colors.primary,
+            style = StudyCardsTheme.typography.weight600Size32LineHeight24,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = pluralString(
+                id = R.plurals.cards,
+                count = toolbarState.cardsCount
+            ),
+            color = StudyCardsTheme.colors.textPrimary,
+            style = StudyCardsTheme.typography.weight500Size16LineHeight20,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = toolbarState.description,
+            color = StudyCardsTheme.colors.textSecondary,
+            style = StudyCardsTheme.typography.weight500Size16LineHeight20,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+@Composable
+private fun Statistics(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.padding(
+            start = 16.dp,
+            end = 16.dp,
+            top = 16.dp
+        )
+    ) {
+        MeasureUnconstrainedViewHeight(
+            viewToMeasure =
+            {
+                CardsToLearn(
+                    modifier = Modifier,
+                    cardsCount = 136, // todo
+                    colorPoints = WrapperList(emptyList())
+                )
+            },
+            content = { maxHeight, _ ->
+                Row(horizontalArrangement = Arrangement.spacedBy(19.dp)) {
+                    CardsToLearn(
+                        modifier = Modifier
+                            .height(maxHeight)
+                            .weight(1f),
+                        cardsCount = 136, // todo
+                        colorPoints = listOf(
+                            0.5f to StudyCardsTheme.colors.success,
+                            0.3f to StudyCardsTheme.colors.uncertainStrong,
+                            0.2f to StudyCardsTheme.colors.unknown,
+                        ).toWrapperList()
+                    )
+                    WeeklyReport(
+                        modifier = Modifier
+                            .height(maxHeight)
+                            .weight(1f),
+                        weekDaysWithProgress = listOf(
+                            "mo" to 0.4f,
+                            "tu" to 0.2f,
+                            "we" to 0.5f,
+                            "th" to 0.6f,
+                            "fr" to 0.3f,
+                            "sn" to 1f,
+                            "st" to 0.1f, // todo make it flexible for all languages
+                        ).toWrapperList()
+                    )
+                }
+            }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            @Composable
+            fun Item(title: String, color: Color) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(7.dp)
+                            .clip(CircleShape)
+                            .background(color)
+                    )
+                    Text(
+                        text = title,
+                        color = StudyCardsTheme.colors.textSecondary,
+                        style = StudyCardsTheme.typography.weight400Size12LineHeight16,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+            Item(
+                title = "Learned",
+                color = StudyCardsTheme.colors.known
+            )
+            Item(
+                title = "Uncertain",
+                color = StudyCardsTheme.colors.uncertain
+            )
+            Item(
+                title = "Unknown",
+                color = StudyCardsTheme.colors.uncertain
+            )
+            Item(
+                title = "Undefined",
+                color = StudyCardsTheme.colors.blueMiddle
+            )
+        }
     }
 }

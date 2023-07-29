@@ -11,9 +11,7 @@ import abm.co.feature.R
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.card.model.toUI
-import abm.co.feature.home.HomeContract
 import abm.co.feature.utils.TextToSpeechManager
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
@@ -52,7 +50,9 @@ class CategoryViewModel @Inject constructor(
     private val _toolbarState = MutableStateFlow(
         CategoryContract.ToolbarState(
             categoryTitle = category.title,
-            descriptionRes = R.string.Category_Toolbar_subtitle
+            description = category.description,
+            cardsCount = category.cardsCount,
+            imageUrl = category.imageURL
         )
     )
     val toolbarState: StateFlow<CategoryContract.ToolbarState> = _toolbarState.asStateFlow()
@@ -68,11 +68,11 @@ class CategoryViewModel @Inject constructor(
 
     fun onEvent(event: CategoryContractEvent) {
         when (event) {
-            is CategoryContractEvent.OnClickPlayCard -> {
+            is CategoryContractEvent.Success.OnClickPlayCard -> {
                 speak(event.cardItem.translation)
             }
 
-            CategoryContractEvent.OnClickNewCard -> {
+            CategoryContractEvent.Toolbar.OnClickNewCard -> {
                 viewModelScope.launch {
                     _channel.send(
                         CategoryContractChannel.NavigateToCard(
@@ -83,13 +83,13 @@ class CategoryViewModel @Inject constructor(
                 }
             }
 
-            CategoryContractEvent.OnBackClicked -> {
+            CategoryContractEvent.Toolbar.OnBack -> {
                 viewModelScope.launch {
                     _channel.send(CategoryContractChannel.NavigateBack)
                 }
             }
 
-            is CategoryContractEvent.OnClickCardItem -> {
+            is CategoryContractEvent.Success.OnClickCardItem -> {
                 viewModelScope.launch {
                     _channel.send(
                         CategoryContractChannel.NavigateToCard(
@@ -100,7 +100,7 @@ class CategoryViewModel @Inject constructor(
                 }
             }
 
-            CategoryContractEvent.OnClickEditCategory -> {
+            CategoryContractEvent.Toolbar.OnClickEditCategory -> {
                 viewModelScope.launch {
                     _channel.send(
                         CategoryContractChannel.NavigateToChangeCategory(
@@ -110,7 +110,7 @@ class CategoryViewModel @Inject constructor(
                 }
             }
 
-            is CategoryContractEvent.OnLongClickCard -> {
+            is CategoryContractEvent.Success.OnLongClickCard -> {
                 _dialogState.update { oldState ->
                     oldState.copy(removingCard = event.cardItem)
                 }
@@ -131,6 +131,10 @@ class CategoryViewModel @Inject constructor(
                     oldState.copy(removingCard = null)
                 }
             }
+
+            CategoryContractEvent.Toolbar.OnClickShare -> {
+                // todo
+            }
         }
     }
 
@@ -139,7 +143,7 @@ class CategoryViewModel @Inject constructor(
             serverRepository.getUserCards(category.id)
                 .collectLatest { either ->
                     either.onSuccess { items ->
-                        if(items.isEmpty()){
+                        if (items.isEmpty()) {
                             _state.value = CategoryContract.ScreenState.Empty
                         } else {
                             when (state.value) {
@@ -191,7 +195,7 @@ class CategoryViewModel @Inject constructor(
 
     private fun Failure.sendException() {
         viewModelScope.launch {
-            this@sendException.toMessageContent()?.let {
+            this@sendException.toMessageContent().let {
                 _channel.send(CategoryContractChannel.ShowMessage(it))
             }
         }
@@ -208,12 +212,14 @@ sealed interface CategoryContract {
 
     @Immutable
     data class ToolbarState(
+        val imageUrl: String?,
         val categoryTitle: String,
-        @StringRes val descriptionRes: Int
-    ): CategoryContract
+        val description: String,
+        val cardsCount: Int
+    ) : CategoryContract
 
     @Stable
-    sealed interface ScreenState: CategoryContract {
+    sealed interface ScreenState : CategoryContract {
         @Immutable
         object Loading : ScreenState
 
@@ -234,21 +240,25 @@ sealed interface CategoryContract {
 @Immutable
 sealed interface CategoryContractEvent {
 
-    data class OnClickPlayCard(val cardItem: CardUI) : CategoryContractEvent
-
-    object OnClickNewCard : CategoryContractEvent
-
-    object OnClickEditCategory : CategoryContractEvent
-
-    data class OnClickCardItem(val cardItem: CardUI) : CategoryContractEvent
-
-    object OnBackClicked : CategoryContractEvent
-
-    data class OnLongClickCard(val cardItem: CardUI) : CategoryContractEvent
-
     data class OnConfirmRemoveCard(val cardItem: CardUI) : CategoryContractEvent
 
     object OnDismissDialog : CategoryContractEvent
+
+    sealed interface Success: CategoryContractEvent {
+        data class OnClickPlayCard(val cardItem: CardUI) : Success
+
+        data class OnClickCardItem(val cardItem: CardUI) : Success
+
+        data class OnLongClickCard(val cardItem: CardUI) : Success
+
+    }
+
+    sealed interface Toolbar : CategoryContractEvent {
+        object OnBack : Toolbar
+        object OnClickNewCard : Toolbar
+        object OnClickEditCategory : Toolbar
+        object OnClickShare : Toolbar
+    }
 }
 
 @Immutable
@@ -258,7 +268,7 @@ sealed interface CategoryContractChannel {
 
     data class NavigateToChangeCategory(
         val category: CategoryUI
-    ): CategoryContractChannel
+    ) : CategoryContractChannel
 
     data class NavigateToCard(
         val cardItem: CardUI?,

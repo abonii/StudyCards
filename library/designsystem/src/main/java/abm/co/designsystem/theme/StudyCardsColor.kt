@@ -32,6 +32,7 @@ internal val LightColors = StudyCardsColor(
     success = Color(0xFF_27AE60),
     error = Color(0xFF_F2376F),
     uncertain = Color(0xFF_CFB323),
+    uncertainStrong = Color(0xFF_FB9301),
     known = Color(0xFF_03DC03),
     unknown = Color(0xFF_FF0000),
     isLight = true
@@ -62,6 +63,7 @@ internal val DarkColors = StudyCardsColor(
     success = Color(0xFF_1E7E2F),
     error = Color(0xFF_8C1D41),
     uncertain = Color(0xFF_89631C),
+    uncertainStrong = Color(0xFF_FB9301),
     known = Color(0xFF_029001),
     unknown = Color(0xFF_990000),
     isLight = false
@@ -93,6 +95,7 @@ class StudyCardsColor(
     success: Color,
     error: Color,
     uncertain: Color,
+    uncertainStrong: Color,
     known: Color,
     unknown: Color,
     isLight: Boolean,
@@ -169,6 +172,9 @@ class StudyCardsColor(
     var uncertain by mutableStateOf(uncertain)
         private set
 
+    var uncertainStrong by mutableStateOf(uncertainStrong)
+        private set
+
     var known by mutableStateOf(known)
         private set
 
@@ -203,6 +209,7 @@ class StudyCardsColor(
         success: Color = this.success,
         error: Color = this.error,
         uncertain: Color = this.uncertain,
+        uncertainStrong: Color = this.uncertainStrong,
         known: Color = this.known,
         isLight: Boolean = this.isLight,
     ) = StudyCardsColor(
@@ -230,6 +237,7 @@ class StudyCardsColor(
         success = success,
         error = error,
         uncertain = uncertain,
+        uncertainStrong = uncertainStrong,
         known = known,
         unknown = unknown,
         isLight = isLight
@@ -260,6 +268,7 @@ class StudyCardsColor(
         success = other.success
         error = other.error
         uncertain = other.uncertain
+        uncertainStrong = other.uncertainStrong
         known = other.known
         unknown = other.unknown
         isLight = other.isLight
