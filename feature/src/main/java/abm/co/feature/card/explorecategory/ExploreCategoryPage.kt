@@ -10,6 +10,7 @@ import abm.co.designsystem.component.text.pluralString
 import abm.co.designsystem.component.toolbar.Toolbar
 import abm.co.designsystem.component.widget.LoadingView
 import abm.co.designsystem.extensions.collectInLaunchedEffect
+import abm.co.designsystem.extensions.shareText
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.theme.StudyCardsTheme
 import abm.co.domain.functional.safeLet
@@ -52,6 +53,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -72,12 +74,13 @@ fun ExploreCategoryPage(
     }
     val state by viewModel.state.collectAsState()
 
+    val context = LocalContext.current
     viewModel.channel.collectInLaunchedEffect {
         when (it) {
             is ExploreCategoryContractChannel.NavigateBack -> navigateBack()
             is ExploreCategoryContractChannel.ShowMessage -> showMessage(it.messageContent)
-            ExploreCategoryContractChannel.Share -> {
-                // todo share
+            is ExploreCategoryContractChannel.Share -> {
+                context.shareText(it.text)
             }
         }
     }

@@ -87,7 +87,11 @@ class ExploreCategoryViewModel @Inject constructor(
 
             ExploreCategoryContractEvent.OnClickCategoryShare -> {
                 viewModelScope.launch {
-                    _channel.send(ExploreCategoryContractChannel.Share)
+                    _channel.send(
+                        ExploreCategoryContractChannel.Share(
+                            "There is no text yet" // todo
+                        )
+                    )
                 }
             }
 
@@ -132,7 +136,12 @@ class ExploreCategoryViewModel @Inject constructor(
             serverRepository.getExploreCategory(categoryUI.id)
                 .onSuccess { categoryResponse ->
                     cards.clear()
-                    cards.addAll(categoryResponse.cards.map { SelectionHolder(it.toUI()) })
+                    cards.addAll(categoryResponse.cards.map {
+                        SelectionHolder(
+                            item = it.toUI(),
+                            isSelected = true
+                        )
+                    })
                     _state.update { oldState ->
                         oldState.copy(
                             uiState = ExploreCategoryContractState.UiState.Success(
@@ -213,7 +222,7 @@ sealed interface ExploreCategoryContractChannel {
 
     object NavigateBack : ExploreCategoryContractChannel
 
-    object Share : ExploreCategoryContractChannel
+    data class Share(val text: String) : ExploreCategoryContractChannel
 
     data class ShowMessage(
         val messageContent: MessageContent
