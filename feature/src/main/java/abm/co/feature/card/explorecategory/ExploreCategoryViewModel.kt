@@ -1,14 +1,17 @@
 package abm.co.feature.card.explorecategory
 
 import abm.co.designsystem.base.SelectionHolder
+import abm.co.designsystem.component.button.ButtonState
 import abm.co.designsystem.message.common.MessageContent
 import abm.co.designsystem.message.common.toMessageContent
+import abm.co.designsystem.message.snackbar.MessageType
 import abm.co.domain.base.Failure
 import abm.co.domain.base.onFailure
 import abm.co.domain.base.onSuccess
 import abm.co.domain.model.explore.ExploreCategoryContext
 import abm.co.domain.repository.LanguagesRepository
 import abm.co.domain.repository.RedesignServerRepository
+import abm.co.feature.R
 import abm.co.feature.card.model.CardUI
 import abm.co.feature.card.model.CategoryUI
 import abm.co.feature.card.model.toDomain
@@ -17,8 +20,10 @@ import abm.co.feature.userattributes.lanugage.LanguageUI
 import abm.co.feature.userattributes.lanugage.toUI
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -38,7 +43,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ExploreCategoryViewModel @Inject constructor(
     private val serverRepository: RedesignServerRepository,
-    private val languagesRepository: LanguagesRepository,
+    languagesRepository: LanguagesRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -48,8 +53,8 @@ class ExploreCategoryViewModel @Inject constructor(
     private val _channel = Channel<ExploreCategoryContractChannel>()
     val channel: Flow<ExploreCategoryContractChannel> = _channel.receiveAsFlow()
 
-    val nativeLanguage = languagesRepository.getNativeLanguage().map { it?.toUI() }
-    val learningLanguage = languagesRepository.getLearningLanguage().map { it?.toUI() }
+    private val nativeLanguage = languagesRepository.getNativeLanguage().map { it?.toUI() }
+    private val learningLanguage = languagesRepository.getLearningLanguage().map { it?.toUI() }
 
     private val _state: MutableStateFlow<ExploreCategoryContractState> =
         MutableStateFlow(
@@ -94,12 +99,29 @@ class ExploreCategoryViewModel @Inject constructor(
 
             ExploreCategoryContractEvent.Success.OnClickAddPrimaryButton -> {
                 viewModelScope.launch {
-                    serverRepository.addExploreCategoryToUserCategory(
-                        request = ExploreCategoryContext(
-                            category = categoryUI.toDomain(),
-                            cards = cards.filter { it.isSelected }.map { it.item.toDomain() }
-                        )
-                    )
+                    val uiState = state.value.uiState
+                    if (uiState is ExploreCategoryContractState.UiState.Success) {
+                        uiState.setButtonState(ButtonState.Loading)
+                        serverRepository.addExploreCategoryToUserCategory(
+                            request = ExploreCategoryContext(
+                                category = categoryUI.toDomain(),
+                                cards = cards.filter { it.isSelected }.map { it.item.toDomain() }
+                            )
+                        ).onFailure {
+                            it.sendException()
+                        }.onSuccess {
+                            _channel.send(
+                                ExploreCategoryContractChannel.ShowMessage(
+                                    messageContent = MessageContent.Snackbar.MessageContentRes(
+                                        titleRes = abm.co.designsystem.R.string.Messages_success,
+                                        subtitleRes = R.string.ExploreCategory_Alert_Success_addedSuccessfully,
+                                        type = MessageType.Success
+                                    )
+                                )
+                            )
+                        }
+                        uiState.setButtonState(ButtonState.Loading)
+                    }
                 }
             }
         }
@@ -113,7 +135,7 @@ class ExploreCategoryViewModel @Inject constructor(
                     cards.addAll(categoryResponse.cards.map { SelectionHolder(it.toUI()) })
                     _state.update { oldState ->
                         oldState.copy(
-                            state = ExploreCategoryContractState.State.Success(
+                            uiState = ExploreCategoryContractState.UiState.Success(
                                 categoryUI = categoryResponse.category.toUI(),
                                 cards = cards,
                                 image = categoryUI.imageURL
@@ -142,16 +164,16 @@ data class ExploreCategoryContractState(
     val image: String?,
     val fromLang: Flow<LanguageUI?>,
     val toLang: Flow<LanguageUI?>,
-    val state: State = State.Loading
+    val uiState: UiState = UiState.Loading
 ) {
-    sealed interface State {
-        object Loading : State
-        object Empty : State
+    sealed interface UiState {
+        object Loading : UiState
+        object Empty : UiState
         data class Success(
             val image: String?,
             val categoryUI: CategoryUI,
             val cards: SnapshotStateList<SelectionHolder<CardUI>>
-        ) : State {
+        ) : UiState {
 
             sealed interface SelectedCards {
                 object All : SelectedCards
@@ -163,6 +185,13 @@ data class ExploreCategoryContractState(
                 return@derivedStateOf if (selectedCount == cards.count()) {
                     SelectedCards.All
                 } else SelectedCards.Some(selectedCount)
+            }
+
+            private val _buttonState = mutableStateOf(ButtonState.Normal)
+            val buttonState: State<ButtonState> = _buttonState
+
+            fun setButtonState(state: ButtonState) {
+                _buttonState.value = state
             }
         }
     }

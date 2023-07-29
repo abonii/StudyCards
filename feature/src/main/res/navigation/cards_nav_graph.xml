@@ -4,22 +4,16 @@
     android:id="@+id/main_card_nav_graph"
     app:startDestination="@id/main_card_destination">
 
-    <include app:graph="@navigation/learn_nav_graph" />
-
     <fragment
         android:id="@+id/main_card_destination"
         android:name="abm.co.feature.card.main.MainCardFragment">
-
-        <action
-            android:id="@+id/to_learn_nav_graph"
-            app:destination="@id/learn_nav_graph">
-            <argument
-                android:name="category"
-                app:argType="abm.co.feature.card.model.CategoryUI" />
-        </action>
         <action
             android:id="@+id/to_explore_category_destination"
-            app:destination="@id/explore_category_destination">
+            app:destination="@id/explore_category_destination"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/pop_enter_from_left"
+            app:popExitAnim="@anim/pop_exit_to_right">
             <argument
                 android:name="category"
                 app:argType="abm.co.feature.card.model.CategoryUI" />

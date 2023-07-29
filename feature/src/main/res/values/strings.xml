@@ -238,6 +238,7 @@
     <string name="ExploreCategory.About.collapse">Close</string>
     <string name="ExploreCategory.Button.add">Add: %s</string>
     <string name="ExploreCategory.Button.addAll">Add: %s</string>
+    <string name="ExploreCategory.Alert.Success.addedSuccessfully">Added successfully</string>
 
     <plurals name="practicedNTime">
         <item quantity="one"> Practiced: %s time</item>

@@ -110,14 +110,14 @@ private fun MainScreen(
             },
             lazyListState = lazyListState
         )
-        when (val state = uiState.state) {
-            ExploreCategoryContractState.State.Empty -> {
+        when (val state = uiState.uiState) {
+            ExploreCategoryContractState.UiState.Empty -> {
                 EmptyScreen(
                     modifier = Modifier.weight(1f)
                 )
             }
 
-            ExploreCategoryContractState.State.Loading -> {
+            ExploreCategoryContractState.UiState.Loading -> {
                 Toolbar(
                     imageUrl = uiState.image,
                     fromLanguage = fromLanguage,
@@ -131,7 +131,7 @@ private fun MainScreen(
                 )
             }
 
-            is ExploreCategoryContractState.State.Success -> {
+            is ExploreCategoryContractState.UiState.Success -> {
                 SuccessScreen(
                     uiState = state,
                     modifier = Modifier
@@ -148,7 +148,7 @@ private fun MainScreen(
 
 @Composable
 private fun SuccessScreen(
-    uiState: ExploreCategoryContractState.State.Success,
+    uiState: ExploreCategoryContractState.UiState.Success,
     onEvent: (ExploreCategoryContractEvent.Success) -> Unit,
     fromLanguage: State<LanguageUI?>,
     toLanguage: State<LanguageUI?>,
@@ -200,11 +200,11 @@ private fun SuccessScreen(
         )
         PrimaryButton(
             title = when (val selectedCards = uiState.selectedCardsCount.value) {
-                ExploreCategoryContractState.State.Success.SelectedCards.All -> {
+                ExploreCategoryContractState.UiState.Success.SelectedCards.All -> {
                     stringResource(id = R.string.ExploreCategory_Button_addAll)
                 }
 
-                is ExploreCategoryContractState.State.Success.SelectedCards.Some -> {
+                is ExploreCategoryContractState.UiState.Success.SelectedCards.Some -> {
                     stringResource(
                         id = R.string.ExploreCategory_Button_add,
                         selectedCards.count

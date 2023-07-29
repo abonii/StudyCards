@@ -69,6 +69,7 @@ class RedesignServerRepositoryImplTest @Inject constructor() : RedesignServerRep
     }
 
     override suspend fun addExploreCategoryToUserCategory(request: ExploreCategoryContext): Either<Failure, Unit> {
+        delay(1200)
         return Either.Empty
     }
 
