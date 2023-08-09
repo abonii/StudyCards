@@ -82,7 +82,10 @@ fun SwipeableCard(
         modifier = Modifier
             .zIndex((totalCount - order).toFloat())
             .offset { IntOffset(x = 0, y = animatedYOffset.roundToPx()) }
-            .scale(animatedScale)
+            .graphicsLayer {
+                scaleX = animatedScale
+                scaleY = animatedScale
+            }
             .swipeToBack { onSwipe() }
     ) {
         SampleCard(backgroundColor = backgroundColor)

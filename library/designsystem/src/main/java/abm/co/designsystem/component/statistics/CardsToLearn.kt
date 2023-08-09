@@ -2,6 +2,7 @@ package abm.co.designsystem.component.statistics
 
 import abm.co.designsystem.base.WrapperList
 import abm.co.designsystem.base.toWrapperList
+import abm.co.designsystem.component.modifier.Modifier
 import abm.co.designsystem.theme.StudyCardsTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

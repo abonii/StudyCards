@@ -50,8 +50,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -228,7 +228,10 @@ private fun CardItem(
         )
         Row(
             modifier = modifier
-                .scale(scale.value)
+                .graphicsLayer {
+                    scaleX = scale.value
+                    scaleY = scale.value
+                }
                 .height(70.dp)
                 .clip(RoundedCornerShape(11.dp))
                 .background(StudyCardsTheme.colors.backgroundPrimary),
