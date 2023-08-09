@@ -1,4 +1,3 @@
-
 package abm.co.designsystem.message.snackbar
 
 import abm.co.designsystem.R
@@ -27,15 +26,16 @@ import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -68,11 +69,13 @@ fun MessageSnackbar(
     if (snackbarHostState.currentSnackbarData != null) {
         var size by remember { mutableStateOf(Size.Zero) }
         val swipeableState = rememberSwipeableState(SwipeDirection.Initial)
-        val height = remember(size) {
-            if (size.height == 0f) {
-                1f
-            } else {
-                size.height
+        val height = remember {
+            derivedStateOf {
+                if (size.height == 0f) {
+                    1f
+                } else {
+                    size.height
+                }
             }
         }
         if (swipeableState.isAnimationRunning) {
@@ -85,8 +88,13 @@ fun MessageSnackbar(
                 }
             }
         }
-        val offset = with(LocalDensity.current) {
-            swipeableState.offset.value.toDp()
+        val density = LocalDensity.current
+        val offset = remember(swipeableState) {
+            derivedStateOf {
+                with(density) {
+                    swipeableState.offset.value.toDp()
+                }
+            }
         }
         val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
         MessageSnackbarHost(
@@ -98,7 +106,7 @@ fun MessageSnackbar(
                 .swipeable(
                     state = swipeableState,
                     anchors = mapOf(
-                        -height to SwipeDirection.Up,
+                        -height.value to SwipeDirection.Up,
                         0f to SwipeDirection.Initial
                     ),
                     thresholds = { _, _ -> FractionalThreshold(0.2f) },
@@ -109,12 +117,10 @@ fun MessageSnackbar(
                 val messageSnackbarContent = remember(data) {
                     Json.decodeFromString<MessageSnackbarContent>(data.message)
                 }
-                val cornerRadius = remember { 12.dp }
-                val cornerShape = remember { RoundedCornerShape(cornerRadius) }
                 MessageSnackbarView(
                     messageSnackbarContent = messageSnackbarContent,
-                    cornerShape = cornerShape,
-                    verticalOffset = offset
+                    cornerShape = RoundedCornerShape(12.dp),
+                    verticalOffset = offset.value
                 )
             }
         )
@@ -133,12 +139,14 @@ private fun MessageSnackbarView(
             MessageType.Info -> {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             }
+
             MessageType.Success -> {
                 repeat(2) {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     delay(100)
                 }
             }
+
             MessageType.Error -> {
                 repeat(4) {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -157,8 +165,15 @@ private fun MessageSnackbarView(
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .offset(y = verticalOffset)
-            .shadow(17.dp)
+            .offset {
+                IntOffset(
+                    y = verticalOffset.roundToPx(),
+                    x = 0
+                )
+            }
+            .graphicsLayer {
+                shadowElevation = 17.dp.toPx()
+            }
     ) {
         Column {
             Text(
