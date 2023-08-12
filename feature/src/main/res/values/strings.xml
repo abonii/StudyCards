@@ -130,10 +130,18 @@
     <string name="EditCard.ExampleField.title">Example</string>
     <string name="EditCard.ExapleField.hint">Enter some examples</string>
     <string name="EditCard.ImageField.title">Image</string>
-    <string name="EditCard.ImageField.hint">Image URL</string>
     <string name="EditCard.Button.save">Save</string>
     <string name="EditCard.Button.back">Navigate Back</string>
     <string name="EditCard.Example.add">+ Add example</string>
+    <string name="EditCard.TranslateVariants.title">TRANSLATE VARIANTS</string>
+    <string name="EditCard.Category.title">GROUP</string>
+    <string name="EditCard.RelatedWords.title">RELATED WORDS</string>
+    <string name="EditCard.RelatedWords.synonyms">Synonyms</string>
+    <string name="EditCard.RelatedWords.antonyms">Antonyms</string>
+    <string name="EditCard.Examples.title">EXAMPLES</string>
+    <string name="EditCard.Definitions.title">DEFINITION</string>
+    <string name="EditCard.Image.title">IMAGE URL</string>
+    <string name="EditCard.Image.Filed.hint">Enter an image URL</string>
 
     <string name="GamePicker.Learn.title">Learn</string>
     <string name="GamePicker.Learn.subtitle">%s to learn</string>

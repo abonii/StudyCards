@@ -67,17 +67,17 @@ class EditCardFragment : BaseFragment() {
     private fun setFragmentResultListeners() {
         setFragmentResultListener(SelectCategoryFragment.SELECT_CATEGORY_KEY) { _, bundle ->
             val category = bundle.getParcelableData<CategoryUI>("category")
-            category?.let { viewModel.onSelectedCategory(it) }
+//            category?.let { viewModel.onSelectedCategory(it) }
         }
         setFragmentResultListener(WordInfoFragment.WORD_INFO_CLOSED) { _, bundle ->
             safeLet(
                 bundle.getStringArray("oxford_checked_items_id"),
                 bundle.getBoolean("from_native", true)
             ) { ids, fromNative ->
-                viewModel.setOxfordResponse(
-                    checkedOxfordItemsID = ids,
-                    fromNative = fromNative
-                )
+//                viewModel.setOxfordResponse(
+//                    checkedOxfordItemsID = ids,
+//                    fromNative = fromNative
+//                )
             }
         }
     }
